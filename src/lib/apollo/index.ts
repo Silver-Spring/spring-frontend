@@ -1,0 +1,1 @@
+export { default as WithApollo } from './with-apollo';

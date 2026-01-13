@@ -1,0 +1,256 @@
+/* eslint-disable */
+import * as types from './graphql';
+import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+
+/**
+ * Map of all GraphQL operations in the project.
+ *
+ * This map has several performance disadvantages:
+ * 1. It is not tree-shakeable, so it will include all operations in the project.
+ * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
+ * 3. It does not support dead code elimination, so it will add unused operations.
+ *
+ * Therefore it is highly recommended to use the babel or swc plugin for production.
+ * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
+ */
+type Documents = {
+    "\n  query GetAllUsers {\n    allUsers {\n      users {\n        id\n        email\n        name\n        isAdmin\n        createdAt\n        updatedAt\n      }\n      totalCount\n      adminCount\n    }\n  }\n": typeof types.GetAllUsersDocument,
+    "\n  query GetAssessmentTrends($startDate: Date!, $endDate: Date!) {\n    assessmentTrends(input: { startDate: $startDate, endDate: $endDate }) {\n      trends {\n        date\n        completedCount\n        startedCount\n        inProgressCount\n      }\n      totalCompleted\n      totalStarted\n      totalInProgress\n    }\n  }\n": typeof types.GetAssessmentTrendsDocument,
+    "\n  mutation GrantAdmin($userId: UUID!) {\n    grantAdminAccess(input: { userId: $userId }) {\n      user {\n        id\n        email\n        name\n        isAdmin\n        createdAt\n        updatedAt\n      }\n      success\n      message\n    }\n  }\n": typeof types.GrantAdminDocument,
+    "\n  mutation RevokeAdmin($userId: UUID!) {\n    revokeAdminAccess(input: { userId: $userId }) {\n      user {\n        id\n        email\n        name\n        isAdmin\n        createdAt\n        updatedAt\n      }\n      success\n      message\n    }\n  }\n": typeof types.RevokeAdminDocument,
+    "\n  query GetScoreDistribution {\n    scoreDistribution {\n      distribution {\n        range\n        count\n        percentage\n      }\n      totalAssessments\n      averageScore\n    }\n  }\n": typeof types.GetScoreDistributionDocument,
+    "\n  query AdminAssessmentStats {\n    adminAssessmentStats {\n      totalSections\n      totalQuestions\n      totalInterpretationBands\n      totalRecommendedActions\n      activeQuestions\n      inactiveQuestions\n      questionsBySectionType\n    }\n  }\n": typeof types.AdminAssessmentStatsDocument,
+    "\n  query AssessmentProgress {\n    assessmentProgress {\n      session {\n        id\n        currentQuestionNumber\n      }\n      totalQuestions\n      answeredQuestions\n      progressPercentage\n    }\n  }\n": typeof types.AssessmentProgressDocument,
+    "\n  query AssessmentQuestions {\n    assessmentQuestions {\n      nodes {\n        id\n        questionText\n        sectionId\n        displayOrder\n        isActive\n      }\n    }\n  }\n": typeof types.AssessmentQuestionsDocument,
+    "\n  query AssessmentResults($id: UUID!) {\n    assessmentResult(id: $id) {\n      id\n      totalReadinessIndex\n      pdfPath\n      isEmailed\n      createdAt\n      assessmentSectionResultsByResultId {\n        nodes {\n          sectionType\n          score\n          interpretationLabel\n          interpretationNarrative\n        }\n      }\n    }\n  }\n": typeof types.AssessmentResultsDocument,
+    "\n  query AssessmentStatus {\n    assessmentStatus {\n      hasCompletedAssessment\n      hasActiveSession\n      completedAt\n      resultId\n      totalReadinessIndex\n    }\n  }\n": typeof types.AssessmentStatusDocument,
+    "\n  mutation BatchSubmitResponses($input: BatchSubmitResponsesInput!) {\n    batchSubmitResponses(input: $input) {\n      success\n      message\n      answeredCount\n      responses {\n        id\n        sessionId\n        questionId\n        responseValue\n        timeTakenSeconds\n        createdAt\n        updatedAt\n      }\n    }\n  }\n": typeof types.BatchSubmitResponsesDocument,
+    "\n  mutation BulkCreateAssessmentQuestions($input: BulkCreateQuestionsInput!) {\n    bulkCreateAssessmentQuestions(input: $input) {\n      questions {\n        id\n        questionText\n        displayOrder\n      }\n      count\n      success\n      message\n    }\n  }\n": typeof types.BulkCreateAssessmentQuestionsDocument,
+    "\n  mutation CompleteAssessment($sessionId: UUID!) {\n    completeAssessment(input: { sessionId: $sessionId }) {\n      result {\n        id\n        sessionId\n        userId\n        totalReadinessIndex\n        pdfPath\n        isEmailed\n        emailedAt\n        createdAt\n      }\n      success\n      message\n      pdfPath\n    }\n  }\n": typeof types.CompleteAssessmentDocument,
+    "\n  mutation CreateAssessmentQuestion($input: CreateQuestionInput!) {\n    createAssessmentQuestion(input: $input) {\n      question {\n        id\n        sectionId\n        questionText\n        displayOrder\n        isActive\n        createdAt\n        updatedAt\n      }\n      success\n      message\n    }\n  }\n": typeof types.CreateAssessmentQuestionDocument,
+    "\n  query CurrentAssessmentSession {\n    currentAssessmentSession {\n      id\n      userId\n      paymentId\n      status\n      currentQuestionNumber\n      startTime\n      lastActivityTime\n      expiresAt\n    }\n  }\n": typeof types.CurrentAssessmentSessionDocument,
+    "\n  mutation DeleteAssessmentQuestion($input: DeleteQuestionInput!) {\n    deleteAssessmentQuestion(input: $input) {\n      success\n      message\n    }\n  }\n": typeof types.DeleteAssessmentQuestionDocument,
+    "\n  query GetQuestionBatch($batchNumber: Int!) {\n    getQuestionBatch(batchNumber: $batchNumber) {\n      batchNumber\n      totalBatches\n      currentBatchStartIndex\n      currentBatchEndIndex\n      questions {\n        id\n        sessionId\n        questionId\n        displayOrder\n        isAnswered\n        createdAt\n        questionText\n        sectionName\n        sectionType\n      }\n    }\n  }\n": typeof types.GetQuestionBatchDocument,
+    "\n  query GetSectionQuestions($sectionId: UUID!) {\n    assessmentQuestions(\n      condition: { sectionId: $sectionId }\n    ) {\n      nodes {\n        id\n        sectionId\n        questionText\n        displayOrder\n        isActive\n        createdAt\n        updatedAt\n      }\n      totalCount\n    }\n  }\n": typeof types.GetSectionQuestionsDocument,
+    "\n  query GetAllSections {\n    assessmentSections(orderBy: DISPLAY_ORDER_ASC) {\n      nodes {\n        id\n        type\n        name\n        description\n        displayOrder\n        isActive\n      }\n    }\n  }\n": typeof types.GetAllSectionsDocument,
+    "\n  mutation ResendReport($resultId: UUID!) {\n    resendAssessmentReport(input: { resultId: $resultId }) {\n      success\n      message\n    }\n  }\n": typeof types.ResendReportDocument,
+    "\n  query SessionQuestions($sessionId: UUID!) {\n    assessmentSession(id: $sessionId) {\n      id\n      status\n      currentQuestionNumber\n      startTime\n      lastActivityTime\n      expiresAt\n\n      # Get all 50 questions for this session\n      assessmentSessionQuestionsBySessionId {\n        nodes {\n          id\n          sessionId\n          questionId\n          displayOrder\n          isAnswered\n          question {\n            id\n            questionText\n            sectionId\n          }\n        }\n      }\n\n      # Get all previous responses to pre-fill answers\n      assessmentResponsesBySessionId {\n        nodes {\n          id\n          questionId\n          responseValue\n          timeTakenSeconds\n          createdAt\n          updatedAt\n        }\n      }\n    }\n  }\n": typeof types.SessionQuestionsDocument,
+    "\n  mutation StartAssessment($paymentId: UUID!) {\n    startAssessment(input: { paymentId: $paymentId }) {\n      session {\n        id\n        userId\n        paymentId\n        status\n        currentQuestionNumber\n        startTime\n        expiresAt\n      }\n      message\n    }\n  }\n": typeof types.StartAssessmentDocument,
+    "\n  mutation SubmitResponse(\n    $sessionId: UUID!\n    $questionId: UUID!\n    $responseValue: Int!\n    $timeTakenSeconds: Int\n  ) {\n    submitAssessmentResponse(\n      input: {\n        sessionId: $sessionId\n        questionId: $questionId\n        responseValue: $responseValue\n        timeTakenSeconds: $timeTakenSeconds\n      }\n    ) {\n      response {\n        id\n        sessionId\n        questionId\n        responseValue\n        timeTakenSeconds\n        createdAt\n      }\n      success\n      message\n    }\n  }\n": typeof types.SubmitResponseDocument,
+    "\n  mutation UpdateAssessmentQuestion($input: UpdateQuestionInput!) {\n    updateAssessmentQuestion(input: $input) {\n      question {\n        id\n        questionText\n        displayOrder\n        isActive\n        updatedAt\n      }\n      success\n      message\n    }\n  }\n": typeof types.UpdateAssessmentQuestionDocument,
+    "\n  mutation UpdateAssessmentSection($input: UpdateSectionInput!) {\n    updateAssessmentSection(input: $input) {\n      section {\n        id\n        name\n        description\n        displayOrder\n        isActive\n        updatedAt\n      }\n      success\n      message\n    }\n  }\n": typeof types.UpdateAssessmentSectionDocument,
+    "\n  query GetUsersWithAssessment {\n    usersWithAssessment {\n      users {\n        userId\n        userName\n        userEmail\n        sessionId\n        resultId\n        status\n        startedAt\n        completedAt\n        expiresAt\n        totalScore\n        interpretationLabel\n      }\n      totalCount\n      completedCount\n      inProgressCount\n    }\n  }\n": typeof types.GetUsersWithAssessmentDocument,
+    "\n  query CurrentUser {\n    currentUser {\n      id\n      ...Lite_User\n    }\n  }\n": typeof types.CurrentUserDocument,
+    "\n  mutation forgotPassword($input: ForgotPasswordInput!) {\n    forgotPassword(input: $input) {\n      success\n    }\n  }\n": typeof types.ForgotPasswordDocument,
+    "\nfragment Lite_User on User {\n  id\n  name\n  email\n  age\n  gender\n  type\n  isAdmin\n}\n": typeof types.Lite_UserFragmentDoc,
+    "\nmutation login($input: LoginInput!) {\n  login(input: $input) {\n    token\n    user {\n      ...Lite_User\n    }\n  }\n}\n": typeof types.LoginDocument,
+    "\n  mutation Logout {\n    logout {\n      success\n    }\n  }\n": typeof types.LogoutDocument,
+    "\n  mutation resetPassword($input: ResetPasswordInput!) {\n    resetPassword(input: $input) {\n      success\n    }\n  }\n": typeof types.ResetPasswordDocument,
+    "\n  mutation Register($input: RegisterInput!) {\n    register(input: $input) {\n      token\n      user {\n        id\n        ...Lite_User\n      }\n    }\n  }\n": typeof types.RegisterDocument,
+    "\n  query CheckPaymentStatus {\n    currentUserPaymentStatus {\n      hasPaid\n      paymentId\n      status\n      amountInr\n      createdAt\n    }\n  }\n": typeof types.CheckPaymentStatusDocument,
+    "\n  mutation CreatePaymentOrder {\n    createPaymentOrder(input: {}) {\n      orderId\n      amount\n      currency\n      razorpayKeyId\n    }\n  }\n": typeof types.CreatePaymentOrderDocument,
+    "\n  mutation VerifyPayment(\n    $orderId: String!\n    $paymentId: String!\n    $signature: String!\n  ) {\n    verifyPayment(\n      input: {\n        orderId: $orderId\n        paymentId: $paymentId\n        signature: $signature\n      }\n    ) {\n      success\n      paymentId\n      message\n    }\n  }\n": typeof types.VerifyPaymentDocument,
+};
+const documents: Documents = {
+    "\n  query GetAllUsers {\n    allUsers {\n      users {\n        id\n        email\n        name\n        isAdmin\n        createdAt\n        updatedAt\n      }\n      totalCount\n      adminCount\n    }\n  }\n": types.GetAllUsersDocument,
+    "\n  query GetAssessmentTrends($startDate: Date!, $endDate: Date!) {\n    assessmentTrends(input: { startDate: $startDate, endDate: $endDate }) {\n      trends {\n        date\n        completedCount\n        startedCount\n        inProgressCount\n      }\n      totalCompleted\n      totalStarted\n      totalInProgress\n    }\n  }\n": types.GetAssessmentTrendsDocument,
+    "\n  mutation GrantAdmin($userId: UUID!) {\n    grantAdminAccess(input: { userId: $userId }) {\n      user {\n        id\n        email\n        name\n        isAdmin\n        createdAt\n        updatedAt\n      }\n      success\n      message\n    }\n  }\n": types.GrantAdminDocument,
+    "\n  mutation RevokeAdmin($userId: UUID!) {\n    revokeAdminAccess(input: { userId: $userId }) {\n      user {\n        id\n        email\n        name\n        isAdmin\n        createdAt\n        updatedAt\n      }\n      success\n      message\n    }\n  }\n": types.RevokeAdminDocument,
+    "\n  query GetScoreDistribution {\n    scoreDistribution {\n      distribution {\n        range\n        count\n        percentage\n      }\n      totalAssessments\n      averageScore\n    }\n  }\n": types.GetScoreDistributionDocument,
+    "\n  query AdminAssessmentStats {\n    adminAssessmentStats {\n      totalSections\n      totalQuestions\n      totalInterpretationBands\n      totalRecommendedActions\n      activeQuestions\n      inactiveQuestions\n      questionsBySectionType\n    }\n  }\n": types.AdminAssessmentStatsDocument,
+    "\n  query AssessmentProgress {\n    assessmentProgress {\n      session {\n        id\n        currentQuestionNumber\n      }\n      totalQuestions\n      answeredQuestions\n      progressPercentage\n    }\n  }\n": types.AssessmentProgressDocument,
+    "\n  query AssessmentQuestions {\n    assessmentQuestions {\n      nodes {\n        id\n        questionText\n        sectionId\n        displayOrder\n        isActive\n      }\n    }\n  }\n": types.AssessmentQuestionsDocument,
+    "\n  query AssessmentResults($id: UUID!) {\n    assessmentResult(id: $id) {\n      id\n      totalReadinessIndex\n      pdfPath\n      isEmailed\n      createdAt\n      assessmentSectionResultsByResultId {\n        nodes {\n          sectionType\n          score\n          interpretationLabel\n          interpretationNarrative\n        }\n      }\n    }\n  }\n": types.AssessmentResultsDocument,
+    "\n  query AssessmentStatus {\n    assessmentStatus {\n      hasCompletedAssessment\n      hasActiveSession\n      completedAt\n      resultId\n      totalReadinessIndex\n    }\n  }\n": types.AssessmentStatusDocument,
+    "\n  mutation BatchSubmitResponses($input: BatchSubmitResponsesInput!) {\n    batchSubmitResponses(input: $input) {\n      success\n      message\n      answeredCount\n      responses {\n        id\n        sessionId\n        questionId\n        responseValue\n        timeTakenSeconds\n        createdAt\n        updatedAt\n      }\n    }\n  }\n": types.BatchSubmitResponsesDocument,
+    "\n  mutation BulkCreateAssessmentQuestions($input: BulkCreateQuestionsInput!) {\n    bulkCreateAssessmentQuestions(input: $input) {\n      questions {\n        id\n        questionText\n        displayOrder\n      }\n      count\n      success\n      message\n    }\n  }\n": types.BulkCreateAssessmentQuestionsDocument,
+    "\n  mutation CompleteAssessment($sessionId: UUID!) {\n    completeAssessment(input: { sessionId: $sessionId }) {\n      result {\n        id\n        sessionId\n        userId\n        totalReadinessIndex\n        pdfPath\n        isEmailed\n        emailedAt\n        createdAt\n      }\n      success\n      message\n      pdfPath\n    }\n  }\n": types.CompleteAssessmentDocument,
+    "\n  mutation CreateAssessmentQuestion($input: CreateQuestionInput!) {\n    createAssessmentQuestion(input: $input) {\n      question {\n        id\n        sectionId\n        questionText\n        displayOrder\n        isActive\n        createdAt\n        updatedAt\n      }\n      success\n      message\n    }\n  }\n": types.CreateAssessmentQuestionDocument,
+    "\n  query CurrentAssessmentSession {\n    currentAssessmentSession {\n      id\n      userId\n      paymentId\n      status\n      currentQuestionNumber\n      startTime\n      lastActivityTime\n      expiresAt\n    }\n  }\n": types.CurrentAssessmentSessionDocument,
+    "\n  mutation DeleteAssessmentQuestion($input: DeleteQuestionInput!) {\n    deleteAssessmentQuestion(input: $input) {\n      success\n      message\n    }\n  }\n": types.DeleteAssessmentQuestionDocument,
+    "\n  query GetQuestionBatch($batchNumber: Int!) {\n    getQuestionBatch(batchNumber: $batchNumber) {\n      batchNumber\n      totalBatches\n      currentBatchStartIndex\n      currentBatchEndIndex\n      questions {\n        id\n        sessionId\n        questionId\n        displayOrder\n        isAnswered\n        createdAt\n        questionText\n        sectionName\n        sectionType\n      }\n    }\n  }\n": types.GetQuestionBatchDocument,
+    "\n  query GetSectionQuestions($sectionId: UUID!) {\n    assessmentQuestions(\n      condition: { sectionId: $sectionId }\n    ) {\n      nodes {\n        id\n        sectionId\n        questionText\n        displayOrder\n        isActive\n        createdAt\n        updatedAt\n      }\n      totalCount\n    }\n  }\n": types.GetSectionQuestionsDocument,
+    "\n  query GetAllSections {\n    assessmentSections(orderBy: DISPLAY_ORDER_ASC) {\n      nodes {\n        id\n        type\n        name\n        description\n        displayOrder\n        isActive\n      }\n    }\n  }\n": types.GetAllSectionsDocument,
+    "\n  mutation ResendReport($resultId: UUID!) {\n    resendAssessmentReport(input: { resultId: $resultId }) {\n      success\n      message\n    }\n  }\n": types.ResendReportDocument,
+    "\n  query SessionQuestions($sessionId: UUID!) {\n    assessmentSession(id: $sessionId) {\n      id\n      status\n      currentQuestionNumber\n      startTime\n      lastActivityTime\n      expiresAt\n\n      # Get all 50 questions for this session\n      assessmentSessionQuestionsBySessionId {\n        nodes {\n          id\n          sessionId\n          questionId\n          displayOrder\n          isAnswered\n          question {\n            id\n            questionText\n            sectionId\n          }\n        }\n      }\n\n      # Get all previous responses to pre-fill answers\n      assessmentResponsesBySessionId {\n        nodes {\n          id\n          questionId\n          responseValue\n          timeTakenSeconds\n          createdAt\n          updatedAt\n        }\n      }\n    }\n  }\n": types.SessionQuestionsDocument,
+    "\n  mutation StartAssessment($paymentId: UUID!) {\n    startAssessment(input: { paymentId: $paymentId }) {\n      session {\n        id\n        userId\n        paymentId\n        status\n        currentQuestionNumber\n        startTime\n        expiresAt\n      }\n      message\n    }\n  }\n": types.StartAssessmentDocument,
+    "\n  mutation SubmitResponse(\n    $sessionId: UUID!\n    $questionId: UUID!\n    $responseValue: Int!\n    $timeTakenSeconds: Int\n  ) {\n    submitAssessmentResponse(\n      input: {\n        sessionId: $sessionId\n        questionId: $questionId\n        responseValue: $responseValue\n        timeTakenSeconds: $timeTakenSeconds\n      }\n    ) {\n      response {\n        id\n        sessionId\n        questionId\n        responseValue\n        timeTakenSeconds\n        createdAt\n      }\n      success\n      message\n    }\n  }\n": types.SubmitResponseDocument,
+    "\n  mutation UpdateAssessmentQuestion($input: UpdateQuestionInput!) {\n    updateAssessmentQuestion(input: $input) {\n      question {\n        id\n        questionText\n        displayOrder\n        isActive\n        updatedAt\n      }\n      success\n      message\n    }\n  }\n": types.UpdateAssessmentQuestionDocument,
+    "\n  mutation UpdateAssessmentSection($input: UpdateSectionInput!) {\n    updateAssessmentSection(input: $input) {\n      section {\n        id\n        name\n        description\n        displayOrder\n        isActive\n        updatedAt\n      }\n      success\n      message\n    }\n  }\n": types.UpdateAssessmentSectionDocument,
+    "\n  query GetUsersWithAssessment {\n    usersWithAssessment {\n      users {\n        userId\n        userName\n        userEmail\n        sessionId\n        resultId\n        status\n        startedAt\n        completedAt\n        expiresAt\n        totalScore\n        interpretationLabel\n      }\n      totalCount\n      completedCount\n      inProgressCount\n    }\n  }\n": types.GetUsersWithAssessmentDocument,
+    "\n  query CurrentUser {\n    currentUser {\n      id\n      ...Lite_User\n    }\n  }\n": types.CurrentUserDocument,
+    "\n  mutation forgotPassword($input: ForgotPasswordInput!) {\n    forgotPassword(input: $input) {\n      success\n    }\n  }\n": types.ForgotPasswordDocument,
+    "\nfragment Lite_User on User {\n  id\n  name\n  email\n  age\n  gender\n  type\n  isAdmin\n}\n": types.Lite_UserFragmentDoc,
+    "\nmutation login($input: LoginInput!) {\n  login(input: $input) {\n    token\n    user {\n      ...Lite_User\n    }\n  }\n}\n": types.LoginDocument,
+    "\n  mutation Logout {\n    logout {\n      success\n    }\n  }\n": types.LogoutDocument,
+    "\n  mutation resetPassword($input: ResetPasswordInput!) {\n    resetPassword(input: $input) {\n      success\n    }\n  }\n": types.ResetPasswordDocument,
+    "\n  mutation Register($input: RegisterInput!) {\n    register(input: $input) {\n      token\n      user {\n        id\n        ...Lite_User\n      }\n    }\n  }\n": types.RegisterDocument,
+    "\n  query CheckPaymentStatus {\n    currentUserPaymentStatus {\n      hasPaid\n      paymentId\n      status\n      amountInr\n      createdAt\n    }\n  }\n": types.CheckPaymentStatusDocument,
+    "\n  mutation CreatePaymentOrder {\n    createPaymentOrder(input: {}) {\n      orderId\n      amount\n      currency\n      razorpayKeyId\n    }\n  }\n": types.CreatePaymentOrderDocument,
+    "\n  mutation VerifyPayment(\n    $orderId: String!\n    $paymentId: String!\n    $signature: String!\n  ) {\n    verifyPayment(\n      input: {\n        orderId: $orderId\n        paymentId: $paymentId\n        signature: $signature\n      }\n    ) {\n      success\n      paymentId\n      message\n    }\n  }\n": types.VerifyPaymentDocument,
+};
+
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ *
+ *
+ * @example
+ * ```ts
+ * const query = graphql(`query GetUser($id: ID!) { user(id: $id) { name } }`);
+ * ```
+ *
+ * The query argument is unknown!
+ * Please regenerate the types.
+ */
+export function graphql(source: string): unknown;
+
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query GetAllUsers {\n    allUsers {\n      users {\n        id\n        email\n        name\n        isAdmin\n        createdAt\n        updatedAt\n      }\n      totalCount\n      adminCount\n    }\n  }\n"): (typeof documents)["\n  query GetAllUsers {\n    allUsers {\n      users {\n        id\n        email\n        name\n        isAdmin\n        createdAt\n        updatedAt\n      }\n      totalCount\n      adminCount\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query GetAssessmentTrends($startDate: Date!, $endDate: Date!) {\n    assessmentTrends(input: { startDate: $startDate, endDate: $endDate }) {\n      trends {\n        date\n        completedCount\n        startedCount\n        inProgressCount\n      }\n      totalCompleted\n      totalStarted\n      totalInProgress\n    }\n  }\n"): (typeof documents)["\n  query GetAssessmentTrends($startDate: Date!, $endDate: Date!) {\n    assessmentTrends(input: { startDate: $startDate, endDate: $endDate }) {\n      trends {\n        date\n        completedCount\n        startedCount\n        inProgressCount\n      }\n      totalCompleted\n      totalStarted\n      totalInProgress\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation GrantAdmin($userId: UUID!) {\n    grantAdminAccess(input: { userId: $userId }) {\n      user {\n        id\n        email\n        name\n        isAdmin\n        createdAt\n        updatedAt\n      }\n      success\n      message\n    }\n  }\n"): (typeof documents)["\n  mutation GrantAdmin($userId: UUID!) {\n    grantAdminAccess(input: { userId: $userId }) {\n      user {\n        id\n        email\n        name\n        isAdmin\n        createdAt\n        updatedAt\n      }\n      success\n      message\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation RevokeAdmin($userId: UUID!) {\n    revokeAdminAccess(input: { userId: $userId }) {\n      user {\n        id\n        email\n        name\n        isAdmin\n        createdAt\n        updatedAt\n      }\n      success\n      message\n    }\n  }\n"): (typeof documents)["\n  mutation RevokeAdmin($userId: UUID!) {\n    revokeAdminAccess(input: { userId: $userId }) {\n      user {\n        id\n        email\n        name\n        isAdmin\n        createdAt\n        updatedAt\n      }\n      success\n      message\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query GetScoreDistribution {\n    scoreDistribution {\n      distribution {\n        range\n        count\n        percentage\n      }\n      totalAssessments\n      averageScore\n    }\n  }\n"): (typeof documents)["\n  query GetScoreDistribution {\n    scoreDistribution {\n      distribution {\n        range\n        count\n        percentage\n      }\n      totalAssessments\n      averageScore\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query AdminAssessmentStats {\n    adminAssessmentStats {\n      totalSections\n      totalQuestions\n      totalInterpretationBands\n      totalRecommendedActions\n      activeQuestions\n      inactiveQuestions\n      questionsBySectionType\n    }\n  }\n"): (typeof documents)["\n  query AdminAssessmentStats {\n    adminAssessmentStats {\n      totalSections\n      totalQuestions\n      totalInterpretationBands\n      totalRecommendedActions\n      activeQuestions\n      inactiveQuestions\n      questionsBySectionType\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query AssessmentProgress {\n    assessmentProgress {\n      session {\n        id\n        currentQuestionNumber\n      }\n      totalQuestions\n      answeredQuestions\n      progressPercentage\n    }\n  }\n"): (typeof documents)["\n  query AssessmentProgress {\n    assessmentProgress {\n      session {\n        id\n        currentQuestionNumber\n      }\n      totalQuestions\n      answeredQuestions\n      progressPercentage\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query AssessmentQuestions {\n    assessmentQuestions {\n      nodes {\n        id\n        questionText\n        sectionId\n        displayOrder\n        isActive\n      }\n    }\n  }\n"): (typeof documents)["\n  query AssessmentQuestions {\n    assessmentQuestions {\n      nodes {\n        id\n        questionText\n        sectionId\n        displayOrder\n        isActive\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query AssessmentResults($id: UUID!) {\n    assessmentResult(id: $id) {\n      id\n      totalReadinessIndex\n      pdfPath\n      isEmailed\n      createdAt\n      assessmentSectionResultsByResultId {\n        nodes {\n          sectionType\n          score\n          interpretationLabel\n          interpretationNarrative\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query AssessmentResults($id: UUID!) {\n    assessmentResult(id: $id) {\n      id\n      totalReadinessIndex\n      pdfPath\n      isEmailed\n      createdAt\n      assessmentSectionResultsByResultId {\n        nodes {\n          sectionType\n          score\n          interpretationLabel\n          interpretationNarrative\n        }\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query AssessmentStatus {\n    assessmentStatus {\n      hasCompletedAssessment\n      hasActiveSession\n      completedAt\n      resultId\n      totalReadinessIndex\n    }\n  }\n"): (typeof documents)["\n  query AssessmentStatus {\n    assessmentStatus {\n      hasCompletedAssessment\n      hasActiveSession\n      completedAt\n      resultId\n      totalReadinessIndex\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation BatchSubmitResponses($input: BatchSubmitResponsesInput!) {\n    batchSubmitResponses(input: $input) {\n      success\n      message\n      answeredCount\n      responses {\n        id\n        sessionId\n        questionId\n        responseValue\n        timeTakenSeconds\n        createdAt\n        updatedAt\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation BatchSubmitResponses($input: BatchSubmitResponsesInput!) {\n    batchSubmitResponses(input: $input) {\n      success\n      message\n      answeredCount\n      responses {\n        id\n        sessionId\n        questionId\n        responseValue\n        timeTakenSeconds\n        createdAt\n        updatedAt\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation BulkCreateAssessmentQuestions($input: BulkCreateQuestionsInput!) {\n    bulkCreateAssessmentQuestions(input: $input) {\n      questions {\n        id\n        questionText\n        displayOrder\n      }\n      count\n      success\n      message\n    }\n  }\n"): (typeof documents)["\n  mutation BulkCreateAssessmentQuestions($input: BulkCreateQuestionsInput!) {\n    bulkCreateAssessmentQuestions(input: $input) {\n      questions {\n        id\n        questionText\n        displayOrder\n      }\n      count\n      success\n      message\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation CompleteAssessment($sessionId: UUID!) {\n    completeAssessment(input: { sessionId: $sessionId }) {\n      result {\n        id\n        sessionId\n        userId\n        totalReadinessIndex\n        pdfPath\n        isEmailed\n        emailedAt\n        createdAt\n      }\n      success\n      message\n      pdfPath\n    }\n  }\n"): (typeof documents)["\n  mutation CompleteAssessment($sessionId: UUID!) {\n    completeAssessment(input: { sessionId: $sessionId }) {\n      result {\n        id\n        sessionId\n        userId\n        totalReadinessIndex\n        pdfPath\n        isEmailed\n        emailedAt\n        createdAt\n      }\n      success\n      message\n      pdfPath\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation CreateAssessmentQuestion($input: CreateQuestionInput!) {\n    createAssessmentQuestion(input: $input) {\n      question {\n        id\n        sectionId\n        questionText\n        displayOrder\n        isActive\n        createdAt\n        updatedAt\n      }\n      success\n      message\n    }\n  }\n"): (typeof documents)["\n  mutation CreateAssessmentQuestion($input: CreateQuestionInput!) {\n    createAssessmentQuestion(input: $input) {\n      question {\n        id\n        sectionId\n        questionText\n        displayOrder\n        isActive\n        createdAt\n        updatedAt\n      }\n      success\n      message\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query CurrentAssessmentSession {\n    currentAssessmentSession {\n      id\n      userId\n      paymentId\n      status\n      currentQuestionNumber\n      startTime\n      lastActivityTime\n      expiresAt\n    }\n  }\n"): (typeof documents)["\n  query CurrentAssessmentSession {\n    currentAssessmentSession {\n      id\n      userId\n      paymentId\n      status\n      currentQuestionNumber\n      startTime\n      lastActivityTime\n      expiresAt\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation DeleteAssessmentQuestion($input: DeleteQuestionInput!) {\n    deleteAssessmentQuestion(input: $input) {\n      success\n      message\n    }\n  }\n"): (typeof documents)["\n  mutation DeleteAssessmentQuestion($input: DeleteQuestionInput!) {\n    deleteAssessmentQuestion(input: $input) {\n      success\n      message\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query GetQuestionBatch($batchNumber: Int!) {\n    getQuestionBatch(batchNumber: $batchNumber) {\n      batchNumber\n      totalBatches\n      currentBatchStartIndex\n      currentBatchEndIndex\n      questions {\n        id\n        sessionId\n        questionId\n        displayOrder\n        isAnswered\n        createdAt\n        questionText\n        sectionName\n        sectionType\n      }\n    }\n  }\n"): (typeof documents)["\n  query GetQuestionBatch($batchNumber: Int!) {\n    getQuestionBatch(batchNumber: $batchNumber) {\n      batchNumber\n      totalBatches\n      currentBatchStartIndex\n      currentBatchEndIndex\n      questions {\n        id\n        sessionId\n        questionId\n        displayOrder\n        isAnswered\n        createdAt\n        questionText\n        sectionName\n        sectionType\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query GetSectionQuestions($sectionId: UUID!) {\n    assessmentQuestions(\n      condition: { sectionId: $sectionId }\n    ) {\n      nodes {\n        id\n        sectionId\n        questionText\n        displayOrder\n        isActive\n        createdAt\n        updatedAt\n      }\n      totalCount\n    }\n  }\n"): (typeof documents)["\n  query GetSectionQuestions($sectionId: UUID!) {\n    assessmentQuestions(\n      condition: { sectionId: $sectionId }\n    ) {\n      nodes {\n        id\n        sectionId\n        questionText\n        displayOrder\n        isActive\n        createdAt\n        updatedAt\n      }\n      totalCount\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query GetAllSections {\n    assessmentSections(orderBy: DISPLAY_ORDER_ASC) {\n      nodes {\n        id\n        type\n        name\n        description\n        displayOrder\n        isActive\n      }\n    }\n  }\n"): (typeof documents)["\n  query GetAllSections {\n    assessmentSections(orderBy: DISPLAY_ORDER_ASC) {\n      nodes {\n        id\n        type\n        name\n        description\n        displayOrder\n        isActive\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation ResendReport($resultId: UUID!) {\n    resendAssessmentReport(input: { resultId: $resultId }) {\n      success\n      message\n    }\n  }\n"): (typeof documents)["\n  mutation ResendReport($resultId: UUID!) {\n    resendAssessmentReport(input: { resultId: $resultId }) {\n      success\n      message\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query SessionQuestions($sessionId: UUID!) {\n    assessmentSession(id: $sessionId) {\n      id\n      status\n      currentQuestionNumber\n      startTime\n      lastActivityTime\n      expiresAt\n\n      # Get all 50 questions for this session\n      assessmentSessionQuestionsBySessionId {\n        nodes {\n          id\n          sessionId\n          questionId\n          displayOrder\n          isAnswered\n          question {\n            id\n            questionText\n            sectionId\n          }\n        }\n      }\n\n      # Get all previous responses to pre-fill answers\n      assessmentResponsesBySessionId {\n        nodes {\n          id\n          questionId\n          responseValue\n          timeTakenSeconds\n          createdAt\n          updatedAt\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query SessionQuestions($sessionId: UUID!) {\n    assessmentSession(id: $sessionId) {\n      id\n      status\n      currentQuestionNumber\n      startTime\n      lastActivityTime\n      expiresAt\n\n      # Get all 50 questions for this session\n      assessmentSessionQuestionsBySessionId {\n        nodes {\n          id\n          sessionId\n          questionId\n          displayOrder\n          isAnswered\n          question {\n            id\n            questionText\n            sectionId\n          }\n        }\n      }\n\n      # Get all previous responses to pre-fill answers\n      assessmentResponsesBySessionId {\n        nodes {\n          id\n          questionId\n          responseValue\n          timeTakenSeconds\n          createdAt\n          updatedAt\n        }\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation StartAssessment($paymentId: UUID!) {\n    startAssessment(input: { paymentId: $paymentId }) {\n      session {\n        id\n        userId\n        paymentId\n        status\n        currentQuestionNumber\n        startTime\n        expiresAt\n      }\n      message\n    }\n  }\n"): (typeof documents)["\n  mutation StartAssessment($paymentId: UUID!) {\n    startAssessment(input: { paymentId: $paymentId }) {\n      session {\n        id\n        userId\n        paymentId\n        status\n        currentQuestionNumber\n        startTime\n        expiresAt\n      }\n      message\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation SubmitResponse(\n    $sessionId: UUID!\n    $questionId: UUID!\n    $responseValue: Int!\n    $timeTakenSeconds: Int\n  ) {\n    submitAssessmentResponse(\n      input: {\n        sessionId: $sessionId\n        questionId: $questionId\n        responseValue: $responseValue\n        timeTakenSeconds: $timeTakenSeconds\n      }\n    ) {\n      response {\n        id\n        sessionId\n        questionId\n        responseValue\n        timeTakenSeconds\n        createdAt\n      }\n      success\n      message\n    }\n  }\n"): (typeof documents)["\n  mutation SubmitResponse(\n    $sessionId: UUID!\n    $questionId: UUID!\n    $responseValue: Int!\n    $timeTakenSeconds: Int\n  ) {\n    submitAssessmentResponse(\n      input: {\n        sessionId: $sessionId\n        questionId: $questionId\n        responseValue: $responseValue\n        timeTakenSeconds: $timeTakenSeconds\n      }\n    ) {\n      response {\n        id\n        sessionId\n        questionId\n        responseValue\n        timeTakenSeconds\n        createdAt\n      }\n      success\n      message\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation UpdateAssessmentQuestion($input: UpdateQuestionInput!) {\n    updateAssessmentQuestion(input: $input) {\n      question {\n        id\n        questionText\n        displayOrder\n        isActive\n        updatedAt\n      }\n      success\n      message\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateAssessmentQuestion($input: UpdateQuestionInput!) {\n    updateAssessmentQuestion(input: $input) {\n      question {\n        id\n        questionText\n        displayOrder\n        isActive\n        updatedAt\n      }\n      success\n      message\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation UpdateAssessmentSection($input: UpdateSectionInput!) {\n    updateAssessmentSection(input: $input) {\n      section {\n        id\n        name\n        description\n        displayOrder\n        isActive\n        updatedAt\n      }\n      success\n      message\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateAssessmentSection($input: UpdateSectionInput!) {\n    updateAssessmentSection(input: $input) {\n      section {\n        id\n        name\n        description\n        displayOrder\n        isActive\n        updatedAt\n      }\n      success\n      message\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query GetUsersWithAssessment {\n    usersWithAssessment {\n      users {\n        userId\n        userName\n        userEmail\n        sessionId\n        resultId\n        status\n        startedAt\n        completedAt\n        expiresAt\n        totalScore\n        interpretationLabel\n      }\n      totalCount\n      completedCount\n      inProgressCount\n    }\n  }\n"): (typeof documents)["\n  query GetUsersWithAssessment {\n    usersWithAssessment {\n      users {\n        userId\n        userName\n        userEmail\n        sessionId\n        resultId\n        status\n        startedAt\n        completedAt\n        expiresAt\n        totalScore\n        interpretationLabel\n      }\n      totalCount\n      completedCount\n      inProgressCount\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query CurrentUser {\n    currentUser {\n      id\n      ...Lite_User\n    }\n  }\n"): (typeof documents)["\n  query CurrentUser {\n    currentUser {\n      id\n      ...Lite_User\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation forgotPassword($input: ForgotPasswordInput!) {\n    forgotPassword(input: $input) {\n      success\n    }\n  }\n"): (typeof documents)["\n  mutation forgotPassword($input: ForgotPasswordInput!) {\n    forgotPassword(input: $input) {\n      success\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\nfragment Lite_User on User {\n  id\n  name\n  email\n  age\n  gender\n  type\n  isAdmin\n}\n"): (typeof documents)["\nfragment Lite_User on User {\n  id\n  name\n  email\n  age\n  gender\n  type\n  isAdmin\n}\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\nmutation login($input: LoginInput!) {\n  login(input: $input) {\n    token\n    user {\n      ...Lite_User\n    }\n  }\n}\n"): (typeof documents)["\nmutation login($input: LoginInput!) {\n  login(input: $input) {\n    token\n    user {\n      ...Lite_User\n    }\n  }\n}\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation Logout {\n    logout {\n      success\n    }\n  }\n"): (typeof documents)["\n  mutation Logout {\n    logout {\n      success\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation resetPassword($input: ResetPasswordInput!) {\n    resetPassword(input: $input) {\n      success\n    }\n  }\n"): (typeof documents)["\n  mutation resetPassword($input: ResetPasswordInput!) {\n    resetPassword(input: $input) {\n      success\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation Register($input: RegisterInput!) {\n    register(input: $input) {\n      token\n      user {\n        id\n        ...Lite_User\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation Register($input: RegisterInput!) {\n    register(input: $input) {\n      token\n      user {\n        id\n        ...Lite_User\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query CheckPaymentStatus {\n    currentUserPaymentStatus {\n      hasPaid\n      paymentId\n      status\n      amountInr\n      createdAt\n    }\n  }\n"): (typeof documents)["\n  query CheckPaymentStatus {\n    currentUserPaymentStatus {\n      hasPaid\n      paymentId\n      status\n      amountInr\n      createdAt\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation CreatePaymentOrder {\n    createPaymentOrder(input: {}) {\n      orderId\n      amount\n      currency\n      razorpayKeyId\n    }\n  }\n"): (typeof documents)["\n  mutation CreatePaymentOrder {\n    createPaymentOrder(input: {}) {\n      orderId\n      amount\n      currency\n      razorpayKeyId\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation VerifyPayment(\n    $orderId: String!\n    $paymentId: String!\n    $signature: String!\n  ) {\n    verifyPayment(\n      input: {\n        orderId: $orderId\n        paymentId: $paymentId\n        signature: $signature\n      }\n    ) {\n      success\n      paymentId\n      message\n    }\n  }\n"): (typeof documents)["\n  mutation VerifyPayment(\n    $orderId: String!\n    $paymentId: String!\n    $signature: String!\n  ) {\n    verifyPayment(\n      input: {\n        orderId: $orderId\n        paymentId: $paymentId\n        signature: $signature\n      }\n    ) {\n      success\n      paymentId\n      message\n    }\n  }\n"];
+
+export function graphql(source: string) {
+  return (documents as any)[source] ?? {};
+}
+
+export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;
