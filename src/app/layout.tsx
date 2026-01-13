@@ -15,8 +15,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Silver Spring',
-  description: 'A platform for psychometric assessments',
+  title: 'Silver Spring - Retirement Transition Coaching',
+  description:
+    "India's first dedicated retirement transition coaching practice, helping you navigate life beyond finances.",
 };
 
 export default function RootLayout({
