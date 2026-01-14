@@ -12,7 +12,9 @@ export const useCompleteAssessment = () => {
       onCompleted: (data) => {
         if (data.completeAssessment?.success) {
           clearCurrentSession();
-          toast.success('Assessment completed! Results have been emailed to you.');
+          toast.success(data.completeAssessment?.message || 'Assessment completed! Results have been emailed to you.');
+        } else {
+          toast.error(data.completeAssessment?.message || 'Failed to complete assessment. Please try again or contact support.');
         }
       },
       onError: (error) => {
