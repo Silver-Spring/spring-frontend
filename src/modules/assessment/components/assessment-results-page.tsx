@@ -6,9 +6,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Progress } from '@/components/ui/progress';
 import { Spinner } from '@/components/ui/spinner';
 import { useAssessmentResults } from '@/modules/assessment/hooks';
+import { downloadAssessmentReport } from '@/modules/assessment/utils/download-pdf';
 import { ArrowLeft, Download, Mail } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 interface AssessmentResultsPageProps {
   resultId: string;
@@ -34,15 +35,19 @@ export const AssessmentResultsPage = ({ resultId }: AssessmentResultsPageProps) 
   const router = useRouter();
   const searchParams = useSearchParams();
   const { result, loading } = useAssessmentResults(resultId);
+  const [downloading, setDownloading] = useState(false);
 
-  // Determine if admin is viewing this page
   const isAdminView = useMemo(() => searchParams.get('from') === 'admin', [searchParams]);
   const backPath = isAdminView ? '/admin/assessment' : '/dashboard';
 
-  const handleDownloadPDF = () => {
-    if (result?.pdfPath) {
-      // Assuming pdfPath is a relative or absolute URL
-      window.open(result.pdfPath, '_blank');
+  const handleDownloadPDF = async () => {
+    if (!result?.id) return;
+
+    setDownloading(true);
+    try {
+      await downloadAssessmentReport(result.id);
+    } finally {
+      setDownloading(false);
     }
   };
 
@@ -160,9 +165,18 @@ export const AssessmentResultsPage = ({ resultId }: AssessmentResultsPageProps) 
           {/* Actions */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             {result.pdfPath && (
-              <Button onClick={handleDownloadPDF} size="lg">
-                <Download className="mr-2 size-4" />
-                Download PDF Report
+              <Button onClick={handleDownloadPDF} size="lg" disabled={downloading}>
+                {downloading ? (
+                  <>
+                    <Spinner className="mr-2 size-4" />
+                    Downloading...
+                  </>
+                ) : (
+                  <>
+                    <Download className="mr-2 size-4" />
+                    Download PDF Report
+                  </>
+                )}
               </Button>
             )}
             <Button variant="outline" onClick={() => router.push(backPath)} size="lg">
