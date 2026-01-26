@@ -89,7 +89,7 @@ export default function HomePage() {
               )}
               {isLoggedIn && (
                 <Button asChild size="lg">
-                  <Link href="/dashboard">Go to Dashboard</Link>
+                  <Link href="/dashboard">Take the Assesment</Link>
                 </Button>
               )}
             </section>
