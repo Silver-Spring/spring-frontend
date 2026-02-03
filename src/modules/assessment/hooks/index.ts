@@ -6,6 +6,7 @@ export * from './use-session-questions';
 export * from './use-assessment-progress';
 export * from './use-assessment-results';
 export * from './use-resend-report';
+export * from './use-download-report';
 export * from './use-admin-stats';
 export * from './use-assessment-status';
 // Batch operations

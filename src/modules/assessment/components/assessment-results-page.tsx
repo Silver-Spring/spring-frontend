@@ -5,11 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Spinner } from '@/components/ui/spinner';
-import { useAssessmentResults } from '@/modules/assessment/hooks';
-import { downloadAssessmentReport } from '@/modules/assessment/utils/download-pdf';
-import { ArrowLeft, Download, Mail } from 'lucide-react';
+import { useAssessmentResults, useDownloadReport } from '@/modules/assessment/hooks';
+import { ArrowLeft, Download, Loader2, Mail } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
 interface AssessmentResultsPageProps {
   resultId: string;
@@ -35,20 +34,14 @@ export const AssessmentResultsPage = ({ resultId }: AssessmentResultsPageProps) 
   const router = useRouter();
   const searchParams = useSearchParams();
   const { result, loading } = useAssessmentResults(resultId);
-  const [downloading, setDownloading] = useState(false);
+  const { downloadReport, isDownloading, isGenerating } = useDownloadReport();
 
   const isAdminView = useMemo(() => searchParams.get('from') === 'admin', [searchParams]);
   const backPath = isAdminView ? '/admin/assessment' : '/dashboard';
 
   const handleDownloadPDF = async () => {
     if (!result?.id) return;
-
-    setDownloading(true);
-    try {
-      await downloadAssessmentReport(result.id);
-    } finally {
-      setDownloading(false);
-    }
+    await downloadReport({ resultId: result.id });
   };
 
   if (loading) {
@@ -164,21 +157,19 @@ export const AssessmentResultsPage = ({ resultId }: AssessmentResultsPageProps) 
 
           {/* Actions */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            {result.pdfPath && (
-              <Button onClick={handleDownloadPDF} size="lg" disabled={downloading}>
-                {downloading ? (
-                  <>
-                    <Spinner className="mr-2 size-4" />
-                    Downloading...
-                  </>
-                ) : (
-                  <>
-                    <Download className="mr-2 size-4" />
-                    Download PDF Report
-                  </>
-                )}
-              </Button>
-            )}
+            <Button onClick={handleDownloadPDF} size="lg" disabled={isDownloading}>
+              {isDownloading ? (
+                <>
+                  <Loader2 className="mr-2 size-4 animate-spin" />
+                  {isGenerating ? 'Generating...' : 'Downloading...'}
+                </>
+              ) : (
+                <>
+                  <Download className="mr-2 size-4" />
+                  Download PDF Report
+                </>
+              )}
+            </Button>
             <Button variant="outline" onClick={() => router.push(backPath)} size="lg">
               Return to {isAdminView ? 'Admin Dashboard' : 'Dashboard'}
             </Button>
