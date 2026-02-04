@@ -59,7 +59,7 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<'div'
                       <FormControl>
                         <Input
                           id="name"
-                          placeholder="John Doe"
+                          placeholder="Jamie Smith"
                           type="text"
                           autoComplete="name"
                           {...field}
@@ -78,7 +78,7 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<'div'
                       <FormControl>
                         <Input
                           id="email"
-                          placeholder="johndoe@mail.com"
+                          placeholder="jamiesmith@mail.com"
                           type="email"
                           autoComplete="email"
                           {...field}
@@ -98,7 +98,7 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<'div'
                         <FormControl>
                           <Input
                             id="age"
-                            placeholder="25"
+                            placeholder="54"
                             type="number"
                             min="0"
                             max="150"

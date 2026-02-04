@@ -50,7 +50,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
                       <FormControl>
                         <Input
                           id="email"
-                          placeholder="johndoe@mail.com"
+                          placeholder="jamiesmith@mail.com"
                           type="email"
                           autoComplete="email"
                           {...field}
