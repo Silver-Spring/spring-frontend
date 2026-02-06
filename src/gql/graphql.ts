@@ -16,6 +16,12 @@ export type Scalars = {
   Float: { input: number; output: number; }
   /** A floating point number that requires more precision than IEEE 754 binary 64 */
   BigFloat: { input: any; output: any; }
+  /**
+   * A signed eight-byte integer. The upper big integer values are greater than the
+   * max value for a JavaScript number. Therefore all big integers will be output as
+   * strings and not numbers.
+   */
+  BigInt: { input: any; output: any; }
   /** A location in a connection that can be used for resuming pagination. */
   Cursor: { input: any; output: any; }
   /** The day, does not include a time. */
@@ -3322,12 +3328,17 @@ export type Query = {
    * which can only query top level fields if they are in a particular form.
    */
   query: Query;
+  reminderEmail?: Maybe<ReminderEmail>;
+  /** Reads and enables pagination through a set of `ReminderEmail`. */
+  reminderEmails?: Maybe<ReminderEmailsConnection>;
   /**
    * Get score distribution across ranges (admin only)
    * Returns count and percentage for each score range: 0-20, 21-40, 41-60, 61-80, 81-100
    */
   scoreDistribution?: Maybe<ScoreDistributionPayload>;
   user?: Maybe<User>;
+  /** Reads and enables pagination through a set of `UserReminderStat`. */
+  userReminderStats?: Maybe<UserReminderStatsConnection>;
   /** Reads and enables pagination through a set of `User`. */
   users?: Maybe<UsersConnection>;
   /**
@@ -3638,8 +3649,37 @@ export type QueryPaymentsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryReminderEmailArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryReminderEmailsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<ReminderEmailCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<ReminderEmailsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryUserArgs = {
   id: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryUserReminderStatsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<UserReminderStatsOrderBy>>;
 };
 
 
@@ -3695,6 +3735,113 @@ export type RegisterPayload = {
   token: Scalars['String']['output'];
   user: User;
 };
+
+/** Tracks reminder emails sent to users who haven't completed payment or assessment */
+export type ReminderEmail = {
+  __typename?: 'ReminderEmail';
+  createdAt: Scalars['Datetime']['output'];
+  emailSentAt: Scalars['Datetime']['output'];
+  emailSubject: Scalars['String']['output'];
+  emailTemplate: Scalars['String']['output'];
+  id: Scalars['UUID']['output'];
+  /** Additional data like email open status, click tracking, etc. */
+  metadata?: Maybe<Scalars['JSON']['output']>;
+  /** Type of reminder: no_payment_attempt, payment_abandoned, payment_failed, paid_no_test, test_incomplete */
+  reminderType: ReminderType;
+  /** Reads a single `User` that is related to this `ReminderEmail`. */
+  user?: Maybe<User>;
+  userId: Scalars['UUID']['output'];
+};
+
+/**
+ * A condition to be used against `ReminderEmail` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type ReminderEmailCondition = {
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `reminderType` field. */
+  reminderType?: InputMaybe<ReminderType>;
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** The fields on `reminderEmail` to look up the row to update. */
+export type ReminderEmailOnReminderEmailForReminderEmailsUserIdFkeyUsingReminderEmailsPkeyUpdate = {
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `reminderEmail` being updated. */
+  patch: UpdateReminderEmailOnReminderEmailForReminderEmailsUserIdFkeyPatch;
+};
+
+/** The fields on `reminderEmail` to look up the row to connect. */
+export type ReminderEmailReminderEmailsPkeyConnect = {
+  id: Scalars['UUID']['input'];
+};
+
+/** A connection to a list of `ReminderEmail` values. */
+export type ReminderEmailsConnection = {
+  __typename?: 'ReminderEmailsConnection';
+  /** A list of edges which contains the `ReminderEmail` and cursor to aid in pagination. */
+  edges: Array<ReminderEmailsEdge>;
+  /** A list of `ReminderEmail` objects. */
+  nodes: Array<ReminderEmail>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `ReminderEmail` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `ReminderEmail` edge in the connection. */
+export type ReminderEmailsEdge = {
+  __typename?: 'ReminderEmailsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `ReminderEmail` at the end of the edge. */
+  node: ReminderEmail;
+};
+
+/** Methods to use when ordering `ReminderEmail`. */
+export enum ReminderEmailsOrderBy {
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  ReminderTypeAsc = 'REMINDER_TYPE_ASC',
+  ReminderTypeDesc = 'REMINDER_TYPE_DESC',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC'
+}
+
+/** Input for the nested mutation of `user` in the `ReminderEmailInput` mutation. */
+export type ReminderEmailsUserIdFkeyInput = {
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  connectById?: InputMaybe<UserUsersPkeyConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteById?: InputMaybe<UserUsersPkeyDelete>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateById?: InputMaybe<UserOnReminderEmailForReminderEmailsUserIdFkeyUsingUsersPkeyUpdate>;
+};
+
+/** Input for the nested mutation of `reminderEmail` in the `UserInput` mutation. */
+export type ReminderEmailsUserIdFkeyInverseInput = {
+  /** The primary key(s) for `reminderEmail` for the far side of the relationship. */
+  connectById?: InputMaybe<Array<ReminderEmailReminderEmailsPkeyConnect>>;
+  /** The primary key(s) and patch data for `reminderEmail` for the far side of the relationship. */
+  updateById?: InputMaybe<Array<ReminderEmailOnReminderEmailForReminderEmailsUserIdFkeyUsingReminderEmailsPkeyUpdate>>;
+};
+
+export enum ReminderType {
+  NoPaymentAttempt = 'NO_PAYMENT_ATTEMPT',
+  PaidNoTest = 'PAID_NO_TEST',
+  PaymentAbandoned = 'PAYMENT_ABANDONED',
+  PaymentFailed = 'PAYMENT_FAILED',
+  TestIncomplete = 'TEST_INCOMPLETE'
+}
 
 export type ResendReportInput = {
   resultId: Scalars['UUID']['input'];
@@ -4052,11 +4199,14 @@ export type User = {
   gender: Scalars['String']['output'];
   id: Scalars['UUID']['output'];
   isAdmin: Scalars['Boolean']['output'];
+  /** User email verification status. Defaults to true until email verification is implemented. Set to false when two-factor authentication or email verification is added. */
   isVerified: Scalars['Boolean']['output'];
   name?: Maybe<Scalars['String']['output']>;
   password?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `Payment`. */
   payments: PaymentsConnection;
+  /** Reads and enables pagination through a set of `ReminderEmail`. */
+  reminderEmails: ReminderEmailsConnection;
   type: Scalars['String']['output'];
   updatedAt: Scalars['Datetime']['output'];
 };
@@ -4092,6 +4242,17 @@ export type UserPaymentsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PaymentsOrderBy>>;
+};
+
+
+export type UserReminderEmailsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<ReminderEmailCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<ReminderEmailsOrderBy>>;
 };
 
 export type UserAssessmentInfo = {
@@ -4137,10 +4298,12 @@ export type UserInput = {
   gender: Scalars['String']['input'];
   id?: InputMaybe<Scalars['UUID']['input']>;
   isAdmin?: InputMaybe<Scalars['Boolean']['input']>;
+  /** User email verification status. Defaults to true until email verification is implemented. Set to false when two-factor authentication or email verification is added. */
   isVerified?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   password?: InputMaybe<Scalars['String']['input']>;
   paymentsUsingId?: InputMaybe<PaymentsUserIdFkeyInverseInput>;
+  reminderEmailsUsingId?: InputMaybe<ReminderEmailsUserIdFkeyInverseInput>;
   type?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
@@ -4166,6 +4329,13 @@ export type UserOnPaymentForPaymentsUserIdFkeyUsingUsersPkeyUpdate = {
   patch: UpdateUserOnPaymentForPaymentsUserIdFkeyPatch;
 };
 
+/** The fields on `user` to look up the row to update. */
+export type UserOnReminderEmailForReminderEmailsUserIdFkeyUsingUsersPkeyUpdate = {
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UpdateUserOnReminderEmailForReminderEmailsUserIdFkeyPatch;
+};
+
 /** Represents an update to a `User`. Fields that are set will be updated. */
 export type UserPatch = {
   age?: InputMaybe<Scalars['Int']['input']>;
@@ -4176,10 +4346,12 @@ export type UserPatch = {
   gender?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
   isAdmin?: InputMaybe<Scalars['Boolean']['input']>;
+  /** User email verification status. Defaults to true until email verification is implemented. Set to false when two-factor authentication or email verification is added. */
   isVerified?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   password?: InputMaybe<Scalars['String']['input']>;
   paymentsUsingId?: InputMaybe<PaymentsUserIdFkeyInverseInput>;
+  reminderEmailsUsingId?: InputMaybe<ReminderEmailsUserIdFkeyInverseInput>;
   type?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
@@ -4192,6 +4364,43 @@ export type UserPaymentStatusPayload = {
   paymentId?: Maybe<Scalars['UUID']['output']>;
   status?: Maybe<Scalars['String']['output']>;
 };
+
+/** Aggregated reminder statistics per user and reminder type */
+export type UserReminderStat = {
+  __typename?: 'UserReminderStat';
+  firstReminderSent?: Maybe<Scalars['Datetime']['output']>;
+  lastReminderSent?: Maybe<Scalars['Datetime']['output']>;
+  reminderCount?: Maybe<Scalars['BigInt']['output']>;
+  reminderType?: Maybe<ReminderType>;
+  userId?: Maybe<Scalars['UUID']['output']>;
+};
+
+/** A connection to a list of `UserReminderStat` values. */
+export type UserReminderStatsConnection = {
+  __typename?: 'UserReminderStatsConnection';
+  /** A list of edges which contains the `UserReminderStat` and cursor to aid in pagination. */
+  edges: Array<UserReminderStatsEdge>;
+  /** A list of `UserReminderStat` objects. */
+  nodes: Array<UserReminderStat>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `UserReminderStat` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `UserReminderStat` edge in the connection. */
+export type UserReminderStatsEdge = {
+  __typename?: 'UserReminderStatsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `UserReminderStat` at the end of the edge. */
+  node: UserReminderStat;
+};
+
+/** Methods to use when ordering `UserReminderStat`. */
+export enum UserReminderStatsOrderBy {
+  Natural = 'NATURAL'
+}
 
 /** The fields on `user` to look up the row to connect. */
 export type UserUsersPkeyConnect = {
@@ -4632,6 +4841,11 @@ export type UpdatePaymentOnPaymentForPaymentsUserIdFkeyPatch = {
   userToUserId?: InputMaybe<PaymentsUserIdFkeyInput>;
 };
 
+/** An object where the defined keys will be set on the `reminderEmail` being updated. */
+export type UpdateReminderEmailOnReminderEmailForReminderEmailsUserIdFkeyPatch = {
+  userToUserId?: InputMaybe<ReminderEmailsUserIdFkeyInput>;
+};
+
 /** An object where the defined keys will be set on the `user` being updated. */
 export type UpdateUserOnAssessmentResultForAssessmentResultsUserIdFkeyPatch = {
   age?: InputMaybe<Scalars['Int']['input']>;
@@ -4642,10 +4856,12 @@ export type UpdateUserOnAssessmentResultForAssessmentResultsUserIdFkeyPatch = {
   gender?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
   isAdmin?: InputMaybe<Scalars['Boolean']['input']>;
+  /** User email verification status. Defaults to true until email verification is implemented. Set to false when two-factor authentication or email verification is added. */
   isVerified?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   password?: InputMaybe<Scalars['String']['input']>;
   paymentsUsingId?: InputMaybe<PaymentsUserIdFkeyInverseInput>;
+  reminderEmailsUsingId?: InputMaybe<ReminderEmailsUserIdFkeyInverseInput>;
   type?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
@@ -4660,10 +4876,12 @@ export type UpdateUserOnAssessmentSessionForAssessmentSessionsUserIdFkeyPatch = 
   gender?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
   isAdmin?: InputMaybe<Scalars['Boolean']['input']>;
+  /** User email verification status. Defaults to true until email verification is implemented. Set to false when two-factor authentication or email verification is added. */
   isVerified?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   password?: InputMaybe<Scalars['String']['input']>;
   paymentsUsingId?: InputMaybe<PaymentsUserIdFkeyInverseInput>;
+  reminderEmailsUsingId?: InputMaybe<ReminderEmailsUserIdFkeyInverseInput>;
   type?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
@@ -4678,10 +4896,32 @@ export type UpdateUserOnPaymentForPaymentsUserIdFkeyPatch = {
   gender?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
   isAdmin?: InputMaybe<Scalars['Boolean']['input']>;
+  /** User email verification status. Defaults to true until email verification is implemented. Set to false when two-factor authentication or email verification is added. */
   isVerified?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   password?: InputMaybe<Scalars['String']['input']>;
   paymentsUsingId?: InputMaybe<PaymentsUserIdFkeyInverseInput>;
+  reminderEmailsUsingId?: InputMaybe<ReminderEmailsUserIdFkeyInverseInput>;
+  type?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** An object where the defined keys will be set on the `user` being updated. */
+export type UpdateUserOnReminderEmailForReminderEmailsUserIdFkeyPatch = {
+  age?: InputMaybe<Scalars['Int']['input']>;
+  assessmentResultsUsingId?: InputMaybe<AssessmentResultsUserIdFkeyInverseInput>;
+  assessmentSessionsUsingId?: InputMaybe<AssessmentSessionsUserIdFkeyInverseInput>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  gender?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  isAdmin?: InputMaybe<Scalars['Boolean']['input']>;
+  /** User email verification status. Defaults to true until email verification is implemented. Set to false when two-factor authentication or email verification is added. */
+  isVerified?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  password?: InputMaybe<Scalars['String']['input']>;
+  paymentsUsingId?: InputMaybe<PaymentsUserIdFkeyInverseInput>;
+  reminderEmailsUsingId?: InputMaybe<ReminderEmailsUserIdFkeyInverseInput>;
   type?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };

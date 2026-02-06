@@ -106,15 +106,11 @@ export const AssessmentResultsPage = ({ resultId }: AssessmentResultsPageProps) 
               <CardDescription className="text-lg">out of 500</CardDescription>
             </CardHeader>
             <CardContent className="text-center">
-              {result.isEmailed ? (
+              {result.isEmailed && (
                 <div className="flex items-center justify-center gap-2 text-green-600 dark:text-green-400">
                   <Mail className="size-4" />
                   <span className="text-sm">Results have been emailed to you</span>
                 </div>
-              ) : (
-                <p className="text-sm text-muted-foreground">
-                  Results will be emailed to you shortly
-                </p>
               )}
             </CardContent>
           </Card>
