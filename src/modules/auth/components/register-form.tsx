@@ -39,16 +39,14 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<'div'
 
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
-      <Card>
+      <Card className="p-16 rounded-[50px] gap-10 shadow-none">
         <CardHeader>
-          <CardTitle>Create your account</CardTitle>
-          <CardDescription>
-            Enter your email and password to register a new account.
-          </CardDescription>
+          <CardTitle className="text-3xl">Create your account</CardTitle>
+          <CardDescription>Enter your email and password to register a new account</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
+            <form onSubmit={form.handleSubmit(handleSubmit)}>
               <div className="grid gap-4">
                 <FormField
                   control={form.control}
@@ -170,7 +168,7 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<'div'
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full" disabled={loading}>
+                <Button type="submit" className="w-full mt-6" disabled={loading}>
                   Register
                 </Button>
 
@@ -193,9 +191,9 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<'div'
               </div>
             </form>
           </Form>
-          <div className="mt-4 text-center text-sm">
+          <div className="mt-6 text-center text-sm">
             Already have an account?{' '}
-            <Link href="/auth/login" className="underline">
+            <Link href="/auth/login" className="underline text-primary font-semibold">
               Sign in
             </Link>
           </div>

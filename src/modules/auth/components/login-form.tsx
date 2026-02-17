@@ -32,14 +32,14 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
 
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
-      <Card>
+      <Card className="p-16 rounded-[50px] gap-10 shadow-none">
         <CardHeader>
-          <CardTitle>Login to your account</CardTitle>
-          <CardDescription>Enter your email and password to login to your account.</CardDescription>
+          <CardTitle className="text-3xl">Login to your account</CardTitle>
+          <CardDescription>Enter your email and password to login to your account</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
+            <form onSubmit={form.handleSubmit(handleSubmit)}>
               <div className="grid gap-4">
                 <FormField
                   control={form.control}
@@ -69,7 +69,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
                         <FormLabel htmlFor="password">Password</FormLabel>
                         <Link
                           href="/auth/forgot-password"
-                          className="ml-auto inline-block text-sm underline"
+                          className="ml-auto inline-block text-sm underline text-primary font-semibold"
                         >
                           Forgot your password?
                         </Link>
@@ -86,7 +86,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full" disabled={loading}>
+                <Button type="submit" className="w-full mt-6" disabled={loading}>
                   Login
                 </Button>
 
@@ -109,9 +109,9 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
               </div>
             </form>
           </Form>
-          <div className="mt-4 text-center text-sm">
+          <div className="mt-6 text-center text-sm">
             Don&apos;t have an account?{' '}
-            <Link href="/auth/register" className="underline">
+            <Link href="/auth/register" className="underline text-primary font-semibold">
               Sign up
             </Link>
           </div>
