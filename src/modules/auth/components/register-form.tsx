@@ -11,6 +11,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { PhoneInput } from '@/components/ui/phone-input';
 import { PasswordInput } from '@/components/ui/password-input';
 import {
   Select,
@@ -83,6 +84,19 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<'div'
                           autoComplete="email"
                           {...field}
                         />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="phoneNumber"
+                  render={({ field }) => (
+                    <FormItem className="grid gap-2">
+                      <FormLabel htmlFor="phoneNumber">Phone Number</FormLabel>
+                      <FormControl>
+                        <PhoneInput id="phoneNumber" placeholder="9876543210" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

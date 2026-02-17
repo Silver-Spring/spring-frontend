@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+const phoneRegex = /^[6-9]\d{9}$/;
+
 export const registerSchema = z
   .object({
     name: z
@@ -25,6 +27,9 @@ export const registerSchema = z
     gender: z.enum(['male', 'female', 'other', 'prefer_not_to_say'], {
       error: 'Please select a valid gender',
     }),
+    phoneNumber: z
+      .string()
+      .regex(phoneRegex, 'Please enter a valid 10-digit phone number'),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'Passwords do not match',

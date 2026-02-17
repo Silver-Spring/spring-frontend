@@ -19,7 +19,6 @@ export const useRegister = () => {
 
   const [register, { data, loading, error }] = useMutation(SignupDoc, {
     onCompleted: (data) => {
-      // Use readFragment to access the user data
       const user = data.register?.user
         ? client.cache.readFragment({
           id: client.cache.identify(data.register.user),
@@ -41,6 +40,7 @@ export const useRegister = () => {
           gender: user.gender,
           type: user.type,
           isAdmin: user.isAdmin,
+          phoneNumber: user.phoneNumber,
         });
       }
 
@@ -56,12 +56,8 @@ export const useRegister = () => {
     },
     onError: (error) => {
       console.error('Registration error:', error);
-      // Only show technical details in development
-      const isDev = process.env.NODE_ENV === 'development';
-      const errorMessage = isDev
-        ? `Registration failed. ${error.message}`
-        : 'Registration failed. Please try again.';
-      toast.error(errorMessage);
+
+      toast.error(error.message);
     },
   });
 
@@ -73,9 +69,15 @@ export const useRegister = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { confirmPassword: _confirmPassword, ...apiInput } = sanitizedInput;
 
+    // Prepend +91 country code to phone number if provided
+    const finalInput = {
+      ...apiInput,
+      phoneNumber: apiInput.phoneNumber ? `+91${apiInput.phoneNumber}` : undefined,
+    };
+
     register({
       variables: {
-        input: apiInput,
+        input: finalInput,
       },
     });
   };
@@ -91,6 +93,7 @@ export const useRegister = () => {
     confirmPassword: '',
     age: undefined as number | undefined,
     gender: undefined as 'male' | 'female' | 'other' | 'prefer_not_to_say' | undefined,
+    phoneNumber: '',
   };
 
   return {

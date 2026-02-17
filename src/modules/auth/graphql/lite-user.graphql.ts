@@ -6,6 +6,7 @@ fragment Lite_User on User {
   name
   email
   age
+  phoneNumber
   gender
   type
   isAdmin

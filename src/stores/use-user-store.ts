@@ -9,6 +9,7 @@ interface User {
   gender: string;
   type: string;
   isAdmin: boolean;
+  phoneNumber?: string | null;
 }
 
 interface UserState {

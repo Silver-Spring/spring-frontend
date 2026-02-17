@@ -42,11 +42,12 @@ type Documents = {
     "\n  query GetUsersWithAssessment {\n    usersWithAssessment {\n      users {\n        userId\n        userName\n        userEmail\n        sessionId\n        resultId\n        status\n        startedAt\n        completedAt\n        expiresAt\n        totalScore\n        interpretationLabel\n      }\n      totalCount\n      completedCount\n      inProgressCount\n    }\n  }\n": typeof types.GetUsersWithAssessmentDocument,
     "\n  query CurrentUser {\n    currentUser {\n      id\n      ...Lite_User\n    }\n  }\n": typeof types.CurrentUserDocument,
     "\n  mutation forgotPassword($input: ForgotPasswordInput!) {\n    forgotPassword(input: $input) {\n      success\n    }\n  }\n": typeof types.ForgotPasswordDocument,
-    "\nfragment Lite_User on User {\n  id\n  name\n  email\n  age\n  gender\n  type\n  isAdmin\n}\n": typeof types.Lite_UserFragmentDoc,
+    "\nfragment Lite_User on User {\n  id\n  name\n  email\n  age\n  phoneNumber\n  gender\n  type\n  isAdmin\n}\n": typeof types.Lite_UserFragmentDoc,
     "\nmutation login($input: LoginInput!) {\n  login(input: $input) {\n    token\n    user {\n      ...Lite_User\n    }\n  }\n}\n": typeof types.LoginDocument,
     "\n  mutation Logout {\n    logout {\n      success\n    }\n  }\n": typeof types.LogoutDocument,
     "\n  mutation resetPassword($input: ResetPasswordInput!) {\n    resetPassword(input: $input) {\n      success\n    }\n  }\n": typeof types.ResetPasswordDocument,
     "\n  mutation Register($input: RegisterInput!) {\n    register(input: $input) {\n      token\n      user {\n        id\n        ...Lite_User\n      }\n    }\n  }\n": typeof types.RegisterDocument,
+    "\n  mutation UpdatePhoneNumber($userId: UUID!, $phoneNumber: String!) {\n    updateUser(input: { id: $userId, patch: { phoneNumber: $phoneNumber } }) {\n      user {\n        id\n        ...Lite_User\n      }\n    }\n  }\n": typeof types.UpdatePhoneNumberDocument,
     "\n  query CheckPaymentStatus {\n    currentUserPaymentStatus {\n      hasPaid\n      paymentId\n      status\n      amountInr\n      createdAt\n    }\n  }\n": typeof types.CheckPaymentStatusDocument,
     "\n  mutation CreatePaymentOrder {\n    createPaymentOrder(input: {}) {\n      orderId\n      amount\n      currency\n      razorpayKeyId\n    }\n  }\n": typeof types.CreatePaymentOrderDocument,
     "\n  mutation VerifyPayment(\n    $orderId: String!\n    $paymentId: String!\n    $signature: String!\n  ) {\n    verifyPayment(\n      input: {\n        orderId: $orderId\n        paymentId: $paymentId\n        signature: $signature\n      }\n    ) {\n      success\n      paymentId\n      message\n    }\n  }\n": typeof types.VerifyPaymentDocument,
@@ -80,11 +81,12 @@ const documents: Documents = {
     "\n  query GetUsersWithAssessment {\n    usersWithAssessment {\n      users {\n        userId\n        userName\n        userEmail\n        sessionId\n        resultId\n        status\n        startedAt\n        completedAt\n        expiresAt\n        totalScore\n        interpretationLabel\n      }\n      totalCount\n      completedCount\n      inProgressCount\n    }\n  }\n": types.GetUsersWithAssessmentDocument,
     "\n  query CurrentUser {\n    currentUser {\n      id\n      ...Lite_User\n    }\n  }\n": types.CurrentUserDocument,
     "\n  mutation forgotPassword($input: ForgotPasswordInput!) {\n    forgotPassword(input: $input) {\n      success\n    }\n  }\n": types.ForgotPasswordDocument,
-    "\nfragment Lite_User on User {\n  id\n  name\n  email\n  age\n  gender\n  type\n  isAdmin\n}\n": types.Lite_UserFragmentDoc,
+    "\nfragment Lite_User on User {\n  id\n  name\n  email\n  age\n  phoneNumber\n  gender\n  type\n  isAdmin\n}\n": types.Lite_UserFragmentDoc,
     "\nmutation login($input: LoginInput!) {\n  login(input: $input) {\n    token\n    user {\n      ...Lite_User\n    }\n  }\n}\n": types.LoginDocument,
     "\n  mutation Logout {\n    logout {\n      success\n    }\n  }\n": types.LogoutDocument,
     "\n  mutation resetPassword($input: ResetPasswordInput!) {\n    resetPassword(input: $input) {\n      success\n    }\n  }\n": types.ResetPasswordDocument,
     "\n  mutation Register($input: RegisterInput!) {\n    register(input: $input) {\n      token\n      user {\n        id\n        ...Lite_User\n      }\n    }\n  }\n": types.RegisterDocument,
+    "\n  mutation UpdatePhoneNumber($userId: UUID!, $phoneNumber: String!) {\n    updateUser(input: { id: $userId, patch: { phoneNumber: $phoneNumber } }) {\n      user {\n        id\n        ...Lite_User\n      }\n    }\n  }\n": types.UpdatePhoneNumberDocument,
     "\n  query CheckPaymentStatus {\n    currentUserPaymentStatus {\n      hasPaid\n      paymentId\n      status\n      amountInr\n      createdAt\n    }\n  }\n": types.CheckPaymentStatusDocument,
     "\n  mutation CreatePaymentOrder {\n    createPaymentOrder(input: {}) {\n      orderId\n      amount\n      currency\n      razorpayKeyId\n    }\n  }\n": types.CreatePaymentOrderDocument,
     "\n  mutation VerifyPayment(\n    $orderId: String!\n    $paymentId: String!\n    $signature: String!\n  ) {\n    verifyPayment(\n      input: {\n        orderId: $orderId\n        paymentId: $paymentId\n        signature: $signature\n      }\n    ) {\n      success\n      paymentId\n      message\n    }\n  }\n": types.VerifyPaymentDocument,
@@ -219,7 +221,7 @@ export function graphql(source: "\n  mutation forgotPassword($input: ForgotPassw
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\nfragment Lite_User on User {\n  id\n  name\n  email\n  age\n  gender\n  type\n  isAdmin\n}\n"): (typeof documents)["\nfragment Lite_User on User {\n  id\n  name\n  email\n  age\n  gender\n  type\n  isAdmin\n}\n"];
+export function graphql(source: "\nfragment Lite_User on User {\n  id\n  name\n  email\n  age\n  phoneNumber\n  gender\n  type\n  isAdmin\n}\n"): (typeof documents)["\nfragment Lite_User on User {\n  id\n  name\n  email\n  age\n  phoneNumber\n  gender\n  type\n  isAdmin\n}\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -236,6 +238,10 @@ export function graphql(source: "\n  mutation resetPassword($input: ResetPasswor
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation Register($input: RegisterInput!) {\n    register(input: $input) {\n      token\n      user {\n        id\n        ...Lite_User\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation Register($input: RegisterInput!) {\n    register(input: $input) {\n      token\n      user {\n        id\n        ...Lite_User\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation UpdatePhoneNumber($userId: UUID!, $phoneNumber: String!) {\n    updateUser(input: { id: $userId, patch: { phoneNumber: $phoneNumber } }) {\n      user {\n        id\n        ...Lite_User\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation UpdatePhoneNumber($userId: UUID!, $phoneNumber: String!) {\n    updateUser(input: { id: $userId, patch: { phoneNumber: $phoneNumber } }) {\n      user {\n        id\n        ...Lite_User\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

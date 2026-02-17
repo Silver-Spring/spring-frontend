@@ -5,3 +5,4 @@ export * from './use-logout';
 export * from './use-register';
 export * from './use-forgot-password';
 export * from './use-reset-password';
+export * from './use-update-phone-number';

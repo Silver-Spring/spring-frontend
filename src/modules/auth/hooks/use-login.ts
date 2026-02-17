@@ -41,6 +41,7 @@ export const useLogin = () => {
           gender: user.gender,
           type: user.type,
           isAdmin: user.isAdmin,
+          phoneNumber: user.phoneNumber,
         });
       }
 
