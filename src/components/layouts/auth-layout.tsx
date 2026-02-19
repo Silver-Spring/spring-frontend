@@ -116,7 +116,7 @@ export function AuthLayout({
       // Default redirect logic
       if (forbidsLoggedIn || forbidsNotAdmin) {
         // User is logged in but shouldn't be here, or not admin
-        return effectiveIsLoggedIn ? '/' : '/auth/login';
+        return effectiveIsLoggedIn ? '/dashboard' : '/auth/login';
       }
 
       if (forbidsLoggedOut) {
@@ -124,7 +124,7 @@ export function AuthLayout({
         return `/auth/login?redirect=${encodeURIComponent(pathname)}`;
       }
 
-      return '/';
+      return '/dashboard';
     };
 
     const redirectPath = getRedirectPath();

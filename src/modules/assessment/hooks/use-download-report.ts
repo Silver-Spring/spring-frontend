@@ -49,7 +49,8 @@ export const useDownloadReport = () => {
           setIsGenerating(false);
 
           if (response.status === 401) {
-            window.location.href = '/auth/login';
+            const redirect = encodeURIComponent(window.location.pathname + window.location.search);
+            window.location.href = `/auth/login?redirect=${redirect}`;
             reject(new Error('Session expired. Please log in again.'));
             return;
           }
