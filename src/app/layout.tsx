@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://silverspring.com'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://assessment.silverspring.in'),
   title: {
     default: 'Silver Spring - Retirement Transition Coaching',
     template: '%s | Silver Spring',

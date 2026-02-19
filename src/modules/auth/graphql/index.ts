@@ -5,3 +5,4 @@ export * from './current-user.graphql';
 export * from './lite-user.graphql';
 export * from './forgot-password.graphql';
 export * from './reset-password.graphql';
+export * from './update-phone-number.graphql';

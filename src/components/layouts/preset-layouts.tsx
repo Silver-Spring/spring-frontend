@@ -9,7 +9,7 @@ import type { ReactNode } from 'react';
  */
 export function GuestOnlyLayout({ children }: { children: ReactNode }) {
   return (
-    <AuthLayout forbidWhen={AuthRestrict.LOGGED_IN} redirectTo="/">
+    <AuthLayout forbidWhen={AuthRestrict.LOGGED_IN} redirectTo="/dashboard">
       {children}
     </AuthLayout>
   );

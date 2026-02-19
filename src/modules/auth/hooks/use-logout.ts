@@ -28,9 +28,8 @@ export const useLogout = () => {
 
       toast.success('Logged out successfully');
 
-      // Refresh the router to invalidate Next.js cache and re-render
-      router.refresh();
-      router.replace('/');
+      // Redirect to the main website after logout
+      window.location.href = 'https://www.silverspring.in';
     },
     onError: (error) => {
       console.error('Logout error:', error);
