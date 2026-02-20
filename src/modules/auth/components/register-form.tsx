@@ -10,9 +10,9 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { PhoneInput } from '@/components/ui/phone-input';
+import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
 import { PasswordInput } from '@/components/ui/password-input';
+import { PhoneInput } from '@/components/ui/phone-input';
 import {
   Select,
   SelectContent,
@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { CalendarIcon, MailIcon, UserIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -56,13 +57,18 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<'div'
                     <FormItem className="grid gap-2">
                       <FormLabel htmlFor="name">Name</FormLabel>
                       <FormControl>
-                        <Input
-                          id="name"
-                          placeholder="Jamie Smith"
-                          type="text"
-                          autoComplete="name"
-                          {...field}
-                        />
+                        <InputGroup>
+                          <InputGroupAddon>
+                            <UserIcon />
+                          </InputGroupAddon>
+                          <InputGroupInput
+                            id="name"
+                            placeholder="Jamie Smith"
+                            type="text"
+                            autoComplete="name"
+                            {...field}
+                          />
+                        </InputGroup>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -75,13 +81,18 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<'div'
                     <FormItem className="grid gap-2">
                       <FormLabel htmlFor="email">Email</FormLabel>
                       <FormControl>
-                        <Input
-                          id="email"
-                          placeholder="jamiesmith@mail.com"
-                          type="email"
-                          autoComplete="email"
-                          {...field}
-                        />
+                        <InputGroup>
+                          <InputGroupAddon>
+                            <MailIcon />
+                          </InputGroupAddon>
+                          <InputGroupInput
+                            id="email"
+                            placeholder="jamiesmith@mail.com"
+                            type="email"
+                            autoComplete="email"
+                            {...field}
+                          />
+                        </InputGroup>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -108,16 +119,21 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<'div'
                       <FormItem className="grid gap-2">
                         <FormLabel htmlFor="age">Age</FormLabel>
                         <FormControl>
-                          <Input
-                            id="age"
-                            placeholder="54"
-                            type="number"
-                            min="0"
-                            max="150"
-                            className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                            {...field}
-                            onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
-                          />
+                          <InputGroup>
+                            <InputGroupAddon>
+                              <CalendarIcon />
+                            </InputGroupAddon>
+                            <InputGroupInput
+                              id="age"
+                              placeholder="54"
+                              type="number"
+                              min="0"
+                              max="150"
+                              className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                              {...field}
+                              onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                            />
+                          </InputGroup>
                         </FormControl>
                         <FormMessage />
                       </FormItem>

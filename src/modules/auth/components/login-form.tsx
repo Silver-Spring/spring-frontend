@@ -10,10 +10,11 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
 import { PasswordInput } from '@/components/ui/password-input';
 import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { MailIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -48,13 +49,18 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
                     <FormItem className="grid gap-2">
                       <FormLabel htmlFor="email">Email</FormLabel>
                       <FormControl>
-                        <Input
-                          id="email"
-                          placeholder="jamiesmith@mail.com"
-                          type="email"
-                          autoComplete="email"
-                          {...field}
-                        />
+                        <InputGroup>
+                          <InputGroupAddon>
+                            <MailIcon />
+                          </InputGroupAddon>
+                          <InputGroupInput
+                            id="email"
+                            placeholder="jamiesmith@mail.com"
+                            type="email"
+                            autoComplete="email"
+                            {...field}
+                          />
+                        </InputGroup>
                       </FormControl>
                       <FormMessage />
                     </FormItem>

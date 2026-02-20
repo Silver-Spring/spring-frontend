@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Spinner } from '@/components/ui/spinner';
+import { cn } from '@/lib/utils';
 import {
   useAssessmentProgress,
   useBatchSubmit,
@@ -290,155 +291,171 @@ export const AssessmentPage = ({ sessionId }: AssessmentPageProps) => {
   return (
     <ProtectedLayout>
       {() => (
-        <div className="min-h-screen bg-linear-to-b from-background to-muted/20">
-          {/* Progress Header */}
-          <div className="border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
-            <div className="container mx-auto px-4 py-4 max-w-3xl">
-              <div className="space-y-2">
-                <div className="flex justify-between items-center text-sm">
-                  <span className="font-medium">
-                    Questions {startQuestionNumber}-{endQuestionNumber} of {totalQuestions}
-                  </span>
-                  <span className="text-muted-foreground">{Math.round(progressPercentage)}%</span>
-                </div>
-                <Progress value={progressPercentage} className="h-1.5" />
-              </div>
-            </div>
-          </div>
-
+        <div className="min-h-screen bg-linear-to-b from-green-50/50 to-green-100/30">
           {/* Questions Container */}
-          <div className="container mx-auto px-4 py-12 max-w-3xl">
-            <div className="space-y-8">
-              {batch.questions.map((sessionQuestion, index) => {
-                const currentResponse = batchResponses.get(sessionQuestion.questionId);
-                const wasPreviouslyAnswered = previousAnswersMap.has(sessionQuestion.questionId);
-                const questionNumber = startQuestionNumber + index;
+          <div className="container mx-auto px-4 py-10 max-w-6xl">
+            <div className="bg-white rounded-[50px] p-10 md:p-16 lg:p-20 shadow-none">
+              {/* Progress Header */}
+              <div className="mb-8 pb-6 border-b">
+                <div className="flex flex-col gap-2">
+                  <div className="flex flex-row items-center w-full">
+                    <span className="text-sm font-medium text-foreground shrink-0">
+                      Question {startQuestionNumber}-{endQuestionNumber} of {totalQuestions}
+                    </span>
+                    <div className="flex-1 mx-4">
+                      <Progress value={progressPercentage} className="h-2" />
+                    </div>
+                    <span className="text-sm font-semibold text-foreground shrink-0">
+                      {Math.round(progressPercentage)}%
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-12">
+                {batch.questions.map((sessionQuestion, index) => {
+                  const currentResponse = batchResponses.get(sessionQuestion.questionId);
+                  const wasPreviouslyAnswered = previousAnswersMap.has(sessionQuestion.questionId);
+                  const questionNumber = startQuestionNumber + index;
 
-                return (
-                  <div
-                    key={sessionQuestion.id}
-                    className="bg-background rounded-lg border p-6 md:p-8 shadow-sm hover:shadow-md transition-shadow"
-                  >
-                    {/* Question Header */}
-                    <div className="mb-6">
-                      <div className="flex items-start gap-3">
-                        <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary text-sm font-semibold shrink-0">
-                          {questionNumber}
-                        </span>
-                        <h3 className="text-lg md:text-xl font-medium leading-relaxed flex-1">
-                          {sessionQuestion.questionText}
+                  return (
+                    <div key={sessionQuestion.id} className="space-y-6">
+                      {/* Question Header */}
+                      <div>
+                        <h3 className="text-base font-semibold text-foreground leading-relaxed">
+                          <span>{questionNumber}.</span> {sessionQuestion.questionText}
                         </h3>
                       </div>
-                    </div>
 
-                    {/* Response Scale */}
-                    <div className="space-y-6">
-                      {/* Value buttons grid */}
-                      <div className="grid grid-cols-10 gap-2">
-                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
-                          <Button
-                            key={num}
-                            type="button"
-                            variant={currentResponse === num ? 'default' : 'outline'}
-                            onClick={() => handleSliderChange(sessionQuestion.questionId, [num])}
-                            className={`aspect-square h-auto w-full p-0 ${
-                              currentResponse === num ? 'shadow-md scale-105' : ''
-                            }`}
-                          >
-                            {num}
-                          </Button>
-                        ))}
-                      </div>
-
-                      {/* Scale labels */}
-                      <div className="flex justify-between text-xs text-muted-foreground px-1">
-                        <span>Strongly Disagree</span>
-                        <span>Neutral</span>
-                        <span>Strongly Agree</span>
-                      </div>
-
-                      {/* Previously answered indicator */}
-                      {wasPreviouslyAnswered && (
-                        <div className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/20 px-3 py-2 rounded-md">
-                          <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
-                          </svg>
-                          <span>Previously answered • You can change your response</span>
+                      {/* Response Scale */}
+                      <div className="space-y-4">
+                        {/* Value buttons grid */}
+                        <div className="grid grid-cols-10 gap-2.5">
+                          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+                            <Button
+                              variant="outline"
+                              size="lg"
+                              key={num}
+                              type="button"
+                              onClick={() => handleSliderChange(sessionQuestion.questionId, [num])}
+                              className={cn(
+                                'aspect-square rounded-xl font-medium text-sm transition-all',
+                                currentResponse === num
+                                  ? 'bg-primary text-primary-foreground shadow-md scale-105 border-primary hover:bg-primary hover:border-primary hover:text-primary-foreground'
+                                  : 'bg-white border-2 border-gray-200 text-foreground hover:border-primary hover:bg-primary/10 hover:text-primary'
+                              )}
+                            >
+                              {num}
+                            </Button>
+                          ))}
                         </div>
-                      )}
+
+                        {/* Scale labels */}
+                        <div className="flex justify-between text-xs text-muted-foreground pt-2">
+                          <span>Strongly Disagree</span>
+                          <span>Neutral</span>
+                          <span>Strongly Agree</span>
+                        </div>
+
+                        {/* Previously answered indicator */}
+                        {wasPreviouslyAnswered && (
+                          <div className="flex items-center gap-2 text-xs text-primary bg-primary/5 px-3 py-2 rounded-lg mt-3">
+                            <svg
+                              className="w-3.5 h-3.5"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                              />
+                            </svg>
+                            <span>Previously Answered you can change your Response.</span>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
 
-            {/* Navigation */}
-            <div className="flex items-center justify-between mt-12 pt-8 border-t">
-              <Button
-                variant="outline"
-                size="lg"
-                onClick={handlePrevious}
-                disabled={currentBatchNumber === 1 || isNavigating || submitting || completing}
-                className="gap-2"
-              >
-                <ChevronLeft className="size-4" />
-                Previous
-              </Button>
-
-              {!allQuestionsAnswered ? (
-                <Button
-                  size="lg"
-                  onClick={handleNext}
-                  disabled={!allBatchQuestionsAnswered || isNavigating || submitting || completing}
-                  className="gap-2"
-                >
-                  {isNavigating || submitting ? (
-                    <>
-                      <Spinner className="size-4" />
-                      Saving...
-                    </>
-                  ) : (
-                    <>
-                      Next
-                      <ChevronRight className="size-4" />
-                    </>
-                  )}
-                </Button>
-              ) : (
-                <Button
-                  size="lg"
-                  onClick={handleCompleteAssessment}
-                  disabled={isNavigating || submitting || completing}
-                  className="gap-2 bg-green-600 hover:bg-green-700"
-                >
-                  {isNavigating || submitting || completing ? (
-                    <>
-                      <Spinner className="size-4" />
-                      Completing...
-                    </>
-                  ) : (
-                    'Complete Assessment'
-                  )}
-                </Button>
+              {/* Helper text */}
+              {!allBatchQuestionsAnswered && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4 mt-8 flex items-center gap-3">
+                  <svg
+                    className="w-5 h-5 text-red-600 shrink-0"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                    />
+                  </svg>
+                  <span className="text-sm text-red-800 font-medium">
+                    Please Answer all Questions to continue
+                  </span>
+                </div>
               )}
-            </div>
 
-            {/* Helper text */}
-            {!allBatchQuestionsAnswered && (
-              <p className="text-center text-sm text-amber-600 dark:text-amber-400 mt-4">
-                Please answer all questions to continue
-              </p>
-            )}
+              {/* Navigation */}
+              <div className="flex items-center justify-end mt-8 gap-4">
+                <Button
+                  variant="ghost"
+                  size="lg"
+                  onClick={handlePrevious}
+                  disabled={currentBatchNumber === 1 || isNavigating || submitting || completing}
+                  className="gap-2 px-6"
+                >
+                  <ChevronLeft className="size-4" />
+                  Previous
+                </Button>
+
+                {!allQuestionsAnswered ? (
+                  <Button
+                    size="lg"
+                    onClick={handleNext}
+                    disabled={
+                      !allBatchQuestionsAnswered || isNavigating || submitting || completing
+                    }
+                    className="gap-2 px-8 min-w-60"
+                  >
+                    {isNavigating || submitting ? (
+                      <>
+                        <Spinner className="size-4" />
+                        Saving...
+                      </>
+                    ) : (
+                      <>
+                        Next
+                        <ChevronRight className="size-4" />
+                      </>
+                    )}
+                  </Button>
+                ) : (
+                  <Button
+                    size="lg"
+                    onClick={handleCompleteAssessment}
+                    disabled={isNavigating || submitting || completing}
+                    className="gap-2 px-8 bg-green-600 hover:bg-green-700"
+                  >
+                    {isNavigating || submitting || completing ? (
+                      <>
+                        <Spinner className="size-4" />
+                        Completing...
+                      </>
+                    ) : (
+                      'Complete Assessment'
+                    )}
+                  </Button>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       )}

@@ -1,11 +1,11 @@
 'use client';
 
 import * as React from 'react';
-import { EyeIcon, EyeOffIcon } from 'lucide-react';
+import { EyeIcon, EyeOffIcon, KeyIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import { InputGroup, InputGroupAddon, InputGroupInput } from './input-group';
 
 const PasswordInput = React.forwardRef<HTMLInputElement, React.ComponentPropsWithoutRef<'input'>>(
   ({ className, ...props }, ref) => {
@@ -14,12 +14,17 @@ const PasswordInput = React.forwardRef<HTMLInputElement, React.ComponentPropsWit
 
     return (
       <div className="relative">
-        <Input
-          type={showPassword ? 'text' : 'password'}
-          className={cn('hide-password-toggle pr-10', className)}
-          ref={ref}
-          {...props}
-        />
+        <InputGroup>
+          <InputGroupAddon>
+            <KeyIcon />
+          </InputGroupAddon>
+          <InputGroupInput
+            type={showPassword ? 'text' : 'password'}
+            className={cn('hide-password-toggle pr-10', className)}
+            ref={ref}
+            {...props}
+          />
+        </InputGroup>
         <Button
           type="button"
           variant="ghost"
