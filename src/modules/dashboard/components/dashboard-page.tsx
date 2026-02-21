@@ -9,11 +9,11 @@ import { AssessmentStatus } from '@/modules/assessment/components';
 import { PhoneNumberDialog } from '@/modules/auth/components';
 import { useLogout } from '@/modules/auth/hooks';
 import { useUserStore } from '@/stores';
-import { getGreeting, getInitials } from '../utils';
-import { LayoutDashboard, LogOut, Mail, Phone, User } from 'lucide-react';
+import { Calendar, LayoutDashboard, LogOut, Mail, Phone, User } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { getGreeting, getInitials } from '../utils';
 
 export const DashboardPage = () => {
   const [showPhoneDialog, setShowPhoneDialog] = useState(false);
@@ -109,16 +109,23 @@ export const DashboardPage = () => {
                     </span>
                   </div>
                   <div className="flex items-center gap-3 text-sm">
+                    <Calendar className="size-4 text-muted-foreground shrink-0" />
+                    <span className="text-muted-foreground w-12 shrink-0">Age</span>
+                    <span className="ml-auto font-medium truncate">{currentUser?.age || '—'}</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-sm">
                     <Phone className="size-4 text-muted-foreground shrink-0" />
                     <span className="text-muted-foreground w-12 shrink-0">Phone</span>
                     <span className="ml-auto font-medium">
                       {currentUser?.phoneNumber ?? (
-                        <button
+                        <Button
+                          variant="link"
+                          size="sm"
                           onClick={() => setShowPhoneDialog(true)}
                           className="text-primary underline underline-offset-4 text-xs font-normal"
                         >
                           Add number
-                        </button>
+                        </Button>
                       )}
                     </span>
                   </div>
