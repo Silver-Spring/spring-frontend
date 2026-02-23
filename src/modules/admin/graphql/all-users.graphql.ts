@@ -7,6 +7,7 @@ const AllUsersDoc = graphql(`
         id
         email
         name
+        phoneNumber
         isAdmin
         createdAt
         updatedAt

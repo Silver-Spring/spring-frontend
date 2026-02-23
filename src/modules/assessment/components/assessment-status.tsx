@@ -6,12 +6,14 @@ import { Spinner } from '@/components/ui/spinner';
 import { usePayment, usePaymentStatus } from '@/modules/payment/hooks';
 import { AlertCircle, CheckCircle2, FileText, PlayCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { useAssessmentStatus, useCurrentSession, useStartAssessment } from '../hooks';
+import { AssessmentInstructionsDialog } from './assessment-instructions-dialog';
 
 export function AssessmentStatus() {
   const router = useRouter();
+  const [showInstructions, setShowInstructions] = useState(false);
 
   // Use the new assessmentStatus query for efficient status checking
   const {
@@ -59,7 +61,13 @@ export function AssessmentStatus() {
     }
   };
 
-  const handleStartAssessment = async () => {
+  const handleStartAssessmentClick = () => {
+    setShowInstructions(true);
+  };
+
+  const handleConfirmStart = async () => {
+    setShowInstructions(false);
+    
     try {
       if (!paymentId) {
         toast.error('Please complete payment first');
@@ -211,31 +219,39 @@ export function AssessmentStatus() {
 
   // Payment made but assessment not started
   return (
-    <Card className="bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
-      <CardHeader>
-        <div className="flex items-center gap-2">
-          <CheckCircle2 className="h-5 w-5 text-blue-600" />
-          <CardTitle className="text-blue-900 dark:text-blue-100">Ready to Start</CardTitle>
-        </div>
-        <CardDescription className="text-blue-800 dark:text-blue-200">
-          Payment confirmed. You can now take the assessment test.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Button className="w-full" onClick={handleStartAssessment} disabled={starting}>
-          {starting ? (
-            <>
-              <Spinner className="mr-2 h-4 w-4" />
-              Starting...
-            </>
-          ) : (
-            <>
-              <PlayCircle className="mr-2 h-4 w-4" />
-              Take Assessment Test
-            </>
-          )}
-        </Button>
-      </CardContent>
-    </Card>
+    <>
+      <Card className="bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="h-5 w-5 text-blue-600" />
+            <CardTitle className="text-blue-900 dark:text-blue-100">Ready to Start</CardTitle>
+          </div>
+          <CardDescription className="text-blue-800 dark:text-blue-200">
+            Payment confirmed. You can now take the assessment test.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button className="w-full" onClick={handleStartAssessmentClick} disabled={starting}>
+            {starting ? (
+              <>
+                <Spinner className="mr-2 h-4 w-4" />
+                Starting...
+              </>
+            ) : (
+              <>
+                <PlayCircle className="mr-2 h-4 w-4" />
+                Take Assessment Test
+              </>
+            )}
+          </Button>
+        </CardContent>
+      </Card>
+
+      <AssessmentInstructionsDialog
+        open={showInstructions}
+        onOpenChange={setShowInstructions}
+        onConfirm={handleConfirmStart}
+      />
+    </>
   );
 }

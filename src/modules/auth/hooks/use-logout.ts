@@ -29,7 +29,7 @@ export const useLogout = () => {
       toast.success('Logged out successfully');
 
       // Redirect to the main website after logout
-      window.location.href = 'https://www.silverspring.in';
+      window.location.href = process.env.NEXT_PUBLIC_APP_URL || 'https://www.silverspring.in';
     },
     onError: (error) => {
       console.error('Logout error:', error);

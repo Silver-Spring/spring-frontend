@@ -134,7 +134,7 @@ export const UsersPage = () => {
             <CardDescription>View and manage all user accounts</CardDescription>
           </CardHeader>
           <CardContent>
-            {loading && users.length === 0 ? (
+            {loading ? (
               <div className="flex items-center justify-center h-64">
                 <Spinner className="h-8 w-8" />
               </div>
@@ -149,14 +149,14 @@ export const UsersPage = () => {
                     <TableRow>
                       <TableHead>User</TableHead>
                       <TableHead>Email</TableHead>
+                      <TableHead>Phone Number</TableHead>
                       <TableHead>Role</TableHead>
                       <TableHead>Created</TableHead>
-                      <TableHead>Last Updated</TableHead>
                       <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {users.map((user: any) => {
+                    {users.map((user) => {
                       const isCurrentUser = user.id === currentUserId;
                       const isProcessing = actionUserId === user.id && (granting || revoking);
 
@@ -185,6 +185,11 @@ export const UsersPage = () => {
                             <span className="text-sm text-muted-foreground">{user.email}</span>
                           </TableCell>
                           <TableCell>
+                            <span className="text-sm text-muted-foreground">
+                              {user.phoneNumber || 'N/A'}
+                            </span>
+                          </TableCell>
+                          <TableCell>
                             {user.isAdmin ? (
                               <Badge variant="default" className="gap-1">
                                 <ShieldCheck className="h-3 w-3" />
@@ -200,13 +205,6 @@ export const UsersPage = () => {
                           <TableCell>
                             <span className="text-sm text-muted-foreground">
                               {formatDistanceToNow(new Date(user.createdAt), {
-                                addSuffix: true,
-                              })}
-                            </span>
-                          </TableCell>
-                          <TableCell>
-                            <span className="text-sm text-muted-foreground">
-                              {formatDistanceToNow(new Date(user.updatedAt), {
                                 addSuffix: true,
                               })}
                             </span>

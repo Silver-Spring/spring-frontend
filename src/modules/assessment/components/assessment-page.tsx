@@ -1,6 +1,7 @@
 'use client';
 
 import { ProtectedLayout } from '@/components/layouts';
+import { Alert, AlertAction, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -12,7 +13,7 @@ import {
   useQuestionBatch,
   useSessionQuestions,
 } from '@/modules/assessment/hooks';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { AlertCircleIcon, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
@@ -41,6 +42,7 @@ export const AssessmentPage = ({ sessionId }: AssessmentPageProps) => {
   const [batchStartTime, setBatchStartTime] = useState(Date.now());
   const [isNavigating, setIsNavigating] = useState(false);
   const [hasInitialized, setHasInitialized] = useState(false);
+  const [showReminder, setShowReminder] = useState(true);
 
   // Update batch number when session data loads (only on initial mount)
   useEffect(() => {
@@ -308,6 +310,22 @@ export const AssessmentPage = ({ sessionId }: AssessmentPageProps) => {
 
           {/* Questions Container */}
           <div className="container mx-auto px-4 py-12 max-w-3xl">
+            {currentBatchNumber === 1 && showReminder && (
+              <Alert className="mb-8 bg-primary/5 border-primary/20">
+                <AlertCircleIcon />
+                <AlertTitle>Remember:</AlertTitle>
+                <AlertDescription>
+                  Reflect on the last 6 months. Be honest with yourself. There are no right or wrong
+                  answers.
+                </AlertDescription>
+                <AlertAction>
+                  <Button variant="ghost" size="sm" onClick={() => setShowReminder(false)}>
+                    <X className="size-4 text-muted-foreground hover:text-foreground transition-colors" />
+                  </Button>
+                </AlertAction>
+              </Alert>
+            )}
+
             <div className="space-y-8">
               {batch.questions.map((sessionQuestion, index) => {
                 const currentResponse = batchResponses.get(sessionQuestion.questionId);
@@ -317,7 +335,7 @@ export const AssessmentPage = ({ sessionId }: AssessmentPageProps) => {
                 return (
                   <div
                     key={sessionQuestion.id}
-                    className="bg-background rounded-lg border p-6 md:p-8 shadow-sm hover:shadow-md transition-shadow"
+                    className="bg-background rounded-lg border p-6 md:p-8"
                   >
                     {/* Question Header */}
                     <div className="mb-6">

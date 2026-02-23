@@ -14,7 +14,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 type Documents = {
-    "\n  query GetAllUsers {\n    allUsers {\n      users {\n        id\n        email\n        name\n        isAdmin\n        createdAt\n        updatedAt\n      }\n      totalCount\n      adminCount\n    }\n  }\n": typeof types.GetAllUsersDocument,
+    "\n  query GetAllUsers {\n    allUsers {\n      users {\n        id\n        email\n        name\n        phoneNumber\n        isAdmin\n        createdAt\n        updatedAt\n      }\n      totalCount\n      adminCount\n    }\n  }\n": typeof types.GetAllUsersDocument,
     "\n  query GetAssessmentTrends($startDate: Date!, $endDate: Date!) {\n    assessmentTrends(input: { startDate: $startDate, endDate: $endDate }) {\n      trends {\n        date\n        completedCount\n        startedCount\n        inProgressCount\n      }\n      totalCompleted\n      totalStarted\n      totalInProgress\n    }\n  }\n": typeof types.GetAssessmentTrendsDocument,
     "\n  mutation GrantAdmin($userId: UUID!) {\n    grantAdminAccess(input: { userId: $userId }) {\n      user {\n        id\n        email\n        name\n        isAdmin\n        createdAt\n        updatedAt\n      }\n      success\n      message\n    }\n  }\n": typeof types.GrantAdminDocument,
     "\n  mutation RevokeAdmin($userId: UUID!) {\n    revokeAdminAccess(input: { userId: $userId }) {\n      user {\n        id\n        email\n        name\n        isAdmin\n        createdAt\n        updatedAt\n      }\n      success\n      message\n    }\n  }\n": typeof types.RevokeAdminDocument,
@@ -53,7 +53,7 @@ type Documents = {
     "\n  mutation VerifyPayment(\n    $orderId: String!\n    $paymentId: String!\n    $signature: String!\n  ) {\n    verifyPayment(\n      input: {\n        orderId: $orderId\n        paymentId: $paymentId\n        signature: $signature\n      }\n    ) {\n      success\n      paymentId\n      message\n    }\n  }\n": typeof types.VerifyPaymentDocument,
 };
 const documents: Documents = {
-    "\n  query GetAllUsers {\n    allUsers {\n      users {\n        id\n        email\n        name\n        isAdmin\n        createdAt\n        updatedAt\n      }\n      totalCount\n      adminCount\n    }\n  }\n": types.GetAllUsersDocument,
+    "\n  query GetAllUsers {\n    allUsers {\n      users {\n        id\n        email\n        name\n        phoneNumber\n        isAdmin\n        createdAt\n        updatedAt\n      }\n      totalCount\n      adminCount\n    }\n  }\n": types.GetAllUsersDocument,
     "\n  query GetAssessmentTrends($startDate: Date!, $endDate: Date!) {\n    assessmentTrends(input: { startDate: $startDate, endDate: $endDate }) {\n      trends {\n        date\n        completedCount\n        startedCount\n        inProgressCount\n      }\n      totalCompleted\n      totalStarted\n      totalInProgress\n    }\n  }\n": types.GetAssessmentTrendsDocument,
     "\n  mutation GrantAdmin($userId: UUID!) {\n    grantAdminAccess(input: { userId: $userId }) {\n      user {\n        id\n        email\n        name\n        isAdmin\n        createdAt\n        updatedAt\n      }\n      success\n      message\n    }\n  }\n": types.GrantAdminDocument,
     "\n  mutation RevokeAdmin($userId: UUID!) {\n    revokeAdminAccess(input: { userId: $userId }) {\n      user {\n        id\n        email\n        name\n        isAdmin\n        createdAt\n        updatedAt\n      }\n      success\n      message\n    }\n  }\n": types.RevokeAdminDocument,
@@ -109,7 +109,7 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query GetAllUsers {\n    allUsers {\n      users {\n        id\n        email\n        name\n        isAdmin\n        createdAt\n        updatedAt\n      }\n      totalCount\n      adminCount\n    }\n  }\n"): (typeof documents)["\n  query GetAllUsers {\n    allUsers {\n      users {\n        id\n        email\n        name\n        isAdmin\n        createdAt\n        updatedAt\n      }\n      totalCount\n      adminCount\n    }\n  }\n"];
+export function graphql(source: "\n  query GetAllUsers {\n    allUsers {\n      users {\n        id\n        email\n        name\n        phoneNumber\n        isAdmin\n        createdAt\n        updatedAt\n      }\n      totalCount\n      adminCount\n    }\n  }\n"): (typeof documents)["\n  query GetAllUsers {\n    allUsers {\n      users {\n        id\n        email\n        name\n        phoneNumber\n        isAdmin\n        createdAt\n        updatedAt\n      }\n      totalCount\n      adminCount\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
