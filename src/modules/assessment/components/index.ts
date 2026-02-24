@@ -1,6 +1,5 @@
 export * from './admin-assessment-page';
 export * from './admin-stats-card';
-export * from './assessment-instructions-dialog';
 export * from './assessment-page';
 export * from './assessment-results-page';
 export * from './assessment-status';

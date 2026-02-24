@@ -6,5 +6,8 @@ declare namespace NodeJS {
 
     // Node environment
     NODE_ENV: 'development' | 'production' | 'test';
+
+    // Main site
+    NEXT_PUBLIC_APP_URL: string
   }
 }

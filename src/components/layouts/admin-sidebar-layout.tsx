@@ -32,6 +32,7 @@ import { AuthLayout, AuthRestrict, type LayoutChildProps } from './auth-layout';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { useLogout } from '@/modules/auth/hooks';
+import { getInitials } from '@/lib/utils';
 
 interface AdminSidebarLayoutProps {
   children: ReactNode | ((props: LayoutChildProps) => ReactNode);
@@ -64,20 +65,6 @@ export const AdminSidebarLayout = ({ children }: AdminSidebarLayoutProps) => {
   const pathname = usePathname();
   const { logout, loading: loggingOut } = useLogout();
 
-  const getInitials = (name?: string | null, email?: string | null) => {
-    if (name) {
-      const names = name.trim().split(' ');
-      if (names.length >= 2) {
-        return `${names[0][0]}${names[names.length - 1][0]}`.toUpperCase();
-      }
-      return name.slice(0, 2).toUpperCase();
-    }
-    if (email) {
-      return email.slice(0, 2).toUpperCase();
-    }
-    return 'AD';
-  };
-
   return (
     <AuthLayout forbidWhen={AuthRestrict.LOGGED_OUT | AuthRestrict.NOT_ADMIN}>
       {(props) => (
@@ -87,7 +74,7 @@ export const AdminSidebarLayout = ({ children }: AdminSidebarLayoutProps) => {
               <div className="flex items-center gap-3">
                 <Avatar className="h-10 w-10">
                   <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
-                    {getInitials(props.currentUser?.name, props.currentUser?.email)}
+                    {getInitials(props.currentUser?.name)}
                   </AvatarFallback>
                 </Avatar>
                 <div>

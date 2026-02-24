@@ -26,6 +26,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { useAllUsers, useGrantAdmin, useRevokeAdmin } from '../hooks';
+import { getInitials } from '@/lib/utils';
 
 export const UsersPage = () => {
   const { users, totalCount, adminCount, regularUserCount, newThisMonth, loading, refetch } =
@@ -57,20 +58,6 @@ export const UsersPage = () => {
 
   const handleRefresh = async () => {
     await refetch();
-  };
-
-  const getInitials = (name?: string | null, email?: string | null) => {
-    if (name) {
-      const names = name.trim().split(' ');
-      if (names.length >= 2) {
-        return `${names[0][0]}${names[names.length - 1][0]}`.toUpperCase();
-      }
-      return name.slice(0, 2).toUpperCase();
-    }
-    if (email) {
-      return email.slice(0, 2).toUpperCase();
-    }
-    return 'U';
   };
 
   return (
@@ -166,7 +153,7 @@ export const UsersPage = () => {
                             <div className="flex items-center gap-3">
                               <Avatar className="h-9 w-9">
                                 <AvatarFallback className="text-xs">
-                                  {getInitials(user.name, user.email)}
+                                  {getInitials(user.name)}
                                 </AvatarFallback>
                               </Avatar>
                               <div className="flex flex-col">
