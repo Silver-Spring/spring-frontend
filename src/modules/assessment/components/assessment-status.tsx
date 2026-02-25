@@ -226,19 +226,12 @@ export function AssessmentStatus() {
           </div>
 
           <div className="w-full md:w-3/5 space-y-6">
-            <div className="space-y-4">
-              <p className="text-base md:text-2xl text-green-700 dark:text-green-700 leading-relaxed font-bold italic">
-                The Silver Spring Retirement Readiness Index (SSRI) is a structured self-assessment
-                designed to help you understand your readiness for your next phase in life beyond
-                full-time work. It focuses on the non-financial dimensions of transition, including
-                psychological, social, mental, physical and lifestyle preparedness.
-              </p>
-
-              <p className="text-base text-muted-foreground leading-relaxed border-l-2 border-muted pl-4">
-                Every retirement story is unique and shaped by who you are, the life you&apos;ve
-                lived.
-              </p>
-            </div>
+            <p className="text-base md:text-2xl text-green-700 dark:text-green-700 leading-relaxed font-bold italic">
+              The Silver Spring Retirement Readiness Index (SSRI) is a structured self-assessment
+              designed to help you understand your readiness for your next phase in life beyond
+              full-time work. It focuses on the non-financial dimensions of transition, including
+              psychological, social, mental, physical and lifestyle preparedness.
+            </p>
           </div>
         </div>
 
