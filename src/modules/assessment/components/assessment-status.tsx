@@ -233,11 +233,6 @@ export function AssessmentStatus() {
                 full-time work. It focuses on the non-financial dimensions of transition, including
                 psychological, social, mental, physical and lifestyle preparedness.
               </p>
-
-              <p className="text-base text-muted-foreground leading-relaxed border-l-2 border-muted pl-4">
-                Every retirement story is unique and shaped by who you are, the life you&apos;ve
-                lived.
-              </p>
             </div>
           </div>
         </div>
@@ -280,7 +275,7 @@ export function AssessmentStatus() {
         <div className="flex justify-center">
           <Button
             size="lg"
-            className="w-full md:w-auto min-w-[240px] h-12 text-base bg-green-600 hover:bg-green-700 text-white shadow-md hover:shadow-lg transition-all"
+            className="w-full md:w-auto min-w-[240px] h-12 text-base bg-green-700 hover:bg-green-800 text-white shadow-md hover:shadow-lg transition-all"
             onClick={handleButtonClick}
             disabled={paymentProcessing || starting}
           >
