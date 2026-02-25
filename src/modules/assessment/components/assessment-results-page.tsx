@@ -103,7 +103,6 @@ export const AssessmentResultsPage = ({ resultId }: AssessmentResultsPageProps) 
               <div className="text-6xl font-bold text-primary my-4">
                 {result.totalReadinessIndex}
               </div>
-              <CardDescription className="text-lg">out of 500</CardDescription>
             </CardHeader>
             <CardContent className="text-center">
               {result.isEmailed && (
@@ -129,7 +128,7 @@ export const AssessmentResultsPage = ({ resultId }: AssessmentResultsPageProps) 
                       {SECTION_NAMES[section.sectionType] || section.sectionType}
                     </h3>
                     <div className="text-right">
-                      <div className="text-lg font-bold">{section.score}/100</div>
+                      <div className="text-lg font-bold">{section.score}</div>
                       <div
                         className={`text-sm font-medium ${
                           INTERPRETATION_COLORS[section.interpretationLabel?.toLowerCase() || ''] ||

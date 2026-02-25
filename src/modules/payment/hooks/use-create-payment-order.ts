@@ -1,14 +1,25 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useMutation } from '@apollo/client/react';
 import { toast } from 'sonner';
 import { CreatePaymentOrderDoc } from '../graphql';
-import { initializeRazorpay, openRazorpayCheckout } from '../utils';
+import { initializeRazorpay, openRazorpayCheckout, closeRazorpayInstance, cleanupRazorpay } from '../utils';
 import { useVerifyPayment } from './use-verify-payment';
 import type { RazorpaySuccessResponse, RazorpayErrorResponse } from '../types';
 
 export const useCreatePaymentOrder = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const { verifyPayment } = useVerifyPayment();
+  const razorpayInstanceRef = useRef<any>(null);
+
+  useEffect(() => {
+    return () => {
+      if (razorpayInstanceRef.current) {
+        closeRazorpayInstance(razorpayInstanceRef.current);
+        razorpayInstanceRef.current = null;
+        cleanupRazorpay();
+      }
+    };
+  }, []);
 
   const [createOrderMutation, { data, loading, error }] = useMutation(CreatePaymentOrderDoc, {
     onError: (error) => {
@@ -47,7 +58,7 @@ export const useCreatePaymentOrder = () => {
       }
 
       // Step 3: Open Razorpay checkout modal
-      openRazorpayCheckout({
+      razorpayInstanceRef.current = openRazorpayCheckout({
         keyId: orderData.razorpayKeyId,
         amount: orderData.amount,
         currency: orderData.currency,
@@ -79,6 +90,9 @@ export const useCreatePaymentOrder = () => {
             toast.error('Failed to verify payment. Please contact support.');
           } finally {
             setIsProcessing(false);
+            closeRazorpayInstance(razorpayInstanceRef.current);
+            razorpayInstanceRef.current = null;
+            cleanupRazorpay();
           }
         },
         onFailure: (error) => {
@@ -87,6 +101,9 @@ export const useCreatePaymentOrder = () => {
             error.error?.description || 'Payment failed. Please try again.';
           toast.error(errorMessage);
           setIsProcessing(false);
+          closeRazorpayInstance(razorpayInstanceRef.current);
+          razorpayInstanceRef.current = null;
+          cleanupRazorpay();
           if (onFailure) {
             onFailure(error);
           }
@@ -95,6 +112,9 @@ export const useCreatePaymentOrder = () => {
     } catch (error) {
       console.error('Error in payment flow:', error);
       setIsProcessing(false);
+      closeRazorpayInstance(razorpayInstanceRef.current);
+      razorpayInstanceRef.current = null;
+      cleanupRazorpay();
       if (onFailure) {
         onFailure(error instanceof Error ? error : new Error('Payment failed'));
       }

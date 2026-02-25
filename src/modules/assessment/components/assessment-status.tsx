@@ -273,7 +273,7 @@ export function AssessmentStatus() {
         <div className="flex justify-center">
           <Button
             size="lg"
-            className="w-full md:w-auto min-w-[240px] h-12 text-base bg-green-600 hover:bg-green-700 text-white shadow-md hover:shadow-lg transition-all"
+            className="w-full md:w-auto min-w-[240px] h-12 text-base bg-green-700 hover:bg-green-800 text-white shadow-md hover:shadow-lg transition-all"
             onClick={handleButtonClick}
             disabled={paymentProcessing || starting}
           >
