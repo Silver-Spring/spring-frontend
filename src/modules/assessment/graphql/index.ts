@@ -1,5 +1,4 @@
 export { StartAssessmentDoc } from './start-assessment.graphql';
-export { SubmitResponseDoc } from './submit-response.graphql';
 export { CompleteAssessmentDoc } from './complete-assessment.graphql';
 export { CurrentSessionDoc } from './current-session.graphql';
 export { SessionQuestionsDoc } from './session-questions.graphql';
@@ -9,9 +8,9 @@ export { AssessmentResultsDoc } from './assessment-results.graphql';
 export { ResendReportDoc } from './resend-report.graphql';
 export { AssessmentStatusDoc } from './assessment-status.graphql';
 
-// Batch operations
-export { GetQuestionBatchDoc } from './get-question-batch.graphql';
-export { BatchSubmitResponsesDoc } from './batch-submit-responses.graphql';
+// Single-question operations
+export { GetSessionQuestionDoc } from './get-session-question.graphql';
+export { SubmitOrUpdateResponseDoc } from './submit-or-update-response.graphql';
 
 // Admin operations
 export { AdminAssessmentStatsDoc } from './admin-stats.graphql';

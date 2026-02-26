@@ -1,5 +1,8 @@
 import { RazorpayOptions, RazorpayErrorResponse } from '../types';
 
+const RAZORPAY_SCRIPT_ID = 'razorpay-checkout-script';
+const RAZORPAY_SCRIPT_URL = 'https://checkout.razorpay.com/v1/checkout.js';
+
 /**
  * Initializes Razorpay by loading the checkout script dynamically
  * Uses a more robust approach with better error handling
@@ -15,7 +18,7 @@ export const initializeRazorpay = (): Promise<boolean> => {
 
     // Check if script is already being loaded
     const existingScript = document.querySelector(
-      'script[src="https://checkout.razorpay.com/v1/checkout.js"]'
+      `script[src="${RAZORPAY_SCRIPT_URL}"]`
     );
 
     if (existingScript) {
@@ -27,7 +30,8 @@ export const initializeRazorpay = (): Promise<boolean> => {
 
     // Create and load the script
     const script = document.createElement('script');
-    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.id = RAZORPAY_SCRIPT_ID;
+    script.src = RAZORPAY_SCRIPT_URL;
     script.async = true;
 
     script.onload = () => {
@@ -44,12 +48,33 @@ export const initializeRazorpay = (): Promise<boolean> => {
 };
 
 /**
+ * Cleans up Razorpay resources after payment completion
+ * Removes the script from DOM and clears global Razorpay object
+ * Optimized for Next.js to prevent memory leaks and unnecessary background processes
+ */
+export const cleanupRazorpay = (): void => {
+  if (typeof window === 'undefined') return;
+
+  // Remove the script tag from DOM
+  const script = document.querySelector(`script[src="${RAZORPAY_SCRIPT_URL}"]`);
+  if (script) {
+    script.remove();
+  }
+
+  // Clear the global Razorpay object
+  if (window.Razorpay) {
+    delete (window as any).Razorpay;
+  }
+};
+
+/**
  * Opens Razorpay checkout modal with the provided options
- * Follows Razorpay's official integration pattern
+ * Returns the Razorpay instance for proper lifecycle management
  * @param options Razorpay checkout options
+ * @returns Razorpay instance
  * @throws Error if Razorpay is not loaded
  */
-export const openRazorpayCheckout = (options: RazorpayOptions): void => {
+export const openRazorpayCheckout = (options: RazorpayOptions): any => {
   if (!window.Razorpay) {
     throw new Error('Razorpay SDK not loaded. Call initializeRazorpay() first.');
   }
@@ -103,6 +128,25 @@ export const openRazorpayCheckout = (options: RazorpayOptions): void => {
   });
 
   rzp.open();
+  
+  return rzp;
+};
+
+/**
+ * Closes and destroys a Razorpay instance
+ * Stops all background polling and network requests
+ * @param rzpInstance The Razorpay instance to close
+ */
+export const closeRazorpayInstance = (rzpInstance: any): void => {
+  if (!rzpInstance) return;
+  
+  try {
+    if (typeof rzpInstance.close === 'function') {
+      rzpInstance.close();
+    }
+  } catch (error) {
+    console.error('Error closing Razorpay instance:', error);
+  }
 };
 
 /**

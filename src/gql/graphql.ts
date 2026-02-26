@@ -466,6 +466,8 @@ export type AssessmentQuestionAssessmentSessionsByAssessmentResponseQuestionIdAn
   /** A cursor for use in pagination. */
   cursor?: Maybe<Scalars['Cursor']['output']>;
   id: Scalars['UUID']['output'];
+  /** Tracks whether this response is an update (true) or initial submission (false) */
+  isUpdate: Scalars['Boolean']['output'];
   /** The `AssessmentSession` at the end of the edge. */
   node: AssessmentSession;
   /** User response value on scale of 1-10 (1 = Not at all, 10 = Very much) */
@@ -694,6 +696,8 @@ export type AssessmentResponse = {
   __typename?: 'AssessmentResponse';
   createdAt: Scalars['Datetime']['output'];
   id: Scalars['UUID']['output'];
+  /** Tracks whether this response is an update (true) or initial submission (false) */
+  isUpdate: Scalars['Boolean']['output'];
   /** Reads a single `AssessmentQuestion` that is related to this `AssessmentResponse`. */
   question?: Maybe<AssessmentQuestion>;
   questionId: Scalars['UUID']['output'];
@@ -737,6 +741,8 @@ export type AssessmentResponseInput = {
   assessmentSessionToSessionId?: InputMaybe<AssessmentResponsesSessionIdFkeyInput>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
+  /** Tracks whether this response is an update (true) or initial submission (false) */
+  isUpdate?: InputMaybe<Scalars['Boolean']['input']>;
   questionId?: InputMaybe<Scalars['UUID']['input']>;
   /** User response value on scale of 1-10 (1 = Not at all, 10 = Very much) */
   responseValue: Scalars['Int']['input'];
@@ -782,6 +788,8 @@ export type AssessmentResponsePatch = {
   assessmentSessionToSessionId?: InputMaybe<AssessmentResponsesSessionIdFkeyInput>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
+  /** Tracks whether this response is an update (true) or initial submission (false) */
+  isUpdate?: InputMaybe<Scalars['Boolean']['input']>;
   questionId?: InputMaybe<Scalars['UUID']['input']>;
   /** User response value on scale of 1-10 (1 = Not at all, 10 = Very much) */
   responseValue?: InputMaybe<Scalars['Int']['input']>;
@@ -832,6 +840,8 @@ export type AssessmentResponsesQuestionIdFkeyAssessmentResponsesCreateInput = {
   assessmentSessionToSessionId?: InputMaybe<AssessmentResponsesSessionIdFkeyInput>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
+  /** Tracks whether this response is an update (true) or initial submission (false) */
+  isUpdate?: InputMaybe<Scalars['Boolean']['input']>;
   /** User response value on scale of 1-10 (1 = Not at all, 10 = Very much) */
   responseValue: Scalars['Int']['input'];
   sessionId?: InputMaybe<Scalars['UUID']['input']>;
@@ -868,6 +878,8 @@ export type AssessmentResponsesSessionIdFkeyAssessmentResponsesCreateInput = {
   assessmentSessionToSessionId?: InputMaybe<AssessmentResponsesSessionIdFkeyInput>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
+  /** Tracks whether this response is an update (true) or initial submission (false) */
+  isUpdate?: InputMaybe<Scalars['Boolean']['input']>;
   questionId?: InputMaybe<Scalars['UUID']['input']>;
   /** User response value on scale of 1-10 (1 = Not at all, 10 = Very much) */
   responseValue: Scalars['Int']['input'];
@@ -1742,6 +1754,8 @@ export type AssessmentSession = {
   id: Scalars['UUID']['output'];
   /** Last time the user interacted with this session (for timeout tracking) */
   lastActivityTime: Scalars['Datetime']['output'];
+  /** The last question number that the user actually answered (separate from current_question_number which tracks navigation) */
+  lastAnsweredQuestion?: Maybe<Scalars['Int']['output']>;
   /** Reads a single `Payment` that is related to this `AssessmentSession`. */
   payment?: Maybe<Payment>;
   /** Reference to the payment made for this assessment (unique - one session per payment) */
@@ -1835,6 +1849,8 @@ export type AssessmentSessionAssessmentQuestionsByAssessmentResponseSessionIdAnd
   /** A cursor for use in pagination. */
   cursor?: Maybe<Scalars['Cursor']['output']>;
   id: Scalars['UUID']['output'];
+  /** Tracks whether this response is an update (true) or initial submission (false) */
+  isUpdate: Scalars['Boolean']['output'];
   /** The `AssessmentQuestion` at the end of the edge. */
   node: AssessmentQuestion;
   /** User response value on scale of 1-10 (1 = Not at all, 10 = Very much) */
@@ -1989,6 +2005,8 @@ export type AssessmentSessionPatch = {
   id?: InputMaybe<Scalars['UUID']['input']>;
   /** Last time the user interacted with this session (for timeout tracking) */
   lastActivityTime?: InputMaybe<Scalars['Datetime']['input']>;
+  /** The last question number that the user actually answered (separate from current_question_number which tracks navigation) */
+  lastAnsweredQuestion?: InputMaybe<Scalars['Int']['input']>;
   /** Reference to the payment made for this assessment (unique - one session per payment) */
   paymentId?: InputMaybe<Scalars['UUID']['input']>;
   paymentToPaymentId?: InputMaybe<AssessmentSessionsPaymentIdFkeyInput>;
@@ -2367,19 +2385,6 @@ export type AssessmentTrendsPayload = {
   trends: Array<AssessmentTrendData>;
 };
 
-export type BatchSubmitResponsesInput = {
-  responses: Array<QuestionResponseInput>;
-  sessionId: Scalars['UUID']['input'];
-};
-
-export type BatchSubmitResponsesPayload = {
-  __typename?: 'BatchSubmitResponsesPayload';
-  answeredCount: Scalars['Int']['output'];
-  message?: Maybe<Scalars['String']['output']>;
-  responses: Array<AssessmentResponse>;
-  success: Scalars['Boolean']['output'];
-};
-
 export type BulkCreateQuestionsInput = {
   questions: Array<BulkQuestionInput>;
   sectionId: Scalars['UUID']['input'];
@@ -2568,6 +2573,15 @@ export type CreateUserPayloadUserEdgeArgs = {
   orderBy?: InputMaybe<Array<UsersOrderBy>>;
 };
 
+export type CurrentResponseDetail = {
+  __typename?: 'CurrentResponseDetail';
+  id: Scalars['UUID']['output'];
+  isUpdate: Scalars['Boolean']['output'];
+  responseValue: Scalars['Int']['output'];
+  timeTakenSeconds?: Maybe<Scalars['Int']['output']>;
+  updatedAt: Scalars['Datetime']['output'];
+};
+
 export type DeleteInterpretationBandInput = {
   id: Scalars['UUID']['input'];
 };
@@ -2629,6 +2643,18 @@ export type DeleteUserPayload = {
 /** The output of our delete `User` mutation. */
 export type DeleteUserPayloadUserEdgeArgs = {
   orderBy?: InputMaybe<Array<UsersOrderBy>>;
+};
+
+export type EnhancedResponseDetail = {
+  __typename?: 'EnhancedResponseDetail';
+  createdAt: Scalars['Datetime']['output'];
+  id: Scalars['UUID']['output'];
+  isUpdate: Scalars['Boolean']['output'];
+  questionId: Scalars['UUID']['output'];
+  responseValue: Scalars['Int']['output'];
+  sessionId: Scalars['UUID']['output'];
+  timeTakenSeconds?: Maybe<Scalars['Int']['output']>;
+  updatedAt: Scalars['Datetime']['output'];
 };
 
 /** All input for the `forgotPassword` mutation. */
@@ -2722,11 +2748,6 @@ export type LogoutPayload = {
 export type Mutation = {
   __typename?: 'Mutation';
   /**
-   * Submit responses for multiple questions at once (batch submission).
-   * This is the recommended way to submit when showing 5 questions at a time.
-   */
-  batchSubmitResponses?: Maybe<BatchSubmitResponsesPayload>;
-  /**
    * Bulk create multiple questions for a section (admin only)
    * Useful for importing questions from CSV/JSON
    */
@@ -2792,10 +2813,11 @@ export type Mutation = {
    */
   startAssessment?: Maybe<StartAssessmentPayload>;
   /**
-   * Submit a response for a question.
-   * Can be called multiple times to update the response.
+   * Submit or update a response for a question with enhanced state management.
+   * Automatically handles both new submissions and updates to previous answers.
+   * Intelligently advances session state when navigating forward.
    */
-  submitAssessmentResponse?: Maybe<SubmitResponsePayload>;
+  submitOrUpdateResponse?: Maybe<SubmitOrUpdateResponsePayload>;
   /** Update an existing assessment question (admin only) */
   updateAssessmentQuestion?: Maybe<UpdateQuestionPayload>;
   /** Updates a single `AssessmentResponse` using a unique key and a patch. */
@@ -2825,12 +2847,6 @@ export type Mutation = {
   /** Updates a single `User` using a unique key and a patch. */
   updateUser?: Maybe<UpdateUserPayload>;
   verifyPayment?: Maybe<VerifyPaymentPayload>;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationBatchSubmitResponsesArgs = {
-  input: BatchSubmitResponsesInput;
 };
 
 
@@ -2961,8 +2977,8 @@ export type MutationStartAssessmentArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationSubmitAssessmentResponseArgs = {
-  input: SubmitResponseInput;
+export type MutationSubmitOrUpdateResponseArgs = {
+  input: SubmitOrUpdateResponseInput;
 };
 
 
@@ -3041,6 +3057,22 @@ export type MutationUpdateUserArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationVerifyPaymentArgs = {
   input: VerifyPaymentInput;
+};
+
+export type NavigationMetadata = {
+  __typename?: 'NavigationMetadata';
+  currentNumber: Scalars['Int']['output'];
+  hasNext: Scalars['Boolean']['output'];
+  hasPrevious: Scalars['Boolean']['output'];
+  nextNumber?: Maybe<Scalars['Int']['output']>;
+  previousNumber?: Maybe<Scalars['Int']['output']>;
+  totalQuestions: Scalars['Int']['output'];
+};
+
+export type NextQuestionHint = {
+  __typename?: 'NextQuestionHint';
+  hasNext: Scalars['Boolean']['output'];
+  questionNumber?: Maybe<Scalars['Int']['output']>;
 };
 
 /** Information about pagination in a connection. */
@@ -3240,6 +3272,13 @@ export type PaymentsUserIdFkeyInverseInput = {
   updateByRazorpayPaymentId?: InputMaybe<Array<PaymentOnPaymentForPaymentsUserIdFkeyUsingPaymentsRazorpayPaymentIdKeyUpdate>>;
 };
 
+export type ProgressMetadata = {
+  __typename?: 'ProgressMetadata';
+  answeredCount: Scalars['Int']['output'];
+  percentComplete: Scalars['Float']['output'];
+  totalCount: Scalars['Int']['output'];
+};
+
 /** The root query type which gives access points into the data universe. */
 export type Query = {
   __typename?: 'Query';
@@ -3314,10 +3353,15 @@ export type Query = {
   /** Returns the interpretation band for a given score */
   getInterpretationBandForScore?: Maybe<AssessmentInterpretationBand>;
   /**
-   * Get the next batch of 5 questions for the current assessment session.
-   * Questions are returned in groups of 5 based on display order.
+   * Get a lightweight summary of all questions and their answer status.
+   * Useful for overview/navigation UI or "jump to question" features.
    */
-  getQuestionBatch?: Maybe<QuestionBatch>;
+  getQuestionsSummary?: Maybe<QuestionsSummaryPayload>;
+  /**
+   * Get a single question with all necessary context including navigation and progress.
+   * Designed for single-question-at-a-time UX flow.
+   */
+  getSessionQuestion?: Maybe<SessionQuestionPayload>;
   payment?: Maybe<Payment>;
   paymentByRazorpayOrderId?: Maybe<Payment>;
   paymentByRazorpayPaymentId?: Maybe<Payment>;
@@ -3613,8 +3657,15 @@ export type QueryGetInterpretationBandForScoreArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryGetQuestionBatchArgs = {
-  batchNumber: Scalars['Int']['input'];
+export type QueryGetQuestionsSummaryArgs = {
+  sessionId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryGetSessionQuestionArgs = {
+  questionNumber: Scalars['Int']['input'];
+  sessionId: Scalars['UUID']['input'];
 };
 
 
@@ -3694,32 +3745,20 @@ export type QueryUsersArgs = {
   orderBy?: InputMaybe<Array<UsersOrderBy>>;
 };
 
-export type QuestionBatch = {
-  __typename?: 'QuestionBatch';
-  batchNumber: Scalars['Int']['output'];
-  currentBatchEndIndex: Scalars['Int']['output'];
-  currentBatchStartIndex: Scalars['Int']['output'];
-  questions: Array<QuestionBatchItem>;
-  totalBatches: Scalars['Int']['output'];
-};
-
-export type QuestionBatchItem = {
-  __typename?: 'QuestionBatchItem';
-  createdAt: Scalars['Datetime']['output'];
+export type QuestionSummaryItem = {
+  __typename?: 'QuestionSummaryItem';
   displayOrder: Scalars['Int']['output'];
-  id: Scalars['UUID']['output'];
   isAnswered: Scalars['Boolean']['output'];
   questionId: Scalars['UUID']['output'];
-  questionText: Scalars['String']['output'];
+  questionNumber: Scalars['Int']['output'];
+  responseValue?: Maybe<Scalars['Int']['output']>;
   sectionName: Scalars['String']['output'];
-  sectionType: Scalars['String']['output'];
-  sessionId: Scalars['UUID']['output'];
 };
 
-export type QuestionResponseInput = {
-  questionId: Scalars['UUID']['input'];
-  responseValue: Scalars['Int']['input'];
-  timeTakenSeconds?: InputMaybe<Scalars['Int']['input']>;
+export type QuestionsSummaryPayload = {
+  __typename?: 'QuestionsSummaryPayload';
+  progress: ProgressMetadata;
+  questions: Array<QuestionSummaryItem>;
 };
 
 export type RegisterInput = {
@@ -3905,6 +3944,35 @@ export type ScoreDistributionPayload = {
   totalAssessments: Scalars['Int']['output'];
 };
 
+export type SessionQuestionDetail = {
+  __typename?: 'SessionQuestionDetail';
+  displayOrder: Scalars['Int']['output'];
+  id: Scalars['UUID']['output'];
+  isAnswered: Scalars['Boolean']['output'];
+  questionId: Scalars['UUID']['output'];
+  questionText: Scalars['String']['output'];
+  sectionName: Scalars['String']['output'];
+  sectionType: Scalars['String']['output'];
+  sessionId: Scalars['UUID']['output'];
+};
+
+export type SessionQuestionPayload = {
+  __typename?: 'SessionQuestionPayload';
+  currentResponse?: Maybe<CurrentResponseDetail>;
+  navigation: NavigationMetadata;
+  progress: ProgressMetadata;
+  question: SessionQuestionDetail;
+};
+
+export type SessionStateDetail = {
+  __typename?: 'SessionStateDetail';
+  currentQuestionNumber: Scalars['Int']['output'];
+  expiresAt: Scalars['Datetime']['output'];
+  id: Scalars['UUID']['output'];
+  lastActivityTime: Scalars['Datetime']['output'];
+  lastAnsweredQuestion?: Maybe<Scalars['Int']['output']>;
+};
+
 export type StartAssessmentInput = {
   paymentId: Scalars['UUID']['input'];
 };
@@ -3915,17 +3983,22 @@ export type StartAssessmentPayload = {
   session?: Maybe<AssessmentSession>;
 };
 
-export type SubmitResponseInput = {
+export type SubmitOrUpdateResponseInput = {
+  isNavigatingForward?: InputMaybe<Scalars['Boolean']['input']>;
   questionId: Scalars['UUID']['input'];
+  questionNumber: Scalars['Int']['input'];
   responseValue: Scalars['Int']['input'];
   sessionId: Scalars['UUID']['input'];
   timeTakenSeconds?: InputMaybe<Scalars['Int']['input']>;
 };
 
-export type SubmitResponsePayload = {
-  __typename?: 'SubmitResponsePayload';
-  message?: Maybe<Scalars['String']['output']>;
-  response?: Maybe<AssessmentResponse>;
+export type SubmitOrUpdateResponsePayload = {
+  __typename?: 'SubmitOrUpdateResponsePayload';
+  message: Scalars['String']['output'];
+  nextQuestion: NextQuestionHint;
+  progress: ProgressMetadata;
+  response: EnhancedResponseDetail;
+  session: SessionStateDetail;
   success: Scalars['Boolean']['output'];
 };
 
@@ -4579,6 +4652,8 @@ export type UpdateAssessmentResponseOnAssessmentResponseForAssessmentResponsesQu
   assessmentSessionToSessionId?: InputMaybe<AssessmentResponsesSessionIdFkeyInput>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
+  /** Tracks whether this response is an update (true) or initial submission (false) */
+  isUpdate?: InputMaybe<Scalars['Boolean']['input']>;
   /** User response value on scale of 1-10 (1 = Not at all, 10 = Very much) */
   responseValue?: InputMaybe<Scalars['Int']['input']>;
   sessionId?: InputMaybe<Scalars['UUID']['input']>;
@@ -4593,6 +4668,8 @@ export type UpdateAssessmentResponseOnAssessmentResponseForAssessmentResponsesSe
   assessmentSessionToSessionId?: InputMaybe<AssessmentResponsesSessionIdFkeyInput>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
+  /** Tracks whether this response is an update (true) or initial submission (false) */
+  isUpdate?: InputMaybe<Scalars['Boolean']['input']>;
   questionId?: InputMaybe<Scalars['UUID']['input']>;
   /** User response value on scale of 1-10 (1 = Not at all, 10 = Very much) */
   responseValue?: InputMaybe<Scalars['Int']['input']>;
@@ -4703,6 +4780,8 @@ export type UpdateAssessmentSessionOnAssessmentResponseForAssessmentResponsesSes
   id?: InputMaybe<Scalars['UUID']['input']>;
   /** Last time the user interacted with this session (for timeout tracking) */
   lastActivityTime?: InputMaybe<Scalars['Datetime']['input']>;
+  /** The last question number that the user actually answered (separate from current_question_number which tracks navigation) */
+  lastAnsweredQuestion?: InputMaybe<Scalars['Int']['input']>;
   /** Reference to the payment made for this assessment (unique - one session per payment) */
   paymentId?: InputMaybe<Scalars['UUID']['input']>;
   paymentToPaymentId?: InputMaybe<AssessmentSessionsPaymentIdFkeyInput>;
@@ -4728,6 +4807,8 @@ export type UpdateAssessmentSessionOnAssessmentResultForAssessmentResultsSession
   id?: InputMaybe<Scalars['UUID']['input']>;
   /** Last time the user interacted with this session (for timeout tracking) */
   lastActivityTime?: InputMaybe<Scalars['Datetime']['input']>;
+  /** The last question number that the user actually answered (separate from current_question_number which tracks navigation) */
+  lastAnsweredQuestion?: InputMaybe<Scalars['Int']['input']>;
   /** Reference to the payment made for this assessment (unique - one session per payment) */
   paymentId?: InputMaybe<Scalars['UUID']['input']>;
   paymentToPaymentId?: InputMaybe<AssessmentSessionsPaymentIdFkeyInput>;
@@ -4753,6 +4834,8 @@ export type UpdateAssessmentSessionOnAssessmentSessionForAssessmentSessionsPayme
   id?: InputMaybe<Scalars['UUID']['input']>;
   /** Last time the user interacted with this session (for timeout tracking) */
   lastActivityTime?: InputMaybe<Scalars['Datetime']['input']>;
+  /** The last question number that the user actually answered (separate from current_question_number which tracks navigation) */
+  lastAnsweredQuestion?: InputMaybe<Scalars['Int']['input']>;
   paymentToPaymentId?: InputMaybe<AssessmentSessionsPaymentIdFkeyInput>;
   startTime?: InputMaybe<Scalars['Datetime']['input']>;
   /** Current status of the assessment session */
@@ -4776,6 +4859,8 @@ export type UpdateAssessmentSessionOnAssessmentSessionForAssessmentSessionsUserI
   id?: InputMaybe<Scalars['UUID']['input']>;
   /** Last time the user interacted with this session (for timeout tracking) */
   lastActivityTime?: InputMaybe<Scalars['Datetime']['input']>;
+  /** The last question number that the user actually answered (separate from current_question_number which tracks navigation) */
+  lastAnsweredQuestion?: InputMaybe<Scalars['Int']['input']>;
   /** Reference to the payment made for this assessment (unique - one session per payment) */
   paymentId?: InputMaybe<Scalars['UUID']['input']>;
   paymentToPaymentId?: InputMaybe<AssessmentSessionsPaymentIdFkeyInput>;
@@ -4800,6 +4885,8 @@ export type UpdateAssessmentSessionOnAssessmentSessionQuestionForAssessmentSessi
   id?: InputMaybe<Scalars['UUID']['input']>;
   /** Last time the user interacted with this session (for timeout tracking) */
   lastActivityTime?: InputMaybe<Scalars['Datetime']['input']>;
+  /** The last question number that the user actually answered (separate from current_question_number which tracks navigation) */
+  lastAnsweredQuestion?: InputMaybe<Scalars['Int']['input']>;
   /** Reference to the payment made for this assessment (unique - one session per payment) */
   paymentId?: InputMaybe<Scalars['UUID']['input']>;
   paymentToPaymentId?: InputMaybe<AssessmentSessionsPaymentIdFkeyInput>;
@@ -5002,13 +5089,6 @@ export type AssessmentStatusQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type AssessmentStatusQuery = { __typename?: 'Query', assessmentStatus?: { __typename?: 'AssessmentStatusPayload', hasCompletedAssessment: boolean, hasActiveSession: boolean, completedAt?: any | null, resultId?: any | null, totalReadinessIndex?: number | null } | null };
 
-export type BatchSubmitResponsesMutationVariables = Exact<{
-  input: BatchSubmitResponsesInput;
-}>;
-
-
-export type BatchSubmitResponsesMutation = { __typename?: 'Mutation', batchSubmitResponses?: { __typename?: 'BatchSubmitResponsesPayload', success: boolean, message?: string | null, answeredCount: number, responses: Array<{ __typename?: 'AssessmentResponse', id: any, sessionId: any, questionId: any, responseValue: number, timeTakenSeconds?: number | null, createdAt: any, updatedAt: any }> } | null };
-
 export type BulkCreateAssessmentQuestionsMutationVariables = Exact<{
   input: BulkCreateQuestionsInput;
 }>;
@@ -5042,13 +5122,6 @@ export type DeleteAssessmentQuestionMutationVariables = Exact<{
 
 export type DeleteAssessmentQuestionMutation = { __typename?: 'Mutation', deleteAssessmentQuestion?: { __typename?: 'DeleteQuestionPayload', success: boolean, message?: string | null } | null };
 
-export type GetQuestionBatchQueryVariables = Exact<{
-  batchNumber: Scalars['Int']['input'];
-}>;
-
-
-export type GetQuestionBatchQuery = { __typename?: 'Query', getQuestionBatch?: { __typename?: 'QuestionBatch', batchNumber: number, totalBatches: number, currentBatchStartIndex: number, currentBatchEndIndex: number, questions: Array<{ __typename?: 'QuestionBatchItem', id: any, sessionId: any, questionId: any, displayOrder: number, isAnswered: boolean, createdAt: any, questionText: string, sectionName: string, sectionType: string }> } | null };
-
 export type GetSectionQuestionsQueryVariables = Exact<{
   sectionId: Scalars['UUID']['input'];
 }>;
@@ -5060,6 +5133,14 @@ export type GetAllSectionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetAllSectionsQuery = { __typename?: 'Query', assessmentSections?: { __typename?: 'AssessmentSectionsConnection', nodes: Array<{ __typename?: 'AssessmentSection', id: any, type: AssessmentSectionType, name: string, description?: string | null, displayOrder: number, isActive: boolean }> } | null };
+
+export type GetSessionQuestionQueryVariables = Exact<{
+  sessionId: Scalars['UUID']['input'];
+  questionNumber: Scalars['Int']['input'];
+}>;
+
+
+export type GetSessionQuestionQuery = { __typename?: 'Query', getSessionQuestion?: { __typename?: 'SessionQuestionPayload', question: { __typename?: 'SessionQuestionDetail', id: any, sessionId: any, questionId: any, displayOrder: number, questionText: string, sectionName: string, sectionType: string, isAnswered: boolean }, currentResponse?: { __typename?: 'CurrentResponseDetail', id: any, responseValue: number, timeTakenSeconds?: number | null, isUpdate: boolean, updatedAt: any } | null, navigation: { __typename?: 'NavigationMetadata', currentNumber: number, totalQuestions: number, hasPrevious: boolean, hasNext: boolean, previousNumber?: number | null, nextNumber?: number | null }, progress: { __typename?: 'ProgressMetadata', answeredCount: number, totalCount: number, percentComplete: number } } | null };
 
 export type ResendReportMutationVariables = Exact<{
   resultId: Scalars['UUID']['input'];
@@ -5082,15 +5163,12 @@ export type StartAssessmentMutationVariables = Exact<{
 
 export type StartAssessmentMutation = { __typename?: 'Mutation', startAssessment?: { __typename?: 'StartAssessmentPayload', message?: string | null, session?: { __typename?: 'AssessmentSession', id: any, userId: any, paymentId: any, status: AssessmentStatus, currentQuestionNumber: number, startTime: any, expiresAt: any } | null } | null };
 
-export type SubmitResponseMutationVariables = Exact<{
-  sessionId: Scalars['UUID']['input'];
-  questionId: Scalars['UUID']['input'];
-  responseValue: Scalars['Int']['input'];
-  timeTakenSeconds?: InputMaybe<Scalars['Int']['input']>;
+export type SubmitOrUpdateResponseMutationVariables = Exact<{
+  input: SubmitOrUpdateResponseInput;
 }>;
 
 
-export type SubmitResponseMutation = { __typename?: 'Mutation', submitAssessmentResponse?: { __typename?: 'SubmitResponsePayload', success: boolean, message?: string | null, response?: { __typename?: 'AssessmentResponse', id: any, sessionId: any, questionId: any, responseValue: number, timeTakenSeconds?: number | null, createdAt: any } | null } | null };
+export type SubmitOrUpdateResponseMutation = { __typename?: 'Mutation', submitOrUpdateResponse?: { __typename?: 'SubmitOrUpdateResponsePayload', success: boolean, message: string, response: { __typename?: 'EnhancedResponseDetail', id: any, sessionId: any, questionId: any, responseValue: number, timeTakenSeconds?: number | null, isUpdate: boolean, createdAt: any, updatedAt: any }, session: { __typename?: 'SessionStateDetail', id: any, currentQuestionNumber: number, lastAnsweredQuestion?: number | null, lastActivityTime: any, expiresAt: any }, progress: { __typename?: 'ProgressMetadata', answeredCount: number, totalCount: number, percentComplete: number }, nextQuestion: { __typename?: 'NextQuestionHint', questionNumber?: number | null, hasNext: boolean } } | null };
 
 export type UpdateAssessmentQuestionMutationVariables = Exact<{
   input: UpdateQuestionInput;
@@ -5201,19 +5279,18 @@ export const AssessmentProgressDocument = {"kind":"Document","definitions":[{"ki
 export const AssessmentQuestionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AssessmentQuestions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assessmentQuestions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"questionText"}},{"kind":"Field","name":{"kind":"Name","value":"sectionId"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}}]}}]}}]}}]} as unknown as DocumentNode<AssessmentQuestionsQuery, AssessmentQuestionsQueryVariables>;
 export const AssessmentResultsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AssessmentResults"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assessmentResult"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"totalReadinessIndex"}},{"kind":"Field","name":{"kind":"Name","value":"pdfPath"}},{"kind":"Field","name":{"kind":"Name","value":"isEmailed"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"assessmentSectionResultsByResultId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sectionType"}},{"kind":"Field","name":{"kind":"Name","value":"score"}},{"kind":"Field","name":{"kind":"Name","value":"interpretationLabel"}},{"kind":"Field","name":{"kind":"Name","value":"interpretationNarrative"}}]}}]}}]}}]}}]} as unknown as DocumentNode<AssessmentResultsQuery, AssessmentResultsQueryVariables>;
 export const AssessmentStatusDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AssessmentStatus"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assessmentStatus"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasCompletedAssessment"}},{"kind":"Field","name":{"kind":"Name","value":"hasActiveSession"}},{"kind":"Field","name":{"kind":"Name","value":"completedAt"}},{"kind":"Field","name":{"kind":"Name","value":"resultId"}},{"kind":"Field","name":{"kind":"Name","value":"totalReadinessIndex"}}]}}]}}]} as unknown as DocumentNode<AssessmentStatusQuery, AssessmentStatusQueryVariables>;
-export const BatchSubmitResponsesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"BatchSubmitResponses"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BatchSubmitResponsesInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"batchSubmitResponses"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"answeredCount"}},{"kind":"Field","name":{"kind":"Name","value":"responses"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"sessionId"}},{"kind":"Field","name":{"kind":"Name","value":"questionId"}},{"kind":"Field","name":{"kind":"Name","value":"responseValue"}},{"kind":"Field","name":{"kind":"Name","value":"timeTakenSeconds"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]}}]} as unknown as DocumentNode<BatchSubmitResponsesMutation, BatchSubmitResponsesMutationVariables>;
 export const BulkCreateAssessmentQuestionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"BulkCreateAssessmentQuestions"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BulkCreateQuestionsInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"bulkCreateAssessmentQuestions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"questions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"questionText"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}}]}},{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<BulkCreateAssessmentQuestionsMutation, BulkCreateAssessmentQuestionsMutationVariables>;
 export const CompleteAssessmentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CompleteAssessment"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sessionId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"completeAssessment"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"sessionId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sessionId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"result"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"sessionId"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"totalReadinessIndex"}},{"kind":"Field","name":{"kind":"Name","value":"pdfPath"}},{"kind":"Field","name":{"kind":"Name","value":"isEmailed"}},{"kind":"Field","name":{"kind":"Name","value":"emailedAt"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"pdfPath"}}]}}]}}]} as unknown as DocumentNode<CompleteAssessmentMutation, CompleteAssessmentMutationVariables>;
 export const CreateAssessmentQuestionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateAssessmentQuestion"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateQuestionInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createAssessmentQuestion"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"question"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"sectionId"}},{"kind":"Field","name":{"kind":"Name","value":"questionText"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<CreateAssessmentQuestionMutation, CreateAssessmentQuestionMutationVariables>;
 export const CurrentAssessmentSessionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"CurrentAssessmentSession"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentAssessmentSession"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"paymentId"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"currentQuestionNumber"}},{"kind":"Field","name":{"kind":"Name","value":"startTime"}},{"kind":"Field","name":{"kind":"Name","value":"lastActivityTime"}},{"kind":"Field","name":{"kind":"Name","value":"expiresAt"}}]}}]}}]} as unknown as DocumentNode<CurrentAssessmentSessionQuery, CurrentAssessmentSessionQueryVariables>;
 export const DeleteAssessmentQuestionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteAssessmentQuestion"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DeleteQuestionInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteAssessmentQuestion"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<DeleteAssessmentQuestionMutation, DeleteAssessmentQuestionMutationVariables>;
-export const GetQuestionBatchDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetQuestionBatch"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"batchNumber"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getQuestionBatch"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"batchNumber"},"value":{"kind":"Variable","name":{"kind":"Name","value":"batchNumber"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"batchNumber"}},{"kind":"Field","name":{"kind":"Name","value":"totalBatches"}},{"kind":"Field","name":{"kind":"Name","value":"currentBatchStartIndex"}},{"kind":"Field","name":{"kind":"Name","value":"currentBatchEndIndex"}},{"kind":"Field","name":{"kind":"Name","value":"questions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"sessionId"}},{"kind":"Field","name":{"kind":"Name","value":"questionId"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}},{"kind":"Field","name":{"kind":"Name","value":"isAnswered"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"questionText"}},{"kind":"Field","name":{"kind":"Name","value":"sectionName"}},{"kind":"Field","name":{"kind":"Name","value":"sectionType"}}]}}]}}]}}]} as unknown as DocumentNode<GetQuestionBatchQuery, GetQuestionBatchQueryVariables>;
 export const GetSectionQuestionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSectionQuestions"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sectionId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assessmentQuestions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"condition"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"sectionId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sectionId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"sectionId"}},{"kind":"Field","name":{"kind":"Name","value":"questionText"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}}]}}]}}]} as unknown as DocumentNode<GetSectionQuestionsQuery, GetSectionQuestionsQueryVariables>;
 export const GetAllSectionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAllSections"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assessmentSections"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"DISPLAY_ORDER_ASC"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}}]}}]}}]}}]} as unknown as DocumentNode<GetAllSectionsQuery, GetAllSectionsQueryVariables>;
+export const GetSessionQuestionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSessionQuestion"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sessionId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"questionNumber"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getSessionQuestion"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"sessionId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sessionId"}}},{"kind":"Argument","name":{"kind":"Name","value":"questionNumber"},"value":{"kind":"Variable","name":{"kind":"Name","value":"questionNumber"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"question"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"sessionId"}},{"kind":"Field","name":{"kind":"Name","value":"questionId"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}},{"kind":"Field","name":{"kind":"Name","value":"questionText"}},{"kind":"Field","name":{"kind":"Name","value":"sectionName"}},{"kind":"Field","name":{"kind":"Name","value":"sectionType"}},{"kind":"Field","name":{"kind":"Name","value":"isAnswered"}}]}},{"kind":"Field","name":{"kind":"Name","value":"currentResponse"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"responseValue"}},{"kind":"Field","name":{"kind":"Name","value":"timeTakenSeconds"}},{"kind":"Field","name":{"kind":"Name","value":"isUpdate"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"navigation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentNumber"}},{"kind":"Field","name":{"kind":"Name","value":"totalQuestions"}},{"kind":"Field","name":{"kind":"Name","value":"hasPrevious"}},{"kind":"Field","name":{"kind":"Name","value":"hasNext"}},{"kind":"Field","name":{"kind":"Name","value":"previousNumber"}},{"kind":"Field","name":{"kind":"Name","value":"nextNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"progress"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"answeredCount"}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"percentComplete"}}]}}]}}]}}]} as unknown as DocumentNode<GetSessionQuestionQuery, GetSessionQuestionQueryVariables>;
 export const ResendReportDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"ResendReport"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"resultId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"resendAssessmentReport"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"resultId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"resultId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<ResendReportMutation, ResendReportMutationVariables>;
 export const SessionQuestionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"SessionQuestions"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sessionId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assessmentSession"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sessionId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"currentQuestionNumber"}},{"kind":"Field","name":{"kind":"Name","value":"startTime"}},{"kind":"Field","name":{"kind":"Name","value":"lastActivityTime"}},{"kind":"Field","name":{"kind":"Name","value":"expiresAt"}},{"kind":"Field","name":{"kind":"Name","value":"assessmentSessionQuestionsBySessionId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"sessionId"}},{"kind":"Field","name":{"kind":"Name","value":"questionId"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}},{"kind":"Field","name":{"kind":"Name","value":"isAnswered"}},{"kind":"Field","name":{"kind":"Name","value":"question"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"questionText"}},{"kind":"Field","name":{"kind":"Name","value":"sectionId"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"assessmentResponsesBySessionId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"questionId"}},{"kind":"Field","name":{"kind":"Name","value":"responseValue"}},{"kind":"Field","name":{"kind":"Name","value":"timeTakenSeconds"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]}}]}}]} as unknown as DocumentNode<SessionQuestionsQuery, SessionQuestionsQueryVariables>;
 export const StartAssessmentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StartAssessment"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"paymentId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"startAssessment"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"paymentId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"paymentId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"session"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"paymentId"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"currentQuestionNumber"}},{"kind":"Field","name":{"kind":"Name","value":"startTime"}},{"kind":"Field","name":{"kind":"Name","value":"expiresAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<StartAssessmentMutation, StartAssessmentMutationVariables>;
-export const SubmitResponseDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SubmitResponse"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sessionId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"questionId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"responseValue"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"timeTakenSeconds"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submitAssessmentResponse"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"sessionId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sessionId"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"questionId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"questionId"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"responseValue"},"value":{"kind":"Variable","name":{"kind":"Name","value":"responseValue"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"timeTakenSeconds"},"value":{"kind":"Variable","name":{"kind":"Name","value":"timeTakenSeconds"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"response"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"sessionId"}},{"kind":"Field","name":{"kind":"Name","value":"questionId"}},{"kind":"Field","name":{"kind":"Name","value":"responseValue"}},{"kind":"Field","name":{"kind":"Name","value":"timeTakenSeconds"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<SubmitResponseMutation, SubmitResponseMutationVariables>;
+export const SubmitOrUpdateResponseDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SubmitOrUpdateResponse"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SubmitOrUpdateResponseInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submitOrUpdateResponse"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"response"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"sessionId"}},{"kind":"Field","name":{"kind":"Name","value":"questionId"}},{"kind":"Field","name":{"kind":"Name","value":"responseValue"}},{"kind":"Field","name":{"kind":"Name","value":"timeTakenSeconds"}},{"kind":"Field","name":{"kind":"Name","value":"isUpdate"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"session"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"currentQuestionNumber"}},{"kind":"Field","name":{"kind":"Name","value":"lastAnsweredQuestion"}},{"kind":"Field","name":{"kind":"Name","value":"lastActivityTime"}},{"kind":"Field","name":{"kind":"Name","value":"expiresAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"progress"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"answeredCount"}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"percentComplete"}}]}},{"kind":"Field","name":{"kind":"Name","value":"nextQuestion"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"questionNumber"}},{"kind":"Field","name":{"kind":"Name","value":"hasNext"}}]}},{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<SubmitOrUpdateResponseMutation, SubmitOrUpdateResponseMutationVariables>;
 export const UpdateAssessmentQuestionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateAssessmentQuestion"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateQuestionInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateAssessmentQuestion"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"question"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"questionText"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<UpdateAssessmentQuestionMutation, UpdateAssessmentQuestionMutationVariables>;
 export const UpdateAssessmentSectionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateAssessmentSection"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateSectionInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateAssessmentSection"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"section"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<UpdateAssessmentSectionMutation, UpdateAssessmentSectionMutationVariables>;
 export const GetUsersWithAssessmentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetUsersWithAssessment"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"usersWithAssessment"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"userName"}},{"kind":"Field","name":{"kind":"Name","value":"userEmail"}},{"kind":"Field","name":{"kind":"Name","value":"sessionId"}},{"kind":"Field","name":{"kind":"Name","value":"resultId"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"startedAt"}},{"kind":"Field","name":{"kind":"Name","value":"completedAt"}},{"kind":"Field","name":{"kind":"Name","value":"expiresAt"}},{"kind":"Field","name":{"kind":"Name","value":"totalScore"}},{"kind":"Field","name":{"kind":"Name","value":"interpretationLabel"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"completedCount"}},{"kind":"Field","name":{"kind":"Name","value":"inProgressCount"}}]}}]}}]} as unknown as DocumentNode<GetUsersWithAssessmentQuery, GetUsersWithAssessmentQueryVariables>;

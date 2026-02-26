@@ -1,5 +1,4 @@
 export * from './use-start-assessment';
-export * from './use-submit-response';
 export * from './use-complete-assessment';
 export * from './use-current-session';
 export * from './use-session-questions';
@@ -9,10 +8,11 @@ export * from './use-resend-report';
 export * from './use-download-report';
 export * from './use-admin-stats';
 export * from './use-assessment-status';
-// Batch operations
-export * from './use-question-batch';
-export * from './use-batch-submit';
-// Sections are now fixed - create/delete hooks removed
+// Single-question hooks
+export * from './use-session-question';
+export * from './use-submit-or-update-response';
+export * from './use-question-flow';
+// Admin hooks
 export * from './use-update-section';
 export * from './use-create-question';
 export * from './use-bulk-create-questions';

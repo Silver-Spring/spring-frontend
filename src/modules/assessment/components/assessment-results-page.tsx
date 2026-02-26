@@ -275,127 +275,46 @@ export const AssessmentResultsPage = ({ resultId }: AssessmentResultsPageProps) 
               </p>
             </div>
 
-            {/* 2️⃣ MAIN ANALYTICS GRID (Two-Column Layout) */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-              {/* LEFT COLUMN — Total Readiness + Cohort Charts */}
-              <div className="space-y-6">
-                {/* Total Readiness Index */}
-                <Card className="bg-linear-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-green-950/20 dark:via-emerald-950/20 dark:to-teal-950/20 border-2 border-green-200/50 dark:border-green-800/50 shadow-lg shadow-green-500/10">
-                  <CardContent className="pt-6 pb-4 text-center">
-                    <p className="text-sm font-semibold text-green-700 dark:text-green-300 uppercase tracking-widest mb-2">
-                      Total Readiness Index
-                    </p>
-                    <div className="text-7xl font-black bg-linear-to-r from-green-600 via-emerald-600 to-teal-600 dark:from-green-400 dark:via-emerald-400 dark:to-teal-400 bg-clip-text text-transparent leading-none mb-2">
-                      {result.totalReadinessIndex}
-                    </div>
-                    <p className="text-sm text-muted-foreground mb-4">out of 500</p>
-                    <span
-                      className={`px-4 py-1.5 rounded-full text-sm font-bold ${overallStageColor}`}
-                    >
-                      {overallStage}
-                    </span>
-                  </CardContent>
-                </Card>
+          {/* Total Readiness Index */}
+          <Card className="mb-8 bg-linear-to-br from-primary/10 via-primary/5 to-background">
+            <CardHeader className="text-center">
+              <CardTitle className="text-2xl mb-2">Total Readiness Index</CardTitle>
+              <div className="text-6xl font-bold text-primary my-4">
+                {result.totalReadinessIndex}
+              </div>
+            </CardHeader>
+            <CardContent className="text-center">
+              {result.isEmailed && (
+                <div className="flex items-center justify-center gap-2 text-green-600 dark:text-green-400">
+                  <Mail className="size-4" />
+                  <span className="text-sm">Results have been emailed to you</span>
+                </div>
+              )}
+            </CardContent>
+          </Card>
 
-                {/* Comparison with Age Group & Gender */}
-                <Card className="border-2 border-green-200/50 dark:border-green-800/50 shadow-lg shadow-green-500/10">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-base text-green-700 dark:text-green-300">
-                      Comparison with Your Cohort
-                    </CardTitle>
-                    <CardDescription>Age group & gender distribution</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    {/* Pie charts row */}
-                    <div className="grid grid-cols-2 gap-6 mb-6">
-                      {/* Age Group Pie */}
-                      <div>
-                        <p className="text-sm font-semibold text-center text-muted-foreground mb-3">
-                          Age Group
-                        </p>
-                        <ChartContainer config={chartConfig} className="h-64 w-full">
-                          <PieChart width={250} height={250}>
-                            <Pie
-                              data={ageGroupData}
-                              cx="50%"
-                              cy="50%"
-                              innerRadius={65}
-                              outerRadius={100}
-                              paddingAngle={2}
-                              dataKey="value"
-                            >
-                              {ageGroupData.map((entry, index) => (
-                                <Cell key={`age-${index}`} fill={entry.color} />
-                              ))}
-                            </Pie>
-                            <Tooltip
-                              formatter={(value) => `${value}%`}
-                              contentStyle={{
-                                backgroundColor: 'rgba(0,0,0,0.8)',
-                                border: 'none',
-                                borderRadius: '8px',
-                              }}
-                            />
-                          </PieChart>
-                        </ChartContainer>
-                        <div className="space-y-1.5 mt-3">
-                          {ageGroupData.map((item) => (
-                            <div key={item.name} className="flex items-center gap-2 text-xs">
-                              <div
-                                className="w-2.5 h-2.5 rounded-full shrink-0"
-                                style={{ backgroundColor: item.color }}
-                              />
-                              <span className="text-muted-foreground truncate">
-                                {item.name}: <strong>{item.value}%</strong>
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Gender Pie */}
-                      <div>
-                        <p className="text-sm font-semibold text-center text-muted-foreground mb-3">
-                          Gender
-                        </p>
-                        <ChartContainer config={chartConfig} className="h-64 w-full">
-                          <PieChart width={250} height={250}>
-                            <Pie
-                              data={genderData}
-                              cx="50%"
-                              cy="50%"
-                              innerRadius={65}
-                              outerRadius={100}
-                              paddingAngle={2}
-                              dataKey="value"
-                            >
-                              {genderData.map((entry, index) => (
-                                <Cell key={`gender-${index}`} fill={entry.color} />
-                              ))}
-                            </Pie>
-                            <Tooltip
-                              formatter={(value) => `${value}%`}
-                              contentStyle={{
-                                backgroundColor: 'rgba(0,0,0,0.8)',
-                                border: 'none',
-                                borderRadius: '8px',
-                              }}
-                            />
-                          </PieChart>
-                        </ChartContainer>
-                        <div className="space-y-1.5 mt-3">
-                          {genderData.map((item) => (
-                            <div key={item.name} className="flex items-center gap-2 text-xs">
-                              <div
-                                className="w-2.5 h-2.5 rounded-full shrink-0"
-                                style={{ backgroundColor: item.color }}
-                              />
-                              <span className="text-muted-foreground">
-                                {item.name}: <strong>{item.value}%</strong>
-                              </span>
-                            </div>
-                          ))}
-                        </div>
+          {/* Section Breakdown */}
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle>Section Breakdown</CardTitle>
+              <CardDescription>Detailed scores across all assessment areas</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {sectionResults.map((section) => (
+                <div key={section.sectionType} className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <h3 className="font-semibold">
+                      {SECTION_NAMES[section.sectionType] || section.sectionType}
+                    </h3>
+                    <div className="text-right">
+                      <div className="text-lg font-bold">{section.score}</div>
+                      <div
+                        className={`text-sm font-medium ${
+                          INTERPRETATION_COLORS[section.interpretationLabel?.toLowerCase() || ''] ||
+                          ''
+                        }`}
+                      >
+                        {section.interpretationLabel}
                       </div>
                     </div>
                   </CardContent>

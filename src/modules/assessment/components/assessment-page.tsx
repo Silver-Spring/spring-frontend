@@ -1,21 +1,18 @@
 'use client';
 
 import { ProtectedLayout } from '@/components/layouts';
-import { Alert, AlertAction, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Spinner } from '@/components/ui/spinner';
 import {
-  useAssessmentProgress,
-  useBatchSubmit,
   useCompleteAssessment,
-  useQuestionBatch,
-  useSessionQuestions,
+  useCurrentSession,
+  useQuestionFlow,
+  useSubmitOrUpdateResponse,
 } from '@/modules/assessment/hooks';
-import { AlertCircleIcon, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { CheckCircleIcon, ChevronLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 interface AssessmentPageProps {
@@ -25,236 +22,162 @@ interface AssessmentPageProps {
 export const AssessmentPage = ({ sessionId }: AssessmentPageProps) => {
   const router = useRouter();
 
-  // Fetch session to get previous responses and current question number
-  const { previousResponses, session, refetch: refetchSession } = useSessionQuestions(sessionId);
+  const { currentSession, loading: sessionLoading } = useCurrentSession();
 
-  // Calculate which batch to start from based on currentQuestionNumber
-  // If user answered questions 1-5, currentQuestionNumber will be 6 (start of batch 2)
-  // Formula: batchNumber = Math.ceil(currentQuestionNumber / 5)
-  const initialBatchNumber = useMemo(() => {
-    const currentQuestionNumber = session?.currentQuestionNumber ?? 1;
-    // If currentQuestionNumber is 1-5, batch is 1; 6-10, batch is 2; etc.
-    return Math.max(1, Math.ceil(currentQuestionNumber / 5));
-  }, [session?.currentQuestionNumber]);
+  const [questionNumber, setQuestionNumber] = useState<number>(1);
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [questionStartTime, setQuestionStartTime] = useState(Date.now());
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isFadingOut, setIsFadingOut] = useState(false);
+  const [showCompletionMessage, setShowCompletionMessage] = useState(false);
+  const [optimisticValue, setOptimisticValue] = useState<number | null>(null);
 
-  const [currentBatchNumber, setCurrentBatchNumber] = useState(initialBatchNumber);
-  const [batchResponses, setBatchResponses] = useState<Map<string, number>>(new Map());
-  const [batchStartTime, setBatchStartTime] = useState(Date.now());
-  const [isNavigating, setIsNavigating] = useState(false);
-  const [hasInitialized, setHasInitialized] = useState(false);
-  const [showReminder, setShowReminder] = useState(true);
+  const [currentProgress, setCurrentProgress] = useState<{
+    answeredCount: number;
+    totalCount: number;
+    percentComplete: number;
+  } | null>(null);
 
-  // Update batch number when session data loads (only on initial mount)
-  useEffect(() => {
-    if (!hasInitialized && initialBatchNumber > 1) {
-      setCurrentBatchNumber(initialBatchNumber);
-      setHasInitialized(true);
-    }
-  }, [initialBatchNumber, hasInitialized]);
+  const prevQuestionRef = useRef<HTMLDivElement | null>(null);
+  const currentQuestionRef = useRef<HTMLDivElement | null>(null);
+  const nextQuestionRef = useRef<HTMLDivElement | null>(null);
 
-  // Fetch current batch
-  const { batch, loading: batchLoading } = useQuestionBatch(currentBatchNumber);
+  const { current, previous, next } = useQuestionFlow({
+    sessionId,
+    questionNumber,
+    enablePrefetch: true,
+  });
 
-  const { batchSubmit, loading: submitting } = useBatchSubmit();
+  const {
+    question,
+    currentResponse,
+    progress,
+    loading: questionLoading,
+    error: questionError,
+  } = current;
+
+  const prevQuestion = previous?.question;
+  const prevResponse = previous?.currentResponse;
+  const nextQuestion = next?.question;
+
+  const { submitOrUpdateResponse, loading: submitting } = useSubmitOrUpdateResponse();
   const { completeAssessment, loading: completing } = useCompleteAssessment();
-  const { progress, refetch: refetchProgress } = useAssessmentProgress();
-
-  // Build a map of previous answers for easy lookup
-  const previousAnswersMap = useMemo(() => {
-    const map = new Map<string, number>();
-    if (previousResponses && Array.isArray(previousResponses)) {
-      previousResponses.forEach((response: { questionId: string; responseValue: number }) => {
-        map.set(response.questionId, response.responseValue);
-      });
-    }
-    return map;
-  }, [previousResponses]);
-
-  // Initialize batch responses with previous answers
-  useEffect(() => {
-    if (batch?.questions && batch.questions.length > 0) {
-      const newResponses = new Map<string, number>();
-      batch.questions.forEach((sessionQuestion) => {
-        const previousValue = previousAnswersMap.get(sessionQuestion.questionId);
-        if (previousValue) {
-          newResponses.set(sessionQuestion.questionId, previousValue);
-        }
-      });
-      setBatchResponses(newResponses);
-    }
-  }, [batch?.questions, previousAnswersMap]);
-
-  const totalBatches = batch?.totalBatches ?? 10;
-  const totalQuestions = totalBatches * 5; // 10 batches × 5 questions each
-
-  // Use backend's progress calculation
-  const answeredCount = progress?.answeredQuestions ?? previousAnswersMap.size;
-  const progressPercentage = progress?.progressPercentage ?? 0;
 
   useEffect(() => {
-    setBatchStartTime(Date.now());
-  }, [currentBatchNumber]);
-
-  const handleSliderChange = (questionId: string, value: number[]) => {
-    setBatchResponses(new Map(batchResponses.set(questionId, value[0])));
-  };
-
-  // Check if all questions in current batch are answered
-  const allBatchQuestionsAnswered = useMemo(() => {
-    if (!batch?.questions) return false;
-    return batch.questions.every((q) => batchResponses.has(q.questionId));
-  }, [batch?.questions, batchResponses]);
-
-  const handleNext = async () => {
-    if (!batch || isNavigating) return;
-
-    if (!allBatchQuestionsAnswered) {
-      toast.error('Please answer all questions in this batch before continuing');
-      return;
+    if (!isInitialized && currentSession && currentSession.currentQuestionNumber) {
+      setQuestionNumber(currentSession.currentQuestionNumber);
+      setIsInitialized(true);
+    } else if (!isInitialized && !sessionLoading && !currentSession) {
+      setIsInitialized(true);
     }
+  }, [currentSession, sessionLoading, isInitialized]);
 
-    setIsNavigating(true);
+  useEffect(() => {
+    if (progress && !currentProgress) {
+      setCurrentProgress({
+        answeredCount: progress.answeredCount ?? 0,
+        totalCount: progress.totalCount ?? 50,
+        percentComplete: progress.percentComplete ?? 0,
+      });
+    }
+  }, [progress, currentProgress]);
+
+  useEffect(() => {
+    setQuestionStartTime(Date.now());
+    setOptimisticValue(null);
+  }, [questionNumber]);
+
+  useEffect(() => {
+    if (currentQuestionRef.current) {
+      const id = setTimeout(() => {
+        currentQuestionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 50);
+      return () => clearTimeout(id);
+    }
+  }, [questionNumber]);
+
+  const handleAnswerSelect = async (value: number) => {
+    if (isTransitioning || completing || !question) return;
+
+    const timeTaken = Math.floor((Date.now() - questionStartTime) / 1000);
+
+    setOptimisticValue(value);
+    setIsTransitioning(true);
+
     try {
-      // Prepare responses array for submission
-      const responsesToSubmit = batch.questions.map((sessionQuestion) => {
-        const responseValue = batchResponses.get(sessionQuestion.questionId);
-        const timeTaken = Math.floor((Date.now() - batchStartTime) / 1000 / batch.questions.length);
-        return {
-          questionId: sessionQuestion.questionId,
-          responseValue: responseValue!,
-          timeTakenSeconds: timeTaken,
-        };
+      const result = await submitOrUpdateResponse({
+        sessionId,
+        questionId: question.questionId,
+        questionNumber,
+        responseValue: value,
+        timeTakenSeconds: timeTaken,
+        isNavigatingForward: true,
       });
 
-      // Submit batch responses
-      const result = await batchSubmit(sessionId, responsesToSubmit);
-
-      if (!result.success) {
-        toast.error(result.message || 'Failed to save your answers. Please try again.');
-        return;
+      if (result.progress) {
+        setCurrentProgress({
+          answeredCount: result.progress.answeredCount,
+          totalCount: result.progress.totalCount,
+          percentComplete: result.progress.percentComplete ?? 0,
+        });
       }
 
-      // Refetch session data to get updated previousResponses
-      await refetchSession();
+      setIsFadingOut(true);
 
-      // Refetch progress to get updated answered count
-      const updatedProgress = await refetchProgress();
-      const allAnswered =
-        updatedProgress.data?.assessmentProgress?.answeredQuestions === totalQuestions;
+      await new Promise((resolve) => setTimeout(resolve, 300));
 
-      if (allAnswered) {
-        // All questions answered - complete assessment
-        const completeResult = await completeAssessment(sessionId);
-        if (completeResult.success && completeResult.result?.id) {
-          router.replace(`/assessment/results/${completeResult.result.id}`);
-        } else {
-          toast.error(completeResult.message || 'Failed to complete assessment. Please try again.');
-        }
-      } else {
-        // Move to next batch
-        setCurrentBatchNumber(currentBatchNumber + 1);
-        setBatchResponses(new Map());
+      if (questionNumber >= 50) {
+        await handleComplete();
+      } else if (result.nextQuestion.hasNext) {
+        setQuestionNumber((prev) => prev + 1);
+
+        setTimeout(() => setIsFadingOut(false), 50);
       }
     } catch (error) {
-      console.error('Error in handleNext:', error);
-      toast.error('An error occurred. Please try again.');
+      console.error('Failed to submit answer:', error);
+      toast.error('Failed to save answer. Please try again.');
+      setOptimisticValue(null);
     } finally {
-      setIsNavigating(false);
+      setIsTransitioning(false);
     }
   };
 
   const handlePrevious = async () => {
-    if (currentBatchNumber > 1 && !isNavigating) {
-      setIsNavigating(true);
-      try {
-        // If user changed any answers, save them before moving
-        const changedResponses = batch?.questions.filter((sessionQuestion) => {
-          const currentValue = batchResponses.get(sessionQuestion.questionId);
-          const previousValue = previousAnswersMap.get(sessionQuestion.questionId);
-          return currentValue && currentValue !== previousValue;
-        });
+    if (isTransitioning || questionNumber <= 1) return;
 
-        if (changedResponses && changedResponses.length > 0) {
-          const responsesToSubmit = changedResponses.map((sessionQuestion) => {
-            const responseValue = batchResponses.get(sessionQuestion.questionId);
-            const timeTaken = Math.floor(
-              (Date.now() - batchStartTime) / 1000 / batch!.questions.length
-            );
-            return {
-              questionId: sessionQuestion.questionId,
-              responseValue: responseValue!,
-              timeTakenSeconds: timeTaken,
-            };
-          });
-
-          await batchSubmit(sessionId, responsesToSubmit);
-          // Refetch session data after saving changes
-          await refetchSession();
-        }
-
-        setCurrentBatchNumber(currentBatchNumber - 1);
-        setBatchResponses(new Map());
-      } catch (error) {
-        console.error('Error saving before going back:', error);
-        // Still allow navigation even if save fails
-        setCurrentBatchNumber(currentBatchNumber - 1);
-        setBatchResponses(new Map());
-      } finally {
-        setIsNavigating(false);
-      }
-    }
+    setIsFadingOut(true);
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    setQuestionNumber((prev) => prev - 1);
+    setTimeout(() => setIsFadingOut(false), 50);
   };
 
-  // Check if all questions are answered OR if user is on last batch with all questions answered
-  const allQuestionsAnswered =
-    progress?.answeredQuestions === totalQuestions ||
-    (currentBatchNumber === totalBatches && allBatchQuestionsAnswered);
+  const handleBack = () => {
+    router.push('/dashboard');
+    return;
+  };
 
-  const handleCompleteAssessment = async () => {
-    if (!allQuestionsAnswered) {
-      toast.error('Please answer all questions before completing the assessment.');
-      return;
-    }
-
-    setIsNavigating(true);
+  const handleComplete = async () => {
     try {
-      // First, submit the final batch if there are any unsaved responses
-      if (batch && allBatchQuestionsAnswered) {
-        const responsesToSubmit = batch.questions.map((sessionQuestion) => {
-          const responseValue = batchResponses.get(sessionQuestion.questionId);
-          const timeTaken = Math.floor(
-            (Date.now() - batchStartTime) / 1000 / batch.questions.length
-          );
-          return {
-            questionId: sessionQuestion.questionId,
-            responseValue: responseValue!,
-            timeTakenSeconds: timeTaken,
-          };
-        });
+      setShowCompletionMessage(true);
 
-        const result = await batchSubmit(sessionId, responsesToSubmit);
-        if (!result.success) {
-          toast.error(result.message || 'Failed to save your final answers. Please try again.');
-          return;
-        }
-      }
+      await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      // Now complete the assessment
-      const completeResult = await completeAssessment(sessionId);
-      if (completeResult.success && completeResult.result?.id) {
-        router.replace(`/assessment/results/${completeResult.result.id}`);
+      const result = await completeAssessment(sessionId);
+
+      if (result.success && result.result?.id) {
+        router.replace(`/assessment/results/${result.result.id}`);
       } else {
-        toast.error(completeResult.message || 'Failed to complete assessment. Please try again.');
+        setShowCompletionMessage(false);
+        toast.error(result.message || 'Failed to complete assessment. Please try again.');
       }
     } catch (error) {
-      console.error('Error completing assessment:', error);
+      setShowCompletionMessage(false);
+      console.error('Failed to complete assessment:', error);
       toast.error('An error occurred. Please try again.');
-    } finally {
-      setIsNavigating(false);
     }
   };
 
-  if (batchLoading) {
+  if (!isInitialized || (questionLoading && !question)) {
     return (
       <ProtectedLayout>
         {() => (
@@ -266,196 +189,206 @@ export const AssessmentPage = ({ sessionId }: AssessmentPageProps) => {
     );
   }
 
-  if (!batch || !batch.questions || batch.questions.length === 0) {
+  if (questionError || !question) {
     return (
       <ProtectedLayout>
         {() => (
-          <div className="flex items-center justify-center min-h-screen">
-            <Card className="w-full max-w-2xl">
-              <CardHeader>
-                <CardTitle>No Questions Found</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4">Unable to load assessment questions.</p>
-                <Button onClick={() => router.push('/dashboard')}>Return to Dashboard</Button>
-              </CardContent>
-            </Card>
+          <div className="flex flex-col items-center justify-center min-h-screen gap-4 px-4">
+            <p className="text-muted-foreground text-center">
+              {questionError?.message || 'Unable to load assessment question.'}
+            </p>
+            <Button onClick={() => router.push('/dashboard')}>Return to Dashboard</Button>
           </div>
         )}
       </ProtectedLayout>
     );
   }
 
-  const startQuestionNumber = batch.currentBatchStartIndex;
-  const endQuestionNumber = batch.currentBatchEndIndex;
+  const selectedValue = optimisticValue ?? currentResponse?.responseValue ?? null;
+  const isDisabled = isTransitioning || completing;
 
   return (
     <ProtectedLayout>
       {() => (
-        <div className="min-h-screen bg-linear-to-b from-background to-muted/20">
-          {/* Progress Header */}
-          <div className="border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
-            <div className="container mx-auto px-4 py-4 max-w-3xl">
-              <div className="space-y-2">
-                <div className="flex justify-between items-center text-sm">
-                  <span className="font-medium">
-                    Questions {startQuestionNumber}-{endQuestionNumber} of {totalQuestions}
+        <div className="flex flex-col bg-background">
+          <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 border-b">
+            <div className="container mx-auto px-4 py-3 max-w-2xl">
+              <div className="flex items-center gap-2 mb-2.5">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleBack}
+                  disabled={isDisabled || questionNumber === 1}
+                  aria-label="Previous question"
+                  className="shrink-0 -ml-2 size-8"
+                >
+                  <ChevronLeft className="size-4" />
+                </Button>
+                <div className="flex flex-1 items-center justify-between text-sm">
+                  <span className="font-medium text-foreground">
+                    Question <span className="text-primary">{questionNumber}</span>{' '}
+                    <span className="text-muted-foreground">of 50</span>
                   </span>
-                  <span className="text-muted-foreground">{Math.round(progressPercentage)}%</span>
+                  <span className="tabular-nums text-muted-foreground">
+                    {Math.round(currentProgress?.percentComplete ?? progress.percentComplete ?? 0)}%
+                  </span>
                 </div>
-                <Progress value={progressPercentage} className="h-1.5" />
               </div>
+              <Progress
+                value={currentProgress?.percentComplete ?? progress.percentComplete ?? 0}
+                className="h-1.5 transition-all duration-500 **:data-[slot=progress-indicator]:bg-green-700"
+              />
             </div>
           </div>
 
-          {/* Questions Container */}
-          <div className="container mx-auto px-4 py-12 max-w-3xl">
-            {currentBatchNumber === 1 && showReminder && (
-              <Alert className="mb-8 bg-primary/5 border-primary/20">
-                <AlertCircleIcon />
-                <AlertTitle>Remember:</AlertTitle>
-                <AlertDescription>
-                  Reflect on the last 6 months. Be honest with yourself. There are no right or wrong
-                  answers.
-                </AlertDescription>
-                <AlertAction>
-                  <Button variant="ghost" size="sm" onClick={() => setShowReminder(false)}>
-                    <X className="size-4 text-muted-foreground hover:text-foreground transition-colors" />
-                  </Button>
-                </AlertAction>
-              </Alert>
-            )}
-
-            <div className="space-y-8">
-              {batch.questions.map((sessionQuestion, index) => {
-                const currentResponse = batchResponses.get(sessionQuestion.questionId);
-                const wasPreviouslyAnswered = previousAnswersMap.has(sessionQuestion.questionId);
-                const questionNumber = startQuestionNumber + index;
-
-                return (
-                  <div
-                    key={sessionQuestion.id}
-                    className="bg-background rounded-lg border p-6 md:p-8"
-                  >
-                    {/* Question Header */}
-                    <div className="mb-6">
-                      <div className="flex items-start gap-3">
-                        <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary text-sm font-semibold shrink-0">
-                          {questionNumber}
-                        </span>
-                        <h3 className="text-lg md:text-xl font-medium leading-relaxed flex-1">
-                          {sessionQuestion.questionText}
-                        </h3>
-                      </div>
-                    </div>
-
-                    {/* Response Scale */}
-                    <div className="space-y-6">
-                      {/* Value buttons grid */}
-                      <div className="grid grid-cols-10 gap-2">
-                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
-                          <Button
-                            key={num}
-                            type="button"
-                            variant={currentResponse === num ? 'default' : 'outline'}
-                            onClick={() => handleSliderChange(sessionQuestion.questionId, [num])}
-                            className={`aspect-square h-auto w-full p-0 ${
-                              currentResponse === num ? 'shadow-md scale-105' : ''
-                            }`}
-                          >
-                            {num}
-                          </Button>
-                        ))}
-                      </div>
-
-                      {/* Scale labels */}
-                      <div className="flex justify-between text-xs text-muted-foreground px-1">
-                        <span>Strongly Disagree</span>
-                        <span>Neutral</span>
-                        <span>Strongly Agree</span>
-                      </div>
-
-                      {/* Previously answered indicator */}
-                      {wasPreviouslyAnswered && (
-                        <div className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/20 px-3 py-2 rounded-md">
-                          <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
-                          </svg>
-                          <span>Previously answered • You can change your response</span>
-                        </div>
-                      )}
+          <div className="flex-1 container mx-auto px-4 max-w-2xl py-6">
+            <div className="space-y-6">
+              {prevQuestion && (
+                <div
+                  key={`question-${questionNumber - 1}`}
+                  ref={prevQuestionRef}
+                  onClick={() => !isTransitioning && handlePrevious()}
+                  onKeyDown={(e) => {
+                    if ((e.key === 'Enter' || e.key === ' ') && !isTransitioning) {
+                      e.preventDefault();
+                      handlePrevious();
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Go back to question ${questionNumber - 1}`}
+                  className={`scroll-mt-20 rounded-xl border border-green-100 dark:border-green-900/30 p-6 md:p-8 transition-all duration-500 ease-in-out bg-green-50/30 dark:bg-green-950/10 cursor-pointer ${
+                    isFadingOut
+                      ? 'opacity-0 -translate-y-4'
+                      : 'opacity-40 translate-y-0 hover:opacity-60 hover:border-green-200 dark:hover:border-green-800/40 hover:shadow-sm hover:bg-green-50/40 dark:hover:bg-green-950/15'
+                  } ${isTransitioning ? 'cursor-not-allowed' : ''}`}
+                >
+                  <div className="mb-8">
+                    <div className="flex items-start gap-4">
+                      <span className="inline-flex items-center justify-center w-9 h-9 rounded-full text-sm font-semibold shrink-0 mt-0.5 transition-colors duration-300 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400">
+                        {prevResponse?.responseValue !== undefined ? (
+                          <CheckCircleIcon className="size-4" />
+                        ) : (
+                          questionNumber - 1
+                        )}
+                      </span>
+                      <p className="text-xl md:text-2xl font-medium leading-relaxed text-foreground/70">
+                        {prevQuestion.questionText}
+                      </p>
                     </div>
                   </div>
-                );
-              })}
-            </div>
+                  {prevResponse && (
+                    <div className="flex justify-center">
+                      <span className="text-sm text-green-600 dark:text-green-500 italic">
+                        Click to edit
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
 
-            {/* Navigation */}
-            <div className="flex items-center justify-between mt-12 pt-8 border-t">
-              <Button
-                variant="outline"
-                size="lg"
-                onClick={handlePrevious}
-                disabled={currentBatchNumber === 1 || isNavigating || submitting || completing}
-                className="gap-2"
+              <div
+                key={`question-${questionNumber}`}
+                ref={currentQuestionRef}
+                aria-current="step"
+                className={`scroll-mt-20 rounded-xl border border-green-200 dark:border-green-800/50 p-6 md:p-8 transition-all duration-500 ease-in-out shadow-md bg-green-50/50 dark:bg-green-950/20 ${
+                  isFadingOut ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
+                }`}
               >
-                <ChevronLeft className="size-4" />
-                Previous
-              </Button>
+                <div className="mb-8">
+                  <div className="flex items-start gap-4">
+                    <span className="inline-flex items-center justify-center w-9 h-9 rounded-full text-sm font-semibold shrink-0 mt-0.5 bg-green-700 dark:bg-green-700 text-white transition-colors duration-300">
+                      {questionNumber}
+                    </span>
+                    <p className="text-xl md:text-2xl font-medium leading-relaxed text-green-900 dark:text-green-100">
+                      {question.questionText}
+                    </p>
+                  </div>
+                </div>
 
-              {!allQuestionsAnswered ? (
-                <Button
-                  size="lg"
-                  onClick={handleNext}
-                  disabled={!allBatchQuestionsAnswered || isNavigating || submitting || completing}
-                  className="gap-2"
+                <div className="space-y-4">
+                  <p className="text-sm text-green-700 dark:text-green-400 text-center">
+                    Tap how much this resonates with you
+                  </p>
+
+                  <div className="grid grid-cols-5 sm:grid-cols-10 gap-2">
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => {
+                      const isSelected = selectedValue === num;
+                      return (
+                        <Button
+                          key={num}
+                          type="button"
+                          variant={isSelected ? 'default' : 'outline'}
+                          onClick={() => handleAnswerSelect(num)}
+                          disabled={isDisabled}
+                          aria-label={`Option ${num} out of 10`}
+                          aria-pressed={isSelected}
+                          className={`aspect-square h-auto w-full p-0 rounded-full text-sm font-semibold transition-all duration-150 ${
+                            isSelected
+                              ? 'bg-green-700 hover:bg-green-800 border-green-700 text-white shadow-md scale-110 ring-2 ring-green-700 ring-offset-2'
+                              : 'border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-950/30 hover:border-green-400 hover:scale-105'
+                          }`}
+                        >
+                          {num}
+                        </Button>
+                      );
+                    })}
+                  </div>
+
+                  <div className="flex justify-between text-xs text-green-600/70 dark:text-green-500/70 px-1 pt-1">
+                    <span>Strongly Disagree</span>
+                    <span>Neutral</span>
+                    <span>Strongly Agree</span>
+                  </div>
+                </div>
+              </div>
+
+              {nextQuestion && questionNumber < 50 && (
+                <div
+                  key={`question-${questionNumber + 1}`}
+                  ref={nextQuestionRef}
+                  className={`scroll-mt-20 rounded-xl border border-green-100 dark:border-green-900/20 p-6 md:p-8 transition-all duration-500 ease-in-out pointer-events-none bg-green-50/20 dark:bg-green-950/5 ${
+                    isFadingOut ? 'opacity-0 translate-y-4' : 'opacity-15 translate-y-0'
+                  }`}
                 >
-                  {isNavigating || submitting ? (
-                    <>
-                      <Spinner className="size-4" />
-                      Saving...
-                    </>
-                  ) : (
-                    <>
-                      Next
-                      <ChevronRight className="size-4" />
-                    </>
-                  )}
-                </Button>
-              ) : (
-                <Button
-                  size="lg"
-                  onClick={handleCompleteAssessment}
-                  disabled={isNavigating || submitting || completing}
-                  className="gap-2 bg-green-600 hover:bg-green-700"
-                >
-                  {isNavigating || submitting || completing ? (
-                    <>
-                      <Spinner className="size-4" />
-                      Completing...
-                    </>
-                  ) : (
-                    'Complete Assessment'
-                  )}
-                </Button>
+                  <div className="mb-8">
+                    <div className="flex items-start gap-4">
+                      <span className="inline-flex items-center justify-center w-9 h-9 rounded-full text-sm font-semibold shrink-0 mt-0.5 transition-colors duration-300 bg-green-100/50 dark:bg-green-900/20 text-green-600 dark:text-green-500">
+                        {questionNumber + 1}
+                      </span>
+                      <p className="text-xl md:text-2xl font-medium leading-relaxed text-foreground/70">
+                        {nextQuestion.questionText}
+                      </p>
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
 
-            {/* Helper text */}
-            {!allBatchQuestionsAnswered && (
-              <p className="text-center text-sm text-amber-600 dark:text-amber-400 mt-4">
-                Please answer all questions to continue
-              </p>
+            {showCompletionMessage && (
+              <div className="fixed inset-0 bg-background/95 backdrop-blur-sm z-50 flex items-center justify-center">
+                <div className="text-center space-y-4 px-4">
+                  <div className="flex justify-center">
+                    <Spinner className="size-12 text-primary" />
+                  </div>
+                  <div className="space-y-2">
+                    <h2 className="text-2xl md:text-3xl font-semibold text-foreground">
+                      Crafting Your Personalized Results
+                    </h2>
+                    <p className="text-muted-foreground max-w-md mx-auto">
+                      We're analyzing your responses to create meaningful insights tailored just for
+                      you...
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {(submitting || completing) && !showCompletionMessage && (
+              <div className="fixed bottom-20 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-background/90 border rounded-full px-4 py-2 shadow-sm text-xs text-muted-foreground z-20 pointer-events-none">
+                <Spinner className="size-3" />
+                <span>{completing ? 'Completing assessment…' : 'Saving…'}</span>
+              </div>
             )}
           </div>
         </div>
