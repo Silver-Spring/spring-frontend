@@ -3,7 +3,6 @@
 import { ProtectedLayout } from '@/components/layouts';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Slider } from '@/components/ui/slider';
 import { Spinner } from '@/components/ui/spinner';
 import {
   useCompleteAssessment,
@@ -13,7 +12,7 @@ import {
 } from '@/modules/assessment/hooks';
 import { CheckCircleIcon, ChevronLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 interface AssessmentPageProps {
@@ -31,9 +30,6 @@ export const AssessmentPage = ({ sessionId }: AssessmentPageProps) => {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [showCompletionMessage, setShowCompletionMessage] = useState(false);
-
-  const [pendingSliderValue, setPendingSliderValue] = useState<number | null>(null);
-
   const [optimisticValue, setOptimisticValue] = useState<number | null>(null);
 
   const [currentProgress, setCurrentProgress] = useState<{
@@ -45,8 +41,6 @@ export const AssessmentPage = ({ sessionId }: AssessmentPageProps) => {
   const prevQuestionRef = useRef<HTMLDivElement | null>(null);
   const currentQuestionRef = useRef<HTMLDivElement | null>(null);
   const nextQuestionRef = useRef<HTMLDivElement | null>(null);
-  const autoSubmitTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const isDraggingRef = useRef<boolean>(false);
 
   const { current, previous, next } = useQuestionFlow({
     sessionId,
@@ -90,24 +84,8 @@ export const AssessmentPage = ({ sessionId }: AssessmentPageProps) => {
 
   useEffect(() => {
     setQuestionStartTime(Date.now());
-    setPendingSliderValue(null);
     setOptimisticValue(null);
-    isDraggingRef.current = false;
-
-    if (autoSubmitTimerRef.current) {
-      clearTimeout(autoSubmitTimerRef.current);
-      autoSubmitTimerRef.current = null;
-    }
   }, [questionNumber]);
-
-  useEffect(() => {
-    return () => {
-      if (autoSubmitTimerRef.current) {
-        clearTimeout(autoSubmitTimerRef.current);
-      }
-      isDraggingRef.current = false;
-    };
-  }, []);
 
   useEffect(() => {
     if (currentQuestionRef.current) {
@@ -118,50 +96,12 @@ export const AssessmentPage = ({ sessionId }: AssessmentPageProps) => {
     }
   }, [questionNumber]);
 
-  const commitPendingValue = useCallback(async () => {
-    if (!pendingSliderValue || !question) return;
-
-    const timeTaken = Math.floor((Date.now() - questionStartTime) / 1000);
-
-    try {
-      const result = await submitOrUpdateResponse({
-        sessionId,
-        questionId: question.questionId,
-        questionNumber,
-        responseValue: pendingSliderValue,
-        timeTakenSeconds: timeTaken,
-        isNavigatingForward: false,
-      });
-
-      if (result.progress) {
-        setCurrentProgress({
-          answeredCount: result.progress.answeredCount,
-          totalCount: result.progress.totalCount,
-          percentComplete: result.progress.percentComplete ?? 0,
-        });
-      }
-
-      setPendingSliderValue(null);
-    } catch (error) {
-      console.error('Failed to commit pending value:', error);
-    }
-  }, [
-    pendingSliderValue,
-    question,
-    questionStartTime,
-    submitOrUpdateResponse,
-    sessionId,
-    questionNumber,
-  ]);
-
   const handleAnswerSelect = async (value: number) => {
     if (isTransitioning || completing || !question) return;
 
     const timeTaken = Math.floor((Date.now() - questionStartTime) / 1000);
 
-    setPendingSliderValue(null);
     setOptimisticValue(value);
-
     setIsTransitioning(true);
 
     try {
@@ -205,14 +145,9 @@ export const AssessmentPage = ({ sessionId }: AssessmentPageProps) => {
   const handlePrevious = async () => {
     if (isTransitioning || questionNumber <= 1) return;
 
-    await commitPendingValue();
-
     setIsFadingOut(true);
-
     await new Promise((resolve) => setTimeout(resolve, 300));
-
     setQuestionNumber((prev) => prev - 1);
-
     setTimeout(() => setIsFadingOut(false), 50);
   };
 
@@ -269,7 +204,7 @@ export const AssessmentPage = ({ sessionId }: AssessmentPageProps) => {
     );
   }
 
-  const currentValue = pendingSliderValue ?? optimisticValue ?? currentResponse?.responseValue ?? 5;
+  const selectedValue = optimisticValue ?? currentResponse?.responseValue ?? null;
   const isDisabled = isTransitioning || completing;
 
   return (
@@ -371,61 +306,36 @@ export const AssessmentPage = ({ sessionId }: AssessmentPageProps) => {
                   </div>
                 </div>
 
-                <div className="space-y-6">
-                  <Slider
-                    min={1}
-                    max={10}
-                    step={1}
-                    value={[currentValue]}
-                    onPointerDown={() => {
-                      isDraggingRef.current = true;
-                    }}
-                    onPointerUp={() => {
-                      isDraggingRef.current = false;
-                    }}
-                    onValueChange={(vals) => {
-                      if (isDisabled) return;
-                      setPendingSliderValue(vals[0]);
+                <div className="space-y-4">
+                  <p className="text-sm text-green-700 dark:text-green-400 text-center">
+                    Tap how much this resonates with you
+                  </p>
 
-                      if (autoSubmitTimerRef.current) {
-                        clearTimeout(autoSubmitTimerRef.current);
-                      }
+                  <div className="grid grid-cols-5 sm:grid-cols-10 gap-2">
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => {
+                      const isSelected = selectedValue === num;
+                      return (
+                        <Button
+                          key={num}
+                          type="button"
+                          variant={isSelected ? 'default' : 'outline'}
+                          onClick={() => handleAnswerSelect(num)}
+                          disabled={isDisabled}
+                          aria-label={`Option ${num} out of 10`}
+                          aria-pressed={isSelected}
+                          className={`aspect-square h-auto w-full p-0 rounded-full text-sm font-semibold transition-all duration-150 ${
+                            isSelected
+                              ? 'bg-green-700 hover:bg-green-800 border-green-700 text-white shadow-md scale-110 ring-2 ring-green-700 ring-offset-2'
+                              : 'border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-950/30 hover:border-green-400 hover:scale-105'
+                          }`}
+                        >
+                          {num}
+                        </Button>
+                      );
+                    })}
+                  </div>
 
-                      autoSubmitTimerRef.current = setTimeout(() => {
-                        if (!isDisabled && !isDraggingRef.current) {
-                          handleAnswerSelect(vals[0]);
-                        }
-                      }, 600);
-                    }}
-                    onValueCommit={(vals) => {
-                      if (isDisabled) return;
-
-                      isDraggingRef.current = false;
-
-                      if (autoSubmitTimerRef.current) {
-                        clearTimeout(autoSubmitTimerRef.current);
-                        autoSubmitTimerRef.current = null;
-                      }
-
-                      handleAnswerSelect(vals[0]);
-                    }}
-                    disabled={isDisabled}
-                    aria-label={`Answer for question ${questionNumber}`}
-                    aria-valuemin={1}
-                    aria-valuemax={10}
-                    aria-valuenow={currentValue}
-                    className={`w-full transition-opacity duration-300
-                      **:data-[slot=slider-track]:h-2.5
-                      **:data-[slot=slider-thumb]:size-6
-                      **:data-[slot=slider-thumb]:shadow-md
-                      ${
-                        currentResponse || optimisticValue
-                          ? '**:data-[slot=slider-range]:bg-green-800'
-                          : '**:data-[slot=slider-range]:bg-green-700'
-                      }`}
-                  />
-
-                  <div className="flex justify-between text-sm text-green-700 dark:text-green-400 px-1">
+                  <div className="flex justify-between text-xs text-green-600/70 dark:text-green-500/70 px-1 pt-1">
                     <span>Strongly Disagree</span>
                     <span>Neutral</span>
                     <span>Strongly Agree</span>
