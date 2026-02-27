@@ -48,6 +48,15 @@ export type AdminStatsPayload = {
   totalSections: Scalars['Int']['output'];
 };
 
+/** Age cohort comparison (same age range, any gender) */
+export type AgeCohort = {
+  __typename?: 'AgeCohort';
+  ageRange: Scalars['String']['output'];
+  cohortSize: Scalars['Int']['output'];
+  sectionScores: Array<CohortSectionScore>;
+  totalScore: CohortTotalScore;
+};
+
 export type AllUsersPayload = {
   __typename?: 'AllUsersPayload';
   adminCount: Scalars['Int']['output'];
@@ -923,6 +932,16 @@ export type AssessmentResult = {
   assessmentSectionResultsByResultId: AssessmentSectionResultsConnection;
   /** Reads and enables pagination through a set of `AssessmentSection`. */
   assessmentSectionsByAssessmentSectionResultResultIdAndSectionId: AssessmentResultAssessmentSectionsByAssessmentSectionResultResultIdAndSectionIdManyToManyConnection;
+  /**
+   * Cohort comparison data with three INDEPENDENT dimensions:
+   * 1. ageCohort: Same age range, regardless of gender
+   * 2. genderCohort: Same gender, regardless of age
+   * 3. overallCohort: All users
+   *
+   * Each cohort is calculated separately and can be null if < 5 users.
+   * Frontend can display any combination of available cohorts.
+   */
+  cohortComparison?: Maybe<CohortComparison>;
   createdAt: Scalars['Datetime']['output'];
   /** Timestamp when the report was emailed */
   emailedAt?: Maybe<Scalars['Datetime']['output']>;
@@ -2402,6 +2421,36 @@ export type BulkQuestionInput = {
   questionText: Scalars['String']['input'];
 };
 
+/**
+ * Combined cohort comparison data with three INDEPENDENT dimensions.
+ * Each cohort type is calculated separately and can be null if insufficient data.
+ * - ageCohort: Same age range, any gender
+ * - genderCohort: Same gender, any age range
+ * - overallCohort: All users
+ */
+export type CohortComparison = {
+  __typename?: 'CohortComparison';
+  ageCohort?: Maybe<AgeCohort>;
+  genderCohort?: Maybe<GenderCohort>;
+  overallCohort?: Maybe<OverallCohort>;
+  userAge: Scalars['Int']['output'];
+  userGender: Scalars['String']['output'];
+};
+
+export type CohortSectionScore = {
+  __typename?: 'CohortSectionScore';
+  cohortAverage: Scalars['Float']['output'];
+  sectionName: Scalars['String']['output'];
+  sectionType: Scalars['String']['output'];
+  userScore: Scalars['Int']['output'];
+};
+
+export type CohortTotalScore = {
+  __typename?: 'CohortTotalScore';
+  cohortAverage: Scalars['Float']['output'];
+  userScore: Scalars['Int']['output'];
+};
+
 export type CompleteAssessmentInput = {
   sessionId: Scalars['UUID']['input'];
 };
@@ -2682,6 +2731,15 @@ export type ForgotPasswordPayload = {
    * even if the email doesn't exist, to prevent email enumeration attacks.
    */
   success?: Maybe<Scalars['Boolean']['output']>;
+};
+
+/** Gender cohort comparison (same gender, any age) */
+export type GenderCohort = {
+  __typename?: 'GenderCohort';
+  cohortSize: Scalars['Int']['output'];
+  gender: Scalars['String']['output'];
+  sectionScores: Array<CohortSectionScore>;
+  totalScore: CohortTotalScore;
 };
 
 /** A `GetDemographicCohortStatsRecord` edge in the connection. */
@@ -3075,6 +3133,14 @@ export type NextQuestionHint = {
   questionNumber?: Maybe<Scalars['Int']['output']>;
 };
 
+/** Overall cohort comparison (all users) */
+export type OverallCohort = {
+  __typename?: 'OverallCohort';
+  cohortSize: Scalars['Int']['output'];
+  sectionScores: Array<CohortSectionScore>;
+  totalScore: CohortTotalScore;
+};
+
 /** Information about pagination in a connection. */
 export type PageInfo = {
   __typename?: 'PageInfo';
@@ -3348,6 +3414,8 @@ export type Query = {
    * Returns the most recent captured payment if it exists.
    */
   currentUserPaymentStatus?: Maybe<UserPaymentStatusPayload>;
+  /** Returns three INDEPENDENT cohort comparisons: age-based (age range, any gender), gender-based (same gender, any age), and overall (all users). Each cohort is calculated separately and returns null only if that specific cohort has < 5 users. Excludes current user from all calculations. */
+  getCohortComparisonForResult?: Maybe<Scalars['JSON']['output']>;
   /** Returns cohort statistics filtered by demographics: overall, age-based, and gender-based */
   getDemographicCohortStats?: Maybe<GetDemographicCohortStatsConnection>;
   /** Returns the interpretation band for a given score */
@@ -3635,6 +3703,12 @@ export type QueryAssessmentSessionsArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryAssessmentTrendsArgs = {
   input: AssessmentTrendsInput;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryGetCohortComparisonForResultArgs = {
+  pResultId: Scalars['UUID']['input'];
 };
 
 
@@ -5077,12 +5151,12 @@ export type AssessmentQuestionsQueryVariables = Exact<{ [key: string]: never; }>
 
 export type AssessmentQuestionsQuery = { __typename?: 'Query', assessmentQuestions?: { __typename?: 'AssessmentQuestionsConnection', nodes: Array<{ __typename?: 'AssessmentQuestion', id: any, questionText: string, sectionId: any, displayOrder: number, isActive: boolean }> } | null };
 
-export type AssessmentResultsQueryVariables = Exact<{
+export type GetAssessmentResultQueryVariables = Exact<{
   id: Scalars['UUID']['input'];
 }>;
 
 
-export type AssessmentResultsQuery = { __typename?: 'Query', assessmentResult?: { __typename?: 'AssessmentResult', id: any, totalReadinessIndex: number, pdfPath?: string | null, isEmailed: boolean, createdAt: any, assessmentSectionResultsByResultId: { __typename?: 'AssessmentSectionResultsConnection', nodes: Array<{ __typename?: 'AssessmentSectionResult', sectionType: AssessmentSectionType, score: number, interpretationLabel: string, interpretationNarrative: string }> } } | null };
+export type GetAssessmentResultQuery = { __typename?: 'Query', assessmentResult?: { __typename?: 'AssessmentResult', id: any, totalReadinessIndex: number, pdfPath?: string | null, createdAt: any, assessmentSectionResultsByResultId: { __typename?: 'AssessmentSectionResultsConnection', nodes: Array<{ __typename?: 'AssessmentSectionResult', sectionType: AssessmentSectionType, score: number, interpretationLabel: string, interpretationNarrative: string }> }, cohortComparison?: { __typename?: 'CohortComparison', userAge: number, userGender: string, ageCohort?: { __typename?: 'AgeCohort', ageRange: string, cohortSize: number, totalScore: { __typename?: 'CohortTotalScore', userScore: number, cohortAverage: number }, sectionScores: Array<{ __typename?: 'CohortSectionScore', sectionType: string, sectionName: string, userScore: number, cohortAverage: number }> } | null, genderCohort?: { __typename?: 'GenderCohort', gender: string, cohortSize: number, totalScore: { __typename?: 'CohortTotalScore', userScore: number, cohortAverage: number }, sectionScores: Array<{ __typename?: 'CohortSectionScore', sectionType: string, sectionName: string, userScore: number, cohortAverage: number }> } | null, overallCohort?: { __typename?: 'OverallCohort', cohortSize: number, totalScore: { __typename?: 'CohortTotalScore', userScore: number, cohortAverage: number }, sectionScores: Array<{ __typename?: 'CohortSectionScore', sectionType: string, sectionName: string, userScore: number, cohortAverage: number }> } | null } | null } | null };
 
 export type AssessmentStatusQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -5277,7 +5351,7 @@ export const GetScoreDistributionDocument = {"kind":"Document","definitions":[{"
 export const AdminAssessmentStatsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AdminAssessmentStats"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminAssessmentStats"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalSections"}},{"kind":"Field","name":{"kind":"Name","value":"totalQuestions"}},{"kind":"Field","name":{"kind":"Name","value":"totalInterpretationBands"}},{"kind":"Field","name":{"kind":"Name","value":"totalRecommendedActions"}},{"kind":"Field","name":{"kind":"Name","value":"activeQuestions"}},{"kind":"Field","name":{"kind":"Name","value":"inactiveQuestions"}},{"kind":"Field","name":{"kind":"Name","value":"questionsBySectionType"}}]}}]}}]} as unknown as DocumentNode<AdminAssessmentStatsQuery, AdminAssessmentStatsQueryVariables>;
 export const AssessmentProgressDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AssessmentProgress"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assessmentProgress"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"session"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"currentQuestionNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalQuestions"}},{"kind":"Field","name":{"kind":"Name","value":"answeredQuestions"}},{"kind":"Field","name":{"kind":"Name","value":"progressPercentage"}}]}}]}}]} as unknown as DocumentNode<AssessmentProgressQuery, AssessmentProgressQueryVariables>;
 export const AssessmentQuestionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AssessmentQuestions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assessmentQuestions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"questionText"}},{"kind":"Field","name":{"kind":"Name","value":"sectionId"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}}]}}]}}]}}]} as unknown as DocumentNode<AssessmentQuestionsQuery, AssessmentQuestionsQueryVariables>;
-export const AssessmentResultsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AssessmentResults"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assessmentResult"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"totalReadinessIndex"}},{"kind":"Field","name":{"kind":"Name","value":"pdfPath"}},{"kind":"Field","name":{"kind":"Name","value":"isEmailed"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"assessmentSectionResultsByResultId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sectionType"}},{"kind":"Field","name":{"kind":"Name","value":"score"}},{"kind":"Field","name":{"kind":"Name","value":"interpretationLabel"}},{"kind":"Field","name":{"kind":"Name","value":"interpretationNarrative"}}]}}]}}]}}]}}]} as unknown as DocumentNode<AssessmentResultsQuery, AssessmentResultsQueryVariables>;
+export const GetAssessmentResultDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAssessmentResult"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assessmentResult"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"totalReadinessIndex"}},{"kind":"Field","name":{"kind":"Name","value":"pdfPath"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"assessmentSectionResultsByResultId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sectionType"}},{"kind":"Field","name":{"kind":"Name","value":"score"}},{"kind":"Field","name":{"kind":"Name","value":"interpretationLabel"}},{"kind":"Field","name":{"kind":"Name","value":"interpretationNarrative"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"cohortComparison"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userAge"}},{"kind":"Field","name":{"kind":"Name","value":"userGender"}},{"kind":"Field","name":{"kind":"Name","value":"ageCohort"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ageRange"}},{"kind":"Field","name":{"kind":"Name","value":"cohortSize"}},{"kind":"Field","name":{"kind":"Name","value":"totalScore"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userScore"}},{"kind":"Field","name":{"kind":"Name","value":"cohortAverage"}}]}},{"kind":"Field","name":{"kind":"Name","value":"sectionScores"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sectionType"}},{"kind":"Field","name":{"kind":"Name","value":"sectionName"}},{"kind":"Field","name":{"kind":"Name","value":"userScore"}},{"kind":"Field","name":{"kind":"Name","value":"cohortAverage"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"genderCohort"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gender"}},{"kind":"Field","name":{"kind":"Name","value":"cohortSize"}},{"kind":"Field","name":{"kind":"Name","value":"totalScore"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userScore"}},{"kind":"Field","name":{"kind":"Name","value":"cohortAverage"}}]}},{"kind":"Field","name":{"kind":"Name","value":"sectionScores"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sectionType"}},{"kind":"Field","name":{"kind":"Name","value":"sectionName"}},{"kind":"Field","name":{"kind":"Name","value":"userScore"}},{"kind":"Field","name":{"kind":"Name","value":"cohortAverage"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"overallCohort"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cohortSize"}},{"kind":"Field","name":{"kind":"Name","value":"totalScore"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userScore"}},{"kind":"Field","name":{"kind":"Name","value":"cohortAverage"}}]}},{"kind":"Field","name":{"kind":"Name","value":"sectionScores"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sectionType"}},{"kind":"Field","name":{"kind":"Name","value":"sectionName"}},{"kind":"Field","name":{"kind":"Name","value":"userScore"}},{"kind":"Field","name":{"kind":"Name","value":"cohortAverage"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetAssessmentResultQuery, GetAssessmentResultQueryVariables>;
 export const AssessmentStatusDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AssessmentStatus"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assessmentStatus"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasCompletedAssessment"}},{"kind":"Field","name":{"kind":"Name","value":"hasActiveSession"}},{"kind":"Field","name":{"kind":"Name","value":"completedAt"}},{"kind":"Field","name":{"kind":"Name","value":"resultId"}},{"kind":"Field","name":{"kind":"Name","value":"totalReadinessIndex"}}]}}]}}]} as unknown as DocumentNode<AssessmentStatusQuery, AssessmentStatusQueryVariables>;
 export const BulkCreateAssessmentQuestionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"BulkCreateAssessmentQuestions"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BulkCreateQuestionsInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"bulkCreateAssessmentQuestions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"questions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"questionText"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}}]}},{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<BulkCreateAssessmentQuestionsMutation, BulkCreateAssessmentQuestionsMutationVariables>;
 export const CompleteAssessmentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CompleteAssessment"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sessionId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"completeAssessment"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"sessionId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sessionId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"result"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"sessionId"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"totalReadinessIndex"}},{"kind":"Field","name":{"kind":"Name","value":"pdfPath"}},{"kind":"Field","name":{"kind":"Name","value":"isEmailed"}},{"kind":"Field","name":{"kind":"Name","value":"emailedAt"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"pdfPath"}}]}}]}}]} as unknown as DocumentNode<CompleteAssessmentMutation, CompleteAssessmentMutationVariables>;

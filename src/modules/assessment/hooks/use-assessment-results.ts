@@ -1,9 +1,9 @@
 import { useQuery } from '@apollo/client/react';
-import { AssessmentResultsDoc } from '../graphql';
+import { GetAssessmentResultDoc } from '../graphql/assessment-results.graphql';
 
 export const useAssessmentResults = (resultId: string | null) => {
   const { data, loading, error, refetch } = useQuery(
-    AssessmentResultsDoc,
+    GetAssessmentResultDoc,
     {
       variables: { id: resultId || '' },
       skip: !resultId,

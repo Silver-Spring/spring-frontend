@@ -4,7 +4,7 @@ export { CurrentSessionDoc } from './current-session.graphql';
 export { SessionQuestionsDoc } from './session-questions.graphql';
 export { AssessmentQuestionsDoc } from './assessment-questions.graphql';
 export { AssessmentProgressDoc } from './assessment-progress.graphql';
-export { AssessmentResultsDoc } from './assessment-results.graphql';
+export { GetAssessmentResultDoc } from './assessment-results.graphql';
 export { ResendReportDoc } from './resend-report.graphql';
 export { AssessmentStatusDoc } from './assessment-status.graphql';
 

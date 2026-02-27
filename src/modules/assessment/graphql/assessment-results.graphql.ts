@@ -1,13 +1,13 @@
 import { graphql } from '@/gql';
 
-const AssessmentResultsDoc = graphql(`
-  query AssessmentResults($id: UUID!) {
+const GetAssessmentResultDoc = graphql(`
+  query GetAssessmentResult($id: UUID!) {
     assessmentResult(id: $id) {
       id
       totalReadinessIndex
       pdfPath
-      isEmailed
       createdAt
+      
       assessmentSectionResultsByResultId {
         nodes {
           sectionType
@@ -16,8 +16,57 @@ const AssessmentResultsDoc = graphql(`
           interpretationNarrative
         }
       }
+      
+      cohortComparison {
+        userAge
+        userGender
+        
+        ageCohort {
+          ageRange
+          cohortSize
+          totalScore {
+            userScore
+            cohortAverage
+          }
+          sectionScores {
+            sectionType
+            sectionName
+            userScore
+            cohortAverage
+          }
+        }
+        
+        genderCohort {
+          gender
+          cohortSize
+          totalScore {
+            userScore
+            cohortAverage
+          }
+          sectionScores {
+            sectionType
+            sectionName
+            userScore
+            cohortAverage
+          }
+        }
+        
+        overallCohort {
+          cohortSize
+          totalScore {
+            userScore
+            cohortAverage
+          }
+          sectionScores {
+            sectionType
+            sectionName
+            userScore
+            cohortAverage
+          }
+        }
+      }
     }
   }
 `);
 
-export { AssessmentResultsDoc };
+export { GetAssessmentResultDoc };
