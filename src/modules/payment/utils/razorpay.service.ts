@@ -99,7 +99,7 @@ export const openRazorpayCheckout = (options: RazorpayOptions): any => {
       contact: options.prefill.contact || '',
     },
     theme: {
-      color: '#3399cc',
+      color: '#DDF8E5',
     },
     modal: {
       ondismiss: () => {
@@ -128,7 +128,7 @@ export const openRazorpayCheckout = (options: RazorpayOptions): any => {
   });
 
   rzp.open();
-  
+
   return rzp;
 };
 
@@ -139,7 +139,7 @@ export const openRazorpayCheckout = (options: RazorpayOptions): any => {
  */
 export const closeRazorpayInstance = (rzpInstance: any): void => {
   if (!rzpInstance) return;
-  
+
   try {
     if (typeof rzpInstance.close === 'function') {
       rzpInstance.close();
