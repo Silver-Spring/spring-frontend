@@ -307,10 +307,6 @@ export const AssessmentPage = ({ sessionId }: AssessmentPageProps) => {
                 </div>
 
                 <div className="space-y-4">
-                  <p className="text-sm text-green-700 dark:text-green-400 text-center">
-                    Tap how much this resonates with you
-                  </p>
-
                   <div className="grid grid-cols-5 sm:grid-cols-10 gap-2">
                     {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => {
                       const isSelected = selectedValue === num;
@@ -335,7 +331,7 @@ export const AssessmentPage = ({ sessionId }: AssessmentPageProps) => {
                     })}
                   </div>
 
-                  <div className="flex justify-between text-xs text-green-600/70 dark:text-green-500/70 px-1 pt-1">
+                  <div className="flex justify-between font-semibold text-xs text-green-600 dark:text-green-500 px-1 pt-1">
                     <span>Strongly Disagree</span>
                     <span>Neutral</span>
                     <span>Strongly Agree</span>

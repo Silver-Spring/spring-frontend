@@ -73,7 +73,7 @@ export const TabbedRadarChart = ({
   if (tabs.length === 0) return null;
 
   return (
-    <Card className="bg-green-50/30 dark:bg-green-950/10 border-green-100 dark:border-green-900/30">
+    <Card className="bg-linear-to-br from-green-50 via-green-50/30 to-background dark:from-green-950/30 dark:via-green-950/10 dark:to-background border-green-200 dark:border-green-900/40 shadow-none">
       <CardHeader>
         <div className="flex items-start gap-3">
           <div className="p-2 rounded-lg bg-green-100/50 dark:bg-green-900/30">
@@ -92,11 +92,15 @@ export const TabbedRadarChart = ({
       <CardContent>
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList
-            className="grid w-full mb-4"
+            className="grid w-full mb-4 bg-green-100/80 dark:bg-green-900/20"
             style={{ gridTemplateColumns: `repeat(${tabs.length}, 1fr)` }}
           >
             {tabs.map((tab) => (
-              <TabsTrigger key={tab.value} value={tab.value}>
+              <TabsTrigger
+                key={tab.value}
+                value={tab.value}
+                className="data-[state=active]:bg-green-700 data-[state=active]:text-white dark:data-[state=active]:bg-green-800"
+              >
                 {tab.label}
               </TabsTrigger>
             ))}
@@ -124,12 +128,7 @@ export const TabbedRadarChart = ({
                         tick={{ fill: 'var(--foreground)', fontSize: 12, fontWeight: 500 }}
                         tickLine={false}
                       />
-                      <PolarRadiusAxis
-                        angle={90}
-                        domain={[0, 100]}
-                        tick={false}
-                        tickCount={6}
-                      />
+                      <PolarRadiusAxis angle={90} domain={[0, 100]} tick={false} tickCount={6} />
                       <Radar
                         name="Your Score"
                         dataKey="userScore"

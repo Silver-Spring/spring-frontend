@@ -11,7 +11,9 @@ import {
 import { SECTION_SCORE_BANDS } from '@/modules/assessment/constants/interpretation-bands';
 import { TrendingUp } from 'lucide-react';
 import { useMemo } from 'react';
-import { Cell, Label, Pie, PieChart as RechartsPieChart } from 'recharts';
+import { Label, Pie, PieChart as RechartsPieChart } from 'recharts';
+
+const RADIAN = Math.PI / 180;
 
 interface SectionResult {
   sectionType: string;
@@ -75,8 +77,27 @@ export const SectionBreakdownCard = ({ sectionResults }: SectionBreakdownCardPro
     });
   }, [sectionResults]);
 
+  const renderCustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, value }: any) => {
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+    return (
+      <text
+        x={x}
+        y={y}
+        fill="white"
+        textAnchor="middle"
+        dominantBaseline="central"
+        className="text-sm font-bold"
+      >
+        {value}
+      </text>
+    );
+  };
+
   return (
-    <Card className="bg-green-50/30 dark:bg-green-950/10 border-green-100 dark:border-green-900/30">
+    <Card className="bg-linear-to-br from-green-50 via-green-50/30 to-background dark:from-green-950/30 dark:via-green-950/10 dark:to-background border-green-200 dark:border-green-900/40 shadow-none">
       <CardHeader>
         <div className="flex items-start gap-3">
           <div className="p-2 rounded-lg bg-green-100/50 dark:bg-green-900/30">
@@ -131,6 +152,8 @@ export const SectionBreakdownCard = ({ sectionResults }: SectionBreakdownCardPro
                 innerRadius={70}
                 outerRadius={140}
                 strokeWidth={5}
+                label={renderCustomLabel}
+                labelLine={false}
               >
                 <Label
                   content={({ viewBox }) => {
@@ -162,7 +185,7 @@ export const SectionBreakdownCard = ({ sectionResults }: SectionBreakdownCardPro
                   }}
                 />
               </Pie>
-              <ChartLegend 
+              <ChartLegend
                 content={<ChartLegendContent className="flex-wrap" />}
                 wrapperStyle={{ paddingTop: '20px' }}
               />

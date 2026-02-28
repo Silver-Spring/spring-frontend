@@ -15,7 +15,7 @@ export const TotalScoreCard = ({ totalScore, completedDate }: TotalScoreCardProp
   }, [totalScore]);
 
   return (
-    <Card className="bg-linear-to-br from-green-50 via-green-50/30 to-background dark:from-green-950/30 dark:via-green-950/10 dark:to-background border-green-200 dark:border-green-900/40">
+    <Card className="bg-linear-to-br from-green-50 via-green-50/30 to-background dark:from-green-950/30 dark:via-green-950/10 dark:to-background border-green-200 dark:border-green-900/40 shadow-none">
       <CardHeader className="text-center">
         <CardTitle className="text-2xl mb-2 text-green-900 dark:text-green-100">
           Total Readiness Index
