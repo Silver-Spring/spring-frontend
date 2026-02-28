@@ -63,7 +63,7 @@ export const useCreatePaymentOrder = () => {
         amount: orderData.amount,
         currency: orderData.currency,
         orderId: orderData.orderId,
-        name: 'Spring',
+        name: 'Silver Spring',
         description: 'Psychometric Assessment Test',
         prefill: {
           // These can be filled from current user context if needed
