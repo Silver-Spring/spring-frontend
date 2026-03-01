@@ -1,6 +1,6 @@
 'use client';
 
-import { useMutation } from '@apollo/client/react';
+import { useApolloClient, useMutation } from '@apollo/client/react';
 import { toast } from 'sonner';
 import { SubmitOrUpdateResponseDoc } from '../graphql/submit-or-update-response.graphql';
 import { GetSessionQuestionDoc } from '../graphql/get-session-question.graphql';
@@ -15,6 +15,8 @@ interface SubmitOrUpdateInput {
 }
 
 export const useSubmitOrUpdateResponse = () => {
+  const apolloClient = useApolloClient();
+  
   const [submitOrUpdateMutation, { loading, error }] = useMutation(
     SubmitOrUpdateResponseDoc,
     {
@@ -50,6 +52,31 @@ export const useSubmitOrUpdateResponse = () => {
 
       if (!data) {
         throw new Error('No data returned from mutation');
+      }
+
+      if (data.progress && data.nextQuestion?.hasNext && data.nextQuestion.questionNumber) {
+        const nextQuestionNum = data.nextQuestion.questionNumber;
+        try {
+          const cachedNextQuestion = apolloClient.readQuery({
+            query: GetSessionQuestionDoc,
+            variables: { sessionId: input.sessionId, questionNumber: nextQuestionNum },
+          });
+
+          if (cachedNextQuestion?.getSessionQuestion) {
+            apolloClient.writeQuery({
+              query: GetSessionQuestionDoc,
+              variables: { sessionId: input.sessionId, questionNumber: nextQuestionNum },
+              data: {
+                getSessionQuestion: {
+                  ...cachedNextQuestion.getSessionQuestion,
+                  progress: data.progress,
+                },
+              },
+            });
+          }
+        } catch (error) {
+          console.log('Cache update skipped for next question');
+        }
       }
 
       return {

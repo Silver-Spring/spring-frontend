@@ -1,6 +1,5 @@
 'use client';
 
-// Force dynamic rendering to avoid pre-rendering issues with auth state
 export const dynamic = 'force-dynamic';
 
 import { use, Suspense } from 'react';

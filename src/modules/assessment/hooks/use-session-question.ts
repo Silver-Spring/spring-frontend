@@ -24,8 +24,8 @@ export const useSessionQuestion = ({
     {
       variables: { sessionId, questionNumber },
       skip: skip || !sessionId || questionNumber < 1 || questionNumber > 50,
-      fetchPolicy: 'cache-first',
-      nextFetchPolicy: 'cache-first',
+      fetchPolicy: 'cache-and-network',
+      nextFetchPolicy: 'cache-and-network',
       notifyOnNetworkStatusChange: false,
       returnPartialData: true,
     }
@@ -42,7 +42,7 @@ export const useSessionQuestion = ({
       client.query({
         query: GetSessionQuestionDoc,
         variables: { sessionId, questionNumber: nextQuestionNumber },
-        fetchPolicy: 'cache-first',
+        fetchPolicy: 'network-only',
       }).catch((error) => {
         console.warn('Prefetch failed for question', nextQuestionNumber, error);
       });

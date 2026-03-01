@@ -103,7 +103,11 @@ export function ResetPasswordForm({
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full" disabled={loading}>
+                <Button 
+                  type="submit" 
+                  className="w-full bg-green-700 hover:bg-green-800 text-white" 
+                  disabled={loading}
+                >
                   {loading ? 'Resetting...' : 'Reset Password'}
                 </Button>
               </div>
@@ -111,7 +115,7 @@ export function ResetPasswordForm({
           </Form>
           <div className="mt-4 text-center text-sm">
             Remember your password?{' '}
-            <Link href="/auth/login" className="underline">
+            <Link href="/auth/login" className="underline text-green-700 dark:text-green-500 hover:text-green-800 dark:hover:text-green-400">
               Back to login
             </Link>
           </div>

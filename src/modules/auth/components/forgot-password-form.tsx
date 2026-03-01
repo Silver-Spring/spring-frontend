@@ -49,7 +49,7 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
                 </p>
               </div>
               <div className="text-center text-sm">
-                <Link href="/auth/login" className="underline">
+                <Link href="/auth/login" className="underline text-green-700 dark:text-green-500 hover:text-green-800 dark:hover:text-green-400">
                   Back to login
                 </Link>
               </div>
@@ -78,7 +78,11 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
                         </FormItem>
                       )}
                     />
-                    <Button type="submit" className="w-full" disabled={loading}>
+                    <Button 
+                      type="submit" 
+                      className="w-full bg-green-700 hover:bg-green-800 text-white" 
+                      disabled={loading}
+                    >
                       {loading ? 'Sending...' : 'Send Reset Link'}
                     </Button>
                   </div>
@@ -86,7 +90,7 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
               </Form>
               <div className="mt-4 text-center text-sm">
                 Remember your password?{' '}
-                <Link href="/auth/login" className="underline">
+                <Link href="/auth/login" className="underline text-green-700 dark:text-green-500 hover:text-green-800 dark:hover:text-green-400">
                   Back to login
                 </Link>
               </div>

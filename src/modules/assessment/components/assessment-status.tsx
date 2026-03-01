@@ -6,12 +6,15 @@ import { usePayment, usePaymentStatus } from '@/modules/payment/hooks';
 import { CheckCircle2, Clock, FileText, PlayCircle } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { useAssessmentStatus, useCurrentSession, useStartAssessment } from '../hooks';
+import { LoadingScreen } from './assessment-components';
 
 export function AssessmentStatus() {
   const router = useRouter();
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [transitionType, setTransitionType] = useState<'preparing' | 'resuming' | null>(null);
 
   const {
     hasCompletedAssessment,
@@ -46,17 +49,27 @@ export function AssessmentStatus() {
 
   const handleStartAssessmentWithPayment = async (newPaymentId: string) => {
     try {
+      setIsTransitioning(true);
+      setTransitionType('preparing');
+
       const result = await startAssessment(newPaymentId);
 
       if (result.session?.id) {
         await Promise.all([refetchAssessmentStatus(), refetchCurrentSession()]);
+
+        await new Promise((resolve) => setTimeout(resolve, 800));
+
         router.push(`/assessment/${result.session.id}`);
       } else {
         console.error('No session ID in result:', result);
         toast.error('Unable to start assessment. Please try again.');
+        setIsTransitioning(false);
+        setTransitionType(null);
       }
     } catch (error) {
       console.error('Failed to start assessment:', error);
+      setIsTransitioning(false);
+      setTransitionType(null);
     }
   };
 
@@ -89,23 +102,38 @@ export function AssessmentStatus() {
           return;
         }
 
+        setIsTransitioning(true);
+        setTransitionType('preparing');
+
         const result = await startAssessment(paymentId);
 
         if (result.session?.id) {
           await Promise.all([refetchAssessmentStatus(), refetchCurrentSession()]);
+
+          await new Promise((resolve) => setTimeout(resolve, 800));
+
           router.push(`/assessment/${result.session.id}`);
         } else {
           console.error('No session ID in result:', result);
           toast.error('Unable to start assessment. Please try again.');
+          setIsTransitioning(false);
+          setTransitionType(null);
         }
       } catch (error) {
         console.error('Failed to start assessment:', error);
+        setIsTransitioning(false);
+        setTransitionType(null);
       }
     }
   };
 
-  const handleResumeAssessment = () => {
+  const handleResumeAssessment = async () => {
     if (currentSession?.id) {
+      setIsTransitioning(true);
+      setTransitionType('resuming');
+
+      await new Promise((resolve) => setTimeout(resolve, 600));
+
       router.push(`/assessment/${currentSession.id}`);
     }
   };
@@ -296,6 +324,21 @@ export function AssessmentStatus() {
           </Button>
         </div>
       </div>
+
+      {isTransitioning && transitionType && (
+        <div className="fixed inset-0 bg-background/95 backdrop-blur-sm z-50">
+          <LoadingScreen
+            message={
+              transitionType === 'preparing' ? 'Preparing Assessment' : 'Resuming Assessment'
+            }
+            description={
+              transitionType === 'preparing'
+                ? 'Setting up your personalized questions...'
+                : 'Loading your progress and questions...'
+            }
+          />
+        </div>
+      )}
     </>
   );
 }

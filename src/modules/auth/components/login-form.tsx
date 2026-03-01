@@ -69,7 +69,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
                         <FormLabel htmlFor="password">Password</FormLabel>
                         <Link
                           href="/auth/forgot-password"
-                          className="ml-auto inline-block text-sm underline"
+                          className="ml-auto inline-block text-sm underline text-green-700 dark:text-green-500 hover:text-green-800 dark:hover:text-green-400"
                         >
                           Forgot your password?
                         </Link>
@@ -86,7 +86,11 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full" disabled={loading}>
+                <Button 
+                  type="submit" 
+                  className="w-full bg-green-700 hover:bg-green-800 text-white" 
+                  disabled={loading}
+                >
                   Login
                 </Button>
 
@@ -111,7 +115,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
           </Form>
           <div className="mt-4 text-center text-sm">
             Don&apos;t have an account?{' '}
-            <Link href="/auth/register" className="underline">
+            <Link href="/auth/register" className="underline text-green-700 dark:text-green-500 hover:text-green-800 dark:hover:text-green-400">
               Sign up
             </Link>
           </div>

@@ -1,5 +1,5 @@
 import { Card } from '@/components/ui/card';
-import { useAdminStats } from '../hooks';
+import { useAdminStats } from '../../assessment/hooks';
 
 export const AdminStatsCard = () => {
   const { stats, loading, error } = useAdminStats();

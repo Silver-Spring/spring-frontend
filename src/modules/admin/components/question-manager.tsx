@@ -12,7 +12,7 @@ import {
   useGetSectionQuestions,
   useGetSections,
   useUpdateQuestion,
-} from '../hooks';
+} from '../../assessment/hooks';
 
 export const QuestionManager = () => {
   const { sections, loading: sectionsLoading } = useGetSections();

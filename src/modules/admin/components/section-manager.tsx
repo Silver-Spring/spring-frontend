@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useState } from 'react';
-import { useGetSections, useUpdateSection } from '../hooks';
+import { useGetSections, useUpdateSection } from '../../assessment/hooks';
 
 export const SectionManager = () => {
   const { sections, loading, refetch } = useGetSections();

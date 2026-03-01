@@ -7,7 +7,7 @@ import {
   QuestionManager,
   SectionManager,
   UsersAssessmentTable,
-} from '@/modules/assessment/components';
+} from '@/modules/admin/components';
 import { useEffect, useState } from 'react';
 
 type TabType = 'stats' | 'users' | 'sections' | 'questions';

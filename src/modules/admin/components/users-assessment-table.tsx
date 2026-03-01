@@ -16,7 +16,7 @@ import { Eye, Mail, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { useResendReport, useUsersWithAssessment } from '../hooks';
+import { useResendReport, useUsersWithAssessment } from '../../assessment/hooks';
 
 export const UsersAssessmentTable = () => {
   const { users, totalCount, completedCount, inProgressCount, loading, refetch } =
