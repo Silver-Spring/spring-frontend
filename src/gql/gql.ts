@@ -16,6 +16,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 type Documents = {
     "\n  query GetAllUsers {\n    allUsers {\n      users {\n        id\n        email\n        name\n        phoneNumber\n        isAdmin\n        createdAt\n        updatedAt\n      }\n      totalCount\n      adminCount\n    }\n  }\n": typeof types.GetAllUsersDocument,
     "\n  query GetAssessmentTrends($startDate: Date!, $endDate: Date!) {\n    assessmentTrends(input: { startDate: $startDate, endDate: $endDate }) {\n      trends {\n        date\n        completedCount\n        startedCount\n        inProgressCount\n      }\n      totalCompleted\n      totalStarted\n      totalInProgress\n    }\n  }\n": typeof types.GetAssessmentTrendsDocument,
+    "\n  mutation DeleteUser($input: AdminDeleteUserInput!) {\n    adminDeleteUser(input: $input) {\n      deletedUserId\n      success\n      message\n    }\n  }\n": typeof types.DeleteUserDocument,
     "\n  mutation GrantAdmin($userId: UUID!) {\n    grantAdminAccess(input: { userId: $userId }) {\n      user {\n        id\n        email\n        name\n        isAdmin\n        createdAt\n        updatedAt\n      }\n      success\n      message\n    }\n  }\n": typeof types.GrantAdminDocument,
     "\n  mutation RevokeAdmin($userId: UUID!) {\n    revokeAdminAccess(input: { userId: $userId }) {\n      user {\n        id\n        email\n        name\n        isAdmin\n        createdAt\n        updatedAt\n      }\n      success\n      message\n    }\n  }\n": typeof types.RevokeAdminDocument,
     "\n  query GetScoreDistribution {\n    scoreDistribution {\n      distribution {\n        range\n        count\n        percentage\n      }\n      totalAssessments\n      averageScore\n    }\n  }\n": typeof types.GetScoreDistributionDocument,
@@ -54,6 +55,7 @@ type Documents = {
 const documents: Documents = {
     "\n  query GetAllUsers {\n    allUsers {\n      users {\n        id\n        email\n        name\n        phoneNumber\n        isAdmin\n        createdAt\n        updatedAt\n      }\n      totalCount\n      adminCount\n    }\n  }\n": types.GetAllUsersDocument,
     "\n  query GetAssessmentTrends($startDate: Date!, $endDate: Date!) {\n    assessmentTrends(input: { startDate: $startDate, endDate: $endDate }) {\n      trends {\n        date\n        completedCount\n        startedCount\n        inProgressCount\n      }\n      totalCompleted\n      totalStarted\n      totalInProgress\n    }\n  }\n": types.GetAssessmentTrendsDocument,
+    "\n  mutation DeleteUser($input: AdminDeleteUserInput!) {\n    adminDeleteUser(input: $input) {\n      deletedUserId\n      success\n      message\n    }\n  }\n": types.DeleteUserDocument,
     "\n  mutation GrantAdmin($userId: UUID!) {\n    grantAdminAccess(input: { userId: $userId }) {\n      user {\n        id\n        email\n        name\n        isAdmin\n        createdAt\n        updatedAt\n      }\n      success\n      message\n    }\n  }\n": types.GrantAdminDocument,
     "\n  mutation RevokeAdmin($userId: UUID!) {\n    revokeAdminAccess(input: { userId: $userId }) {\n      user {\n        id\n        email\n        name\n        isAdmin\n        createdAt\n        updatedAt\n      }\n      success\n      message\n    }\n  }\n": types.RevokeAdminDocument,
     "\n  query GetScoreDistribution {\n    scoreDistribution {\n      distribution {\n        range\n        count\n        percentage\n      }\n      totalAssessments\n      averageScore\n    }\n  }\n": types.GetScoreDistributionDocument,
@@ -112,6 +114,10 @@ export function graphql(source: "\n  query GetAllUsers {\n    allUsers {\n      
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query GetAssessmentTrends($startDate: Date!, $endDate: Date!) {\n    assessmentTrends(input: { startDate: $startDate, endDate: $endDate }) {\n      trends {\n        date\n        completedCount\n        startedCount\n        inProgressCount\n      }\n      totalCompleted\n      totalStarted\n      totalInProgress\n    }\n  }\n"): (typeof documents)["\n  query GetAssessmentTrends($startDate: Date!, $endDate: Date!) {\n    assessmentTrends(input: { startDate: $startDate, endDate: $endDate }) {\n      trends {\n        date\n        completedCount\n        startedCount\n        inProgressCount\n      }\n      totalCompleted\n      totalStarted\n      totalInProgress\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation DeleteUser($input: AdminDeleteUserInput!) {\n    adminDeleteUser(input: $input) {\n      deletedUserId\n      success\n      message\n    }\n  }\n"): (typeof documents)["\n  mutation DeleteUser($input: AdminDeleteUserInput!) {\n    adminDeleteUser(input: $input) {\n      deletedUserId\n      success\n      message\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
