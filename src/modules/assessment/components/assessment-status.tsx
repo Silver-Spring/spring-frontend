@@ -207,7 +207,7 @@ export function AssessmentStatus() {
   }
 
   const isInProgress = hasActiveSession;
-  const buttonText = isInProgress ? 'Resume Test' : 'Take the Test';
+  const buttonText = isInProgress ? 'Resume Assessment' : 'Take the Assessment';
   const handleButtonClick = isInProgress ? handleResumeAssessment : handleStartAssessmentClick;
   return (
     <>
