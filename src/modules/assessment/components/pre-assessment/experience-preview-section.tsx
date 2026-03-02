@@ -28,7 +28,9 @@ const carouselImages = [
 ];
 
 export function ExperiencePreviewSection() {
-  const plugin = React.useRef(Autoplay({ delay: 3000, stopOnInteraction: false }));
+  const plugin = React.useRef(
+    Autoplay({ delay: 3000, stopOnInteraction: true, stopOnMouseEnter: true })
+  );
 
   return (
     <section className="flex flex-col gap-8">
@@ -36,12 +38,12 @@ export function ExperiencePreviewSection() {
         <h2 className="text-balance text-2xl font-bold tracking-tight lg:text-3xl">
           Experience Preview
         </h2>
-        <p className="mx-auto max-w-2xl text-pretty text-muted-foreground">
+        <p className="mx-auto max-w-2xl text-pretty text-muted-foreground px-4">
           See what the assessment looks like and what kind of report you'll receive.
         </p>
       </div>
 
-      <div className="mx-auto w-full max-w-4xl">
+      <div className="mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8">
         <Carousel
           plugins={[plugin.current]}
           className="w-full"
@@ -50,21 +52,23 @@ export function ExperiencePreviewSection() {
           opts={{
             align: 'center',
             loop: true,
+            dragFree: false,
           }}
         >
-          <CarouselContent>
+          <CarouselContent className="-ml-2 sm:-ml-4">
             {carouselImages.map((image) => (
-              <CarouselItem key={image.id}>
+              <CarouselItem key={image.id} className="pl-2 sm:pl-4">
                 <div className="p-1">
                   <Card className="bg-green-50/30 dark:bg-green-950/10 border-green-100 dark:border-green-900/30 overflow-hidden">
-                    <CardContent className="flex aspect-video items-center justify-center p-0">
-                      <div className="relative w-full h-full">
+                    <CardContent className="flex items-center justify-center p-0">
+                      <div className="relative w-full aspect-4/3 sm:aspect-video">
                         <Image
                           src={image.src}
                           alt={image.alt}
                           fill
-                          className="object-contain"
+                          className="object-contain p-2 sm:p-4"
                           priority={image.id === 1}
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 896px"
                         />
                       </div>
                     </CardContent>
@@ -73,9 +77,19 @@ export function ExperiencePreviewSection() {
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
+          <CarouselPrevious className="hidden sm:flex -left-4 lg:-left-12" />
+          <CarouselNext className="hidden sm:flex -right-4 lg:-right-12" />
         </Carousel>
+
+        <div className="mt-4 flex justify-center gap-2 sm:hidden">
+          {carouselImages.map((_, index) => (
+            <div
+              key={index}
+              className="h-1.5 w-8 rounded-full bg-green-200 dark:bg-green-800"
+              aria-hidden="true"
+            />
+          ))}
+        </div>
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center">
