@@ -32,7 +32,7 @@ export function HowItWorksSection() {
       <div className="flex flex-col gap-2 text-center">
         <h2 className="text-balance text-2xl font-bold tracking-tight lg:text-3xl">How It Works</h2>
         <p className="mx-auto max-w-2xl text-pretty text-muted-foreground">
-          A simple four-step process from start to actionable results.
+          A simple three-step process from start to actionable results.
         </p>
       </div>
 
