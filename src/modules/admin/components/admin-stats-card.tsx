@@ -38,7 +38,7 @@ export const AdminStatsCard = () => {
 
       <Card className="p-6">
         <div className="text-sm font-medium text-muted-foreground">Active Questions</div>
-        <div className="text-3xl font-bold mt-2 text-green-600">{stats.activeQuestions}</div>
+        <div className="text-3xl font-bold mt-2 text-primary">{stats.activeQuestions}</div>
       </Card>
 
       <Card className="p-6">

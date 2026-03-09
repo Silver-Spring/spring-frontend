@@ -62,14 +62,14 @@ export function DimensionsSection() {
         {dimensions.map((dim, index) => (
           <Card
             key={dim.name}
-            className="bg-green-50/30 dark:bg-green-950/10 border-green-100 dark:border-green-900/30 text-center transition-shadow hover:shadow-md"
+            className="bg-primary/5 border-primary/10 text-center transition-shadow hover:shadow-md"
           >
             <CardContent className="flex flex-col items-center gap-4">
               <div className="flex flex-col items-center gap-3">
                 <span className="text-xs font-semibold text-green-700 dark:text-green-400">
                   {String(index + 1).padStart(2, '0')}
                 </span>
-                <div className="flex size-12 items-center justify-center rounded-xl bg-green-100/50 dark:bg-green-900/30 text-green-600 dark:text-green-500">
+                <div className="flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
                   <dim.icon className="size-6" />
                 </div>
               </div>

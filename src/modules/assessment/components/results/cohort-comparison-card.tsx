@@ -80,11 +80,11 @@ export const CohortComparisonCard = ({
   }
 
   return (
-    <Card className="bg-linear-to-br from-green-50 via-green-50/30 to-background dark:from-green-950/30 dark:via-green-950/10 dark:to-background border-green-200 dark:border-green-900/40 shadow-none">
+    <Card className="bg-linear-to-br from-primary/8 via-primary/5 to-background border-primary/20 shadow-none">
       <CardHeader>
         <div className="flex items-start gap-3">
-          <div className="p-2 rounded-lg bg-green-100/50 dark:bg-green-900/30">
-            <Users className="size-5 text-green-600 dark:text-green-500" />
+          <div className="p-2 rounded-lg bg-primary/10">
+            <Users className="size-5 text-primary" />
           </div>
           <div className="flex-1">
             <CardTitle className="text-green-900 dark:text-green-100">Cohort Comparison</CardTitle>

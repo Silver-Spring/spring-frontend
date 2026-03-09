@@ -81,7 +81,7 @@ export function HeroSection({
         {onCtaClick && (
           <Button
             size="lg"
-            className="h-12 w-fit gap-2 rounded-xl bg-green-700 hover:bg-green-800 text-base font-semibold text-white shadow-md transition-all hover:shadow-lg"
+            className="h-12 w-fit gap-2 rounded-xl bg-primary hover:bg-primary/90 text-base font-semibold text-primary-foreground shadow-md transition-all hover:shadow-lg"
             onClick={onCtaClick}
             disabled={isLoading}
           >

@@ -181,7 +181,7 @@ export const AssessmentResultsPage = ({ resultId }: AssessmentResultsPageProps) 
               onClick={handleDownloadPDF}
               size="lg"
               disabled={isDownloading}
-              className="bg-green-700 hover:bg-green-800 text-white dark:bg-green-500 dark:hover:bg-green-600"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground"
             >
               {isDownloading ? (
                 <>

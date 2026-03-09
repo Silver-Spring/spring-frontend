@@ -44,7 +44,7 @@ export const AssessmentHeader = ({
         </div>
         <Progress
           value={progressPercent}
-          className="h-1.5 transition-all duration-500 **:data-[slot=progress-indicator]:bg-green-700"
+          className="h-1.5 transition-all duration-500 **:data-[slot=progress-indicator]:bg-primary"
         />
       </div>
     </div>

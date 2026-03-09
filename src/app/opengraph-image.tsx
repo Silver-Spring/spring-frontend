@@ -12,8 +12,8 @@ export const contentType = 'image/png';
 
 export default async function Image() {
   try {
-    const logoData = await readFile(join(process.cwd(), 'public/silverspring_logo.jpeg'), 'base64');
-    const logoSrc = `data:image/jpeg;base64,${logoData}`;
+    const logoData = await readFile(join(process.cwd(), 'public/silverspring_logo.png'), 'base64');
+    const logoSrc = `data:image/png;base64,${logoData}`;
 
     return new ImageResponse(
       (

@@ -126,11 +126,11 @@ export const TabbedRadarChart = ({
   if (tabs.length === 0) return null;
 
   return (
-    <Card className="bg-linear-to-br from-green-50 via-green-50/30 to-background dark:from-green-950/30 dark:via-green-950/10 dark:to-background border-green-200 dark:border-green-900/40 shadow-none">
+      <Card className="bg-linear-to-br from-primary/8 via-primary/5 to-background border-primary/20 shadow-none">
       <CardHeader>
         <div className="flex items-start gap-3">
-          <div className="p-2 rounded-lg bg-green-100/50 dark:bg-green-900/30">
-            <BarChart3 className="size-5 text-green-600 dark:text-green-500" />
+          <div className="p-2 rounded-lg bg-primary/10">
+            <BarChart3 className="size-5 text-primary" />
           </div>
           <div className="flex-1">
             <CardTitle className="text-green-900 dark:text-green-100">
@@ -145,14 +145,14 @@ export const TabbedRadarChart = ({
       <CardContent>
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList
-            className="grid w-full mb-4 bg-green-100/80 dark:bg-green-900/20"
+            className="grid w-full mb-4 bg-primary/15"
             style={{ gridTemplateColumns: `repeat(${tabs.length}, 1fr)` }}
           >
             {tabs.map((tab) => (
               <TabsTrigger
                 key={tab.value}
                 value={tab.value}
-                className="data-[state=active]:bg-green-700 data-[state=active]:text-white dark:data-[state=active]:bg-green-800"
+                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
               >
                 {tab.label}
               </TabsTrigger>

@@ -128,7 +128,7 @@ export const UsersPage = () => {
               <CardTitle className="text-3xl">{adminCount}</CardTitle>
             </CardHeader>
             <CardContent>
-              <ShieldCheck className="h-4 w-4 text-green-600" />
+              <ShieldCheck className="h-4 w-4 text-primary" />
             </CardContent>
           </Card>
           <Card>

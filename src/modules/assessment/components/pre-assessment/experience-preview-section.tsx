@@ -59,7 +59,7 @@ export function ExperiencePreviewSection() {
             {carouselImages.map((image) => (
               <CarouselItem key={image.id} className="pl-2 sm:pl-4">
                 <div className="p-1">
-                  <Card className="bg-green-50/30 dark:bg-green-950/10 border-green-100 dark:border-green-900/30 overflow-hidden">
+                  <Card className="bg-primary/5 border-primary/10 overflow-hidden">
                     <CardContent className="flex items-center justify-center p-0">
                       <div className="relative w-full aspect-4/3 sm:aspect-video">
                         <Image
@@ -85,7 +85,7 @@ export function ExperiencePreviewSection() {
           {carouselImages.map((_, index) => (
             <div
               key={index}
-              className="h-1.5 w-8 rounded-full bg-green-200 dark:bg-green-800"
+              className="h-1.5 w-8 rounded-full bg-primary/25"
               aria-hidden="true"
             />
           ))}
@@ -95,21 +95,21 @@ export function ExperiencePreviewSection() {
       <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center">
         <Badge
           variant="outline"
-          className="gap-1.5 px-3 py-1.5 text-xs font-normal border-green-200 dark:border-green-800 text-green-700 dark:text-green-300"
+          className="gap-1.5 px-3 py-1.5 text-xs font-normal border-primary/20 text-primary"
         >
           <Info className="size-3" />
           No right or wrong answers
         </Badge>
         <Badge
           variant="outline"
-          className="gap-1.5 px-3 py-1.5 text-xs font-normal border-green-200 dark:border-green-800 text-green-700 dark:text-green-300"
+          className="gap-1.5 px-3 py-1.5 text-xs font-normal border-primary/20 text-primary"
         >
           <Info className="size-3" />
           Reflect on the last 6 months
         </Badge>
         <Badge
           variant="outline"
-          className="gap-1.5 px-3 py-1.5 text-xs font-normal border-green-200 dark:border-green-800 text-green-700 dark:text-green-300"
+          className="gap-1.5 px-3 py-1.5 text-xs font-normal border-primary/20 text-primary"
         >
           <SlidersHorizontal className="size-3" />
           Be honest with yourself

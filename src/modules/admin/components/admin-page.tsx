@@ -256,8 +256,8 @@ export const AdminPage = () => {
                 <Card className="hover:shadow-md transition-all cursor-pointer h-full group hover:border-primary/50">
                   <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
-                      <div className="p-2 rounded-lg bg-green-100 dark:bg-green-900/20 group-hover:bg-green-200 dark:group-hover:bg-green-900/30 transition-colors">
-                        <FileText className="h-5 w-5 text-green-600 dark:text-green-400" />
+                      <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                        <FileText className="h-5 w-5 text-primary" />
                       </div>
                       <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
                     </div>

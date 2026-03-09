@@ -27,7 +27,7 @@ export const Navbar = () => {
         <div className="h-full grid grid-cols-2 md:grid-cols-3 items-center">
           <div className="flex items-center gap-2 justify-start">
             <Image
-              src="/silverspring_logo.jpeg"
+              src="/silverspring_logo.png"
               alt="Silver Spring"
               width={40}
               height={40}
@@ -39,25 +39,25 @@ export const Navbar = () => {
           <nav className="hidden md:flex items-center justify-center gap-8">
             <Link
               href={process.env.NEXT_PUBLIC_APP_URL}
-              className="text-base font-semibold text-green-800 hover:text-green-700 transition-colors"
+              className="text-base font-semibold text-primary/80 hover:text-primary transition-colors"
             >
               Home
             </Link>
             <Link
               href={`${process.env.NEXT_PUBLIC_APP_URL}/about-us`}
-              className="text-base font-semibold text-green-800 hover:text-green-700 transition-colors"
+              className="text-base font-semibold text-primary/80 hover:text-primary transition-colors"
             >
               About Us
             </Link>
             <Link
               href={`${process.env.NEXT_PUBLIC_APP_URL}/resources`}
-              className="text-base font-semibold text-green-800 hover:text-green-700 transition-colors"
+              className="text-base font-semibold text-primary/80 hover:text-primary transition-colors"
             >
               Resources
             </Link>
             <Link
               href={`${process.env.NEXT_PUBLIC_APP_URL}/blog`}
-              className="text-base font-semibold text-green-800 hover:text-green-700 transition-colors"
+              className="text-base font-semibold text-primary/80 hover:text-primary transition-colors"
             >
               Blog
             </Link>
@@ -75,28 +75,28 @@ export const Navbar = () => {
                 <nav className="flex flex-col gap-4 p-8">
                   <Link
                     href={process.env.NEXT_PUBLIC_APP_URL || '/'}
-                    className="text-base font-semibold text-green-800 hover:text-green-700 transition-colors py-2"
+                    className="text-base font-semibold text-primary/80 hover:text-primary transition-colors py-2"
                     onClick={handleMobileNavClick}
                   >
                     Home
                   </Link>
                   <Link
                     href={`${process.env.NEXT_PUBLIC_APP_URL}/about-us`}
-                    className="text-base font-semibold text-green-800 hover:text-green-700 transition-colors py-2"
+                    className="text-base font-semibold text-primary/80 hover:text-primary transition-colors py-2"
                     onClick={handleMobileNavClick}
                   >
                     About Us
                   </Link>
                   <Link
                     href={`${process.env.NEXT_PUBLIC_APP_URL}/resources`}
-                    className="text-base font-semibold text-green-800 hover:text-green-700 transition-colors py-2"
+                    className="text-base font-semibold text-primary/80 hover:text-primary transition-colors py-2"
                     onClick={handleMobileNavClick}
                   >
                     Resources
                   </Link>
                   <Link
                     href={`${process.env.NEXT_PUBLIC_APP_URL}/blog`}
-                    className="text-base font-semibold text-green-800 hover:text-green-700 transition-colors py-2"
+                    className="text-base font-semibold text-primary/80 hover:text-primary transition-colors py-2"
                     onClick={handleMobileNavClick}
                   >
                     Blog
@@ -107,7 +107,7 @@ export const Navbar = () => {
                       <div className="border-t pt-4 mt-4">
                         <div className="flex items-center gap-2 mb-4">
                           <Avatar className="size-8">
-                            <AvatarFallback className="text-xs font-medium bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300">
+                            <AvatarFallback className="text-xs font-medium bg-primary/10 text-primary">
                               {getInitials(currentUser?.name)}
                             </AvatarFallback>
                           </Avatar>
@@ -144,7 +144,7 @@ export const Navbar = () => {
                     <Button
                       asChild
                       size="sm"
-                      className="bg-green-600 hover:bg-green-700 text-white shadow-md mt-4"
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-md mt-4"
                     >
                       <Link href="/auth/login" onClick={handleMobileNavClick}>
                         Start Your Journey
@@ -160,7 +160,7 @@ export const Navbar = () => {
                 <>
                   <div className="flex items-center gap-2">
                     <Avatar className="size-8">
-                      <AvatarFallback className="text-xs font-medium bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300">
+                      <AvatarFallback className="text-xs font-medium bg-primary/10 text-primary">
                         {getInitials(currentUser?.name)}
                       </AvatarFallback>
                     </Avatar>
@@ -193,7 +193,7 @@ export const Navbar = () => {
                 <Button
                   asChild
                   size="sm"
-                  className="bg-green-600 hover:bg-green-700 text-white shadow-md"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-md"
                 >
                   <Link href="/auth/login">Start Your Journey</Link>
                 </Button>

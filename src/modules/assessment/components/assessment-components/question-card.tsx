@@ -22,20 +22,18 @@ const variantStyles: Record<
 > = {
   previous: {
     container:
-      'border-green-100 dark:border-green-900/30 bg-green-50/30 dark:bg-green-950/10 cursor-pointer opacity-40 hover:opacity-60 hover:border-green-200 dark:hover:border-green-800/40 hover:shadow-sm hover:bg-green-50/40 dark:hover:bg-green-950/15',
-    badge: 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400',
+      'border-primary/10 bg-primary/5 cursor-pointer opacity-40 hover:opacity-60 hover:border-primary/20 hover:shadow-sm hover:bg-primary/8',
+    badge: 'bg-primary/15 text-primary',
     badgeText: 'text-foreground/70',
   },
   current: {
-    container:
-      'border-green-200 dark:border-green-800/50 bg-green-50/50 dark:bg-green-950/20 shadow-md',
-    badge: 'bg-green-700 dark:bg-green-700 text-white',
+    container: 'border-primary/20 bg-primary/8 shadow-md',
+    badge: 'bg-primary text-primary-foreground',
     badgeText: 'text-green-900 dark:text-green-100',
   },
   next: {
-    container:
-      'border-green-100 dark:border-green-900/20 bg-green-50/20 dark:bg-green-950/5 pointer-events-none opacity-15',
-    badge: 'bg-green-100/50 dark:bg-green-900/20 text-green-600 dark:text-green-500',
+    container: 'border-primary/10 bg-primary/5 pointer-events-none opacity-15',
+    badge: 'bg-primary/8 text-primary',
     badgeText: 'text-foreground/70',
   },
 };
@@ -100,7 +98,7 @@ export const QuestionCard = ({
 
       {variant === 'previous' && isAnswered && (
         <div className="flex justify-center mt-4">
-          <span className="text-sm text-green-600 dark:text-green-500 italic">Click to edit</span>
+          <span className="text-sm text-primary italic">Click to edit</span>
         </div>
       )}
     </div>

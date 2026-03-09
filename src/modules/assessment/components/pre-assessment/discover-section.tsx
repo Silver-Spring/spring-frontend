@@ -1,40 +1,40 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { TrendingUp, BarChart3, Lightbulb, Users, FileText, Target } from 'lucide-react';
+import { BarChart3, FileText, Lightbulb, LucideIcon, Target, TrendingUp, Users } from 'lucide-react';
 
 interface DiscoverItem {
-  icon: React.ReactNode;
+  icon: LucideIcon;
   title: string;
   description: string;
 }
 
 const discoverItems: DiscoverItem[] = [
   {
-    icon: <TrendingUp className="size-5" />,
+    icon: TrendingUp,
     title: 'Your Readiness Score',
     description: 'A comprehensive score reflecting your overall retirement readiness.',
   },
   {
-    icon: <BarChart3 className="size-5" />,
+    icon: BarChart3,
     title: '5-Dimension Breakdown',
     description: 'See exactly where you stand across the five key areas that matter most.',
   },
   {
-    icon: <Lightbulb className="size-5" />,
+    icon: Lightbulb,
     title: 'Personalized Insights',
     description: 'Actionable recommendations tailored to your unique profile and circumstances.',
   },
   {
-    icon: <Users className="size-5" />,
+    icon: Users,
     title: 'Peer Comparison',
     description: 'Understand how your readiness compares with others with the same demographics.',
   },
   {
-    icon: <FileText className="size-5" />,
+    icon: FileText,
     title: 'Downloadable PDF Report',
     description: 'A detailed report you can share with your advisor or revisit anytime.',
   },
   {
-    icon: <Target className="size-5" />,
+    icon: Target,
     title: 'Action Plan',
     description: 'Clear next steps to improve in areas where you can make the biggest impact.',
   },
@@ -57,11 +57,11 @@ export function DiscoverSection() {
         {discoverItems.map((item) => (
           <Card
             key={item.title}
-            className="bg-green-50/30 dark:bg-green-950/10 border-green-100 dark:border-green-900/30 transition-shadow hover:shadow-md"
+            className="bg-primary/5 border-primary/10 transition-shadow hover:shadow-md"
           >
             <CardContent className="flex gap-4">
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-green-100/50 dark:bg-green-900/30 text-green-600 dark:text-green-500">
-                {item.icon}
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <item.icon className="size-5" />
               </div>
               <div className="flex flex-col gap-1">
                 <h3 className="font-semibold">{item.title}</h3>

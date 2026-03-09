@@ -154,7 +154,7 @@ export function AssessmentStatus() {
 
           <div className="w-full md:w-1/2 space-y-6">
             <div className="flex items-start gap-3">
-              <CheckCircle2 className="h-8 w-8 text-green-600 dark:text-green-500 shrink-0 mt-1" />
+              <CheckCircle2 className="h-8 w-8 text-primary shrink-0 mt-1" />
               <div>
                 <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-3">Thank You!</h1>
                 <p className="text-lg text-muted-foreground">Your assessment is complete</p>
@@ -169,7 +169,7 @@ export function AssessmentStatus() {
               </p>
               <p className="text-foreground/90 leading-relaxed">
                 Your <strong>Silver Spring Retirement Readiness Index (SSRI)</strong> score is{' '}
-                <strong className="text-green-600 dark:text-green-500 text-xl">
+                <strong className="text-primary text-xl">
                   {totalReadinessIndex}
                 </strong>
                 . Visit your results page to explore a comprehensive breakdown of your readiness
@@ -189,9 +189,9 @@ export function AssessmentStatus() {
           </div>
         </div>
 
-        <div className="bg-green-50/30 dark:bg-green-950/10 border border-green-100 dark:border-green-900/30 rounded-lg p-6 md:p-8 mb-12">
+        <div className="bg-primary/5 border border-primary/10 rounded-lg p-6 md:p-8 mb-12">
           <div className="flex items-start gap-3">
-            <FileText className="h-5 w-5 text-green-600 dark:text-green-500 shrink-0 mt-0.5" />
+            <FileText className="h-5 w-5 text-primary shrink-0 mt-0.5" />
             <div>
               <h3 className="font-semibold text-green-900 dark:text-green-100 mb-2">
                 Your Results Are Ready
@@ -207,7 +207,7 @@ export function AssessmentStatus() {
         <div className="flex justify-center">
           <Button
             size="lg"
-            className="w-full md:w-auto min-w-[240px] h-12 text-base bg-green-600 hover:bg-green-700 text-white shadow-md hover:shadow-lg transition-all"
+            className="w-full md:w-auto min-w-[240px] h-12 text-base bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg transition-all"
             onClick={handleViewResults}
           >
             <FileText className="mr-2 h-5 w-5" />
@@ -248,7 +248,7 @@ export function AssessmentStatus() {
 
         <PricingSection />
 
-        <section className="flex flex-col items-center gap-8 rounded-2xl bg-green-50/30 dark:bg-green-950/10 px-6 py-12 text-center ring-1 ring-green-200/50 dark:ring-green-900/30 sm:px-12">
+        <section className="flex flex-col items-center gap-8 rounded-2xl bg-primary/5 px-6 py-12 text-center ring-1 ring-primary/15 sm:px-12">
           <div className="flex flex-col gap-3">
             <h2 className="text-balance text-2xl font-bold tracking-tight lg:text-3xl">
               {isInProgress ? 'Welcome Back!' : 'Ready to begin?'}
@@ -262,7 +262,7 @@ export function AssessmentStatus() {
 
           <Button
             size="lg"
-            className="h-12 min-w-[260px] gap-2 rounded-xl bg-green-700 hover:bg-green-800 text-base font-semibold text-white shadow-md transition-all hover:shadow-lg"
+            className="h-12 min-w-[260px] gap-2 rounded-xl bg-primary hover:bg-primary/90 text-base font-semibold text-primary-foreground shadow-md transition-all hover:shadow-lg"
             onClick={handleButtonClick}
             disabled={isProcessing}
           >
@@ -281,24 +281,24 @@ export function AssessmentStatus() {
 
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
             <span className="flex items-center gap-1.5">
-              <Clock className="size-3.5 text-green-600 dark:text-green-500" />
+              <Clock className="size-3.5 text-primary" />
               Takes about 15 minutes
             </span>
             <span className="flex items-center gap-1.5">
-              <Save className="size-3.5 text-green-600 dark:text-green-500" />
+              <Save className="size-3.5 text-primary" />
               Save & resume anytime
             </span>
             <span className="flex items-center gap-1.5">
-              <Lock className="size-3.5 text-green-600 dark:text-green-500" />
+              <Lock className="size-3.5 text-primary" />
               Private & secure
             </span>
           </div>
 
           {!isInProgress && (
-            <blockquote className="mx-auto max-w-md border-l-2 border-green-600/30 dark:border-green-500/30 pl-4 text-left text-sm italic text-muted-foreground">
+              <blockquote className="mx-auto max-w-md border-l-2 border-primary/30 pl-4 text-left text-sm italic text-muted-foreground">
               &quot;SSRI helped me identify specific areas that I probably need to work on more, and
               the suggestions were practical and implementable.&quot;
-              <footer className="mt-2 text-xs font-medium not-italic text-green-700 dark:text-green-400">
+              <footer className="mt-2 text-xs font-medium not-italic text-primary">
                 — Priya S., 58, Mumbai
               </footer>
             </blockquote>

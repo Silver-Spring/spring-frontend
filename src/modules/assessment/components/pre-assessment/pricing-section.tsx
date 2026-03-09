@@ -16,11 +16,11 @@ export function PricingSection() {
         </p>
       </div>
 
-      <Card className="w-full max-w-md bg-green-50/30 dark:bg-green-950/10 border-green-200 dark:border-green-900/40 shadow-lg">
+      <Card className="w-full max-w-md bg-primary/5 border-primary/20 shadow-lg">
         <CardHeader className="text-center">
           <Badge
             variant="secondary"
-            className="mx-auto mb-3 w-fit px-3 py-1 text-xs bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300 hover:bg-green-100/80 dark:hover:bg-green-900/60"
+            className="mx-auto mb-3 w-fit px-3 py-1 text-xs bg-primary/10 text-primary hover:bg-primary/15"
           >
             One-Time Assessment Fee
           </Badge>
@@ -42,8 +42,8 @@ export function PricingSection() {
             </ul>
           </div>
 
-          <div className="flex items-center justify-center gap-2 rounded-lg bg-green-100/50 dark:bg-green-900/30 px-4 py-3 text-sm text-green-800 dark:text-green-200">
-            <ShieldCheck className="size-4 text-green-600 dark:text-green-400" />
+          <div className="flex items-center justify-center gap-2 rounded-lg bg-primary/10 px-4 py-3 text-sm text-primary">
+            <ShieldCheck className="size-4 text-primary" />
             <span>Secure payment • Lifetime access to your results</span>
           </div>
 
