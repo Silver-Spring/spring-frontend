@@ -10,10 +10,29 @@ import {
 } from '@/components/ui/chart';
 import { SECTION_SCORE_BANDS } from '@/modules/assessment/constants/interpretation-bands';
 import { TrendingUp } from 'lucide-react';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { Label, Pie, PieChart as RechartsPieChart } from 'recharts';
 
 const RADIAN = Math.PI / 180;
+
+const renderCustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, value }: any) => {
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+  return (
+    <text
+      x={x}
+      y={y}
+      fill="white"
+      textAnchor="middle"
+      dominantBaseline="central"
+      className="text-sm font-bold"
+    >
+      {value}
+    </text>
+  );
+};
 
 interface SectionResult {
   sectionType: string;
@@ -77,24 +96,37 @@ export const SectionBreakdownCard = ({ sectionResults }: SectionBreakdownCardPro
     });
   }, [sectionResults]);
 
-  const renderCustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, value }: any) => {
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-    const x = cx + radius * Math.cos(-midAngle * RADIAN);
-    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+  const renderTooltipContent = useCallback(
+    ({ active, payload }: any) => {
+      if (!active || !payload?.length) return null;
+      const data = payload[0];
+      const section = sectionResults.find(
+        (s) => s.sectionType.toLowerCase() === data.payload.section
+      );
+      const band = SECTION_SCORE_BANDS.find(
+        (b) => section && section.score >= b.min && section.score <= b.max
+      );
 
-    return (
-      <text
-        x={x}
-        y={y}
-        fill="white"
-        textAnchor="middle"
-        dominantBaseline="central"
-        className="text-sm font-bold"
-      >
-        {value}
-      </text>
-    );
-  };
+      return (
+        <div className="rounded-lg border bg-background p-3 shadow-md">
+          <p className="font-semibold mb-2">{data.name}</p>
+          <div className="space-y-1 text-sm">
+            <p className="flex justify-between gap-4">
+              <span className="text-muted-foreground">Score:</span>
+              <span className="font-bold">{data.value}</span>
+            </p>
+            <p className="flex justify-between gap-4">
+              <span className="text-muted-foreground">Level:</span>
+              <span className={`font-medium ${band?.color || ''}`}>
+                {section?.interpretationLabel}
+              </span>
+            </p>
+          </div>
+        </div>
+      );
+    },
+    [sectionResults]
+  );
 
   return (
     <Card className="bg-linear-to-br from-green-50 via-green-50/30 to-background dark:from-green-950/30 dark:via-green-950/10 dark:to-background border-green-200 dark:border-green-900/40 shadow-none">
@@ -115,36 +147,7 @@ export const SectionBreakdownCard = ({ sectionResults }: SectionBreakdownCardPro
         <div className="h-[400px]">
           <ChartContainer config={chartConfig} className="w-full h-full">
             <RechartsPieChart>
-              <ChartTooltip
-                content={({ active, payload }) => {
-                  if (!active || !payload?.length) return null;
-                  const data = payload[0];
-                  const section = sectionResults.find(
-                    (s) => s.sectionType.toLowerCase() === data.payload.section
-                  );
-                  const band = SECTION_SCORE_BANDS.find(
-                    (b) => section && section.score >= b.min && section.score <= b.max
-                  );
-
-                  return (
-                    <div className="rounded-lg border bg-background p-3 shadow-md">
-                      <p className="font-semibold mb-2">{data.name}</p>
-                      <div className="space-y-1 text-sm">
-                        <p className="flex justify-between gap-4">
-                          <span className="text-muted-foreground">Score:</span>
-                          <span className="font-bold">{data.value}</span>
-                        </p>
-                        <p className="flex justify-between gap-4">
-                          <span className="text-muted-foreground">Level:</span>
-                          <span className={`font-medium ${band?.color || ''}`}>
-                            {section?.interpretationLabel}
-                          </span>
-                        </p>
-                      </div>
-                    </div>
-                  );
-                }}
-              />
+              <ChartTooltip content={renderTooltipContent} />
               <Pie
                 data={chartData}
                 dataKey="score"

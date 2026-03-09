@@ -13,7 +13,7 @@ import {
 import { useAssessmentResults, useDownloadReport } from '@/modules/assessment/hooks';
 import { ArrowLeft, Download, Loader2 } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 
 interface AssessmentResultsPageProps {
   resultId: string;
@@ -35,13 +35,13 @@ export const AssessmentResultsPage = ({ resultId }: AssessmentResultsPageProps) 
   const { result, loading } = useAssessmentResults(resultId);
   const { downloadReport, isDownloading, isGenerating } = useDownloadReport();
 
-  const isAdminView = useMemo(() => searchParams.get('from') === 'admin', [searchParams]);
+  const isAdminView = searchParams.get('from') === 'admin';
   const backPath = isAdminView ? '/admin/assessment' : '/dashboard';
 
-  const handleDownloadPDF = async () => {
+  const handleDownloadPDF = useCallback(async () => {
     if (!result?.id) return;
     await downloadReport({ resultId: result.id });
-  };
+  }, [result?.id, downloadReport]);
 
   const sectionResults = useMemo(() => {
     return result?.assessmentSectionResultsByResultId?.nodes || [];

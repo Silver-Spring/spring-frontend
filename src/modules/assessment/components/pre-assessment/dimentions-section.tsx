@@ -1,8 +1,8 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { Brain, Users, HeartPulse, Activity, Leaf } from 'lucide-react';
+import { Activity, Brain, HeartPulse, Leaf, LucideIcon, Users } from 'lucide-react';
 
 interface Dimension {
-  icon: React.ReactNode;
+  icon: LucideIcon;
   name: string;
   description: string;
   color: string;
@@ -10,34 +10,34 @@ interface Dimension {
 
 const dimensions: Dimension[] = [
   {
-    icon: <Brain className="size-6" />,
+    icon: Brain,
     name: 'Psychological Readiness',
     description:
       'Your mental preparedness, identity shift, and sense of purpose for the next chapter.',
     color: 'bg-primary/10 text-primary',
   },
   {
-    icon: <Users className="size-6" />,
+    icon: Users,
     name: 'Social Support',
     description:
       'The strength of your social network, community ties, and meaningful relationships.',
     color: 'bg-chart-2/15 text-chart-2',
   },
   {
-    icon: <HeartPulse className="size-6" />,
+    icon: HeartPulse,
     name: 'Mental Wellness',
     description:
       'Your emotional resilience, stress management, and overall psychological well-being.',
     color: 'bg-chart-3/15 text-chart-3',
   },
   {
-    icon: <Activity className="size-6" />,
+    icon: Activity,
     name: 'Physical Health',
     description: 'Your health habits, energy levels, and proactive approach to physical wellness.',
     color: 'bg-chart-4/15 text-chart-4',
   },
   {
-    icon: <Leaf className="size-6" />,
+    icon: Leaf,
     name: 'Lifestyle Factors',
     description:
       'Your daily routines, hobbies, interests, and readiness to design a fulfilling lifestyle.',
@@ -70,7 +70,7 @@ export function DimensionsSection() {
                   {String(index + 1).padStart(2, '0')}
                 </span>
                 <div className="flex size-12 items-center justify-center rounded-xl bg-green-100/50 dark:bg-green-900/30 text-green-600 dark:text-green-500">
-                  {dim.icon}
+                  <dim.icon className="size-6" />
                 </div>
               </div>
               <div className="flex flex-col gap-1.5">

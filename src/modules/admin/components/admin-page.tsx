@@ -19,6 +19,7 @@ import {
   Users,
 } from 'lucide-react';
 import Link from 'next/link';
+import { useCallback, useMemo } from 'react';
 
 export const AdminPage = () => {
   const { totalCount: totalUsers, loading: loadingUsers, refetch: refetchUsers } = useAllUsers();
@@ -33,12 +34,14 @@ export const AdminPage = () => {
 
   const isLoading = loadingUsers || loadingAssessments || loadingStats;
 
-  const handleRefresh = async () => {
+  const handleRefresh = useCallback(async () => {
     await Promise.all([refetchUsers(), refetchAssessments(), refetchStats()]);
-  };
+  }, [refetchUsers, refetchAssessments, refetchStats]);
 
-  const completionRate =
-    totalAssessments > 0 ? Math.round((completedCount / totalAssessments) * 100) : 0;
+  const completionRate = useMemo(
+    () => (totalAssessments > 0 ? Math.round((completedCount / totalAssessments) * 100) : 0),
+    [completedCount, totalAssessments]
+  );
 
   return (
     <AdminSidebarLayout>

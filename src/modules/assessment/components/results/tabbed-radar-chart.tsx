@@ -5,11 +5,10 @@ import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent,
 } from '@/components/ui/chart';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { BarChart3 } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Legend, PolarAngleAxis, PolarGrid, PolarRadiusAxis, Radar, RadarChart } from 'recharts';
 
 interface CohortData {
@@ -63,12 +62,66 @@ export const TabbedRadarChart = ({
   genderCohort,
   overallCohort,
 }: TabbedRadarChartProps) => {
-  const tabs = [];
-  if (ageCohort) tabs.push({ value: 'age', label: ageCohort.label, data: ageCohort });
-  if (genderCohort) tabs.push({ value: 'gender', label: genderCohort.label, data: genderCohort });
-  if (overallCohort) tabs.push({ value: 'overall', label: 'All Users', data: overallCohort });
+  const tabs = useMemo(() => {
+    const buildRadarData = (cohort: CohortData) =>
+      cohort.sectionScores.map((section) => ({
+        subject: shortenSectionName(section.sectionName),
+        fullName: section.sectionName,
+        userScore: section.userScore,
+        cohortAverage: section.cohortAverage,
+        fullMark: 100,
+      }));
+
+    const result: { value: string; label: string; radarData: ReturnType<typeof buildRadarData> }[] =
+      [];
+    if (ageCohort)
+      result.push({ value: 'age', label: ageCohort.label, radarData: buildRadarData(ageCohort) });
+    if (genderCohort)
+      result.push({
+        value: 'gender',
+        label: genderCohort.label,
+        radarData: buildRadarData(genderCohort),
+      });
+    if (overallCohort)
+      result.push({
+        value: 'overall',
+        label: 'All Users',
+        radarData: buildRadarData(overallCohort),
+      });
+    return result;
+  }, [ageCohort, genderCohort, overallCohort]);
 
   const [activeTab, setActiveTab] = useState(tabs[0]?.value || 'age');
+
+  const renderTooltipContent = useCallback(({ active, payload }: any) => {
+    if (!active || !payload?.length) return null;
+    const data = payload[0].payload;
+
+    return (
+      <div className="rounded-lg border bg-background p-3 shadow-md">
+        <p className="font-semibold mb-2">{data.fullName}</p>
+        <div className="space-y-1 text-sm">
+          <p className="flex justify-between gap-4">
+            <span className="text-muted-foreground">Your Score:</span>
+            <span className="font-bold" style={{ color: 'var(--chart-1)' }}>
+              {Math.round(data.userScore)}
+            </span>
+          </p>
+          <p className="flex justify-between gap-4">
+            <span className="text-muted-foreground">Cohort Avg:</span>
+            <span className="font-bold" style={{ color: 'var(--chart-2)' }}>
+              {Math.round(data.cohortAverage)}
+            </span>
+          </p>
+        </div>
+      </div>
+    );
+  }, []);
+
+  const renderLegendFormatter = useCallback(
+    (value: string) => <span className="text-sm font-medium">{value}</span>,
+    []
+  );
 
   if (tabs.length === 0) return null;
 
@@ -106,82 +159,45 @@ export const TabbedRadarChart = ({
             ))}
           </TabsList>
 
-          {tabs.map((tab) => {
-            const radarData = [
-              ...tab.data.sectionScores.map((section) => ({
-                subject: shortenSectionName(section.sectionName),
-                fullName: section.sectionName,
-                userScore: section.userScore,
-                cohortAverage: section.cohortAverage,
-                fullMark: 100,
-              })),
-            ];
-
-            return (
-              <TabsContent key={tab.value} value={tab.value}>
-                <div className="w-full h-[450px]">
-                  <ChartContainer config={CHART_CONFIG} className="w-full h-full">
-                    <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="80%">
-                      <PolarGrid gridType="polygon" stroke="var(--border)" />
-                      <PolarAngleAxis
-                        dataKey="subject"
-                        tick={{ fill: 'var(--foreground)', fontSize: 12, fontWeight: 500 }}
-                        tickLine={false}
-                      />
-                      <PolarRadiusAxis angle={90} domain={[0, 100]} tick={false} tickCount={6} />
-                      <Radar
-                        name="Your Score"
-                        dataKey="userScore"
-                        stroke="var(--color-userScore)"
-                        fill="var(--color-userScore)"
-                        fillOpacity={0.6}
-                        strokeWidth={2}
-                      />
-                      <Radar
-                        name="Cohort Average"
-                        dataKey="cohortAverage"
-                        stroke="var(--color-cohortAverage)"
-                        fill="var(--color-cohortAverage)"
-                        fillOpacity={0.4}
-                        strokeWidth={2}
-                      />
-                      <ChartTooltip
-                        content={({ active, payload }) => {
-                          if (!active || !payload?.length) return null;
-                          const data = payload[0].payload;
-
-                          return (
-                            <div className="rounded-lg border bg-background p-3 shadow-md">
-                              <p className="font-semibold mb-2">{data.fullName}</p>
-                              <div className="space-y-1 text-sm">
-                                <p className="flex justify-between gap-4">
-                                  <span className="text-muted-foreground">Your Score:</span>
-                                  <span className="font-bold" style={{ color: 'var(--chart-1)' }}>
-                                    {Math.round(data.userScore)}
-                                  </span>
-                                </p>
-                                <p className="flex justify-between gap-4">
-                                  <span className="text-muted-foreground">Cohort Avg:</span>
-                                  <span className="font-bold" style={{ color: 'var(--chart-2)' }}>
-                                    {Math.round(data.cohortAverage)}
-                                  </span>
-                                </p>
-                              </div>
-                            </div>
-                          );
-                        }}
-                      />
-                      <Legend
-                        wrapperStyle={{ paddingTop: '20px' }}
-                        iconType="circle"
-                        formatter={(value) => <span className="text-sm font-medium">{value}</span>}
-                      />
-                    </RadarChart>
-                  </ChartContainer>
-                </div>
-              </TabsContent>
-            );
-          })}
+          {tabs.map((tab) => (
+            <TabsContent key={tab.value} value={tab.value}>
+              <div className="w-full h-[450px]">
+                <ChartContainer config={CHART_CONFIG} className="w-full h-full">
+                  <RadarChart data={tab.radarData} cx="50%" cy="50%" outerRadius="80%">
+                    <PolarGrid gridType="polygon" stroke="var(--border)" />
+                    <PolarAngleAxis
+                      dataKey="subject"
+                      tick={{ fill: 'var(--foreground)', fontSize: 12, fontWeight: 500 }}
+                      tickLine={false}
+                    />
+                    <PolarRadiusAxis angle={90} domain={[0, 100]} tick={false} tickCount={6} />
+                    <Radar
+                      name="Your Score"
+                      dataKey="userScore"
+                      stroke="var(--color-userScore)"
+                      fill="var(--color-userScore)"
+                      fillOpacity={0.6}
+                      strokeWidth={2}
+                    />
+                    <Radar
+                      name="Cohort Average"
+                      dataKey="cohortAverage"
+                      stroke="var(--color-cohortAverage)"
+                      fill="var(--color-cohortAverage)"
+                      fillOpacity={0.4}
+                      strokeWidth={2}
+                    />
+                    <ChartTooltip content={renderTooltipContent} />
+                    <Legend
+                      wrapperStyle={{ paddingTop: '20px' }}
+                      iconType="circle"
+                      formatter={renderLegendFormatter}
+                    />
+                  </RadarChart>
+                </ChartContainer>
+              </div>
+            </TabsContent>
+          ))}
         </Tabs>
       </CardContent>
     </Card>

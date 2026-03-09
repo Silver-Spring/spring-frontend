@@ -18,6 +18,11 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { useResendReport, useUsersWithAssessment } from '../../assessment/hooks';
 
+const getStatusColor = (status: string): string =>
+  status === 'completed'
+    ? 'text-green-600 bg-green-50 px-2 py-1 rounded-full text-xs font-medium'
+    : 'text-yellow-600 bg-yellow-50 px-2 py-1 rounded-full text-xs font-medium';
+
 export const UsersAssessmentTable = () => {
   const { users, totalCount, completedCount, inProgressCount, loading, refetch } =
     useUsersWithAssessment();
@@ -43,12 +48,6 @@ export const UsersAssessmentTable = () => {
     } catch (error) {
       toast.error('Failed to refresh data');
     }
-  };
-
-  const getStatusColor = (status: string) => {
-    return status === 'completed'
-      ? 'text-green-600 bg-green-50 px-2 py-1 rounded-full text-xs font-medium'
-      : 'text-yellow-600 bg-yellow-50 px-2 py-1 rounded-full text-xs font-medium';
   };
 
   if (loading) {

@@ -1,25 +1,25 @@
-import { ClipboardList, FileBarChart, Rocket } from 'lucide-react';
+import { ClipboardList, FileBarChart, LucideIcon, Rocket } from 'lucide-react';
 
 interface Step {
-  icon: React.ReactNode;
+  icon: LucideIcon;
   title: string;
   description: string;
 }
 
 const steps: Step[] = [
   {
-    icon: <ClipboardList className="size-5" />,
+    icon: ClipboardList,
     title: 'Answer 50 Questions',
     description: 'Reflective questions using a simple sliding scale. Be honest with yourself.',
   },
   {
-    icon: <FileBarChart className="size-5" />,
+    icon: FileBarChart,
     title: 'Receive Your Report',
     description:
       'Get a personalized readiness score, dimension breakdown, and downloadable PDF report.',
   },
   {
-    icon: <Rocket className="size-5" />,
+    icon: Rocket,
     title: 'Take Action',
     description:
       'Use your insights to strengthen weak areas and build a more confident retirement plan.',
@@ -45,7 +45,7 @@ export function HowItWorksSection() {
         {steps.map((step, index) => (
           <div key={step.title} className="relative flex flex-col items-center gap-4 text-center">
             <div className="relative z-10 flex size-16 items-center justify-center rounded-2xl bg-green-600 dark:bg-green-700 text-white shadow-sm">
-              {step.icon}
+              <step.icon className="size-5" />
             </div>
             <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
               Step {index + 1}
