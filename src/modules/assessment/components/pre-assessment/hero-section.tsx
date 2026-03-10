@@ -18,9 +18,9 @@ export function HeroSection({
     <section className="relative flex flex-col items-center justify-center gap-6 text-center mx-auto min-h-[600px] overflow-hidden rounded-3xl w-full">
       <div className="absolute inset-0 z-0">
         <Grainient
-          color1="#baf2da"
-          color2="#057f1e"
-          color3="#8eeccc"
+          color1="#076506"
+          color2="#bbbdbd"
+          color3="#0f570c"
           timeSpeed={0.25}
           colorBalance={0}
           warpStrength={1}
@@ -54,7 +54,7 @@ export function HeroSection({
 
         <div className="flex flex-col gap-3">
           <h1 className="text-balance text-3xl font-bold tracking-tight lg:text-4xl">
-            {"You're ready to discover your retirement readiness"}
+            You&apos;re ready to discover your retirement readiness
           </h1>
           <p className="mx-auto max-w-3xl text-pretty leading-relaxed lg:text-lg">
             15 minutes to understand your retirement readiness beyond finances. The Silver Spring
