@@ -33,7 +33,7 @@ export const AssessmentResultsPage = ({ resultId }: AssessmentResultsPageProps) 
   const router = useRouter();
   const searchParams = useSearchParams();
   const { result, loading } = useAssessmentResults(resultId);
-  const { downloadReport, isDownloading, isGenerating } = useDownloadReport();
+  const { downloadReport, isDownloading } = useDownloadReport();
 
   const isAdminView = searchParams.get('from') === 'admin';
   const backPath = isAdminView ? '/admin/assessment' : '/dashboard';
@@ -186,7 +186,7 @@ export const AssessmentResultsPage = ({ resultId }: AssessmentResultsPageProps) 
               {isDownloading ? (
                 <>
                   <Loader2 className="mr-2 size-4 animate-spin" />
-                  {isGenerating ? 'Generating...' : 'Downloading...'}
+                  Preparing...
                 </>
               ) : (
                 <>

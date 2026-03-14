@@ -3437,7 +3437,7 @@ export type Query = {
    * Returns the most recent captured payment if it exists.
    */
   currentUserPaymentStatus?: Maybe<UserPaymentStatusPayload>;
-  /** Returns three INDEPENDENT cohort comparisons: age-based (age range, any gender), gender-based (same gender, any age), and overall (all users). Each cohort is calculated separately and returns null only if that specific cohort has < 5 users. Excludes current user from all calculations. */
+  /** Returns three INDEPENDENT cohort comparisons: age-based (age range, any gender), gender-based (same gender, any age), and overall (all users). When a cohort has fewer than 5 users, returns the user's own score as the cohortAverage (cohortSize = 0) so the UI always has meaningful data to display. */
   getCohortComparisonForResult?: Maybe<Scalars['JSON']['output']>;
   /** Returns cohort statistics filtered by demographics: overall, age-based, and gender-based */
   getDemographicCohortStats?: Maybe<GetDemographicCohortStatsConnection>;

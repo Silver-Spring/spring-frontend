@@ -15,38 +15,32 @@ interface DownloadReportOptions {
 
 export const useDownloadReport = () => {
   const [isDownloading, setIsDownloading] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
 
   const downloadReport = async ({
     resultId,
     filename = `assessment-report-${resultId}.pdf`,
   }: DownloadReportOptions): Promise<boolean> => {
+    if (isDownloading) {
+      return false;
+    }
+
     const apiUrl = getApiBaseUrl();
     const downloadUrl = `${apiUrl}/api/download-report/${resultId}`;
     const token = Cookies.get(TOKEN_NAME);
 
     setIsDownloading(true);
-    let generatingTimer: NodeJS.Timeout | null = null;
 
     try {
       const downloadPromise = new Promise<void>(async (resolve, reject) => {
         try {
-          generatingTimer = setTimeout(() => {
-            setIsGenerating(true);
-          }, 2000);
-
           const response = await fetch(downloadUrl, {
             method: 'GET',
-            credentials: 'include',
+            credentials: 'same-origin',
             headers: {
+              'Accept': 'application/json, application/pdf',
               ...(token ? { Authorization: `Bearer ${token}` } : {}),
             },
           });
-
-          if (generatingTimer) {
-            clearTimeout(generatingTimer);
-          }
-          setIsGenerating(false);
 
           if (response.status === 401) {
             const redirect = encodeURIComponent(window.location.pathname + window.location.search);
@@ -70,6 +64,11 @@ export const useDownloadReport = () => {
             return;
           }
 
+          if (response.status === 503) {
+            reject(new Error('Server is busy generating reports. Please try again in a moment.'));
+            return;
+          }
+
           if (!response.ok) {
             const error = await response.json().catch(() => ({}));
             reject(
@@ -81,27 +80,40 @@ export const useDownloadReport = () => {
           }
 
           const contentType = response.headers.get('content-type');
-          if (contentType !== 'application/pdf') {
-            reject(new Error('Invalid file format received'));
+
+          if (contentType?.includes('application/json')) {
+            const data = await response.json();
+            
+            if (data.success && data.url) {
+              window.open(data.url, '_blank');
+            } else {
+              reject(new Error(data.message || 'Failed to get download URL'));
+              return;
+            }
+          } else if (contentType?.includes('application/pdf')) {
+            const blob = await response.blob();
+
+            if (blob.size === 0) {
+              reject(new Error('Received empty file'));
+              return;
+            }
+
+            const disposition = response.headers.get('content-disposition');
+            const extractedFilename = disposition?.match(/filename="(.+)"/)?.[1];
+            const finalFilename = extractedFilename || filename;
+
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = finalFilename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+          } else {
+            reject(new Error('Unexpected response format'));
             return;
           }
-
-          const blob = await response.blob();
-
-          if (blob.size === 0) {
-            reject(new Error('Received empty file'));
-            return;
-          }
-
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = filename;
-          document.body.appendChild(a);
-          a.click();
-
-          window.URL.revokeObjectURL(url);
-          document.body.removeChild(a);
 
           resolve();
         } catch (error) {
@@ -111,7 +123,7 @@ export const useDownloadReport = () => {
 
       await toast.promise(downloadPromise, {
         loading: 'Preparing your report...',
-        success: 'Your report has been downloaded.',
+        success: 'Your report download has started.',
         error: (err) => {
           const message = err instanceof Error ? err.message : 'Failed to download report. Please try again.';
           return message;
@@ -123,17 +135,12 @@ export const useDownloadReport = () => {
       console.error('Download error:', error);
       return false;
     } finally {
-      if (generatingTimer) {
-        clearTimeout(generatingTimer);
-      }
       setIsDownloading(false);
-      setIsGenerating(false);
     }
   };
 
   return {
     downloadReport,
     isDownloading,
-    isGenerating,
   };
 };
