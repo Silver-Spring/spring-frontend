@@ -8,6 +8,7 @@ export * from './use-resend-report';
 export * from './use-download-report';
 export * from './use-admin-stats';
 export * from './use-assessment-status';
+export * from './use-delete-my-assessment';
 // Single-question hooks
 export * from './use-session-question';
 export * from './use-submit-or-update-response';

@@ -4,3 +4,5 @@ export * from './use-revoke-admin';
 export * from './use-delete-user';
 export * from './use-assessment-trends';
 export * from './use-score-distribution';
+export * from './use-grant-internal-access';
+export * from './use-revoke-internal-access';

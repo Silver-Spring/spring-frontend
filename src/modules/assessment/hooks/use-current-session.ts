@@ -10,9 +10,12 @@ export const useCurrentSession = () => {
 
   useEffect(() => {
     if (data?.currentAssessmentSession) {
-      setCurrentSession(data.currentAssessmentSession);
+      setCurrentSession({
+        ...data.currentAssessmentSession,
+        paymentId: data.currentAssessmentSession.paymentId || null,
+      });
     }
-  }, [data, setCurrentSession]);
+  }, [data?.currentAssessmentSession, setCurrentSession]);
 
   return {
     currentSession: data?.currentAssessmentSession || null,

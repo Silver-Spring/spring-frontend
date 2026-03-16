@@ -10,5 +10,6 @@ fragment Lite_User on User {
   gender
   type
   isAdmin
+  isInternal
 }
 `);

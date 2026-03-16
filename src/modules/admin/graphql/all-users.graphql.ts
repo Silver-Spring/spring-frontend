@@ -9,6 +9,7 @@ const AllUsersDoc = graphql(`
         name
         phoneNumber
         isAdmin
+        isInternal
         createdAt
         updatedAt
       }

@@ -1,7 +1,7 @@
 import { graphql } from '@/gql';
 
 const StartAssessmentDoc = graphql(`
-  mutation StartAssessment($paymentId: UUID!) {
+  mutation StartAssessment($paymentId: UUID) {
     startAssessment(input: { paymentId: $paymentId }) {
       session {
         id

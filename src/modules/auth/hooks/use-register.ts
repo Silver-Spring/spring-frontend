@@ -41,6 +41,7 @@ export const useRegister = () => {
           type: user.type,
           isAdmin: user.isAdmin,
           phoneNumber: user.phoneNumber,
+          isInternal: user.isInternal,
         });
       }
 

@@ -8,6 +8,7 @@ const RevokeAdminDoc = graphql(`
         email
         name
         isAdmin
+        isInternal
         createdAt
         updatedAt
       }

@@ -1,15 +1,24 @@
 'use client';
 
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Spinner } from '@/components/ui/spinner';
 import { usePayment, usePaymentStatus } from '@/modules/payment/hooks';
-import { ArrowRight, CheckCircle2, Clock, FileText, Lock, Save } from 'lucide-react';
+import { useUserStore } from '@/stores';
+import { ArrowRight, CheckCircle2, Clock, FileText, Info, Lock, Save, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { useAssessmentStatus, useCurrentSession, useStartAssessment } from '../hooks';
+import {
+  useAssessmentStatus,
+  useCurrentSession,
+  useDeleteMyAssessment,
+  useStartAssessment,
+} from '../hooks';
+import { DeleteAssessmentDialog } from './dialogs';
 import {
   DimensionsSection,
   DiscoverSection,
@@ -21,6 +30,9 @@ import {
 
 export function AssessmentStatus() {
   const router = useRouter();
+  const currentUser = useUserStore((state) => state.user);
+  const isInternal = currentUser?.isInternal ?? false;
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const {
     hasCompletedAssessment,
@@ -40,6 +52,7 @@ export function AssessmentStatus() {
 
   const { startAssessment, loading: starting } = useStartAssessment();
   const { initiatePayment, isProcessing: paymentProcessing } = usePayment();
+  const { deleteMyAssessment, loading: deleting } = useDeleteMyAssessment();
 
   const {
     hasPaid,
@@ -62,11 +75,10 @@ export function AssessmentStatus() {
         await Promise.all([refetchAssessmentStatus(), refetchCurrentSession()]);
         router.push(`/assessment/${result.session.id}`);
       } else {
-        console.error('No session ID in result:', result);
         toast.error('Unable to start assessment. Please try again.');
       }
     } catch (error) {
-      console.error('Failed to start assessment:', error);
+      toast.error('Failed to start assessment. Please try again.');
     }
   };
 
@@ -81,16 +93,29 @@ export function AssessmentStatus() {
           }
         },
         (error) => {
-          console.error('Payment failed:', error);
+          toast.error('Payment failed. Please try again.');
         }
       );
     } catch (error) {
-      console.error('Payment error:', error);
+      toast.error('Payment failed. Please try again.');
     }
   };
 
   const handleStartAssessmentClick = async () => {
-    if (!hasPaid) {
+    if (isInternal) {
+      try {
+        const result = await startAssessment(null);
+
+        if (result.session?.id) {
+          await Promise.all([refetchAssessmentStatus(), refetchCurrentSession()]);
+          router.push(`/assessment/${result.session.id}`);
+        } else {
+          toast.error('Unable to start assessment. Please try again.');
+        }
+      } catch (error) {
+        toast.error('Failed to start assessment. Please try again.');
+      }
+    } else if (!hasPaid) {
       handlePaymentAndStart();
     } else {
       try {
@@ -105,11 +130,10 @@ export function AssessmentStatus() {
           await Promise.all([refetchAssessmentStatus(), refetchCurrentSession()]);
           router.push(`/assessment/${result.session.id}`);
         } else {
-          console.error('No session ID in result:', result);
           toast.error('Unable to start assessment. Please try again.');
         }
       } catch (error) {
-        console.error('Failed to start assessment:', error);
+        toast.error('Failed to start assessment. Please try again.');
       }
     }
   };
@@ -125,6 +149,19 @@ export function AssessmentStatus() {
       router.push(`/assessment/results/${resultId}`);
     } else {
       toast.error('Unable to find result ID. Please contact support.');
+    }
+  };
+
+  const handleDeleteAssessment = async () => {
+    try {
+      const result = await deleteMyAssessment();
+      if (result?.success) {
+        await Promise.all([refetchAssessmentStatus(), refetchCurrentSession()]);
+        setShowDeleteDialog(false);
+        router.push('/dashboard');
+      }
+    } catch (error) {
+      toast.error('Failed to delete assessment. Please try again.');
     }
   };
 
@@ -169,11 +206,9 @@ export function AssessmentStatus() {
               </p>
               <p className="text-foreground/90 leading-relaxed">
                 Your <strong>Silver Spring Retirement Readiness Index (SSRI)</strong> score is{' '}
-                <strong className="text-primary text-xl">
-                  {totalReadinessIndex}
-                </strong>
-                . Visit your results page to explore a comprehensive breakdown of your readiness
-                across all key dimensions.
+                <strong className="text-primary text-xl">{totalReadinessIndex}</strong>. Visit your
+                results page to explore a comprehensive breakdown of your readiness across all key
+                dimensions.
               </p>
               {completedAt && (
                 <p className="text-xs text-muted-foreground mt-4">
@@ -204,16 +239,44 @@ export function AssessmentStatus() {
           </div>
         </div>
 
-        <div className="flex justify-center">
+        <div className="flex flex-col sm:flex-row justify-center gap-4">
           <Button
             size="lg"
-            className="w-full md:w-auto min-w-[240px] h-12 text-base bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg transition-all"
+            className="w-full sm:w-auto min-w-[240px] h-12 text-base bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg transition-all"
             onClick={handleViewResults}
           >
             <FileText className="mr-2 h-5 w-5" />
             View Your Results
           </Button>
+          {isInternal && (
+            <Button
+              size="lg"
+              variant="destructive"
+              className="w-full sm:w-auto bg-red-700 hover:bg-red-700/90 min-w-[240px] h-12 text-base shadow-md hover:shadow-lg transition-all"
+              onClick={() => setShowDeleteDialog(true)}
+              disabled={deleting}
+            >
+              {deleting ? (
+                <>
+                  <Spinner className="mr-2 h-5 w-5" />
+                  Deleting...
+                </>
+              ) : (
+                <>
+                  <Trash2 className="mr-2 h-5 w-5" />
+                  Delete Assessment
+                </>
+              )}
+            </Button>
+          )}
         </div>
+
+        <DeleteAssessmentDialog
+          open={showDeleteDialog}
+          onOpenChange={setShowDeleteDialog}
+          onConfirm={handleDeleteAssessment}
+          loading={deleting}
+        />
       </div>
     );
   }
@@ -246,7 +309,27 @@ export function AssessmentStatus() {
 
         <Separator className="mx-auto w-24" />
 
-        <PricingSection />
+        {isInternal ? (
+          <section className="flex flex-col items-center gap-8">
+            <div className="flex flex-col gap-2 text-center">
+              <h2 className="text-balance text-2xl font-bold tracking-tight lg:text-3xl">
+                Internal User Access
+              </h2>
+            </div>
+            <Alert className="max-w-2xl border-primary/20 bg-primary/5">
+              <Info className="h-4 w-4 text-primary" />
+              <AlertTitle className="text-primary font-semibold">
+                Silver Spring Internal User
+              </AlertTitle>
+              <AlertDescription className="text-foreground/80 mt-2">
+                You can start the assessment without payment. You can also delete and retake the
+                test multiple times.
+              </AlertDescription>
+            </Alert>
+          </section>
+        ) : (
+          <PricingSection />
+        )}
 
         <section className="flex flex-col items-center gap-8 rounded-2xl bg-primary/5 px-6 py-12 text-center ring-1 ring-primary/15 sm:px-12">
           <div className="flex flex-col gap-3">
@@ -260,24 +343,48 @@ export function AssessmentStatus() {
             </p>
           </div>
 
-          <Button
-            size="lg"
-            className="h-12 min-w-[260px] gap-2 rounded-xl bg-primary hover:bg-primary/90 text-base font-semibold text-primary-foreground shadow-md transition-all hover:shadow-lg"
-            onClick={handleButtonClick}
-            disabled={isProcessing}
-          >
-            {isProcessing ? (
-              <>
-                <Spinner className="size-4" />
-                {paymentProcessing ? 'Processing Payment...' : 'Starting Assessment...'}
-              </>
-            ) : (
-              <>
-                {buttonText}
-                <ArrowRight className="size-4" />
-              </>
+          <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+            <Button
+              size="lg"
+              className="h-12 min-w-[260px] gap-2 rounded-xl bg-primary hover:bg-primary/90 text-base font-semibold text-primary-foreground shadow-md transition-all hover:shadow-lg"
+              onClick={handleButtonClick}
+              disabled={isProcessing}
+            >
+              {isProcessing ? (
+                <>
+                  <Spinner className="size-4" />
+                  {paymentProcessing ? 'Processing Payment...' : 'Starting Assessment...'}
+                </>
+              ) : (
+                <>
+                  {buttonText}
+                  <ArrowRight className="size-4" />
+                </>
+              )}
+            </Button>
+
+            {isInternal && isInProgress && (
+              <Button
+                size="lg"
+                variant="destructive"
+                className="h-12 min-w-[260px] bg-red-700 hover:bg-red-700/90 gap-2 rounded-xl text-base font-semibold shadow-md transition-all hover:shadow-lg"
+                onClick={() => setShowDeleteDialog(true)}
+                disabled={deleting}
+              >
+                {deleting ? (
+                  <>
+                    <Spinner className="size-4" />
+                    Deleting...
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="size-4" />
+                    Delete Assessment
+                  </>
+                )}
+              </Button>
             )}
-          </Button>
+          </div>
 
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
             <span className="flex items-center gap-1.5">
@@ -295,7 +402,7 @@ export function AssessmentStatus() {
           </div>
 
           {!isInProgress && (
-              <blockquote className="mx-auto max-w-md border-l-2 border-primary/30 pl-4 text-left text-sm italic text-muted-foreground">
+            <blockquote className="mx-auto max-w-md border-l-2 border-primary/30 pl-4 text-left text-sm italic text-muted-foreground">
               &quot;SSRI helped me identify specific areas that I probably need to work on more, and
               the suggestions were practical and implementable.&quot;
               <footer className="mt-2 text-xs font-medium not-italic text-primary">
@@ -303,8 +410,24 @@ export function AssessmentStatus() {
               </footer>
             </blockquote>
           )}
+
+          {isInternal && (
+            <div className="flex items-center justify-center gap-2 text-sm text-primary">
+              <Badge variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/15">
+                Internal User
+              </Badge>
+              <span className="text-muted-foreground">You are a Silver Spring internal user</span>
+            </div>
+          )}
         </section>
       </div>
+
+      <DeleteAssessmentDialog
+        open={showDeleteDialog}
+        onOpenChange={setShowDeleteDialog}
+        onConfirm={handleDeleteAssessment}
+        loading={deleting}
+      />
     </div>
   );
 }

@@ -4,7 +4,7 @@ import { AssessmentStatus } from '@/gql/graphql';
 interface AssessmentSession {
   id: string;
   userId: string;
-  paymentId: string;
+  paymentId: string | null;
   status: AssessmentStatus;
   currentQuestionNumber: number;
   startTime: string;

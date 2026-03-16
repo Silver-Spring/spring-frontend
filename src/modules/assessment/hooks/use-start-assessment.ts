@@ -9,12 +9,15 @@ export const useStartAssessment = () => {
   const [startAssessmentMutation, { data, loading, error }] = useMutation(StartAssessmentDoc, {
     onCompleted: (data) => {
       if (data.startAssessment?.session) {
-        setCurrentSession(data.startAssessment.session);
+        setCurrentSession({
+          ...data.startAssessment.session,
+          paymentId: data.startAssessment.session.paymentId || null,
+        });
         toast.success('Assessment started successfully!');
       }
     },
     onError: (error) => {
-      console.error('Error starting assessment:', error);
+      toast.error('Failed to start assessment. Please try again.');
       // Only show technical details in development
       const isDev = process.env.NODE_ENV === 'development';
       const errorMessage = isDev
@@ -24,21 +27,17 @@ export const useStartAssessment = () => {
     },
   });
 
-  const startAssessment = async (paymentId: string) => {
+  const startAssessment = async (paymentId?: string | null) => {
     try {
-      console.log('Starting assessment mutation with paymentId:', paymentId);
       const result = await startAssessmentMutation({
-        variables: { paymentId },
+        variables: { paymentId: paymentId || null },
       });
-
-      console.log('Mutation result:', result);
 
       return {
         session: result.data?.startAssessment?.session || null,
         message: result.data?.startAssessment?.message || null,
       };
     } catch (error) {
-      console.error('Error in startAssessment mutation:', error);
       throw error;
     }
   };

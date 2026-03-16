@@ -39,6 +39,7 @@ export function useCurrentUser() {
         type: currentUser.type,
         isAdmin: currentUser.isAdmin,
         phoneNumber: currentUser.phoneNumber,
+        isInternal: currentUser.isInternal,
       });
     } else if (!loading && !currentUser) {
       // Only clear if we're not loading and there's no user (logged out state)

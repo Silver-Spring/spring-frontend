@@ -1,8 +1,8 @@
 import { graphql } from '@/gql';
 
-const GrantAdminDoc = graphql(`
-  mutation GrantAdmin($userId: UUID!) {
-    grantAdminAccess(input: { userId: $userId }) {
+const RevokeInternalAccessDoc = graphql(`
+  mutation RevokeInternalAccess($userId: UUID!) {
+    revokeInternalAccess(input: { userId: $userId }) {
       user {
         id
         email
@@ -18,4 +18,4 @@ const GrantAdminDoc = graphql(`
   }
 `);
 
-export { GrantAdminDoc };
+export { RevokeInternalAccessDoc };

@@ -32,25 +32,43 @@ import {
   UserCheck,
   UserPlus,
   Users as UsersIcon,
+  Key,
+  XCircle,
 } from 'lucide-react';
 import { useState } from 'react';
-import { DeleteUserDialog, GrantAdminDialog, RevokeAdminDialog } from './dialogs';
-import { useAllUsers, useDeleteUser, useGrantAdmin, useRevokeAdmin } from '../hooks';
+import { 
+  DeleteUserDialog, 
+  GrantAdminDialog, 
+  RevokeAdminDialog,
+  GrantInternalAccessDialog,
+  RevokeInternalAccessDialog,
+} from './dialogs';
+import { 
+  useAllUsers, 
+  useDeleteUser, 
+  useGrantAdmin, 
+  useRevokeAdmin,
+  useGrantInternalAccess,
+  useRevokeInternalAccess,
+} from '../hooks';
 
-type ConfirmDialogType = 'grant' | 'revoke' | 'delete' | null;
+type ConfirmDialogType = 'grant' | 'revoke' | 'delete' | 'grantInternal' | 'revokeInternal' | null;
 
 interface SelectedUser {
   id: string;
   email: string;
   name: string | null;
   isAdmin: boolean;
+  isInternal: boolean;
 }
 
 export const UsersPage = () => {
-  const { users, totalCount, adminCount, regularUserCount, newThisMonth, loading, refetch } =
+  const { users, totalCount, adminCount, internalUserCount, regularUserCount, newThisMonth, loading, refetch } =
     useAllUsers();
   const { grantAdmin, loading: granting } = useGrantAdmin();
   const { revokeAdmin, loading: revoking } = useRevokeAdmin();
+  const { grantInternalAccess, loading: grantingInternal } = useGrantInternalAccess();
+  const { revokeInternalAccess, loading: revokingInternal } = useRevokeInternalAccess();
   const { deleteUser, loading: deleting } = useDeleteUser();
   const currentUserId = useUserStore((state) => state.user?.id);
   const [actionUserId, setActionUserId] = useState<string | null>(null);
@@ -79,6 +97,12 @@ export const UsersPage = () => {
         case 'revoke':
           await revokeAdmin(selectedUser.id);
           break;
+        case 'grantInternal':
+          await grantInternalAccess(selectedUser.id);
+          break;
+        case 'revokeInternal':
+          await revokeInternalAccess(selectedUser.id);
+          break;
         case 'delete':
           await deleteUser(selectedUser.id);
           break;
@@ -94,7 +118,7 @@ export const UsersPage = () => {
     await refetch();
   };
 
-  const isProcessing = granting || revoking || deleting;
+  const isProcessing = granting || revoking || grantingInternal || revokingInternal || deleting;
 
   return (
     <AdminSidebarLayout>
@@ -112,7 +136,7 @@ export const UsersPage = () => {
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
           <Card>
             <CardHeader className="pb-3">
               <CardDescription>Total Users</CardDescription>
@@ -129,6 +153,15 @@ export const UsersPage = () => {
             </CardHeader>
             <CardContent>
               <ShieldCheck className="h-4 w-4 text-primary" />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="pb-3">
+              <CardDescription>Internal Users</CardDescription>
+              <CardTitle className="text-3xl">{internalUserCount}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Key className="h-4 w-4 text-orange-600" />
             </CardContent>
           </Card>
           <Card>
@@ -173,7 +206,7 @@ export const UsersPage = () => {
                       <TableHead className="w-[200px]">User</TableHead>
                       <TableHead className="w-[220px]">Email</TableHead>
                       <TableHead className="w-[150px]">Phone Number</TableHead>
-                      <TableHead className="w-[120px]">Role</TableHead>
+                      <TableHead className="w-[180px]">Role & Access</TableHead>
                       <TableHead className="w-[150px]">Created</TableHead>
                       <TableHead className="w-[80px] text-right">Actions</TableHead>
                     </TableRow>
@@ -214,18 +247,25 @@ export const UsersPage = () => {
                               {user.phoneNumber || 'N/A'}
                             </span>
                           </TableCell>
-                          <TableCell className="w-[120px]">
-                            {user.isAdmin ? (
-                              <Badge variant="default" className="gap-1">
-                                <ShieldCheck className="h-3 w-3" />
-                                Admin
-                              </Badge>
-                            ) : (
-                              <Badge variant="secondary" className="gap-1">
-                                <UserCheck className="h-3 w-3" />
-                                User
-                              </Badge>
-                            )}
+                          <TableCell className="w-[180px]">
+                            <div className="flex flex-wrap gap-1">
+                              {user.isAdmin ? (
+                                <Badge variant="default" className="gap-1">
+                                  <ShieldCheck className="h-3 w-3" />
+                                  Admin
+                                </Badge>
+                              ) : user.isInternal ? (
+                                <Badge variant="outline" className="gap-1 border-orange-600 text-orange-600">
+                                  <Key className="h-3 w-3" />
+                                  Internal
+                                </Badge>
+                              ) : (
+                                <Badge variant="secondary" className="gap-1">
+                                  <UserCheck className="h-3 w-3" />
+                                  User
+                                </Badge>
+                              )}
+                            </div>
                           </TableCell>
                           <TableCell className="w-[150px]">
                             <span className="text-sm text-muted-foreground">
@@ -260,6 +300,7 @@ export const UsersPage = () => {
                                         email: user.email,
                                         name: user.name || null,
                                         isAdmin: user.isAdmin,
+                                        isInternal: user.isInternal,
                                       })
                                     }
                                     disabled={isCurrentUser}
@@ -275,12 +316,48 @@ export const UsersPage = () => {
                                         email: user.email,
                                         name: user.name || null,
                                         isAdmin: user.isAdmin,
+                                        isInternal: user.isInternal,
                                       })
                                     }
                                   >
                                     <ShieldCheck className="h-4 w-4 mr-2" />
                                     Grant Admin
                                   </DropdownMenuItem>
+                                )}
+                                {!user.isAdmin && (
+                                  <>
+                                    {user.isInternal ? (
+                                      <DropdownMenuItem
+                                        onClick={() =>
+                                          handleOpenConfirmDialog('revokeInternal', {
+                                            id: user.id,
+                                            email: user.email,
+                                            name: user.name || null,
+                                            isAdmin: user.isAdmin,
+                                            isInternal: user.isInternal,
+                                          })
+                                        }
+                                      >
+                                        <XCircle className="h-4 w-4 mr-2" />
+                                        Revoke Internal Access
+                                      </DropdownMenuItem>
+                                    ) : (
+                                      <DropdownMenuItem
+                                        onClick={() =>
+                                          handleOpenConfirmDialog('grantInternal', {
+                                            id: user.id,
+                                            email: user.email,
+                                            name: user.name || null,
+                                            isAdmin: user.isAdmin,
+                                            isInternal: user.isInternal,
+                                          })
+                                        }
+                                      >
+                                        <Key className="h-4 w-4 mr-2" />
+                                        Grant Internal Access
+                                      </DropdownMenuItem>
+                                    )}
+                                  </>
                                 )}
                                 <DropdownMenuItem
                                   variant="destructive"
@@ -290,6 +367,7 @@ export const UsersPage = () => {
                                       email: user.email,
                                       name: user.name || null,
                                       isAdmin: user.isAdmin,
+                                      isInternal: user.isInternal,
                                     })
                                   }
                                   disabled={isCurrentUser}
@@ -325,6 +403,22 @@ export const UsersPage = () => {
         onConfirm={handleConfirmAction}
         userEmail={selectedUser?.email || ''}
         loading={revoking}
+      />
+
+      <GrantInternalAccessDialog
+        open={confirmDialog === 'grantInternal'}
+        onOpenChange={handleCloseConfirmDialog}
+        onConfirm={handleConfirmAction}
+        userEmail={selectedUser?.email || ''}
+        loading={grantingInternal}
+      />
+
+      <RevokeInternalAccessDialog
+        open={confirmDialog === 'revokeInternal'}
+        onOpenChange={handleCloseConfirmDialog}
+        onConfirm={handleConfirmAction}
+        userEmail={selectedUser?.email || ''}
+        loading={revokingInternal}
       />
 
       <DeleteUserDialog
