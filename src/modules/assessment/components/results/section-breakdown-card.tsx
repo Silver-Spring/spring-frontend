@@ -1,36 +1,58 @@
 'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
-  ChartTooltip,
-} from '@/components/ui/chart';
+import { ChartConfig, ChartContainer, ChartTooltip } from '@/components/ui/chart';
 import { SECTION_SCORE_BANDS } from '@/modules/assessment/constants/interpretation-bands';
 import { TrendingUp } from 'lucide-react';
-import { useCallback, useMemo } from 'react';
-import { Label, Pie, PieChart as RechartsPieChart } from 'recharts';
+import { useCallback, useMemo, useState } from 'react';
+import { Cell, Label, Pie, PieChart as RechartsPieChart, Sector } from 'recharts';
 
 const RADIAN = Math.PI / 180;
 
-const renderCustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, value }: any) => {
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+const renderCustomLabel = ({ cx, cy, midAngle, outerRadius, payload }: any) => {
+  const radius = outerRadius + 40;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+  const isLeft = x < cx;
+  const lines = payload.label.split(' ');
 
   return (
     <text
       x={x}
       y={y}
-      fill="white"
-      textAnchor="middle"
+      textAnchor={isLeft ? 'end' : 'start'}
       dominantBaseline="central"
-      className="text-sm font-bold"
+      className="fill-foreground text-xs font-semibold"
     >
-      {value}
+      {lines.map((line: string, index: number) => (
+        <tspan key={index} x={x} dy={index === 0 ? 0 : '1.2em'}>
+          {line}
+        </tspan>
+      ))}
+      <tspan x={x} dy="1.4em" className="fill-primary font-bold text-sm">
+        {payload.score}
+      </tspan>
     </text>
+  );
+};
+
+const renderActiveShape = (props: any) => {
+  const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill } = props;
+
+  return (
+    <Sector
+      cx={cx}
+      cy={cy}
+      innerRadius={innerRadius}
+      outerRadius={outerRadius + 8}
+      startAngle={startAngle}
+      endAngle={endAngle}
+      fill={fill}
+      style={{
+        filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25))',
+      }}
+    />
   );
 };
 
@@ -80,6 +102,8 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export const SectionBreakdownCard = ({ sectionResults }: SectionBreakdownCardProps) => {
+  const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
+
   const totalScore = useMemo(() => {
     return sectionResults.reduce((sum, section) => sum + section.score, 0);
   }, [sectionResults]);
@@ -96,6 +120,14 @@ export const SectionBreakdownCard = ({ sectionResults }: SectionBreakdownCardPro
     });
   }, [sectionResults]);
 
+  const handleMouseEnter = useCallback((_: any, index: number) => {
+    setActiveIndex(index);
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    setActiveIndex(undefined);
+  }, []);
+
   const renderTooltipContent = useCallback(
     ({ active, payload }: any) => {
       if (!active || !payload?.length) return null;
@@ -107,25 +139,36 @@ export const SectionBreakdownCard = ({ sectionResults }: SectionBreakdownCardPro
         (b) => section && section.score >= b.min && section.score <= b.max
       );
 
+      const percentage = (((section?.score || 0) / totalScore) * 100).toFixed(1);
+
       return (
-        <div className="rounded-lg border bg-background p-3 shadow-md">
-          <p className="font-semibold mb-2">{data.name}</p>
-          <div className="space-y-1 text-sm">
-            <p className="flex justify-between gap-4">
+        <div className="rounded-lg border bg-background p-4 shadow-xl max-w-xs">
+          <p className="font-bold text-base mb-3 text-foreground">{data.payload.label}</p>
+          <div className="space-y-2 text-sm">
+            <div className="flex items-center justify-between gap-6">
               <span className="text-muted-foreground">Score:</span>
-              <span className="font-bold">{data.value}</span>
-            </p>
-            <p className="flex justify-between gap-4">
+              <span className="font-bold text-lg text-foreground">{data.value}</span>
+            </div>
+            <div className="flex items-center justify-between gap-6">
+              <span className="text-muted-foreground">Contribution:</span>
+              <span className="font-semibold text-foreground">{percentage}%</span>
+            </div>
+            <div className="flex items-center justify-between gap-6">
               <span className="text-muted-foreground">Level:</span>
-              <span className={`font-medium ${band?.color || ''}`}>
+              <span className={`font-semibold ${band?.color || ''}`}>
                 {section?.interpretationLabel}
               </span>
-            </p>
+            </div>
+            {section?.interpretationNarrative && (
+              <p className="text-xs text-muted-foreground mt-3 pt-3 border-t italic">
+                {section.interpretationNarrative}
+              </p>
+            )}
           </div>
         </div>
       );
     },
-    [sectionResults]
+    [sectionResults, totalScore]
   );
 
   return (
@@ -144,20 +187,35 @@ export const SectionBreakdownCard = ({ sectionResults }: SectionBreakdownCardPro
         </div>
       </CardHeader>
       <CardContent>
-        <div className="h-[400px]">
+        <div className="h-[500px] will-change-transform">
           <ChartContainer config={chartConfig} className="w-full h-full">
             <RechartsPieChart>
               <ChartTooltip content={renderTooltipContent} />
               <Pie
                 data={chartData}
                 dataKey="score"
-                nameKey="section"
+                nameKey="label"
                 innerRadius={70}
-                outerRadius={140}
-                strokeWidth={5}
+                outerRadius={120}
+                strokeWidth={2}
                 label={renderCustomLabel}
                 labelLine={false}
+                activeIndex={activeIndex}
+                activeShape={renderActiveShape}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+                isAnimationActive={false}
+                style={{
+                  cursor: 'pointer',
+                }}
               >
+                {chartData.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={entry.fill}
+                    fillOpacity={activeIndex === undefined || activeIndex === index ? 1 : 0.35}
+                  />
+                ))}
                 <Label
                   content={({ viewBox }) => {
                     if (viewBox && 'cx' in viewBox && 'cy' in viewBox) {
@@ -188,10 +246,6 @@ export const SectionBreakdownCard = ({ sectionResults }: SectionBreakdownCardPro
                   }}
                 />
               </Pie>
-              <ChartLegend
-                content={<ChartLegendContent className="flex-wrap" />}
-                wrapperStyle={{ paddingTop: '20px' }}
-              />
             </RechartsPieChart>
           </ChartContainer>
         </div>

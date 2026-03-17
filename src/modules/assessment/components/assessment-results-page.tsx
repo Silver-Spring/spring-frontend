@@ -147,7 +147,7 @@ export const AssessmentResultsPage = ({ resultId }: AssessmentResultsPageProps) 
           />
 
           {/* Two Column Grid - Section Breakdown & Cohort Comparison */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6 lg:items-center">
             {/* Section Breakdown */}
             <SectionBreakdownCard sectionResults={sectionResults} />
 

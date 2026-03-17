@@ -94,47 +94,49 @@ export const CohortComparisonCard = ({
           </div>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex items-center justify-center min-h-[500px] p-6">
         {/* Bar Chart */}
-        <ChartContainer config={chartConfig} className="w-full h-full">
-          <BarChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="category" />
-            <YAxis />
-            <ChartTooltip content={<ChartTooltipContent />} />
-            <ChartLegend content={<ChartLegendContent />} />
-            <Bar
-              dataKey="userScore"
-              fill="var(--color-userScore)"
-              radius={[8, 8, 0, 0]}
-              maxBarSize={60}
-            />
-            {ageCohort && (
+        <div className="w-full">
+          <ChartContainer config={chartConfig} className="h-[300px] w-full">
+            <BarChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="category" />
+              <YAxis />
+              <ChartTooltip content={<ChartTooltipContent />} />
+              <ChartLegend content={<ChartLegendContent />} />
               <Bar
-                dataKey="ageAverage"
-                fill="var(--color-ageAverage)"
+                dataKey="userScore"
+                fill="var(--color-userScore)"
                 radius={[8, 8, 0, 0]}
                 maxBarSize={60}
               />
-            )}
-            {genderCohort && (
-              <Bar
-                dataKey="genderAverage"
-                fill="var(--color-genderAverage)"
-                radius={[8, 8, 0, 0]}
-                maxBarSize={60}
-              />
-            )}
-            {overallCohort && (
-              <Bar
-                dataKey="overallAverage"
-                fill="var(--color-overallAverage)"
-                radius={[8, 8, 0, 0]}
-                maxBarSize={60}
-              />
-            )}
-          </BarChart>
-        </ChartContainer>
+              {ageCohort && (
+                <Bar
+                  dataKey="ageAverage"
+                  fill="var(--color-ageAverage)"
+                  radius={[8, 8, 0, 0]}
+                  maxBarSize={60}
+                />
+              )}
+              {genderCohort && (
+                <Bar
+                  dataKey="genderAverage"
+                  fill="var(--color-genderAverage)"
+                  radius={[8, 8, 0, 0]}
+                  maxBarSize={60}
+                />
+              )}
+              {overallCohort && (
+                <Bar
+                  dataKey="overallAverage"
+                  fill="var(--color-overallAverage)"
+                  radius={[8, 8, 0, 0]}
+                  maxBarSize={60}
+                />
+              )}
+            </BarChart>
+          </ChartContainer>
+        </div>
       </CardContent>
     </Card>
   );
