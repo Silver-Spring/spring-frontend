@@ -8,6 +8,7 @@ import {
   ClipboardList,
   Users,
   BarChart3,
+  CreditCard,
   Settings,
   LogOut,
   Home,
@@ -58,6 +59,11 @@ const menuItems = [
     title: 'Analytics',
     url: '/admin/analytics',
     icon: BarChart3,
+  },
+  {
+    title: 'Payments',
+    url: '/admin/payments',
+    icon: CreditCard,
   },
 ];
 
@@ -155,7 +161,7 @@ export const AdminSidebarLayout = ({ children }: AdminSidebarLayoutProps) => {
                 </p>
               </div>
             </header>
-            <main className="flex-1 overflow-y-auto">
+            <main className="flex-1 overflow-y-auto overflow-x-hidden">
               {typeof children === 'function' ? children(props) : children}
             </main>
           </SidebarInset>

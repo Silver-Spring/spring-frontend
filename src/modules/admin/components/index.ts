@@ -6,3 +6,4 @@ export * from './admin-stats-card';
 export * from './question-manager';
 export * from './section-manager';
 export * from './users-assessment-table';
+export * from './payment-observability-page';

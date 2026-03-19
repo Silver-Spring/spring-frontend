@@ -48,6 +48,56 @@ export type AdminDeleteUserPayload = {
   success: Scalars['Boolean']['output'];
 };
 
+export type AdminPaymentAnalyticsPayload = {
+  __typename?: 'AdminPaymentAnalyticsPayload';
+  averagePaymentAmount: Scalars['Float']['output'];
+  capturedAmount: Scalars['Int']['output'];
+  capturedPayments: Scalars['Int']['output'];
+  failedAmount: Scalars['Int']['output'];
+  failedPayments: Scalars['Int']['output'];
+  paymentMethodBreakdown: Array<PaymentMethodStats>;
+  recentPayments: Scalars['Int']['output'];
+  refundedAmount: Scalars['Int']['output'];
+  refundedPayments: Scalars['Int']['output'];
+  successRate: Scalars['Float']['output'];
+  totalAmount: Scalars['Int']['output'];
+  totalPayments: Scalars['Int']['output'];
+};
+
+export type AdminPaymentDetailsPayload = {
+  __typename?: 'AdminPaymentDetailsPayload';
+  dbData?: Maybe<Scalars['String']['output']>;
+  razorpayData: Scalars['String']['output'];
+};
+
+export type AdminPaymentsFilterInput = {
+  count?: InputMaybe<Scalars['Int']['input']>;
+  from?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  to?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type AdminPaymentsListPayload = {
+  __typename?: 'AdminPaymentsListPayload';
+  count: Scalars['Int']['output'];
+  entity: Scalars['String']['output'];
+  items: Array<RazorpayPaymentItem>;
+};
+
+export type AdminRefundsListPayload = {
+  __typename?: 'AdminRefundsListPayload';
+  count: Scalars['Int']['output'];
+  entity: Scalars['String']['output'];
+  items: Array<RazorpayRefundItem>;
+};
+
+export type AdminSettlementsListPayload = {
+  __typename?: 'AdminSettlementsListPayload';
+  count: Scalars['Int']['output'];
+  entity: Scalars['String']['output'];
+  items: Array<RazorpaySettlementItem>;
+};
+
 export type AdminStatsPayload = {
   __typename?: 'AdminStatsPayload';
   activeQuestions: Scalars['Int']['output'];
@@ -3296,6 +3346,15 @@ export type PaymentCondition = {
   userId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
+export type PaymentMethodStats = {
+  __typename?: 'PaymentMethodStats';
+  count: Scalars['Int']['output'];
+  failedCount: Scalars['Int']['output'];
+  method: Scalars['String']['output'];
+  successCount: Scalars['Int']['output'];
+  totalAmount: Scalars['Int']['output'];
+};
+
 /** The fields on `payment` to look up the row to update. */
 export type PaymentOnAssessmentSessionForAssessmentSessionsPaymentIdFkeyUsingPaymentsPkeyUpdate = {
   id: Scalars['UUID']['input'];
@@ -3439,6 +3498,33 @@ export type Query = {
   /** Get admin statistics about assessment content (admin only) */
   adminAssessmentStats?: Maybe<AdminStatsPayload>;
   /**
+   * Admin only: Get payment analytics and statistics from local database.
+   * Optionally filter by date range.
+   * Requires admin privileges.
+   */
+  adminPaymentAnalytics?: Maybe<AdminPaymentAnalyticsPayload>;
+  /**
+   * Admin only: Fetch detailed payment information by Razorpay payment ID.
+   * Returns both Razorpay data and local database data.
+   * Requires admin privileges.
+   */
+  adminPaymentDetails?: Maybe<AdminPaymentDetailsPayload>;
+  /**
+   * Admin only: Fetch all payments from Razorpay with filters.
+   * Requires admin privileges.
+   */
+  adminPaymentsList?: Maybe<AdminPaymentsListPayload>;
+  /**
+   * Admin only: Fetch all refunds from Razorpay.
+   * Requires admin privileges.
+   */
+  adminRefundsList?: Maybe<AdminRefundsListPayload>;
+  /**
+   * Admin only: Fetch all settlements from Razorpay.
+   * Requires admin privileges.
+   */
+  adminSettlementsList?: Maybe<AdminSettlementsListPayload>;
+  /**
    * Get list of all users in the system (admin only)
    * Includes user details and admin status for role management
    */
@@ -3549,6 +3635,36 @@ export type Query = {
    * Includes their session details, completion status, and results if completed
    */
   usersWithAssessment?: Maybe<UsersWithAssessmentPayload>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAdminPaymentAnalyticsArgs = {
+  input?: InputMaybe<AdminPaymentsFilterInput>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAdminPaymentDetailsArgs = {
+  paymentId: Scalars['String']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAdminPaymentsListArgs = {
+  input?: InputMaybe<AdminPaymentsFilterInput>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAdminRefundsListArgs = {
+  input?: InputMaybe<AdminPaymentsFilterInput>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAdminSettlementsListArgs = {
+  input?: InputMaybe<AdminPaymentsFilterInput>;
 };
 
 
@@ -3924,6 +4040,56 @@ export type QuestionsSummaryPayload = {
   __typename?: 'QuestionsSummaryPayload';
   progress: ProgressMetadata;
   questions: Array<QuestionSummaryItem>;
+};
+
+export type RazorpayPaymentItem = {
+  __typename?: 'RazorpayPaymentItem';
+  amount: Scalars['Int']['output'];
+  amountRefunded?: Maybe<Scalars['Int']['output']>;
+  captured: Scalars['Boolean']['output'];
+  contact?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['Int']['output'];
+  currency: Scalars['String']['output'];
+  email?: Maybe<Scalars['String']['output']>;
+  entity: Scalars['String']['output'];
+  errorCode?: Maybe<Scalars['String']['output']>;
+  errorDescription?: Maybe<Scalars['String']['output']>;
+  errorReason?: Maybe<Scalars['String']['output']>;
+  errorSource?: Maybe<Scalars['String']['output']>;
+  errorStep?: Maybe<Scalars['String']['output']>;
+  fee?: Maybe<Scalars['Int']['output']>;
+  id: Scalars['String']['output'];
+  method?: Maybe<Scalars['String']['output']>;
+  notes?: Maybe<Scalars['String']['output']>;
+  orderId?: Maybe<Scalars['String']['output']>;
+  refundStatus?: Maybe<Scalars['String']['output']>;
+  status: Scalars['String']['output'];
+  tax?: Maybe<Scalars['Int']['output']>;
+};
+
+export type RazorpayRefundItem = {
+  __typename?: 'RazorpayRefundItem';
+  amount: Scalars['Int']['output'];
+  createdAt: Scalars['Int']['output'];
+  currency: Scalars['String']['output'];
+  entity: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  paymentId: Scalars['String']['output'];
+  speedProcessed?: Maybe<Scalars['String']['output']>;
+  speedRequested?: Maybe<Scalars['String']['output']>;
+  status: Scalars['String']['output'];
+};
+
+export type RazorpaySettlementItem = {
+  __typename?: 'RazorpaySettlementItem';
+  amount: Scalars['Int']['output'];
+  createdAt: Scalars['Int']['output'];
+  entity: Scalars['String']['output'];
+  fees?: Maybe<Scalars['Int']['output']>;
+  id: Scalars['String']['output'];
+  status: Scalars['String']['output'];
+  tax?: Maybe<Scalars['Int']['output']>;
+  utr?: Maybe<Scalars['String']['output']>;
 };
 
 export type RegisterInput = {
@@ -5225,6 +5391,41 @@ export type UpdateUserOnReminderEmailForReminderEmailsUserIdFkeyPatch = {
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
+export type AdminPaymentAnalyticsQueryVariables = Exact<{
+  input?: InputMaybe<AdminPaymentsFilterInput>;
+}>;
+
+
+export type AdminPaymentAnalyticsQuery = { __typename?: 'Query', adminPaymentAnalytics?: { __typename?: 'AdminPaymentAnalyticsPayload', totalPayments: number, totalAmount: number, capturedPayments: number, capturedAmount: number, failedPayments: number, failedAmount: number, refundedPayments: number, refundedAmount: number, averagePaymentAmount: number, successRate: number, recentPayments: number, paymentMethodBreakdown: Array<{ __typename?: 'PaymentMethodStats', method: string, count: number, totalAmount: number, successCount: number, failedCount: number }> } | null };
+
+export type AdminPaymentDetailsQueryVariables = Exact<{
+  paymentId: Scalars['String']['input'];
+}>;
+
+
+export type AdminPaymentDetailsQuery = { __typename?: 'Query', adminPaymentDetails?: { __typename?: 'AdminPaymentDetailsPayload', razorpayData: string, dbData?: string | null } | null };
+
+export type AdminPaymentsListQueryVariables = Exact<{
+  input?: InputMaybe<AdminPaymentsFilterInput>;
+}>;
+
+
+export type AdminPaymentsListQuery = { __typename?: 'Query', adminPaymentsList?: { __typename?: 'AdminPaymentsListPayload', entity: string, count: number, items: Array<{ __typename?: 'RazorpayPaymentItem', id: string, entity: string, amount: number, currency: string, status: string, orderId?: string | null, method?: string | null, email?: string | null, contact?: string | null, fee?: number | null, tax?: number | null, errorCode?: string | null, errorDescription?: string | null, errorSource?: string | null, errorStep?: string | null, errorReason?: string | null, captured: boolean, refundStatus?: string | null, amountRefunded?: number | null, createdAt: number, notes?: string | null }> } | null };
+
+export type AdminRefundsListQueryVariables = Exact<{
+  input?: InputMaybe<AdminPaymentsFilterInput>;
+}>;
+
+
+export type AdminRefundsListQuery = { __typename?: 'Query', adminRefundsList?: { __typename?: 'AdminRefundsListPayload', entity: string, count: number, items: Array<{ __typename?: 'RazorpayRefundItem', id: string, entity: string, amount: number, currency: string, paymentId: string, status: string, speedRequested?: string | null, speedProcessed?: string | null, createdAt: number }> } | null };
+
+export type AdminSettlementsListQueryVariables = Exact<{
+  input?: InputMaybe<AdminPaymentsFilterInput>;
+}>;
+
+
+export type AdminSettlementsListQuery = { __typename?: 'Query', adminSettlementsList?: { __typename?: 'AdminSettlementsListPayload', entity: string, count: number, items: Array<{ __typename?: 'RazorpaySettlementItem', id: string, entity: string, amount: number, status: string, fees?: number | null, tax?: number | null, utr?: string | null, createdAt: number }> } | null };
+
 export type GetAllUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -5490,6 +5691,11 @@ export type VerifyPaymentMutationVariables = Exact<{
 export type VerifyPaymentMutation = { __typename?: 'Mutation', verifyPayment?: { __typename?: 'VerifyPaymentPayload', success: boolean, paymentId?: any | null, message?: string | null } | null };
 
 export const Lite_UserFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Lite_User"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"age"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"gender"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"isAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"isInternal"}}]}}]} as unknown as DocumentNode<Lite_UserFragment, unknown>;
+export const AdminPaymentAnalyticsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AdminPaymentAnalytics"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"AdminPaymentsFilterInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminPaymentAnalytics"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalPayments"}},{"kind":"Field","name":{"kind":"Name","value":"totalAmount"}},{"kind":"Field","name":{"kind":"Name","value":"capturedPayments"}},{"kind":"Field","name":{"kind":"Name","value":"capturedAmount"}},{"kind":"Field","name":{"kind":"Name","value":"failedPayments"}},{"kind":"Field","name":{"kind":"Name","value":"failedAmount"}},{"kind":"Field","name":{"kind":"Name","value":"refundedPayments"}},{"kind":"Field","name":{"kind":"Name","value":"refundedAmount"}},{"kind":"Field","name":{"kind":"Name","value":"averagePaymentAmount"}},{"kind":"Field","name":{"kind":"Name","value":"successRate"}},{"kind":"Field","name":{"kind":"Name","value":"recentPayments"}},{"kind":"Field","name":{"kind":"Name","value":"paymentMethodBreakdown"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"method"}},{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"totalAmount"}},{"kind":"Field","name":{"kind":"Name","value":"successCount"}},{"kind":"Field","name":{"kind":"Name","value":"failedCount"}}]}}]}}]}}]} as unknown as DocumentNode<AdminPaymentAnalyticsQuery, AdminPaymentAnalyticsQueryVariables>;
+export const AdminPaymentDetailsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AdminPaymentDetails"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"paymentId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminPaymentDetails"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"paymentId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"paymentId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"razorpayData"}},{"kind":"Field","name":{"kind":"Name","value":"dbData"}}]}}]}}]} as unknown as DocumentNode<AdminPaymentDetailsQuery, AdminPaymentDetailsQueryVariables>;
+export const AdminPaymentsListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AdminPaymentsList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"AdminPaymentsFilterInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminPaymentsList"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"entity"}},{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"entity"}},{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currency"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"orderId"}},{"kind":"Field","name":{"kind":"Name","value":"method"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"contact"}},{"kind":"Field","name":{"kind":"Name","value":"fee"}},{"kind":"Field","name":{"kind":"Name","value":"tax"}},{"kind":"Field","name":{"kind":"Name","value":"errorCode"}},{"kind":"Field","name":{"kind":"Name","value":"errorDescription"}},{"kind":"Field","name":{"kind":"Name","value":"errorSource"}},{"kind":"Field","name":{"kind":"Name","value":"errorStep"}},{"kind":"Field","name":{"kind":"Name","value":"errorReason"}},{"kind":"Field","name":{"kind":"Name","value":"captured"}},{"kind":"Field","name":{"kind":"Name","value":"refundStatus"}},{"kind":"Field","name":{"kind":"Name","value":"amountRefunded"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"notes"}}]}}]}}]}}]} as unknown as DocumentNode<AdminPaymentsListQuery, AdminPaymentsListQueryVariables>;
+export const AdminRefundsListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AdminRefundsList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"AdminPaymentsFilterInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminRefundsList"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"entity"}},{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"entity"}},{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currency"}},{"kind":"Field","name":{"kind":"Name","value":"paymentId"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"speedRequested"}},{"kind":"Field","name":{"kind":"Name","value":"speedProcessed"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]}}]} as unknown as DocumentNode<AdminRefundsListQuery, AdminRefundsListQueryVariables>;
+export const AdminSettlementsListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AdminSettlementsList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"AdminPaymentsFilterInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminSettlementsList"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"entity"}},{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"entity"}},{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"fees"}},{"kind":"Field","name":{"kind":"Name","value":"tax"}},{"kind":"Field","name":{"kind":"Name","value":"utr"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]}}]} as unknown as DocumentNode<AdminSettlementsListQuery, AdminSettlementsListQueryVariables>;
 export const GetAllUsersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAllUsers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"allUsers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"isAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"isInternal"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"adminCount"}}]}}]}}]} as unknown as DocumentNode<GetAllUsersQuery, GetAllUsersQueryVariables>;
 export const GetAssessmentTrendsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAssessmentTrends"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"startDate"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Date"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"endDate"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Date"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assessmentTrends"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"startDate"},"value":{"kind":"Variable","name":{"kind":"Name","value":"startDate"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"endDate"},"value":{"kind":"Variable","name":{"kind":"Name","value":"endDate"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"trends"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"completedCount"}},{"kind":"Field","name":{"kind":"Name","value":"startedCount"}},{"kind":"Field","name":{"kind":"Name","value":"inProgressCount"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCompleted"}},{"kind":"Field","name":{"kind":"Name","value":"totalStarted"}},{"kind":"Field","name":{"kind":"Name","value":"totalInProgress"}}]}}]}}]} as unknown as DocumentNode<GetAssessmentTrendsQuery, GetAssessmentTrendsQueryVariables>;
 export const DeleteUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"AdminDeleteUserInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminDeleteUser"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deletedUserId"}},{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<DeleteUserMutation, DeleteUserMutationVariables>;

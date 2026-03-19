@@ -1,7 +1,14 @@
 'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ChartConfig, ChartContainer, ChartTooltip } from '@/components/ui/chart';
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartLegend,
+  ChartLegendContent,
+} from '@/components/ui/chart';
+import { useIsMobile } from '@/hooks';
 import { SECTION_SCORE_BANDS } from '@/modules/assessment/constants/interpretation-bands';
 import { TrendingUp } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
@@ -23,7 +30,7 @@ const renderCustomLabel = ({ cx, cy, midAngle, outerRadius, payload }: any) => {
       y={y}
       textAnchor={isLeft ? 'end' : 'start'}
       dominantBaseline="central"
-      className="fill-foreground text-xs font-semibold"
+      className="fill-foreground text-xs font-semibold hidden lg:block"
     >
       {lines.map((line: string, index: number) => (
         <tspan key={index} x={x} dy={index === 0 ? 0 : '1.2em'}>
@@ -33,6 +40,25 @@ const renderCustomLabel = ({ cx, cy, midAngle, outerRadius, payload }: any) => {
       <tspan x={x} dy="1.4em" className="fill-primary font-bold text-sm">
         {payload.score}
       </tspan>
+    </text>
+  );
+};
+
+const renderMobileLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, value }: any) => {
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+  return (
+    <text
+      x={x}
+      y={y}
+      fill="white"
+      textAnchor="middle"
+      dominantBaseline="central"
+      className="text-sm font-bold lg:hidden"
+    >
+      {value}
     </text>
   );
 };
@@ -102,6 +128,8 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export const SectionBreakdownCard = ({ sectionResults }: SectionBreakdownCardProps) => {
+  const isMobile = useIsMobile();
+
   const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
 
   const totalScore = useMemo(() => {
@@ -187,18 +215,23 @@ export const SectionBreakdownCard = ({ sectionResults }: SectionBreakdownCardPro
         </div>
       </CardHeader>
       <CardContent>
-        <div className="h-[500px] will-change-transform">
+        <div className="h-[400px] md:h-[500px] will-change-transform">
           <ChartContainer config={chartConfig} className="w-full h-full">
             <RechartsPieChart>
               <ChartTooltip content={renderTooltipContent} />
               <Pie
                 data={chartData}
                 dataKey="score"
-                nameKey="label"
+                nameKey="section"
                 innerRadius={70}
                 outerRadius={120}
                 strokeWidth={2}
-                label={renderCustomLabel}
+                label={(props) => {
+                  if (isMobile) {
+                    return renderMobileLabel(props);
+                  }
+                  return renderCustomLabel(props);
+                }}
                 labelLine={false}
                 activeIndex={activeIndex}
                 activeShape={renderActiveShape}
@@ -246,6 +279,11 @@ export const SectionBreakdownCard = ({ sectionResults }: SectionBreakdownCardPro
                   }}
                 />
               </Pie>
+              <ChartLegend
+                content={<ChartLegendContent nameKey="section" />}
+                wrapperStyle={{ paddingTop: '20px', maxWidth: '100%' }}
+                className="lg:hidden flex-wrap"
+              />
             </RechartsPieChart>
           </ChartContainer>
         </div>
