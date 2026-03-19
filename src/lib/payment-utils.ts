@@ -13,10 +13,13 @@ export const formatAmount = (amountInPaise: number, currency = 'INR'): string =>
 
 export const getDateRangeTimestamps = (
   range: string
-): { from: number; to: number } => {
+): { from: number; to: number } | null => {
   const now = Math.floor(Date.now() / 1000);
 
   switch (range) {
+    case 'allTime':
+      return null;
+
     case 'today': {
       const startOfDay = Math.floor(new Date().setHours(0, 0, 0, 0) / 1000);
       return { from: startOfDay, to: now };

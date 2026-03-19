@@ -31,6 +31,7 @@ import {
 } from './payment';
 
 type DateRangeOption =
+  | 'allTime'
   | 'today'
   | 'yesterday'
   | 'last7days'
@@ -48,34 +49,31 @@ export const PaymentObservabilityPage = () => {
     analytics,
     loading: analyticsLoading,
     refetch: refetchAnalytics,
-  } = useAdminPaymentAnalytics(timestamps);
+  } = useAdminPaymentAnalytics(timestamps || undefined);
 
   const {
     payments,
     loading: paymentsLoading,
     refetch: refetchPayments,
-  } = useAdminPaymentsList({
-    ...timestamps,
-    count: 100,
-  });
+  } = useAdminPaymentsList(
+    timestamps ? { ...timestamps, count: 100 } : { count: 100 }
+  );
 
   const {
     settlements,
     loading: settlementsLoading,
     refetch: refetchSettlements,
-  } = useAdminSettlementsList({
-    ...timestamps,
-    count: 100,
-  });
+  } = useAdminSettlementsList(
+    timestamps ? { ...timestamps, count: 100 } : { count: 100 }
+  );
 
   const {
     refunds,
     loading: refundsLoading,
     refetch: refetchRefunds,
-  } = useAdminRefundsList({
-    ...timestamps,
-    count: 100,
-  });
+  } = useAdminRefundsList(
+    timestamps ? { ...timestamps, count: 100 } : { count: 100 }
+  );
 
   const handleRefreshAll = async () => {
     await Promise.all([
@@ -112,6 +110,7 @@ export const PaymentObservabilityPage = () => {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="allTime">All Time</SelectItem>
                   <SelectItem value="today">Today</SelectItem>
                   <SelectItem value="yesterday">Yesterday</SelectItem>
                   <SelectItem value="last7days">Last 7 Days</SelectItem>
