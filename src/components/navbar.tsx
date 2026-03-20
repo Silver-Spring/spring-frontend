@@ -2,7 +2,14 @@
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 import { getInitials } from '@/lib/utils';
 import { useLogout } from '@/modules/auth/hooks';
 import { useUserStore } from '@/stores';
@@ -24,7 +31,7 @@ export const Navbar = () => {
   return (
     <header className="border-b bg-background/80 backdrop-blur-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 relative">
-        <div className="h-full grid grid-cols-2 md:grid-cols-3 items-center">
+        <div className="h-full grid grid-cols-2 lg:grid-cols-3 items-center">
           <div className="flex items-center gap-2 justify-start">
             <Image
               src="/silverspring_logo.png"
@@ -36,28 +43,28 @@ export const Navbar = () => {
             />
           </div>
 
-          <nav className="hidden md:flex items-center justify-center gap-8">
+          <nav className="hidden lg:flex items-center justify-center gap-6 xl:gap-8">
             <Link
               href={process.env.NEXT_PUBLIC_APP_URL}
-              className="text-base font-semibold text-primary/80 hover:text-primary transition-colors"
+              className="text-base font-semibold text-primary/80 hover:text-primary transition-colors whitespace-nowrap"
             >
               Home
             </Link>
             <Link
               href={`${process.env.NEXT_PUBLIC_APP_URL}/about-us`}
-              className="text-base font-semibold text-primary/80 hover:text-primary transition-colors"
+              className="text-base font-semibold text-primary/80 hover:text-primary transition-colors whitespace-nowrap"
             >
               About Us
             </Link>
             <Link
               href={`${process.env.NEXT_PUBLIC_APP_URL}/resources`}
-              className="text-base font-semibold text-primary/80 hover:text-primary transition-colors"
+              className="text-base font-semibold text-primary/80 hover:text-primary transition-colors whitespace-nowrap"
             >
               Resources
             </Link>
             <Link
               href={`${process.env.NEXT_PUBLIC_APP_URL}/blog`}
-              className="text-base font-semibold text-primary/80 hover:text-primary transition-colors"
+              className="text-base font-semibold text-primary/80 hover:text-primary transition-colors whitespace-nowrap"
             >
               Blog
             </Link>
@@ -66,13 +73,19 @@ export const Navbar = () => {
           <div className="flex items-center gap-3 justify-end">
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="sm" className="md:hidden">
+                <Button variant="ghost" size="sm" className="lg:hidden">
                   <Menu className="h-5 w-5" />
                   <span className="sr-only">Toggle menu</span>
                 </Button>
               </SheetTrigger>
               <SheetContent side="top" className="w-full">
-                <nav className="flex flex-col gap-4 p-8">
+                <SheetHeader>
+                  <SheetTitle>Menu</SheetTitle>
+                  <SheetDescription className="sr-only">
+                    Navigate to different sections of Silver Spring
+                  </SheetDescription>
+                </SheetHeader>
+                <nav className="flex flex-col gap-4 px-4">
                   <Link
                     href={process.env.NEXT_PUBLIC_APP_URL || '/'}
                     className="text-base font-semibold text-primary/80 hover:text-primary transition-colors py-2"
@@ -105,7 +118,7 @@ export const Navbar = () => {
                   {currentUser && (
                     <>
                       <div className="border-t pt-4 mt-4">
-                        <div className="flex items-center gap-2 mb-4">
+                        <div className="flex items-center gap-2">
                           <Avatar className="size-8">
                             <AvatarFallback className="text-xs font-medium bg-primary/10 text-primary">
                               {getInitials(currentUser?.name)}
@@ -117,7 +130,7 @@ export const Navbar = () => {
                       {isAdmin && (
                         <Link
                           href="/admin"
-                          className="flex items-center gap-2 text-base font-medium text-foreground hover:text-foreground/80 py-2"
+                          className="flex items-center gap-2 text-base font-medium text-foreground hover:text-foreground/80"
                           onClick={handleMobileNavClick}
                         >
                           <LayoutDashboard className="size-4" />
@@ -125,14 +138,14 @@ export const Navbar = () => {
                         </Link>
                       )}
                       <Button
-                        variant="ghost"
+                        variant="link"
                         size="sm"
                         onClick={() => {
                           logout();
                           handleMobileNavClick();
                         }}
                         disabled={logoutLoading}
-                        className="justify-start gap-2 text-foreground hover:text-foreground/80"
+                        className="justify-start gap-2 text-foreground px-0! hover:text-foreground/80"
                       >
                         <LogOut className="size-4" />
                         <span>{logoutLoading ? 'Logging out...' : 'Logout'}</span>
@@ -155,7 +168,7 @@ export const Navbar = () => {
               </SheetContent>
             </Sheet>
 
-            <div className="hidden md:flex items-center gap-3">
+            <div className="hidden lg:flex items-center gap-3">
               {currentUser ? (
                 <>
                   <div className="flex items-center gap-2">
@@ -164,12 +177,12 @@ export const Navbar = () => {
                         {getInitials(currentUser?.name)}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="text-sm text-foreground hidden lg:block">
+                    <span className="text-sm text-foreground hidden xl:block whitespace-nowrap">
                       {currentUser?.name}
                     </span>
                   </div>
                   {isAdmin && (
-                    <Button asChild variant="ghost" size="sm" className="gap-1.5">
+                    <Button asChild variant="ghost" size="sm" className="gap-1.5 whitespace-nowrap">
                       <Link href="/admin">
                         <LayoutDashboard className="size-4" />
                         <span>Admin</span>
@@ -181,10 +194,10 @@ export const Navbar = () => {
                     size="sm"
                     onClick={logout}
                     disabled={logoutLoading}
-                    className="gap-1.5 text-foreground hover:text-foreground/80"
+                    className="gap-1.5 text-foreground hover:text-foreground/80 whitespace-nowrap"
                   >
                     <LogOut className="size-4" />
-                    <span className="hidden sm:inline">
+                    <span className="hidden xl:inline">
                       {logoutLoading ? 'Logging out...' : 'Logout'}
                     </span>
                   </Button>
@@ -193,7 +206,7 @@ export const Navbar = () => {
                 <Button
                   asChild
                   size="sm"
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-md"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-md whitespace-nowrap"
                 >
                   <Link href="/auth/login">Start Your Journey</Link>
                 </Button>

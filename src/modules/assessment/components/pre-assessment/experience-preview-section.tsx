@@ -25,6 +25,11 @@ const carouselImages = [
     src: '/images/assessment-preview-2.png',
     alt: 'Assessment Preview 2',
   },
+  {
+    id: 3,
+    src: '/images/assessment-preview-3.png',
+    alt: 'Assessment Preview 3',
+  },
 ];
 
 export function ExperiencePreviewSection() {
@@ -83,11 +88,7 @@ export function ExperiencePreviewSection() {
 
         <div className="mt-4 flex justify-center gap-2 sm:hidden">
           {carouselImages.map((_, index) => (
-            <div
-              key={index}
-              className="h-1.5 w-8 rounded-full bg-primary/25"
-              aria-hidden="true"
-            />
+            <div key={index} className="h-1.5 w-8 rounded-full bg-primary/25" aria-hidden="true" />
           ))}
         </div>
       </div>
