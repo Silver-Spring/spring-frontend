@@ -32,7 +32,12 @@ export const Navbar = () => {
     <header className="border-b bg-background/80 backdrop-blur-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 relative">
         <div className="h-full grid grid-cols-2 lg:grid-cols-3 items-center">
-          <div className="flex items-center gap-2 justify-start">
+          <Link
+            href={process.env.NEXT_PUBLIC_APP_URL || '/'}
+            aria-label="Go to landing page"
+            tabIndex={0}
+            className="flex items-center gap-2 justify-start"
+          >
             <Image
               src="/silverspring_logo.png"
               alt="Silver Spring"
@@ -41,7 +46,7 @@ export const Navbar = () => {
               className="rounded-sm object-cover"
               priority
             />
-          </div>
+          </Link>
 
           <nav className="hidden lg:flex items-center justify-center gap-6 xl:gap-8">
             <Link
