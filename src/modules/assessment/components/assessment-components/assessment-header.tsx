@@ -27,7 +27,7 @@ export const AssessmentHeader = ({
             size="icon"
             onClick={onBack}
             disabled={isDisabled || !canGoBack}
-            aria-label="Back to dashboard"
+            aria-label="Back to assessment"
             className="shrink-0 -ml-2 size-8"
           >
             <ChevronLeft className="size-4" />

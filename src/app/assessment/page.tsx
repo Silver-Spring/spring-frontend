@@ -6,7 +6,7 @@ import { PhoneNumberDialog } from '@/modules/auth/components';
 import { useUserStore } from '@/stores';
 import { useEffect, useState } from 'react';
 
-export const DashboardPage = () => {
+export default function AssessmentPage() {
   const [showPhoneDialog, setShowPhoneDialog] = useState(false);
   const currentUser = useUserStore((state) => state.user);
 
@@ -29,4 +29,4 @@ export const DashboardPage = () => {
       )}
     </ProtectedLayout>
   );
-};
+}

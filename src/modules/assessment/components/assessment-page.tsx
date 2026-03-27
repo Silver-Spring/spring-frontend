@@ -110,7 +110,7 @@ export const AssessmentPage = ({ sessionId }: AssessmentPageProps) => {
   }, [questionNumber]);
 
   const handleBack = useCallback(() => {
-    router.push('/dashboard');
+    router.push('/assessment');
   }, [router]);
 
   const handlePrevious = useCallback(async () => {
@@ -261,7 +261,7 @@ export const AssessmentPage = ({ sessionId }: AssessmentPageProps) => {
         {() => (
           <div className="flex flex-col items-center justify-center min-h-screen gap-4 px-4">
             <p className="text-muted-foreground text-center">{errorMessage}</p>
-            <Button onClick={() => router.push('/dashboard')}>Return to Dashboard</Button>
+            <Button onClick={() => router.push('/assessment')}>Return to Assessment</Button>
           </div>
         )}
       </ProtectedLayout>

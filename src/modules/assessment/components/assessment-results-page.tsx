@@ -36,7 +36,7 @@ export const AssessmentResultsPage = ({ resultId }: AssessmentResultsPageProps) 
   const { downloadReport, isDownloading } = useDownloadReport();
 
   const isAdminView = searchParams.get('from') === 'admin';
-  const backPath = isAdminView ? '/admin/assessment' : '/dashboard';
+  const backPath = isAdminView ? '/admin/assessment' : '/assessment';
 
   const handleDownloadPDF = useCallback(async () => {
     if (!result?.id) return;

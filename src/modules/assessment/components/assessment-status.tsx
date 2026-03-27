@@ -158,7 +158,7 @@ export function AssessmentStatus() {
       if (result?.success) {
         await Promise.all([refetchAssessmentStatus(), refetchCurrentSession()]);
         setShowDeleteDialog(false);
-        router.push('/dashboard');
+        router.push('/assessment');
       }
     } catch (error) {
       toast.error('Failed to delete assessment. Please try again.');

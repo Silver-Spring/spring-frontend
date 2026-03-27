@@ -47,8 +47,8 @@ export const useRegister = () => {
 
       toast.success('Registered successfully');
 
-      // Redirect to the URL from query param or default to dashboard
-      const redirectUrl = searchParams.get('redirect') || '/dashboard';
+      // Redirect to the URL from query param or default to assessment
+      const redirectUrl = searchParams.get('redirect') || '/assessment';
 
       // Refresh the router to invalidate Next.js cache and re-render
       // The useCurrentUser query will automatically include the auth token now
