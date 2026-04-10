@@ -5,6 +5,8 @@ import { CreatePaymentOrderDoc } from '../graphql';
 import { initializeRazorpay, openRazorpayCheckout, closeRazorpayInstance, cleanupRazorpay } from '../utils';
 import { useVerifyPayment } from './use-verify-payment';
 import type { RazorpaySuccessResponse, RazorpayErrorResponse } from '../types';
+import posthog from 'posthog-js';
+import { capturePaymentError } from '@/lib/analytics';
 
 export const useCreatePaymentOrder = () => {
   const [isProcessing, setIsProcessing] = useState(false);
@@ -24,6 +26,9 @@ export const useCreatePaymentOrder = () => {
   const [createOrderMutation, { data, loading, error }] = useMutation(CreatePaymentOrderDoc, {
     onError: (error) => {
       console.error('Payment order creation error:', error);
+      
+      capturePaymentError(error, undefined, undefined);
+      
       // Only show technical details in development
       const isDev = process.env.NODE_ENV === 'development';
       const errorMessage = isDev
@@ -58,6 +63,11 @@ export const useCreatePaymentOrder = () => {
       }
 
       // Step 3: Open Razorpay checkout modal
+      posthog.capture('payment_initiated', {
+        order_id: orderData.orderId,
+        amount: orderData.amount,
+        currency: orderData.currency,
+      });
       razorpayInstanceRef.current = openRazorpayCheckout({
         keyId: orderData.razorpayKeyId,
         amount: orderData.amount,
@@ -78,6 +88,10 @@ export const useCreatePaymentOrder = () => {
             );
 
             if (verificationResult.success) {
+              posthog.capture('payment_completed', {
+                order_id: response.razorpay_order_id,
+                payment_id: verificationResult.paymentId,
+              });
               // Step 5: Notify success (no subscription to refetch)
               onSuccess(verificationResult.paymentId);
             } else {
@@ -87,6 +101,7 @@ export const useCreatePaymentOrder = () => {
             }
           } catch (verifyError) {
             console.error('Payment verification error:', verifyError);
+            posthog.captureException(verifyError);
             toast.error('Failed to verify payment. Please contact support.');
           } finally {
             setIsProcessing(false);
@@ -99,6 +114,11 @@ export const useCreatePaymentOrder = () => {
           console.error('Payment failed:', error);
           const errorMessage =
             error.error?.description || 'Payment failed. Please try again.';
+          posthog.capture('payment_failed', {
+            error_code: error.error?.code,
+            error_description: error.error?.description,
+            error_reason: error.error?.reason,
+          });
           toast.error(errorMessage);
           setIsProcessing(false);
           closeRazorpayInstance(razorpayInstanceRef.current);

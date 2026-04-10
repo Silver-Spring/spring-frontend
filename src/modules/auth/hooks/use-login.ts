@@ -8,6 +8,8 @@ import { LoginDoc, LiteUserDoc } from '../graphql';
 import { LoginInput } from '@/gql/graphql';
 import { useFragment } from '@/gql';
 import { useUserStore } from '@/stores';
+import posthog from 'posthog-js';
+import { captureAuthError } from '@/lib/analytics';
 
 export const useLogin = () => {
   const [, setCookies] = useCookies();
@@ -44,6 +46,19 @@ export const useLogin = () => {
           phoneNumber: user.phoneNumber,
           isInternal: user.isInternal,
         });
+
+        posthog.identify(user.id, {
+          email: user.email,
+          name: user.name,
+          gender: user.gender,
+          age: user.age,
+          is_admin: user.isAdmin,
+          is_internal: user.isInternal,
+        });
+        posthog.capture('user_logged_in', {
+          user_id: user.id,
+          email: user.email,
+        });
       }
 
       toast.success('Logged in successfully');
@@ -58,6 +73,9 @@ export const useLogin = () => {
     },
     onError: (error) => {
       console.error('Login error:', error);
+
+      captureAuthError({ ...error }, 'login');
+
       // Only show technical details in development
       const isDev = process.env.NODE_ENV === 'development';
       const errorMessage = isDev

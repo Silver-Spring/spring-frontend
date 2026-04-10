@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { ForgotPasswordDoc } from '../graphql';
 import { forgotPasswordSchema } from '../schema';
+import posthog from 'posthog-js';
 
 export const useForgotPassword = () => {
   const [emailSent, setEmailSent] = useState(false);
@@ -12,6 +13,7 @@ export const useForgotPassword = () => {
     onCompleted: (data) => {
       if (data.forgotPassword?.success) {
         setEmailSent(true);
+        posthog.capture('password_reset_requested');
         // Always show the same message for security (prevent email enumeration)
         toast.success(
           'If your email is registered, you will receive a password reset link shortly. Please check your inbox.'

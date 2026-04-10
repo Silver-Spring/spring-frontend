@@ -2,6 +2,7 @@ import { useMutation } from '@apollo/client/react';
 import { toast } from 'sonner';
 import { CompleteAssessmentDoc } from '../graphql';
 import { useAssessmentStore } from '@/stores';
+import { captureAssessmentError } from '@/lib/analytics';
 
 export const useCompleteAssessment = () => {
   const { clearCurrentSession } = useAssessmentStore();
@@ -19,6 +20,9 @@ export const useCompleteAssessment = () => {
       },
       onError: (error) => {
         console.error('Error completing assessment:', error);
+        
+        captureAssessmentError(error, undefined, undefined);
+        
         // Only show technical details in development
         const isDev = process.env.NODE_ENV === 'development';
         const errorMessage = isDev

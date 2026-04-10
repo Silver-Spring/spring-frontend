@@ -12,6 +12,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import posthog from 'posthog-js';
 import {
   useAssessmentStatus,
   useCurrentSession,
@@ -72,6 +73,10 @@ export function AssessmentStatus() {
       const result = await startAssessment(newPaymentId);
 
       if (result.session?.id) {
+        posthog.capture('assessment_started', {
+          session_id: result.session.id,
+          payment_id: newPaymentId,
+        });
         await Promise.all([refetchAssessmentStatus(), refetchCurrentSession()]);
         router.push(`/assessment/${result.session.id}`);
       } else {
@@ -107,6 +112,10 @@ export function AssessmentStatus() {
         const result = await startAssessment(null);
 
         if (result.session?.id) {
+          posthog.capture('assessment_started', {
+            session_id: result.session.id,
+            is_internal: true,
+          });
           await Promise.all([refetchAssessmentStatus(), refetchCurrentSession()]);
           router.push(`/assessment/${result.session.id}`);
         } else {
@@ -127,6 +136,10 @@ export function AssessmentStatus() {
         const result = await startAssessment(paymentId);
 
         if (result.session?.id) {
+          posthog.capture('assessment_started', {
+            session_id: result.session.id,
+            payment_id: paymentId,
+          });
           await Promise.all([refetchAssessmentStatus(), refetchCurrentSession()]);
           router.push(`/assessment/${result.session.id}`);
         } else {
@@ -140,6 +153,9 @@ export function AssessmentStatus() {
 
   const handleResumeAssessment = () => {
     if (currentSession?.id) {
+      posthog.capture('assessment_resumed', {
+        session_id: currentSession.id,
+      });
       router.push(`/assessment/${currentSession.id}`);
     }
   };
@@ -156,6 +172,7 @@ export function AssessmentStatus() {
     try {
       const result = await deleteMyAssessment();
       if (result?.success) {
+        posthog.capture('assessment_deleted');
         await Promise.all([refetchAssessmentStatus(), refetchCurrentSession()]);
         setShowDeleteDialog(false);
         router.push('/assessment');
@@ -183,6 +200,7 @@ export function AssessmentStatus() {
                 src="/images/start-assessment-image.png"
                 alt="Retirement journey illustration"
                 fill
+                sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-contain"
                 priority
               />

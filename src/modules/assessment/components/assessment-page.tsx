@@ -11,6 +11,7 @@ import {
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
+import posthog from 'posthog-js';
 import { TOTAL_QUESTIONS } from '../constants';
 import {
   AssessmentHeader,
@@ -131,6 +132,10 @@ export const AssessmentPage = ({ sessionId }: AssessmentPageProps) => {
       const result = await completeAssessment(sessionId);
 
       if (result.success && result.result?.id) {
+        posthog.capture('assessment_completed', {
+          session_id: sessionId,
+          result_id: result.result.id,
+        });
         router.replace(`/assessment/results/${result.result.id}`);
       } else {
         setShowCompletionMessage(false);
@@ -139,6 +144,7 @@ export const AssessmentPage = ({ sessionId }: AssessmentPageProps) => {
     } catch (error) {
       setShowCompletionMessage(false);
       console.error('Failed to complete assessment:', error);
+      posthog.captureException(error);
       toast.error('An error occurred. Please try again.');
     }
   }, [sessionId, completeAssessment, router]);

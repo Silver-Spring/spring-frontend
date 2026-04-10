@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import { TOKEN_NAME } from '.';
 import { LogoutDoc } from '../graphql';
 import { useUserStore } from '@/stores';
+import posthog from 'posthog-js';
 
 export const useLogout = () => {
   const [, , deleteCookie] = useCookies();
@@ -25,6 +26,9 @@ export const useLogout = () => {
 
       // Clear Zustand user store
       clearUser();
+
+      posthog.capture('user_logged_out');
+      posthog.reset();
 
       toast.success('Logged out successfully');
 

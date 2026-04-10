@@ -8,6 +8,8 @@ import { TOKEN_NAME } from '.';
 import { LiteUserDoc, SignupDoc } from '../graphql';
 import { registerSchema } from '../schema';
 import { useUserStore } from '@/stores';
+import posthog from 'posthog-js';
+import { captureAuthError } from '@/lib/analytics';
 
 export const useRegister = () => {
   const [, setCookies] = useCookies();
@@ -43,6 +45,21 @@ export const useRegister = () => {
           phoneNumber: user.phoneNumber,
           isInternal: user.isInternal,
         });
+
+        posthog.identify(user.id, {
+          email: user.email,
+          name: user.name,
+          gender: user.gender,
+          age: user.age,
+          is_admin: user.isAdmin,
+          is_internal: user.isInternal,
+        });
+        posthog.capture('user_signed_up', {
+          user_id: user.id,
+          email: user.email,
+          gender: user.gender,
+          age: user.age,
+        });
       }
 
       toast.success('Registered successfully');
@@ -57,6 +74,8 @@ export const useRegister = () => {
     },
     onError: (error) => {
       console.error('Registration error:', error);
+
+      captureAuthError(error, 'registration');
 
       toast.error(error.message);
     },

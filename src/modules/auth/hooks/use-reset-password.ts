@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { ResetPasswordDoc } from '../graphql';
 import { resetPasswordSchema } from '../schema';
+import posthog from 'posthog-js';
 
 export const useResetPassword = () => {
   const router = useRouter();
@@ -11,6 +12,7 @@ export const useResetPassword = () => {
   const [resetPasswordMutation, { data, loading, error }] = useMutation(ResetPasswordDoc, {
     onCompleted: (data) => {
       if (data.resetPassword?.success) {
+        posthog.capture('password_reset_completed');
         toast.success('Password reset successfully! Please log in with your new password.');
         router.replace('/auth/login');
       } else {

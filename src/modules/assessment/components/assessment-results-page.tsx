@@ -14,6 +14,7 @@ import { useAssessmentResults, useDownloadReport } from '@/modules/assessment/ho
 import { ArrowLeft, Download, Loader2 } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useMemo } from 'react';
+import posthog from 'posthog-js';
 
 interface AssessmentResultsPageProps {
   resultId: string;
@@ -40,8 +41,12 @@ export const AssessmentResultsPage = ({ resultId }: AssessmentResultsPageProps) 
 
   const handleDownloadPDF = useCallback(async () => {
     if (!result?.id) return;
+    posthog.capture('report_downloaded', {
+      result_id: result.id,
+      total_readiness_index: result.totalReadinessIndex,
+    });
     await downloadReport({ resultId: result.id });
-  }, [result?.id, downloadReport]);
+  }, [result?.id, result?.totalReadinessIndex, downloadReport]);
 
   const sectionResults = useMemo(() => {
     return result?.assessmentSectionResultsByResultId?.nodes || [];
