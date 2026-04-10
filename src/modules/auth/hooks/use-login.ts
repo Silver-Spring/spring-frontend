@@ -4,7 +4,7 @@ import { TOKEN_NAME } from '.';
 import { toast } from 'sonner';
 import { loginSchema } from '../schema';
 import { useMutation, useApolloClient } from '@apollo/client/react';
-import { LoginDoc, LiteUserDoc } from '../graphql';
+import { LoginDoc, LiteUserDoc, CurrentUserDoc } from '../graphql';
 import { LoginInput } from '@/gql/graphql';
 import { useFragment } from '@/gql';
 import { useUserStore } from '@/stores';
@@ -32,6 +32,16 @@ export const useLogin = () => {
       // Set cookies - Apollo middleware will automatically pick them up on next request
       setCookies(TOKEN_NAME, data.login?.token, { path: '/' });
       setCookies('currentUserId', user?.id, { path: '/' });
+
+      // Write currentUser to Apollo cache so useCurrentUser doesn't need to fetch
+      if (user) {
+        client.cache.writeQuery({
+          query: CurrentUserDoc,
+          data: {
+            currentUser: user,
+          },
+        });
+      }
 
       // Update Zustand store with user data
       if (user) {

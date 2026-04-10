@@ -1,27 +1,16 @@
-'use client';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
-import { Spinner } from '@/components/ui/spinner';
-import { useCurrentUser } from '@/modules/auth/hooks/use-current-user';
-import { useUserStore } from '@/stores';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+// Token name constant - must match the one used in auth hooks
+const TOKEN_NAME = 'authToken';
 
-export default function RootPage() {
-  const { isLoggedIn, loading } = useCurrentUser();
-  const zustandUser = useUserStore((state) => state.user);
-  const hasHydrated = useUserStore((state) => state._hasHydrated);
-  const router = useRouter();
+export default async function RootPage() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get(TOKEN_NAME);
 
-  const effectiveIsLoggedIn = isLoggedIn || !!zustandUser;
-
-  useEffect(() => {
-    if (!hasHydrated || loading) return;
-    router.replace(effectiveIsLoggedIn ? '/assessment' : '/auth/login');
-  }, [hasHydrated, loading, effectiveIsLoggedIn, router]);
-
-  return (
-    <div className="flex items-center justify-center min-h-screen">
-      <Spinner className="size-8" />
-    </div>
-  );
+  if (token?.value) {
+    redirect('/assessment');
+  } else {
+    redirect('/auth/login');
+  }
 }

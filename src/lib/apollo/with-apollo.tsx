@@ -43,7 +43,28 @@ const WithApollo: React.FC<Props> = ({ children }) => {
 
     return new ApolloClient({
       link: authMiddleware.concat(httpLink),
-      cache: new InMemoryCache({}),
+      cache: new InMemoryCache({
+        typePolicies: {
+          Query: {
+            fields: {
+              currentUser: {
+                merge(existing, incoming) {
+                  return incoming;
+                },
+              },
+            },
+          },
+        },
+      }),
+      defaultOptions: {
+        watchQuery: {
+          fetchPolicy: 'cache-first',
+          nextFetchPolicy: 'cache-first',
+        },
+        query: {
+          fetchPolicy: 'cache-first',
+        },
+      },
     });
   };
 

@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useCookies } from 'react-cookie';
 import { toast } from 'sonner';
 import { TOKEN_NAME } from '.';
-import { LiteUserDoc, SignupDoc } from '../graphql';
+import { LiteUserDoc, SignupDoc, CurrentUserDoc } from '../graphql';
 import { registerSchema } from '../schema';
 import { useUserStore } from '@/stores';
 import posthog from 'posthog-js';
@@ -31,6 +31,16 @@ export const useRegister = () => {
       // Set cookies - Apollo middleware will automatically pick them up on next request
       setCookies(TOKEN_NAME, data.register?.token, { path: '/' });
       setCookies('currentUserId', user?.id, { path: '/' });
+
+      // Write currentUser to Apollo cache so useCurrentUser doesn't need to fetch
+      if (user) {
+        client.cache.writeQuery({
+          query: CurrentUserDoc,
+          data: {
+            currentUser: user,
+          },
+        });
+      }
 
       // Update Zustand store with user data
       if (user) {

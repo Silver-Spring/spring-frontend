@@ -13,22 +13,23 @@ export function useCurrentUser() {
 
   const { data, loading, error } = useQuery(CurrentUserDoc, {
     errorPolicy: 'all',
-    // Use cache-and-network to ensure we get fresh data while showing cached data immediately
-    fetchPolicy: 'cache-and-network',
-    // After the first fetch, use cache-first for better performance
+    // Use cache-first for optimal performance - only fetch if cache is empty
+    fetchPolicy: 'cache-first',
+    // After the first fetch, continue using cache-first
     nextFetchPolicy: 'cache-first',
     // Skip query until hydration is complete to avoid premature clearing
     skip: !hasHydrated,
-    // Enable polling as a fallback (optional, can be removed if not needed)
-    // pollInterval: 30000, // Poll every 30 seconds
   });
 
   // Use useFragment at the top level, not conditionally
-  const userFragment = useFragment(LiteUserDoc, data?.currentUser);
+  const userFragment = useFragment(LiteUserDoc, data?.currentUser ?? null);
   const currentUser = data?.currentUser ? userFragment : null;
 
   // Sync Apollo cache with Zustand store
   useEffect(() => {
+    // Don't do anything until hydration is complete
+    if (!hasHydrated) return;
+
     if (currentUser) {
       setUser({
         id: currentUser.id,
@@ -42,10 +43,14 @@ export function useCurrentUser() {
         isInternal: currentUser.isInternal,
       });
     } else if (!loading && !currentUser) {
-      // Only clear if we're not loading and there's no user (logged out state)
+      // Only clear if:
+      // 1. Hydration is complete (checked above)
+      // 2. Apollo is not loading
+      // 3. There's no user data from Apollo
+      // This means the backend confirmed the user is logged out
       clearUser();
     }
-  }, [currentUser, loading, setUser, clearUser]);
+  }, [currentUser, loading, hasHydrated, setUser, clearUser]);
 
   return {
     currentUser,
