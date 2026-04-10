@@ -3,11 +3,16 @@
 import { useMutation } from '@apollo/client/react';
 import { toast } from 'sonner';
 import { RevokeAdminDoc } from '../graphql/revoke-admin.graphql';
+import posthog from 'posthog-js';
 
 export const useRevokeAdmin = () => {
   const [revokeAdminMutation, { loading }] = useMutation(RevokeAdminDoc, {
     onCompleted: (data) => {
       if (data.revokeAdminAccess?.success) {
+        posthog.capture('admin_access_revoked', {
+          target_user_id: data.revokeAdminAccess.user?.id,
+          target_user_email: data.revokeAdminAccess.user?.email,
+        });
         toast.success(data.revokeAdminAccess.message || 'Admin access revoked successfully');
       }
     },

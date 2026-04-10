@@ -3,6 +3,7 @@ import { useUserStore } from '@/stores';
 import { toast } from 'sonner';
 import { UpdatePhoneNumberDoc, LiteUserDoc } from '../graphql';
 import { useFragment } from '@/gql';
+import posthog from 'posthog-js';
 
 export const useUpdatePhoneNumber = () => {
   const client = useApolloClient();
@@ -11,6 +12,10 @@ export const useUpdatePhoneNumber = () => {
 
   const [updatePhoneNumber, { data, loading, error }] = useMutation(UpdatePhoneNumberDoc, {
     onCompleted: (data) => {
+      posthog.capture('phone_number_updated', {
+        user_id: currentUser?.id,
+        has_phone_number: true,
+      });
       toast.success('Phone number updated successfully');
     },
     onError: (error) => {

@@ -162,6 +162,7 @@ export function AssessmentStatus() {
 
   const handleViewResults = () => {
     if (resultId) {
+      posthog.capture('results_viewed', { result_id: resultId });
       router.push(`/assessment/results/${resultId}`);
     } else {
       toast.error('Unable to find result ID. Please contact support.');

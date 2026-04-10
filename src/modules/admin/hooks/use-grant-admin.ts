@@ -3,11 +3,16 @@
 import { useMutation } from '@apollo/client/react';
 import { toast } from 'sonner';
 import { GrantAdminDoc } from '../graphql/grant-admin.graphql';
+import posthog from 'posthog-js';
 
 export const useGrantAdmin = () => {
   const [grantAdminMutation, { loading }] = useMutation(GrantAdminDoc, {
     onCompleted: (data) => {
       if (data.grantAdminAccess?.success) {
+        posthog.capture('admin_access_granted', {
+          target_user_id: data.grantAdminAccess.user?.id,
+          target_user_email: data.grantAdminAccess.user?.email,
+        });
         toast.success(data.grantAdminAccess.message || 'Admin access granted successfully');
       }
     },

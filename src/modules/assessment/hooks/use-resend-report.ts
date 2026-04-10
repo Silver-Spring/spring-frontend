@@ -1,11 +1,14 @@
 import { useMutation } from '@apollo/client/react';
 import { toast } from 'sonner';
 import { ResendReportDoc } from '../graphql';
+import posthog from 'posthog-js';
 
 export const useResendReport = () => {
   const [resendReportMutation, { data, loading, error }] = useMutation(ResendReportDoc, {
     onCompleted: (data) => {
-      if (!data.resendAssessmentReport?.success) {
+      if (data.resendAssessmentReport?.success) {
+        toast.success('Report resent successfully');
+      } else {
         toast.error('Failed to resend report. Please try again.');
       }
     },
@@ -20,10 +23,18 @@ export const useResendReport = () => {
     },
   });
 
-  const resendReport = async (resultId: string) => {
+  const resendReport = async (resultId: string, userEmail?: string) => {
     const result = await resendReportMutation({
       variables: { resultId },
     });
+
+    // Track the event with the resultId passed as parameter
+    if (result.data?.resendAssessmentReport?.success) {
+      posthog.capture('report_resent', {
+        result_id: resultId,
+        user_email: userEmail,
+      });
+    }
 
     return {
       success: result.data?.resendAssessmentReport?.success || false,

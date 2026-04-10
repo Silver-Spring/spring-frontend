@@ -1,0 +1,171 @@
+[
+  {
+    "event": "user_signed_up",
+    "description": "Fired when a new user successfully completes registration",
+    "properties": {
+      "user_id": "string",
+      "email": "string",
+      "gender": "string",
+      "age": "number"
+    },
+    "file": "src/modules/auth/hooks/use-register.ts",
+    "flow": "Authentication"
+  },
+  {
+    "event": "user_logged_in",
+    "description": "Fired when a user successfully logs in",
+    "properties": {
+      "user_id": "string",
+      "email": "string"
+    },
+    "file": "src/modules/auth/hooks/use-login.ts",
+    "flow": "Authentication"
+  },
+  {
+    "event": "user_logged_out",
+    "description": "Fired when a user logs out",
+    "file": "src/modules/auth/hooks/use-logout.ts",
+    "flow": "Authentication"
+  },
+  {
+    "event": "password_reset_requested",
+    "description": "Fired when a user requests a password reset via forgot password",
+    "file": "src/modules/auth/hooks/use-forgot-password.ts",
+    "flow": "Authentication"
+  },
+  {
+    "event": "password_reset_completed",
+    "description": "Fired when a user successfully resets their password",
+    "file": "src/modules/auth/hooks/use-reset-password.ts",
+    "flow": "Authentication"
+  },
+  {
+    "event": "phone_number_updated",
+    "description": "Fired when a user successfully updates their phone number via the phone number dialog",
+    "properties": {
+      "user_id": "string",
+      "has_phone_number": "boolean"
+    },
+    "file": "src/modules/auth/hooks/use-update-phone-number.ts",
+    "flow": "User Profile"
+  },
+  {
+    "event": "assessment_started",
+    "description": "Fired when a user starts a new assessment",
+    "properties": {
+      "session_id": "string",
+      "assessment_type": "string"
+    },
+    "file": "src/modules/assessment/components/assessment-status.tsx",
+    "flow": "Assessment"
+  },
+  {
+    "event": "assessment_resumed",
+    "description": "Fired when a user resumes an incomplete assessment",
+    "properties": {
+      "session_id": "string"
+    },
+    "file": "src/modules/assessment/components/assessment-status.tsx",
+    "flow": "Assessment"
+  },
+  {
+    "event": "assessment_completed",
+    "description": "Fired when a user successfully completes an assessment",
+    "properties": {
+      "session_id": "string",
+      "result_id": "string",
+      "duration_ms": "number"
+    },
+    "file": "src/modules/assessment/components/assessment-page.tsx",
+    "flow": "Assessment"
+  },
+  {
+    "event": "assessment_deleted",
+    "description": "Fired when a user deletes an incomplete assessment session",
+    "file": "src/modules/assessment/components/assessment-status.tsx",
+    "flow": "Assessment"
+  },
+  {
+    "event": "results_viewed",
+    "description": "Fired when a user clicks to view their assessment results from the assessment status page",
+    "properties": {
+      "result_id": "string"
+    },
+    "file": "src/modules/assessment/components/assessment-status.tsx",
+    "flow": "Assessment"
+  },
+  {
+    "event": "report_downloaded",
+    "description": "Fired when a user downloads their assessment report PDF",
+    "properties": {
+      "result_id": "string",
+      "report_type": "string"
+    },
+    "file": "src/modules/assessment/components/assessment-results-page.tsx",
+    "flow": "Assessment"
+  },
+  {
+    "event": "report_resent",
+    "description": "Fired when an admin resends the assessment report to a user",
+    "properties": {
+      "result_id": "string",
+      "user_email": "string"
+    },
+    "file": "src/modules/assessment/hooks/use-resend-report.ts",
+    "flow": "Admin"
+  },
+  {
+    "event": "payment_initiated",
+    "description": "Fired when a user initiates a payment for assessment",
+    "properties": {
+      "amount": "number",
+      "currency": "string",
+      "order_id": "string"
+    },
+    "file": "src/modules/payment/hooks/use-create-payment-order.ts",
+    "flow": "Payment"
+  },
+  {
+    "event": "payment_completed",
+    "description": "Fired when a payment is successfully completed and verified",
+    "properties": {
+      "payment_id": "string",
+      "order_id": "string",
+      "amount": "number",
+      "method": "string"
+    },
+    "file": "src/modules/payment/hooks/use-create-payment-order.ts",
+    "flow": "Payment"
+  },
+  {
+    "event": "payment_failed",
+    "description": "Fired when a payment fails or is cancelled",
+    "properties": {
+      "order_id": "string",
+      "error_code": "string",
+      "error_description": "string"
+    },
+    "file": "src/modules/payment/hooks/use-create-payment-order.ts",
+    "flow": "Payment"
+  },
+  {
+    "event": "admin_access_granted",
+    "description": "Fired when an admin grants admin access to a user",
+    "properties": {
+      "target_user_id": "string",
+      "target_user_email": "string"
+    },
+    "file": "src/modules/admin/hooks/use-grant-admin.ts",
+    "flow": "Admin"
+  },
+  {
+    "event": "admin_access_revoked",
+    "description": "Fired when an admin revokes admin access from a user",
+    "properties": {
+      "target_user_id": "string",
+      "target_user_email": "string"
+    },
+    "file": "src/modules/admin/hooks/use-revoke-admin.ts",
+    "flow": "Admin"
+  }
+]
