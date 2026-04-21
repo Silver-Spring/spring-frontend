@@ -29,7 +29,7 @@
     "next": "16.2.0",
     "next-themes": "^0.4.6",
     "ogl": "^1.0.11",
-    "posthog-js": "^1.367.0",
+    "posthog-js": "^1.369.5",
     "posthog-node": "^5.29.2",
     "radix-ui": "latest",
     "razorpay": "^2.9.6",
@@ -75,6 +75,13 @@
     "overrides": {
       "@types/react": "19.2.14",
       "@types/react-dom": "19.2.3"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "core-js",
+      "msw",
+      "protobufjs",
+      "sharp",
+      "unrs-resolver"
+    ]
   }
 }

@@ -14,7 +14,10 @@ posthog.init(process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN!, {
   },
   debug: process.env.NODE_ENV === 'development',
   // Disable automatic pageview capture to prevent double-tracking
-  capture_pageview: false,
+  capture_pageview: true,
+  capture_pageleave: true,
+  capture_performance: true,
+  enable_heatmaps: true,
   // Enable session recording
   session_recording: {
     maskAllInputs: true,
