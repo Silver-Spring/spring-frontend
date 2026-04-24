@@ -85,7 +85,7 @@ export function FeaturesBento() {
         {/* Score Card */}
         <div className="score-card group flex flex-col justify-between rounded-2xl border border-border bg-card p-8 transition-all duration-300 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5">
           <div>
-            <div className="mb-4 flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary transition-all duration-300 will-change-transform group-hover:scale-110">
+            <div className="mb-4 flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary transition-all duration-300 will-change-transform group-hover:scale-110">
               <TrendingUp className="size-5" />
             </div>
             <h3 className="mb-2 text-xl font-semibold">Your Readiness Score</h3>
