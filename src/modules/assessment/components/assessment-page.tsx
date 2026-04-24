@@ -1,5 +1,12 @@
 'use client';
 
+import {
+  AssessmentHeader,
+  CompletionOverlay,
+  LoadingScreen,
+  LoadingToast,
+  QuestionCard,
+} from '@/components/assessment/assessment-components';
 import { ProtectedLayout } from '@/components/layouts';
 import { Button } from '@/components/ui/button';
 import {
@@ -9,17 +16,10 @@ import {
   useSubmitOrUpdateResponse,
 } from '@/modules/assessment/hooks';
 import { useRouter } from 'next/navigation';
+import posthog from 'posthog-js';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
-import posthog from 'posthog-js';
 import { TOTAL_QUESTIONS } from '../constants';
-import {
-  AssessmentHeader,
-  CompletionOverlay,
-  LoadingScreen,
-  LoadingToast,
-  QuestionCard,
-} from './assessment-components';
 
 interface AssessmentPageProps {
   sessionId: string;
@@ -75,7 +75,7 @@ export const AssessmentPage = ({ sessionId }: AssessmentPageProps) => {
 
   useEffect(() => {
     const currentPercent = progress.percentComplete;
-    
+
     if (currentPercent !== undefined && optimisticProgress !== null) {
       const lastProgress = lastProgressRef.current;
       const hasProgressChanged =
@@ -85,11 +85,11 @@ export const AssessmentPage = ({ sessionId }: AssessmentPageProps) => {
 
       if (hasProgressChanged) {
         lastProgressRef.current = { questionNumber, percent: currentPercent };
-        
+
         const timer = setTimeout(() => {
           setOptimisticProgress(null);
         }, 100);
-        
+
         return () => clearTimeout(timer);
       }
     }

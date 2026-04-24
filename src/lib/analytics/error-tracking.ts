@@ -20,23 +20,25 @@ export const captureError = (
   context?: ErrorContext,
   severity: ErrorSeverity = ErrorSeverity.MEDIUM
 ): void => {
-  try {
-    const errorInstance = error instanceof Error ? error : new Error(String(error));
+  const errorInstance = error instanceof Error ? error : new Error(String(error));
+  
+  // Log in development, but don't send to PostHog
+  if (process.env.NODE_ENV !== 'production') {
+    console.error('[Error Tracking - DEV]', {
+      error: errorInstance,
+      severity,
+      context,
+    });
+    return;
+  }
 
+  try {
     posthog.captureException(errorInstance, {
       severity,
       ...context,
       timestamp: new Date().toISOString(),
-      environment: process.env.NODE_ENV,
+      environment: 'production',
     });
-
-    if (process.env.NODE_ENV === 'development') {
-      console.error('[Error Tracking]', {
-        error: errorInstance,
-        severity,
-        context,
-      });
-    }
   } catch (trackingError) {
     console.error('[Error Tracking Failed]', trackingError);
   }

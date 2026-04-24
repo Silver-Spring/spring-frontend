@@ -1,20 +1,20 @@
 'use client';
 
-import { ProtectedLayout } from '@/components/layouts';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Spinner } from '@/components/ui/spinner';
 import {
   CohortComparisonCard,
   SectionBreakdownCard,
   TabbedRadarChart,
   TotalScoreCard,
-} from '@/modules/assessment/components/results';
+} from '@/components/assessment/results';
+import { ProtectedLayout } from '@/components/layouts';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Spinner } from '@/components/ui/spinner';
 import { useAssessmentResults, useDownloadReport } from '@/modules/assessment/hooks';
 import { ArrowLeft, Download, Loader2 } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useMemo } from 'react';
 import posthog from 'posthog-js';
+import { useCallback, useMemo } from 'react';
 
 interface AssessmentResultsPageProps {
   resultId: string;

@@ -39,7 +39,7 @@ export default async function Image() {
           >
             <img
               src={logoSrc}
-              height="180"
+              height={180}
               style={{
                 borderRadius: '20px',
                 boxShadow: '0 10px 40px rgba(0,0,0,0.3)',

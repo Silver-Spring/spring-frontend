@@ -1,38 +1,34 @@
 'use client';
 
+import { DeleteAssessmentDialog } from '@/components/assessment/dialogs';
+import {
+  CtaSection,
+  DimensionsSection,
+  FeaturesBento,
+  HeroSection,
+  PricingSection,
+} from '@/components/assessment/pre-assessment';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import { Spinner } from '@/components/ui/spinner';
 import { usePayment, usePaymentStatus } from '@/modules/payment/hooks';
 import { useUserStore } from '@/stores';
-import { ArrowRight, CheckCircle2, Clock, FileText, Info, Lock, Save, Trash2 } from 'lucide-react';
-import Image from 'next/image';
+import { CheckCircle2, FileText, Info, Trash2, TrendingUp } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
 import posthog from 'posthog-js';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { toast } from 'sonner';
 import {
   useAssessmentStatus,
   useCurrentSession,
   useDeleteMyAssessment,
   useStartAssessment,
 } from '../hooks';
-import { DeleteAssessmentDialog } from './dialogs';
-import {
-  DimensionsSection,
-  DiscoverSection,
-  ExperiencePreviewSection,
-  HeroSection,
-  HowItWorksSection,
-  PricingSection,
-} from './pre-assessment';
 
 export function AssessmentStatus() {
   const router = useRouter();
   const currentUser = useUserStore((state) => state.user);
-  const isInternal = currentUser?.isInternal ?? false;
+  const isInternal = useMemo(() => currentUser?.isInternal ?? false, [currentUser?.isInternal]);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const {
@@ -62,32 +58,53 @@ export function AssessmentStatus() {
     refetch: refetchPaymentStatus,
   } = usePaymentStatus();
 
+  const isLoading = useMemo(
+    () => statusLoading || sessionLoading || paymentLoading,
+    [statusLoading, sessionLoading, paymentLoading]
+  );
+
+  const formattedCompletedDate = useMemo(() => {
+    if (!completedAt) return null;
+    return new Date(completedAt).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  }, [completedAt]);
+
+  const isInProgress = useMemo(() => hasActiveSession, [hasActiveSession]);
+  const isProcessing = useMemo(() => paymentProcessing || starting, [paymentProcessing, starting]);
+
   useEffect(() => {
     refetchPaymentStatus();
     refetchAssessmentStatus();
     refetchCurrentSession();
-  }, [refetchPaymentStatus, refetchAssessmentStatus, refetchCurrentSession]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const handleStartAssessmentWithPayment = async (newPaymentId: string) => {
-    try {
-      const result = await startAssessment(newPaymentId);
+  const handleStartAssessmentWithPayment = useCallback(
+    async (newPaymentId: string) => {
+      try {
+        const result = await startAssessment(newPaymentId);
 
-      if (result.session?.id) {
-        posthog.capture('assessment_started', {
-          session_id: result.session.id,
-          payment_id: newPaymentId,
-        });
-        await Promise.all([refetchAssessmentStatus(), refetchCurrentSession()]);
-        router.push(`/assessment/${result.session.id}`);
-      } else {
-        toast.error('Unable to start assessment. Please try again.');
+        if (result.session?.id) {
+          posthog.capture('assessment_started', {
+            session_id: result.session.id,
+            payment_id: newPaymentId,
+          });
+          await Promise.all([refetchAssessmentStatus(), refetchCurrentSession()]);
+          router.push(`/assessment/${result.session.id}`);
+        } else {
+          toast.error('Unable to start assessment. Please try again.');
+        }
+      } catch (error) {
+        toast.error('Failed to start assessment. Please try again.');
       }
-    } catch (error) {
-      toast.error('Failed to start assessment. Please try again.');
-    }
-  };
+    },
+    [startAssessment, refetchAssessmentStatus, refetchCurrentSession, router]
+  );
 
-  const handlePaymentAndStart = async () => {
+  const handlePaymentAndStart = useCallback(async () => {
     try {
       await initiatePayment(
         async (newPaymentId) => {
@@ -104,9 +121,9 @@ export function AssessmentStatus() {
     } catch (error) {
       toast.error('Payment failed. Please try again.');
     }
-  };
+  }, [initiatePayment, refetchPaymentStatus, handleStartAssessmentWithPayment]);
 
-  const handleStartAssessmentClick = async () => {
+  const handleStartAssessmentClick = useCallback(async () => {
     if (isInternal) {
       try {
         const result = await startAssessment(null);
@@ -149,27 +166,36 @@ export function AssessmentStatus() {
         toast.error('Failed to start assessment. Please try again.');
       }
     }
-  };
+  }, [
+    isInternal,
+    hasPaid,
+    paymentId,
+    startAssessment,
+    refetchAssessmentStatus,
+    refetchCurrentSession,
+    router,
+    handlePaymentAndStart,
+  ]);
 
-  const handleResumeAssessment = () => {
+  const handleResumeAssessment = useCallback(() => {
     if (currentSession?.id) {
       posthog.capture('assessment_resumed', {
         session_id: currentSession.id,
       });
       router.push(`/assessment/${currentSession.id}`);
     }
-  };
+  }, [currentSession?.id, router]);
 
-  const handleViewResults = () => {
+  const handleViewResults = useCallback(() => {
     if (resultId) {
       posthog.capture('results_viewed', { result_id: resultId });
       router.push(`/assessment/results/${resultId}`);
     } else {
       toast.error('Unable to find result ID. Please contact support.');
     }
-  };
+  }, [resultId, router]);
 
-  const handleDeleteAssessment = async () => {
+  const handleDeleteAssessment = useCallback(async () => {
     try {
       const result = await deleteMyAssessment();
       if (result?.success) {
@@ -181,11 +207,20 @@ export function AssessmentStatus() {
     } catch (error) {
       toast.error('Failed to delete assessment. Please try again.');
     }
-  };
+  }, [deleteMyAssessment, refetchAssessmentStatus, refetchCurrentSession, router]);
 
-  if (statusLoading || sessionLoading || paymentLoading) {
+  const handleOpenDeleteDialog = useCallback(() => {
+    setShowDeleteDialog(true);
+  }, []);
+
+  const handleButtonClick = useMemo(
+    () => (isInProgress ? handleResumeAssessment : handleStartAssessmentClick),
+    [isInProgress, handleResumeAssessment, handleStartAssessmentClick]
+  );
+
+  if (isLoading) {
     return (
-      <div className="flex items-center min-h-screen justify-center p-4">
+      <div className="flex min-h-screen items-center justify-center p-4">
         <Spinner className="h-6 w-6" />
       </div>
     );
@@ -193,102 +228,98 @@ export function AssessmentStatus() {
 
   if (hasCompletedAssessment) {
     return (
-      <div className="max-w-4xl mx-auto py-8 md:py-12 px-4">
-        <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-center mb-12">
-          <div className="w-full md:w-1/2">
-            <div className="relative aspect-square max-w-md mx-auto">
-              <Image
-                src="/images/start-assessment-image.png"
-                alt="Retirement journey illustration"
-                fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-contain"
-                priority
-              />
+      <div className="mx-auto max-w-6xl px-4 py-12">
+        <div className="mb-12 text-center">
+          <div className="mb-4 flex justify-center">
+            <div className="flex size-16 items-center justify-center rounded-2xl bg-primary/10">
+              <CheckCircle2 className="size-8 text-primary" />
             </div>
           </div>
+          <h1 className="mb-3 text-3xl font-bold tracking-tight md:text-4xl">
+            Assessment Complete!
+          </h1>
+          <p className="mx-auto max-w-2xl text-pretty text-muted-foreground">
+            Congratulations on completing your retirement readiness assessment. Your results are
+            ready to view.
+          </p>
+        </div>
 
-          <div className="w-full md:w-1/2 space-y-6">
-            <div className="flex items-start gap-3">
-              <CheckCircle2 className="h-8 w-8 text-primary shrink-0 mt-1" />
+        <div className="mb-8 grid gap-6 md:grid-cols-2">
+          <div className="rounded-2xl border border-border bg-card p-8 shadow-sm">
+            <div className="mb-6 flex items-center gap-3">
+              <div className="flex size-12 items-center justify-center rounded-xl bg-primary/10">
+                <TrendingUp className="size-6 text-primary" />
+              </div>
               <div>
-                <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-3">Thank You!</h1>
-                <p className="text-lg text-muted-foreground">Your assessment is complete</p>
+                <h3 className="font-semibold">Your SSRI Score</h3>
+                <p className="text-xs text-muted-foreground">
+                  Silver Spring Retirement Readiness Index
+                </p>
               </div>
             </div>
-
-            <div className="prose prose-sm dark:prose-invert max-w-none">
-              <p className="text-foreground/90 leading-relaxed mb-4">
-                Congratulations on completing your psychometric assessment. Your responses have been
-                carefully analyzed to provide you with personalized insights into your retirement
-                readiness.
-              </p>
-              <p className="text-foreground/90 leading-relaxed">
-                Your <strong>Silver Spring Retirement Readiness Index (SSRI)</strong> score is{' '}
-                <strong className="text-primary text-xl">{totalReadinessIndex}</strong>. Visit your
-                results page to explore a comprehensive breakdown of your readiness across all key
-                dimensions.
-              </p>
-              {completedAt && (
-                <p className="text-xs text-muted-foreground mt-4">
-                  Completed on{' '}
-                  {new Date(completedAt).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  })}
-                </p>
-              )}
+            <div className="flex items-baseline gap-2">
+              <span className="text-5xl font-bold text-primary">{totalReadinessIndex}</span>
+              <span className="text-lg text-muted-foreground">/ 500</span>
             </div>
+            {formattedCompletedDate && (
+              <p className="mt-4 text-xs text-muted-foreground">
+                Completed on {formattedCompletedDate}
+              </p>
+            )}
+          </div>
+
+          <div className="rounded-2xl border border-primary/20 bg-primary/5 p-8 shadow-sm">
+            <div className="mb-4 flex items-center gap-3">
+              <div className="flex size-12 items-center justify-center rounded-xl bg-primary/10">
+                <FileText className="size-6 text-primary" />
+              </div>
+              <h3 className="font-semibold">Your Results Are Ready</h3>
+            </div>
+            <p className="mb-6 text-sm text-muted-foreground">
+              View your detailed report to understand your strengths, areas for growth, and
+              personalized recommendations to enhance your retirement readiness.
+            </p>
+            <Button
+              size="lg"
+              className="h-12 w-full gap-2 rounded-xl bg-primary text-base font-semibold text-primary-foreground shadow-md transition-all hover:bg-primary/90 hover:shadow-lg"
+              onClick={handleViewResults}
+            >
+              <FileText className="size-4" />
+              View Your Results
+            </Button>
           </div>
         </div>
 
-        <div className="bg-primary/5 border border-primary/10 rounded-lg p-6 md:p-8 mb-12">
-          <div className="flex items-start gap-3">
-            <FileText className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-            <div>
-              <h3 className="font-semibold text-green-900 dark:text-green-100 mb-2">
-                Your Results Are Ready
-              </h3>
-              <p className="text-sm text-green-800 dark:text-green-200 leading-relaxed">
-                View your detailed report to understand your strengths, areas for growth, and
-                personalized recommendations to enhance your retirement readiness.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex flex-col sm:flex-row justify-center gap-4">
-          <Button
-            size="lg"
-            className="w-full sm:w-auto min-w-[240px] h-12 text-base bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg transition-all"
-            onClick={handleViewResults}
-          >
-            <FileText className="mr-2 h-5 w-5" />
-            View Your Results
-          </Button>
-          {isInternal && (
+        {isInternal && (
+          <div className="mx-auto max-w-2xl rounded-2xl border border-border bg-card/50 p-6 text-center shadow-sm">
+            <Alert className="mb-4 border-primary/20 bg-primary/5">
+              <Info className="h-4 w-4 text-primary" />
+              <AlertTitle className="font-semibold text-primary">Internal User</AlertTitle>
+              <AlertDescription className="mt-2 text-foreground/80">
+                You can delete this assessment and retake the test multiple times.
+              </AlertDescription>
+            </Alert>
             <Button
               size="lg"
               variant="destructive"
-              className="w-full sm:w-auto bg-red-700 hover:bg-red-700/90 min-w-[240px] h-12 text-base shadow-md hover:shadow-lg transition-all"
-              onClick={() => setShowDeleteDialog(true)}
+              className="h-12 w-full gap-2 rounded-xl bg-red-700 text-base font-semibold shadow-md transition-all hover:bg-red-700/90 hover:shadow-lg sm:w-auto sm:min-w-[240px]"
+              onClick={handleOpenDeleteDialog}
               disabled={deleting}
             >
               {deleting ? (
                 <>
-                  <Spinner className="mr-2 h-5 w-5" />
+                  <Spinner className="size-4" />
                   Deleting...
                 </>
               ) : (
                 <>
-                  <Trash2 className="mr-2 h-5 w-5" />
+                  <Trash2 className="size-4" />
                   Delete Assessment
                 </>
               )}
             </Button>
-          )}
-        </div>
+          </div>
+        )}
 
         <DeleteAssessmentDialog
           open={showDeleteDialog}
@@ -300,33 +331,18 @@ export function AssessmentStatus() {
     );
   }
 
-  const isInProgress = hasActiveSession;
-  const buttonText = isInProgress ? 'Resume Assessment' : 'Begin Your Assessment';
-  const handleButtonClick = isInProgress ? handleResumeAssessment : handleStartAssessmentClick;
-  const isProcessing = paymentProcessing || starting;
-
   return (
-    <div className="mx-auto px-4 py-10 lg:py-16">
+    <div>
       <div className="flex flex-col gap-16 lg:gap-20">
-        <HeroSection onCtaClick={handleButtonClick} ctaText={buttonText} isLoading={isProcessing} />
-
-        <Separator className="mx-auto w-24" />
-
-        <DiscoverSection />
-
-        <Separator className="mx-auto w-24" />
-
-        <ExperiencePreviewSection />
-
-        <Separator className="mx-auto w-24" />
+        <HeroSection
+          onCtaClick={handleButtonClick}
+          isLoading={isProcessing}
+          isInProgress={isInProgress}
+        />
 
         <DimensionsSection />
 
-        <Separator className="mx-auto w-24" />
-
-        <HowItWorksSection />
-
-        <Separator className="mx-auto w-24" />
+        <FeaturesBento />
 
         {isInternal ? (
           <section className="flex flex-col items-center gap-8">
@@ -337,108 +353,29 @@ export function AssessmentStatus() {
             </div>
             <Alert className="max-w-2xl border-primary/20 bg-primary/5">
               <Info className="h-4 w-4 text-primary" />
-              <AlertTitle className="text-primary font-semibold">
+              <AlertTitle className="font-semibold text-primary">
                 Silver Spring Internal User
               </AlertTitle>
-              <AlertDescription className="text-foreground/80 mt-2">
+              <AlertDescription className="mt-2 text-foreground/80">
                 You can start the assessment without payment. You can also delete and retake the
                 test multiple times.
               </AlertDescription>
             </Alert>
           </section>
         ) : (
-          <PricingSection />
+          !hasPaid && <PricingSection onCtaClick={handleButtonClick} isLoading={isProcessing} />
         )}
 
-        <section className="flex flex-col items-center gap-8 rounded-2xl bg-primary/5 px-6 py-12 text-center ring-1 ring-primary/15 sm:px-12">
-          <div className="flex flex-col gap-3">
-            <h2 className="text-balance text-2xl font-bold tracking-tight lg:text-3xl">
-              {isInProgress ? 'Welcome Back!' : 'Ready to begin?'}
-            </h2>
-            <p className="mx-auto max-w-lg text-pretty text-muted-foreground">
-              {isInProgress
-                ? 'Continue where you left off. Your progress has been saved.'
-                : 'Take the first step toward a more confident, well-rounded retirement. Your results are private, and you can save and resume at any time.'}
-            </p>
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
-            <Button
-              size="lg"
-              className="h-12 min-w-[260px] gap-2 rounded-xl bg-primary hover:bg-primary/90 text-base font-semibold text-primary-foreground shadow-md transition-all hover:shadow-lg"
-              onClick={handleButtonClick}
-              disabled={isProcessing}
-            >
-              {isProcessing ? (
-                <>
-                  <Spinner className="size-4" />
-                  {paymentProcessing ? 'Processing Payment...' : 'Starting Assessment...'}
-                </>
-              ) : (
-                <>
-                  {buttonText}
-                  <ArrowRight className="size-4" />
-                </>
-              )}
-            </Button>
-
-            {isInternal && isInProgress && (
-              <Button
-                size="lg"
-                variant="destructive"
-                className="h-12 min-w-[260px] bg-red-700 hover:bg-red-700/90 gap-2 rounded-xl text-base font-semibold shadow-md transition-all hover:shadow-lg"
-                onClick={() => setShowDeleteDialog(true)}
-                disabled={deleting}
-              >
-                {deleting ? (
-                  <>
-                    <Spinner className="size-4" />
-                    Deleting...
-                  </>
-                ) : (
-                  <>
-                    <Trash2 className="size-4" />
-                    Delete Assessment
-                  </>
-                )}
-              </Button>
-            )}
-          </div>
-
-          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
-            <span className="flex items-center gap-1.5">
-              <Clock className="size-3.5 text-primary" />
-              Takes about 15 minutes
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Save className="size-3.5 text-primary" />
-              Save & resume anytime
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Lock className="size-3.5 text-primary" />
-              Private & secure
-            </span>
-          </div>
-
-          {!isInProgress && (
-            <blockquote className="mx-auto max-w-md border-l-2 border-primary/30 pl-4 text-left text-sm italic text-muted-foreground">
-              &quot;SSRI helped me identify specific areas that I probably need to work on more, and
-              the suggestions were practical and implementable.&quot;
-              <footer className="mt-2 text-xs font-medium not-italic text-primary">
-                — Priya S., 58, Mumbai
-              </footer>
-            </blockquote>
-          )}
-
-          {isInternal && (
-            <div className="flex items-center justify-center gap-2 text-sm text-primary">
-              <Badge variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/15">
-                Internal User
-              </Badge>
-              <span className="text-muted-foreground">You are a Silver Spring internal user</span>
-            </div>
-          )}
-        </section>
+        {isInProgress && (
+          <CtaSection
+            onCtaClick={handleButtonClick}
+            isLoading={isProcessing}
+            isInternal={isInternal}
+            isInProgress={isInProgress}
+            onDeleteClick={handleOpenDeleteDialog}
+            deleteLoading={deleting}
+          />
+        )}
       </div>
 
       <DeleteAssessmentDialog

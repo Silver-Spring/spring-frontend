@@ -16,6 +16,16 @@ export const onRequestError = async (
     routeType: 'render' | 'route' | 'action' | 'middleware';
   }
 ) => {
+  // Skip PostHog tracking in development
+  if (process.env.NODE_ENV !== 'production') {
+    console.error('[Server Error - DEV]', {
+      error: err,
+      context,
+      path: request.path,
+    });
+    return;
+  }
+
   if (process.env.NEXT_RUNTIME === 'nodejs') {
     const { getPostHogServer } = require('./src/lib/posthog-server');
     const posthog = getPostHogServer();
@@ -50,13 +60,5 @@ export const onRequestError = async (
         request_path: request.path,
       },
     });
-
-    if (process.env.NODE_ENV === 'development') {
-      console.error('[Server Error Tracking]', {
-        error: err,
-        distinctId,
-        context,
-      });
-    }
   }
 };

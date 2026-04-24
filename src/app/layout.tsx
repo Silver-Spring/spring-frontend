@@ -1,21 +1,19 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { DM_Sans, DM_Mono } from 'next/font/google';
 import './globals.css';
 import { Providers } from '@/components/providers';
 import { NavbarWrapper } from '@/components/navbar-wrapper';
+import { FooterWrapper } from '@/components/footer-wrapper';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
-const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-inter',
-});
+const dmSans = DM_Sans({ subsets: ['latin'], variable: '--font-dm-sans' });
+const dmMono = DM_Mono({ weight: ['400'], subsets: ['latin'], variable: '--font-dm-mono' });
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://assessment.silverspring.in'),
   title: {
-    default: 'Silver Spring - Retirement Transition Coaching',
+    default: 'Silver Spring - A Retirement Readiness Assessment',
     template: '%s | Silver Spring',
   },
   description:
@@ -36,13 +34,13 @@ export const metadata: Metadata = {
     locale: 'en_IN',
     url: '/',
     siteName: 'Silver Spring',
-    title: 'Silver Spring - Retirement Transition Coaching',
+    title: 'Silver Spring - A Retirement Readiness Assessment',
     description:
       "India's first dedicated retirement transition coaching practice, helping you navigate life beyond finances.",
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Silver Spring - Retirement Transition Coaching',
+    title: 'Silver Spring - A Retirement Readiness Assessment',
     description:
       "India's first dedicated retirement transition coaching practice, helping you navigate life beyond finances.",
   },
@@ -65,11 +63,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={inter.className}>
+    <html lang="en" className={`${dmSans.variable} ${dmMono.variable}`}>
       <body className="antialiased">
         <Providers>
           <NavbarWrapper />
-          {children}
+          <main className="min-h-screen">{children}</main>
+          <FooterWrapper />
         </Providers>
         <Analytics />
         <SpeedInsights />

@@ -3,8 +3,8 @@ import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 export const size = {
-  width: 180,
-  height: 180,
+  width: 100,
+  height: 100,
 };
 
 export const contentType = 'image/png';

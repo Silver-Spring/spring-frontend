@@ -23,6 +23,12 @@ export const AnalyticsEvents = {
 export type AnalyticsEvent = (typeof AnalyticsEvents)[keyof typeof AnalyticsEvents];
 
 export const trackEvent = (event: AnalyticsEvent, data?: AnalyticsEventData): void => {
+  // Skip tracking in development mode
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('[Analytics - DEV]', event, data);
+    return;
+  }
+
   try {
     if (typeof window !== 'undefined') {
       posthog.capture(event, data);

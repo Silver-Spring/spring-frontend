@@ -51,25 +51,25 @@ export const Navbar = () => {
           <nav className="hidden lg:flex items-center justify-center gap-6 xl:gap-8">
             <Link
               href={process.env.NEXT_PUBLIC_APP_URL}
-              className="text-base font-semibold text-primary/80 hover:text-primary transition-colors whitespace-nowrap"
+              className="text-base text-primary/80 hover:text-primary transition-colors whitespace-nowrap"
             >
               Home
             </Link>
             <Link
               href={`${process.env.NEXT_PUBLIC_APP_URL}/about-us`}
-              className="text-base font-semibold text-primary/80 hover:text-primary transition-colors whitespace-nowrap"
+              className="text-base text-primary/80 hover:text-primary transition-colors whitespace-nowrap"
             >
               About Us
             </Link>
             <Link
               href={`${process.env.NEXT_PUBLIC_APP_URL}/resources`}
-              className="text-base font-semibold text-primary/80 hover:text-primary transition-colors whitespace-nowrap"
+              className="text-base text-primary/80 hover:text-primary transition-colors whitespace-nowrap"
             >
               Resources
             </Link>
             <Link
               href={`${process.env.NEXT_PUBLIC_APP_URL}/blog`}
-              className="text-base font-semibold text-primary/80 hover:text-primary transition-colors whitespace-nowrap"
+              className="text-base text-primary/80 hover:text-primary transition-colors whitespace-nowrap"
             >
               Blog
             </Link>
@@ -90,31 +90,31 @@ export const Navbar = () => {
                     Navigate to different sections of Silver Spring
                   </SheetDescription>
                 </SheetHeader>
-                <nav className="flex flex-col gap-4 px-4">
+                <nav className="flex flex-col gap-4 px-4 pb-5">
                   <Link
                     href={process.env.NEXT_PUBLIC_APP_URL || '/'}
-                    className="text-base font-semibold text-primary/80 hover:text-primary transition-colors py-2"
+                    className="text-base text-primary/80 hover:text-primary transition-colors py-2"
                     onClick={handleMobileNavClick}
                   >
                     Home
                   </Link>
                   <Link
                     href={`${process.env.NEXT_PUBLIC_APP_URL}/about-us`}
-                    className="text-base font-semibold text-primary/80 hover:text-primary transition-colors py-2"
+                    className="text-base text-primary/80 hover:text-primary transition-colors py-2"
                     onClick={handleMobileNavClick}
                   >
                     About Us
                   </Link>
                   <Link
                     href={`${process.env.NEXT_PUBLIC_APP_URL}/resources`}
-                    className="text-base font-semibold text-primary/80 hover:text-primary transition-colors py-2"
+                    className="text-base text-primary/80 hover:text-primary transition-colors py-2"
                     onClick={handleMobileNavClick}
                   >
                     Resources
                   </Link>
                   <Link
                     href={`${process.env.NEXT_PUBLIC_APP_URL}/blog`}
-                    className="text-base font-semibold text-primary/80 hover:text-primary transition-colors py-2"
+                    className="text-base text-primary/80 hover:text-primary transition-colors py-2"
                     onClick={handleMobileNavClick}
                   >
                     Blog
