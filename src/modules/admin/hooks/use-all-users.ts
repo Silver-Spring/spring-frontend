@@ -12,6 +12,7 @@ export const useAllUsers = () => {
   const users = data?.allUsers?.users ?? [];
   const totalCount = data?.allUsers?.totalCount ?? 0;
   const adminCount = data?.allUsers?.adminCount ?? 0;
+  const usersWithoutAssessmentCount = data?.allUsers?.usersWithoutAssessmentCount ?? 0;
 
   // Calculate internal user count (excluding admins as they are always internal)
   const internalUserCount = useMemo(() => {
@@ -23,25 +24,13 @@ export const useAllUsers = () => {
     return users.filter((user: any) => !user.isAdmin && !user.isInternal).length;
   }, [users]);
 
-  // Calculate users created this month
-  const newThisMonth = useMemo(() => {
-    const now = new Date();
-    const currentMonth = now.getMonth();
-    const currentYear = now.getFullYear();
-
-    return users.filter((user: any) => {
-      const createdDate = new Date(user.createdAt);
-      return createdDate.getMonth() === currentMonth && createdDate.getFullYear() === currentYear;
-    }).length;
-  }, [users]);
-
   return {
     users,
     totalCount,
     adminCount,
     internalUserCount,
     regularUserCount,
-    newThisMonth,
+    usersWithoutAssessmentCount,
     loading,
     error,
     refetch,

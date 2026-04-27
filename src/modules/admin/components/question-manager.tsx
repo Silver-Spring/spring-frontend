@@ -4,6 +4,13 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useState } from 'react';
 import {
   useBulkCreateQuestions,
@@ -121,23 +128,25 @@ export const QuestionManager = () => {
     <div className="space-y-4">
       <h2 className="text-2xl font-bold">Question Management</h2>
 
-      <Card className="p-4">
+      <Card className="p-4 w-fit">
         <Label htmlFor="section-select">Select Section</Label>
-        <select
-          id="section-select"
-          className="w-full border rounded-md p-2 mt-2"
+        <Select
           value={selectedSectionId || ''}
-          onChange={(e) => setSelectedSectionId(e.target.value || null)}
+          onValueChange={(value) => setSelectedSectionId(value || null)}
         >
-          <option value="">-- Select a section --</option>
-          {sections.map(
-            (section: { id: string; name: string; type: string; isActive: boolean }) => (
-              <option key={section.id} value={section.id}>
-                {section.name} ({section.type}) {!section.isActive && '(Inactive)'}
-              </option>
-            )
-          )}
-        </select>
+          <SelectTrigger className="mt-2">
+            <SelectValue placeholder="-- Select a section --" />
+          </SelectTrigger>
+          <SelectContent>
+            {sections.map(
+              (section: { id: string; name: string; type: string; isActive: boolean }) => (
+                <SelectItem key={section.id} value={section.id}>
+                  {section.name} ({section.type}) {!section.isActive && '(Inactive)'}
+                </SelectItem>
+              )
+            )}
+          </SelectContent>
+        </Select>
       </Card>
 
       {selectedSectionId && (
@@ -154,7 +163,7 @@ export const QuestionManager = () => {
           {showCreateForm && (
             <Card className="p-6">
               <form onSubmit={handleCreate} className="space-y-4">
-                <div>
+                <div className="flex flex-col gap-2">
                   <Label htmlFor="questionText">Question Text</Label>
                   <Input
                     id="questionText"
@@ -163,13 +172,6 @@ export const QuestionManager = () => {
                     placeholder="e.g., I can easily identify and express my emotions"
                     required
                   />
-                </div>
-
-                <div className="p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md">
-                  <p className="text-sm text-blue-800 dark:text-blue-200">
-                    ℹ️ Display order will be automatically assigned as the next available number in
-                    the selected section.
-                  </p>
                 </div>
 
                 <Button type="submit" disabled={creating}>
@@ -282,9 +284,6 @@ export const QuestionManager = () => {
                         <div className="flex items-center justify-between">
                           <div className="flex-1">
                             <div className="flex items-center space-x-2">
-                              <span className="text-xs px-2 py-1 bg-gray-200 rounded">
-                                #{question.displayOrder}
-                              </span>
                               <p className="text-sm">{question.questionText}</p>
                               {!question.isActive && (
                                 <span className="text-xs px-2 py-1 bg-red-100 text-red-700 rounded">

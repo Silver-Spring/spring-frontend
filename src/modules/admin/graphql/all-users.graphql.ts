@@ -15,6 +15,7 @@ const AllUsersDoc = graphql(`
       }
       totalCount
       adminCount
+      usersWithoutAssessmentCount
     }
   }
 `);

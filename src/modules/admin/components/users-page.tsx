@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import { type ColumnDef } from '@tanstack/react-table';
 import {
   ArrowUpDown,
+  ClipboardX,
   Key,
   MoreVertical,
   RefreshCw,
@@ -11,7 +12,6 @@ import {
   ShieldOff,
   Trash2,
   UserCheck,
-  UserPlus,
   Users as UsersIcon,
   XCircle,
 } from 'lucide-react';
@@ -66,7 +66,7 @@ export const UsersPage = () => {
     adminCount,
     internalUserCount,
     regularUserCount,
-    newThisMonth,
+    usersWithoutAssessmentCount,
     loading,
     refetch,
   } = useAllUsers();
@@ -428,11 +428,11 @@ export const UsersPage = () => {
             </Card>
             <Card>
               <CardHeader className="pb-3">
-                <CardDescription>New This Month</CardDescription>
-                <CardTitle className="text-3xl">{newThisMonth}</CardTitle>
+                <CardDescription>Users Without Assessment</CardDescription>
+                <CardTitle className="text-3xl">{usersWithoutAssessmentCount}</CardTitle>
               </CardHeader>
               <CardContent>
-                <UserPlus className="h-4 w-4 text-purple-600" />
+                <ClipboardX className="h-4 w-4 text-purple-600" />
               </CardContent>
             </Card>
           </div>
