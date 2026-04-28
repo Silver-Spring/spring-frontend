@@ -7,3 +7,4 @@ export * from './pricing-section';
 export * from './cta-section';
 export * from './features-bento';
 export * from './testimonials-section';
+export * from './coupon-input';

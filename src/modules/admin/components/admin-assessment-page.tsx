@@ -1,6 +1,5 @@
 'use client';
 
-import { AdminSidebarLayout } from '@/components/layouts';
 import { Button } from '@/components/ui/button';
 import {
   AdminStatsCard,
@@ -30,8 +29,7 @@ export const AdminAssessmentPage = () => {
   };
 
   return (
-    <AdminSidebarLayout>
-      <div className="p-6 md:p-8 space-y-6">
+    <div className="p-6 md:p-8 space-y-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Assessment Management</h1>
           <p className="text-muted-foreground mt-2">
@@ -76,7 +74,6 @@ export const AdminAssessmentPage = () => {
           {activeTab === 'sections' && <SectionManager />}
           {activeTab === 'questions' && <QuestionManager />}
         </div>
-      </div>
-    </AdminSidebarLayout>
+    </div>
   );
 };

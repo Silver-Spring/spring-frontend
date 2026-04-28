@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { AdminSidebarLayout } from '@/components/layouts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
@@ -55,25 +54,19 @@ export const PaymentObservabilityPage = () => {
     payments,
     loading: paymentsLoading,
     refetch: refetchPayments,
-  } = useAdminPaymentsList(
-    timestamps ? { ...timestamps, count: 100 } : { count: 100 }
-  );
+  } = useAdminPaymentsList(timestamps ? { ...timestamps, count: 100 } : { count: 100 });
 
   const {
     settlements,
     loading: settlementsLoading,
     refetch: refetchSettlements,
-  } = useAdminSettlementsList(
-    timestamps ? { ...timestamps, count: 100 } : { count: 100 }
-  );
+  } = useAdminSettlementsList(timestamps ? { ...timestamps, count: 100 } : { count: 100 });
 
   const {
     refunds,
     loading: refundsLoading,
     refetch: refetchRefunds,
-  } = useAdminRefundsList(
-    timestamps ? { ...timestamps, count: 100 } : { count: 100 }
-  );
+  } = useAdminRefundsList(timestamps ? { ...timestamps, count: 100 } : { count: 100 });
 
   const handleRefreshAll = async () => {
     await Promise.all([
@@ -89,7 +82,7 @@ export const PaymentObservabilityPage = () => {
   };
 
   return (
-    <AdminSidebarLayout>
+    <>
       <div className="flex flex-1 flex-col overflow-x-hidden">
         <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6 lg:p-8">
           <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
@@ -203,6 +196,6 @@ export const PaymentObservabilityPage = () => {
         onOpenChange={(open) => !open && setSelectedPaymentId(null)}
         paymentId={selectedPaymentId}
       />
-    </AdminSidebarLayout>
+    </>
   );
 };

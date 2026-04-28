@@ -1,21 +1,11 @@
 'use client';
 
-import { type ReactNode } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import {
-  LayoutDashboard,
-  ClipboardList,
-  Users,
-  BarChart3,
-  CreditCard,
-  Settings,
-  LogOut,
-  Home,
-} from 'lucide-react';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -26,14 +16,24 @@ import {
   SidebarMenuItem,
   SidebarProvider,
   SidebarTrigger,
-  SidebarFooter,
 } from '@/components/ui/sidebar';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { AuthLayout, AuthRestrict, type LayoutChildProps } from './auth-layout';
-import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
-import { useLogout } from '@/modules/auth/hooks';
 import { getInitials } from '@/lib/utils';
+import { useLogout } from '@/modules/auth/hooks';
+import {
+  BarChart3,
+  ClipboardList,
+  CreditCard,
+  Home,
+  LayoutDashboard,
+  LogOut,
+  Ticket,
+  Users,
+} from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { type ReactNode } from 'react';
+import { AuthLayout, AuthRestrict, type LayoutChildProps } from './auth-layout';
 
 interface AdminSidebarLayoutProps {
   children: ReactNode | ((props: LayoutChildProps) => ReactNode);
@@ -64,6 +64,11 @@ const menuItems = [
     title: 'Payments',
     url: '/admin/payments',
     icon: CreditCard,
+  },
+  {
+    title: 'Coupons',
+    url: '/admin/coupons',
+    icon: Ticket,
   },
 ];
 

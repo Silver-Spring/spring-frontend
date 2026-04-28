@@ -1,11 +1,11 @@
 'use client';
 
-import { AdminSidebarLayout } from '@/components/layouts';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
 import { useAllUsers } from '@/modules/admin/hooks';
 import { useAdminStats, useUsersWithAssessment } from '@/modules/assessment/hooks';
+import { useCurrentUser } from '@/modules/auth/hooks/use-current-user';
 import {
   Activity,
   ArrowRight,
@@ -22,6 +22,7 @@ import Link from 'next/link';
 import { useCallback, useMemo } from 'react';
 
 export const AdminPage = () => {
+  const { currentUser } = useCurrentUser();
   const { totalCount: totalUsers, loading: loadingUsers, refetch: refetchUsers } = useAllUsers();
   const {
     totalCount: totalAssessments,
@@ -44,9 +45,7 @@ export const AdminPage = () => {
   );
 
   return (
-    <AdminSidebarLayout>
-      {({ currentUser }) => (
-        <div className="p-6 md:p-8 space-y-8">
+    <div className="p-6 md:p-8 space-y-8">
           {/* Welcome Section */}
           <div className="flex items-center justify-between">
             <div>
@@ -272,8 +271,6 @@ export const AdminPage = () => {
               </Link>
             </div>
           </div>
-        </div>
-      )}
-    </AdminSidebarLayout>
+    </div>
   );
 };

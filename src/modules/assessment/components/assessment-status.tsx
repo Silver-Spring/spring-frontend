@@ -104,27 +104,71 @@ export function AssessmentStatus() {
     [startAssessment, refetchAssessmentStatus, refetchCurrentSession, router]
   );
 
-  const handlePaymentAndStart = useCallback(async () => {
-    try {
-      await initiatePayment(
-        async (newPaymentId) => {
-          if (newPaymentId) {
-            await refetchPaymentStatus();
-            toast.success('Payment successful! Starting your assessment...');
-            await handleStartAssessmentWithPayment(newPaymentId);
-          }
-        },
-        (error) => {
-          toast.error('Payment failed. Please try again.');
-        }
-      );
-    } catch (error) {
-      toast.error('Payment failed. Please try again.');
-    }
-  }, [initiatePayment, refetchPaymentStatus, handleStartAssessmentWithPayment]);
+  const handlePaymentAndStart = useCallback(
+    async (couponCode?: string) => {
+      try {
+        await initiatePayment(
+          async (newPaymentId) => {
+            if (newPaymentId) {
+              // Regular paid flow - payment verified with Razorpay
+              await refetchPaymentStatus();
+              toast.success('Payment successful! Starting your assessment...');
+              await handleStartAssessmentWithPayment(newPaymentId);
+            } else {
+              // Free coupon flow (100% discount) - backend auto-created payment
+              // Success toast already shown by payment hook
+              // Need to refetch to get the auto-created payment ID
+              const { data: paymentData } = await refetchPaymentStatus();
+              const autoCreatedPaymentId = paymentData?.currentUserPaymentStatus?.paymentId;
 
-  const handleStartAssessmentClick = useCallback(async () => {
+              if (autoCreatedPaymentId) {
+                // Start assessment with the auto-created payment ID
+                try {
+                  const result = await startAssessment(autoCreatedPaymentId);
+
+                  if (result.session?.id) {
+                    posthog.capture('assessment_started', {
+                      session_id: result.session.id,
+                      free_coupon: true,
+                      payment_id: autoCreatedPaymentId,
+                    });
+                    await Promise.all([refetchAssessmentStatus(), refetchCurrentSession()]);
+                    router.push(`/assessment/${result.session.id}`);
+                  } else {
+                    toast.error('Unable to start assessment. Please try again.');
+                  }
+                } catch (error) {
+                  console.error('Failed to start assessment:', error);
+                  toast.error('Failed to start assessment. Please contact support.');
+                }
+              } else {
+                toast.error('Payment not found. Please contact support.');
+              }
+            }
+          },
+          () => {
+            toast.error('Payment failed. Please try again.');
+          },
+          couponCode
+        );
+      } catch (error) {
+        toast.error('Payment failed. Please try again.');
+      }
+    },
+    [
+      initiatePayment,
+      refetchPaymentStatus,
+      handleStartAssessmentWithPayment,
+      startAssessment,
+      refetchAssessmentStatus,
+      refetchCurrentSession,
+      router,
+    ]
+  );
+
+  const handleHeroButtonClick = useCallback(async () => {
     if (isInternal) {
+      // Internal users can start directly
       try {
         const result = await startAssessment(null);
 
@@ -141,9 +185,8 @@ export function AssessmentStatus() {
       } catch (error) {
         toast.error('Failed to start assessment. Please try again.');
       }
-    } else if (!hasPaid) {
-      handlePaymentAndStart();
-    } else {
+    } else if (hasPaid) {
+      // User has already paid, start assessment
       try {
         if (!paymentId) {
           toast.error('Please complete payment first');
@@ -165,6 +208,12 @@ export function AssessmentStatus() {
       } catch (error) {
         toast.error('Failed to start assessment. Please try again.');
       }
+    } else {
+      // Scroll to pricing section for payment
+      const pricingSection = document.getElementById('pricing-section');
+      if (pricingSection) {
+        pricingSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
     }
   }, [
     isInternal,
@@ -174,8 +223,14 @@ export function AssessmentStatus() {
     refetchAssessmentStatus,
     refetchCurrentSession,
     router,
-    handlePaymentAndStart,
   ]);
+
+  const handlePricingSectionClick = useCallback(
+    async (couponCode?: string) => {
+      handlePaymentAndStart(couponCode);
+    },
+    [handlePaymentAndStart]
+  );
 
   const handleResumeAssessment = useCallback(() => {
     if (currentSession?.id) {
@@ -214,8 +269,8 @@ export function AssessmentStatus() {
   }, []);
 
   const handleButtonClick = useMemo(
-    () => (isInProgress ? handleResumeAssessment : handleStartAssessmentClick),
-    [isInProgress, handleResumeAssessment, handleStartAssessmentClick]
+    () => (isInProgress ? handleResumeAssessment : handleHeroButtonClick),
+    [isInProgress, handleResumeAssessment, handleHeroButtonClick]
   );
 
   if (isLoading) {
@@ -345,7 +400,7 @@ export function AssessmentStatus() {
         <FeaturesBento />
 
         {isInternal ? (
-          <section className="flex flex-col items-center gap-8">
+          <section className="mb-5 flex flex-col items-center gap-8">
             <div className="flex flex-col gap-2 text-center">
               <h2 className="text-balance text-2xl font-bold tracking-tight lg:text-3xl">
                 Internal User Access
@@ -363,7 +418,11 @@ export function AssessmentStatus() {
             </Alert>
           </section>
         ) : (
-          !hasPaid && <PricingSection onCtaClick={handleButtonClick} isLoading={isProcessing} />
+          !hasPaid && (
+            <div id="pricing-section">
+              <PricingSection onCtaClick={handlePricingSectionClick} isLoading={isProcessing} />
+            </div>
+          )
         )}
 
         {isInProgress && (

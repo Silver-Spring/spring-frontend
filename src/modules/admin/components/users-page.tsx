@@ -16,7 +16,6 @@ import {
   XCircle,
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import { AdminSidebarLayout } from '@/components/layouts';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -367,7 +366,7 @@ export const UsersPage = () => {
   );
 
   return (
-    <AdminSidebarLayout>
+    <>
       <div className="flex flex-1 flex-col overflow-x-hidden">
         <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6 lg:p-8">
           <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
@@ -505,6 +504,6 @@ export const UsersPage = () => {
         userEmail={selectedUser?.email || ''}
         loading={deleting}
       />
-    </AdminSidebarLayout>
+    </>
   );
 };

@@ -37,6 +37,16 @@ export type Scalars = {
   UUID: { input: any; output: any; }
 };
 
+export type ActivateCouponInput = {
+  id: Scalars['UUID']['input'];
+};
+
+export type ActivateCouponPayload = {
+  __typename?: 'ActivateCouponPayload';
+  message?: Maybe<Scalars['String']['output']>;
+  success: Scalars['Boolean']['output'];
+};
+
 export type AdminDeleteUserInput = {
   userId: Scalars['UUID']['input'];
 };
@@ -2531,6 +2541,838 @@ export type CompleteAssessmentPayload = {
   success: Scalars['Boolean']['output'];
 };
 
+export type Coupon = {
+  __typename?: 'Coupon';
+  code: Scalars['String']['output'];
+  createdAt: Scalars['Datetime']['output'];
+  createdBy?: Maybe<Scalars['UUID']['output']>;
+  currentUses: Scalars['Int']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  discountType: DiscountType;
+  discountValue: Scalars['Int']['output'];
+  id: Scalars['UUID']['output'];
+  isActive: Scalars['Boolean']['output'];
+  maxDiscountAmount?: Maybe<Scalars['Int']['output']>;
+  maxTotalUses?: Maybe<Scalars['Int']['output']>;
+  updatedAt: Scalars['Datetime']['output'];
+  validFrom: Scalars['Datetime']['output'];
+  validUntil?: Maybe<Scalars['Datetime']['output']>;
+};
+
+export type CouponAnalytics = {
+  __typename?: 'CouponAnalytics';
+  activeCoupons: Scalars['Int']['output'];
+  totalCoupons: Scalars['Int']['output'];
+  totalDiscountGiven: Scalars['Int']['output'];
+  totalRedemptions: Scalars['Int']['output'];
+};
+
+export type CouponInfo = {
+  __typename?: 'CouponInfo';
+  code: Scalars['String']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  discountType: DiscountType;
+  discountValue: Scalars['Int']['output'];
+};
+
+/** Promo codes for one-time assessment payments. Simplified for single-purchase model. Managed via AdminCouponPlugin. */
+export type CouponTable = {
+  __typename?: 'CouponTable';
+  /** Unique coupon code (e.g., "LAUNCH50"). Case-insensitive. */
+  code: Scalars['String']['output'];
+  /** Reads and enables pagination through a set of `CouponUsageTable`. */
+  couponUsageTables: CouponUsageTablesConnection;
+  createdAt: Scalars['Datetime']['output'];
+  createdBy?: Maybe<Scalars['UUID']['output']>;
+  /** Running count of how many times this coupon has been used. */
+  currentUses: Scalars['Int']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  /** Type of discount: "percentage" (e.g., 20% off) or "flat" (e.g., ₹500 off) */
+  discountType: Scalars['String']['output'];
+  /** Discount amount: percentage value (20 for 20%) or paise (50000 for ₹500) */
+  discountValue: Scalars['Int']['output'];
+  id: Scalars['UUID']['output'];
+  isActive: Scalars['Boolean']['output'];
+  /** For percentage discounts only: maximum discount cap in paise (e.g., 100000 for max ₹1000 off) */
+  maxDiscountAmount?: Maybe<Scalars['Int']['output']>;
+  /** Total times this coupon can be used across all users. NULL = unlimited. */
+  maxTotalUses?: Maybe<Scalars['Int']['output']>;
+  /** Reads and enables pagination through a set of `Payment`. */
+  payments: PaymentsConnection;
+  updatedAt: Scalars['Datetime']['output'];
+  /** Reads a single `User` that is related to this `CouponTable`. */
+  userByCreatedBy?: Maybe<User>;
+  /** Reads and enables pagination through a set of `User`. */
+  usersByCouponUsageTableCouponIdAndUserId: CouponTableUsersByCouponUsageTableCouponIdAndUserIdManyToManyConnection;
+  /** Reads and enables pagination through a set of `User`. */
+  usersByPaymentCouponIdAndUserId: CouponTableUsersByPaymentCouponIdAndUserIdManyToManyConnection;
+  validFrom: Scalars['Datetime']['output'];
+  validUntil?: Maybe<Scalars['Datetime']['output']>;
+};
+
+
+/** Promo codes for one-time assessment payments. Simplified for single-purchase model. Managed via AdminCouponPlugin. */
+export type CouponTableCouponUsageTablesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CouponUsageTableCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CouponUsageTablesOrderBy>>;
+};
+
+
+/** Promo codes for one-time assessment payments. Simplified for single-purchase model. Managed via AdminCouponPlugin. */
+export type CouponTablePaymentsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<PaymentCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PaymentsOrderBy>>;
+};
+
+
+/** Promo codes for one-time assessment payments. Simplified for single-purchase model. Managed via AdminCouponPlugin. */
+export type CouponTableUsersByCouponUsageTableCouponIdAndUserIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<UserCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<UsersOrderBy>>;
+};
+
+
+/** Promo codes for one-time assessment payments. Simplified for single-purchase model. Managed via AdminCouponPlugin. */
+export type CouponTableUsersByPaymentCouponIdAndUserIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<UserCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<UsersOrderBy>>;
+};
+
+/**
+ * A condition to be used against `CouponTable` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type CouponTableCondition = {
+  /** Checks for equality with the object’s `code` field. */
+  code?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `createdBy` field. */
+  createdBy?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `isActive` field. */
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** The fields on `couponTable` to look up the row to connect. */
+export type CouponTableCouponsCodeKeyConnect = {
+  /** Unique coupon code (e.g., "LAUNCH50"). Case-insensitive. */
+  code: Scalars['String']['input'];
+};
+
+/** The fields on `couponTable` to look up the row to delete. */
+export type CouponTableCouponsCodeKeyDelete = {
+  /** Unique coupon code (e.g., "LAUNCH50"). Case-insensitive. */
+  code: Scalars['String']['input'];
+};
+
+/** The fields on `couponTable` to look up the row to connect. */
+export type CouponTableCouponsPkeyConnect = {
+  id: Scalars['UUID']['input'];
+};
+
+/** The fields on `couponTable` to look up the row to delete. */
+export type CouponTableCouponsPkeyDelete = {
+  id: Scalars['UUID']['input'];
+};
+
+/** An input for mutations affecting `CouponTable` */
+export type CouponTableInput = {
+  /** Unique coupon code (e.g., "LAUNCH50"). Case-insensitive. */
+  code: Scalars['String']['input'];
+  couponUsageTablesUsingId?: InputMaybe<CouponUsageCouponIdFkeyInverseInput>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  createdBy?: InputMaybe<Scalars['UUID']['input']>;
+  /** Running count of how many times this coupon has been used. */
+  currentUses?: InputMaybe<Scalars['Int']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** Type of discount: "percentage" (e.g., 20% off) or "flat" (e.g., ₹500 off) */
+  discountType: Scalars['String']['input'];
+  /** Discount amount: percentage value (20 for 20%) or paise (50000 for ₹500) */
+  discountValue: Scalars['Int']['input'];
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  /** For percentage discounts only: maximum discount cap in paise (e.g., 100000 for max ₹1000 off) */
+  maxDiscountAmount?: InputMaybe<Scalars['Int']['input']>;
+  /** Total times this coupon can be used across all users. NULL = unlimited. */
+  maxTotalUses?: InputMaybe<Scalars['Int']['input']>;
+  paymentsUsingId?: InputMaybe<PaymentsCouponIdFkeyInverseInput>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  userToCreatedBy?: InputMaybe<CouponsCreatedByFkeyInput>;
+  validFrom?: InputMaybe<Scalars['Datetime']['input']>;
+  validUntil?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** The fields on `couponTable` to look up the row to update. */
+export type CouponTableOnCouponTableForCouponsCreatedByFkeyUsingCouponsCodeKeyUpdate = {
+  /** Unique coupon code (e.g., "LAUNCH50"). Case-insensitive. */
+  code: Scalars['String']['input'];
+  /** An object where the defined keys will be set on the `couponTable` being updated. */
+  patch: UpdateCouponTableOnCouponTableForCouponsCreatedByFkeyPatch;
+};
+
+/** The fields on `couponTable` to look up the row to update. */
+export type CouponTableOnCouponTableForCouponsCreatedByFkeyUsingCouponsPkeyUpdate = {
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `couponTable` being updated. */
+  patch: UpdateCouponTableOnCouponTableForCouponsCreatedByFkeyPatch;
+};
+
+/** The fields on `couponTable` to look up the row to update. */
+export type CouponTableOnCouponUsageTableForCouponUsageCouponIdFkeyUsingCouponsCodeKeyUpdate = {
+  /** Unique coupon code (e.g., "LAUNCH50"). Case-insensitive. */
+  code: Scalars['String']['input'];
+  /** An object where the defined keys will be set on the `couponTable` being updated. */
+  patch: UpdateCouponTableOnCouponUsageTableForCouponUsageCouponIdFkeyPatch;
+};
+
+/** The fields on `couponTable` to look up the row to update. */
+export type CouponTableOnCouponUsageTableForCouponUsageCouponIdFkeyUsingCouponsPkeyUpdate = {
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `couponTable` being updated. */
+  patch: UpdateCouponTableOnCouponUsageTableForCouponUsageCouponIdFkeyPatch;
+};
+
+/** The fields on `couponTable` to look up the row to update. */
+export type CouponTableOnPaymentForPaymentsCouponIdFkeyUsingCouponsCodeKeyUpdate = {
+  /** Unique coupon code (e.g., "LAUNCH50"). Case-insensitive. */
+  code: Scalars['String']['input'];
+  /** An object where the defined keys will be set on the `couponTable` being updated. */
+  patch: UpdateCouponTableOnPaymentForPaymentsCouponIdFkeyPatch;
+};
+
+/** The fields on `couponTable` to look up the row to update. */
+export type CouponTableOnPaymentForPaymentsCouponIdFkeyUsingCouponsPkeyUpdate = {
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `couponTable` being updated. */
+  patch: UpdateCouponTableOnPaymentForPaymentsCouponIdFkeyPatch;
+};
+
+/** Represents an update to a `CouponTable`. Fields that are set will be updated. */
+export type CouponTablePatch = {
+  /** Unique coupon code (e.g., "LAUNCH50"). Case-insensitive. */
+  code?: InputMaybe<Scalars['String']['input']>;
+  couponUsageTablesUsingId?: InputMaybe<CouponUsageCouponIdFkeyInverseInput>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  createdBy?: InputMaybe<Scalars['UUID']['input']>;
+  /** Running count of how many times this coupon has been used. */
+  currentUses?: InputMaybe<Scalars['Int']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** Type of discount: "percentage" (e.g., 20% off) or "flat" (e.g., ₹500 off) */
+  discountType?: InputMaybe<Scalars['String']['input']>;
+  /** Discount amount: percentage value (20 for 20%) or paise (50000 for ₹500) */
+  discountValue?: InputMaybe<Scalars['Int']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  /** For percentage discounts only: maximum discount cap in paise (e.g., 100000 for max ₹1000 off) */
+  maxDiscountAmount?: InputMaybe<Scalars['Int']['input']>;
+  /** Total times this coupon can be used across all users. NULL = unlimited. */
+  maxTotalUses?: InputMaybe<Scalars['Int']['input']>;
+  paymentsUsingId?: InputMaybe<PaymentsCouponIdFkeyInverseInput>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  userToCreatedBy?: InputMaybe<CouponsCreatedByFkeyInput>;
+  validFrom?: InputMaybe<Scalars['Datetime']['input']>;
+  validUntil?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** A connection to a list of `User` values, with data from `CouponUsageTable`. */
+export type CouponTableUsersByCouponUsageTableCouponIdAndUserIdManyToManyConnection = {
+  __typename?: 'CouponTableUsersByCouponUsageTableCouponIdAndUserIdManyToManyConnection';
+  /** A list of edges which contains the `User`, info from the `CouponUsageTable`, and the cursor to aid in pagination. */
+  edges: Array<CouponTableUsersByCouponUsageTableCouponIdAndUserIdManyToManyEdge>;
+  /** A list of `User` objects. */
+  nodes: Array<User>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `User` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `User` edge in the connection, with data from `CouponUsageTable`. */
+export type CouponTableUsersByCouponUsageTableCouponIdAndUserIdManyToManyEdge = {
+  __typename?: 'CouponTableUsersByCouponUsageTableCouponIdAndUserIdManyToManyEdge';
+  /** Reads and enables pagination through a set of `CouponUsageTable`. */
+  couponUsageTables: CouponUsageTablesConnection;
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `User` at the end of the edge. */
+  node: User;
+};
+
+
+/** A `User` edge in the connection, with data from `CouponUsageTable`. */
+export type CouponTableUsersByCouponUsageTableCouponIdAndUserIdManyToManyEdgeCouponUsageTablesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CouponUsageTableCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CouponUsageTablesOrderBy>>;
+};
+
+/** A connection to a list of `User` values, with data from `Payment`. */
+export type CouponTableUsersByPaymentCouponIdAndUserIdManyToManyConnection = {
+  __typename?: 'CouponTableUsersByPaymentCouponIdAndUserIdManyToManyConnection';
+  /** A list of edges which contains the `User`, info from the `Payment`, and the cursor to aid in pagination. */
+  edges: Array<CouponTableUsersByPaymentCouponIdAndUserIdManyToManyEdge>;
+  /** A list of `User` objects. */
+  nodes: Array<User>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `User` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `User` edge in the connection, with data from `Payment`. */
+export type CouponTableUsersByPaymentCouponIdAndUserIdManyToManyEdge = {
+  __typename?: 'CouponTableUsersByPaymentCouponIdAndUserIdManyToManyEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `User` at the end of the edge. */
+  node: User;
+  /** Reads and enables pagination through a set of `Payment`. */
+  payments: PaymentsConnection;
+};
+
+
+/** A `User` edge in the connection, with data from `Payment`. */
+export type CouponTableUsersByPaymentCouponIdAndUserIdManyToManyEdgePaymentsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<PaymentCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PaymentsOrderBy>>;
+};
+
+/** A connection to a list of `CouponTable` values. */
+export type CouponTablesConnection = {
+  __typename?: 'CouponTablesConnection';
+  /** A list of edges which contains the `CouponTable` and cursor to aid in pagination. */
+  edges: Array<CouponTablesEdge>;
+  /** A list of `CouponTable` objects. */
+  nodes: Array<CouponTable>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `CouponTable` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `CouponTable` edge in the connection. */
+export type CouponTablesEdge = {
+  __typename?: 'CouponTablesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `CouponTable` at the end of the edge. */
+  node: CouponTable;
+};
+
+/** Methods to use when ordering `CouponTable`. */
+export enum CouponTablesOrderBy {
+  CodeAsc = 'CODE_ASC',
+  CodeDesc = 'CODE_DESC',
+  CreatedByAsc = 'CREATED_BY_ASC',
+  CreatedByDesc = 'CREATED_BY_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  IsActiveAsc = 'IS_ACTIVE_ASC',
+  IsActiveDesc = 'IS_ACTIVE_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** The `couponUsageTable` to be created by this mutation. */
+export type CouponUsageCouponIdFkeyCouponUsageCreateInput = {
+  couponTableToCouponId?: InputMaybe<CouponUsageCouponIdFkeyInput>;
+  /** Amount user saved in paise (e.g., 50000 for ₹500 discount) */
+  discountAmount: Scalars['Int']['input'];
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  paymentId?: InputMaybe<Scalars['UUID']['input']>;
+  paymentToPaymentId?: InputMaybe<CouponUsagePaymentIdFkeyInput>;
+  usedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  userId?: InputMaybe<Scalars['UUID']['input']>;
+  userToUserId?: InputMaybe<CouponUsageUserIdFkeyInput>;
+};
+
+/** The `couponTable` to be created by this mutation. */
+export type CouponUsageCouponIdFkeyCouponsCreateInput = {
+  /** Unique coupon code (e.g., "LAUNCH50"). Case-insensitive. */
+  code: Scalars['String']['input'];
+  couponUsageTablesUsingId?: InputMaybe<CouponUsageCouponIdFkeyInverseInput>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  createdBy?: InputMaybe<Scalars['UUID']['input']>;
+  /** Running count of how many times this coupon has been used. */
+  currentUses?: InputMaybe<Scalars['Int']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** Type of discount: "percentage" (e.g., 20% off) or "flat" (e.g., ₹500 off) */
+  discountType: Scalars['String']['input'];
+  /** Discount amount: percentage value (20 for 20%) or paise (50000 for ₹500) */
+  discountValue: Scalars['Int']['input'];
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  /** For percentage discounts only: maximum discount cap in paise (e.g., 100000 for max ₹1000 off) */
+  maxDiscountAmount?: InputMaybe<Scalars['Int']['input']>;
+  /** Total times this coupon can be used across all users. NULL = unlimited. */
+  maxTotalUses?: InputMaybe<Scalars['Int']['input']>;
+  paymentsUsingId?: InputMaybe<PaymentsCouponIdFkeyInverseInput>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  userToCreatedBy?: InputMaybe<CouponsCreatedByFkeyInput>;
+  validFrom?: InputMaybe<Scalars['Datetime']['input']>;
+  validUntil?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** Input for the nested mutation of `couponTable` in the `CouponUsageTableInput` mutation. */
+export type CouponUsageCouponIdFkeyInput = {
+  /** The primary key(s) for `couponTable` for the far side of the relationship. */
+  connectByCode?: InputMaybe<CouponTableCouponsCodeKeyConnect>;
+  /** The primary key(s) for `couponTable` for the far side of the relationship. */
+  connectById?: InputMaybe<CouponTableCouponsPkeyConnect>;
+  /** A `CouponTableInput` object that will be created and connected to this object. */
+  create?: InputMaybe<CouponUsageCouponIdFkeyCouponsCreateInput>;
+  /** The primary key(s) for `couponTable` for the far side of the relationship. */
+  deleteByCode?: InputMaybe<CouponTableCouponsCodeKeyDelete>;
+  /** The primary key(s) for `couponTable` for the far side of the relationship. */
+  deleteById?: InputMaybe<CouponTableCouponsPkeyDelete>;
+  /** The primary key(s) and patch data for `couponTable` for the far side of the relationship. */
+  updateByCode?: InputMaybe<CouponTableOnCouponUsageTableForCouponUsageCouponIdFkeyUsingCouponsCodeKeyUpdate>;
+  /** The primary key(s) and patch data for `couponTable` for the far side of the relationship. */
+  updateById?: InputMaybe<CouponTableOnCouponUsageTableForCouponUsageCouponIdFkeyUsingCouponsPkeyUpdate>;
+};
+
+/** Input for the nested mutation of `couponUsageTable` in the `CouponTableInput` mutation. */
+export type CouponUsageCouponIdFkeyInverseInput = {
+  /** The primary key(s) for `couponUsageTable` for the far side of the relationship. */
+  connectById?: InputMaybe<Array<CouponUsageTableCouponUsagePkeyConnect>>;
+  /** The primary key(s) for `couponUsageTable` for the far side of the relationship. */
+  connectByPaymentId?: InputMaybe<Array<CouponUsageTableUniqueCouponPerPaymentConnect>>;
+  /** A `CouponUsageTableInput` object that will be created and connected to this object. */
+  create?: InputMaybe<Array<CouponUsageCouponIdFkeyCouponUsageCreateInput>>;
+  /** The primary key(s) for `couponUsageTable` for the far side of the relationship. */
+  deleteById?: InputMaybe<Array<CouponUsageTableCouponUsagePkeyDelete>>;
+  /** The primary key(s) for `couponUsageTable` for the far side of the relationship. */
+  deleteByPaymentId?: InputMaybe<Array<CouponUsageTableUniqueCouponPerPaymentDelete>>;
+  /** Flag indicating whether all other `couponUsageTable` records that match this relationship should be removed. */
+  deleteOthers?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The primary key(s) and patch data for `couponUsageTable` for the far side of the relationship. */
+  updateById?: InputMaybe<Array<CouponUsageTableOnCouponUsageTableForCouponUsageCouponIdFkeyUsingCouponUsagePkeyUpdate>>;
+  /** The primary key(s) and patch data for `couponUsageTable` for the far side of the relationship. */
+  updateByPaymentId?: InputMaybe<Array<CouponUsageTableOnCouponUsageTableForCouponUsageCouponIdFkeyUsingUniqueCouponPerPaymentUpdate>>;
+};
+
+export type CouponUsageListPayload = {
+  __typename?: 'CouponUsageListPayload';
+  totalCount: Scalars['Int']['output'];
+  usageRecords: Array<CouponUsageRecord>;
+};
+
+/** The `couponUsageTable` to be created by this mutation. */
+export type CouponUsagePaymentIdFkeyCouponUsageCreateInput = {
+  couponId?: InputMaybe<Scalars['UUID']['input']>;
+  couponTableToCouponId?: InputMaybe<CouponUsageCouponIdFkeyInput>;
+  /** Amount user saved in paise (e.g., 50000 for ₹500 discount) */
+  discountAmount: Scalars['Int']['input'];
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  paymentToPaymentId?: InputMaybe<CouponUsagePaymentIdFkeyInput>;
+  usedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  userId?: InputMaybe<Scalars['UUID']['input']>;
+  userToUserId?: InputMaybe<CouponUsageUserIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `payment` in the `CouponUsageTableInput` mutation. */
+export type CouponUsagePaymentIdFkeyInput = {
+  /** The primary key(s) for `payment` for the far side of the relationship. */
+  connectById?: InputMaybe<PaymentPaymentsPkeyConnect>;
+  /** The primary key(s) for `payment` for the far side of the relationship. */
+  connectByRazorpayOrderId?: InputMaybe<PaymentPaymentsRazorpayOrderIdKeyConnect>;
+  /** The primary key(s) for `payment` for the far side of the relationship. */
+  connectByRazorpayPaymentId?: InputMaybe<PaymentPaymentsRazorpayPaymentIdKeyConnect>;
+  /** The primary key(s) and patch data for `payment` for the far side of the relationship. */
+  updateById?: InputMaybe<PaymentOnCouponUsageTableForCouponUsagePaymentIdFkeyUsingPaymentsPkeyUpdate>;
+  /** The primary key(s) and patch data for `payment` for the far side of the relationship. */
+  updateByRazorpayOrderId?: InputMaybe<PaymentOnCouponUsageTableForCouponUsagePaymentIdFkeyUsingPaymentsRazorpayOrderIdKeyUpdate>;
+  /** The primary key(s) and patch data for `payment` for the far side of the relationship. */
+  updateByRazorpayPaymentId?: InputMaybe<PaymentOnCouponUsageTableForCouponUsagePaymentIdFkeyUsingPaymentsRazorpayPaymentIdKeyUpdate>;
+};
+
+/** Input for the nested mutation of `couponUsageTable` in the `PaymentInput` mutation. */
+export type CouponUsagePaymentIdFkeyInverseInput = {
+  /** The primary key(s) for `couponUsageTable` for the far side of the relationship. */
+  connectById?: InputMaybe<CouponUsageTableCouponUsagePkeyConnect>;
+  /** The primary key(s) for `couponUsageTable` for the far side of the relationship. */
+  connectByPaymentId?: InputMaybe<CouponUsageTableUniqueCouponPerPaymentConnect>;
+  /** A `CouponUsageTableInput` object that will be created and connected to this object. */
+  create?: InputMaybe<Array<CouponUsagePaymentIdFkeyCouponUsageCreateInput>>;
+  /** The primary key(s) for `couponUsageTable` for the far side of the relationship. */
+  deleteById?: InputMaybe<CouponUsageTableCouponUsagePkeyDelete>;
+  /** The primary key(s) for `couponUsageTable` for the far side of the relationship. */
+  deleteByPaymentId?: InputMaybe<CouponUsageTableUniqueCouponPerPaymentDelete>;
+  /** Flag indicating whether all other `couponUsageTable` records that match this relationship should be removed. */
+  deleteOthers?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The primary key(s) and patch data for `couponUsageTable` for the far side of the relationship. */
+  updateById?: InputMaybe<CouponUsageTableOnCouponUsageTableForCouponUsagePaymentIdFkeyUsingCouponUsagePkeyUpdate>;
+  /** The primary key(s) and patch data for `couponUsageTable` for the far side of the relationship. */
+  updateByPaymentId?: InputMaybe<CouponUsageTableOnCouponUsageTableForCouponUsagePaymentIdFkeyUsingUniqueCouponPerPaymentUpdate>;
+};
+
+export type CouponUsageRecord = {
+  __typename?: 'CouponUsageRecord';
+  couponId: Scalars['UUID']['output'];
+  discountAmount: Scalars['Int']['output'];
+  id: Scalars['UUID']['output'];
+  paymentId: Scalars['UUID']['output'];
+  usedAt: Scalars['Datetime']['output'];
+  userEmail?: Maybe<Scalars['String']['output']>;
+  userId: Scalars['UUID']['output'];
+  userName?: Maybe<Scalars['String']['output']>;
+};
+
+/** Tracks coupon redemptions for analytics. One-to-one with payments since users pay only once. */
+export type CouponUsageTable = {
+  __typename?: 'CouponUsageTable';
+  /** Reads a single `CouponTable` that is related to this `CouponUsageTable`. */
+  coupon?: Maybe<CouponTable>;
+  couponId: Scalars['UUID']['output'];
+  /** Amount user saved in paise (e.g., 50000 for ₹500 discount) */
+  discountAmount: Scalars['Int']['output'];
+  id: Scalars['UUID']['output'];
+  /** Reads a single `Payment` that is related to this `CouponUsageTable`. */
+  payment?: Maybe<Payment>;
+  paymentId: Scalars['UUID']['output'];
+  usedAt: Scalars['Datetime']['output'];
+  /** Reads a single `User` that is related to this `CouponUsageTable`. */
+  user?: Maybe<User>;
+  userId: Scalars['UUID']['output'];
+};
+
+/**
+ * A condition to be used against `CouponUsageTable` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type CouponUsageTableCondition = {
+  /** Checks for equality with the object’s `couponId` field. */
+  couponId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `paymentId` field. */
+  paymentId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `usedAt` field. */
+  usedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** The fields on `couponUsageTable` to look up the row to connect. */
+export type CouponUsageTableCouponUsagePkeyConnect = {
+  id: Scalars['UUID']['input'];
+};
+
+/** The fields on `couponUsageTable` to look up the row to delete. */
+export type CouponUsageTableCouponUsagePkeyDelete = {
+  id: Scalars['UUID']['input'];
+};
+
+/** An input for mutations affecting `CouponUsageTable` */
+export type CouponUsageTableInput = {
+  couponId?: InputMaybe<Scalars['UUID']['input']>;
+  couponTableToCouponId?: InputMaybe<CouponUsageCouponIdFkeyInput>;
+  /** Amount user saved in paise (e.g., 50000 for ₹500 discount) */
+  discountAmount: Scalars['Int']['input'];
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  paymentId?: InputMaybe<Scalars['UUID']['input']>;
+  paymentToPaymentId?: InputMaybe<CouponUsagePaymentIdFkeyInput>;
+  usedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  userId?: InputMaybe<Scalars['UUID']['input']>;
+  userToUserId?: InputMaybe<CouponUsageUserIdFkeyInput>;
+};
+
+/** The fields on `couponUsageTable` to look up the row to update. */
+export type CouponUsageTableOnCouponUsageTableForCouponUsageCouponIdFkeyUsingCouponUsagePkeyUpdate = {
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `couponUsageTable` being updated. */
+  patch: UpdateCouponUsageTableOnCouponUsageTableForCouponUsageCouponIdFkeyPatch;
+};
+
+/** The fields on `couponUsageTable` to look up the row to update. */
+export type CouponUsageTableOnCouponUsageTableForCouponUsageCouponIdFkeyUsingUniqueCouponPerPaymentUpdate = {
+  /** An object where the defined keys will be set on the `couponUsageTable` being updated. */
+  patch: UpdateCouponUsageTableOnCouponUsageTableForCouponUsageCouponIdFkeyPatch;
+  paymentId: Scalars['UUID']['input'];
+};
+
+/** The fields on `couponUsageTable` to look up the row to update. */
+export type CouponUsageTableOnCouponUsageTableForCouponUsagePaymentIdFkeyUsingCouponUsagePkeyUpdate = {
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `couponUsageTable` being updated. */
+  patch: UpdateCouponUsageTableOnCouponUsageTableForCouponUsagePaymentIdFkeyPatch;
+};
+
+/** The fields on `couponUsageTable` to look up the row to update. */
+export type CouponUsageTableOnCouponUsageTableForCouponUsagePaymentIdFkeyUsingUniqueCouponPerPaymentUpdate = {
+  /** An object where the defined keys will be set on the `couponUsageTable` being updated. */
+  patch: UpdateCouponUsageTableOnCouponUsageTableForCouponUsagePaymentIdFkeyPatch;
+  paymentId: Scalars['UUID']['input'];
+};
+
+/** The fields on `couponUsageTable` to look up the row to update. */
+export type CouponUsageTableOnCouponUsageTableForCouponUsageUserIdFkeyUsingCouponUsagePkeyUpdate = {
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `couponUsageTable` being updated. */
+  patch: UpdateCouponUsageTableOnCouponUsageTableForCouponUsageUserIdFkeyPatch;
+};
+
+/** The fields on `couponUsageTable` to look up the row to update. */
+export type CouponUsageTableOnCouponUsageTableForCouponUsageUserIdFkeyUsingUniqueCouponPerPaymentUpdate = {
+  /** An object where the defined keys will be set on the `couponUsageTable` being updated. */
+  patch: UpdateCouponUsageTableOnCouponUsageTableForCouponUsageUserIdFkeyPatch;
+  paymentId: Scalars['UUID']['input'];
+};
+
+/** Represents an update to a `CouponUsageTable`. Fields that are set will be updated. */
+export type CouponUsageTablePatch = {
+  couponId?: InputMaybe<Scalars['UUID']['input']>;
+  couponTableToCouponId?: InputMaybe<CouponUsageCouponIdFkeyInput>;
+  /** Amount user saved in paise (e.g., 50000 for ₹500 discount) */
+  discountAmount?: InputMaybe<Scalars['Int']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  paymentId?: InputMaybe<Scalars['UUID']['input']>;
+  paymentToPaymentId?: InputMaybe<CouponUsagePaymentIdFkeyInput>;
+  usedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  userId?: InputMaybe<Scalars['UUID']['input']>;
+  userToUserId?: InputMaybe<CouponUsageUserIdFkeyInput>;
+};
+
+/** The fields on `couponUsageTable` to look up the row to connect. */
+export type CouponUsageTableUniqueCouponPerPaymentConnect = {
+  paymentId: Scalars['UUID']['input'];
+};
+
+/** The fields on `couponUsageTable` to look up the row to delete. */
+export type CouponUsageTableUniqueCouponPerPaymentDelete = {
+  paymentId: Scalars['UUID']['input'];
+};
+
+/** A connection to a list of `CouponUsageTable` values. */
+export type CouponUsageTablesConnection = {
+  __typename?: 'CouponUsageTablesConnection';
+  /** A list of edges which contains the `CouponUsageTable` and cursor to aid in pagination. */
+  edges: Array<CouponUsageTablesEdge>;
+  /** A list of `CouponUsageTable` objects. */
+  nodes: Array<CouponUsageTable>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `CouponUsageTable` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `CouponUsageTable` edge in the connection. */
+export type CouponUsageTablesEdge = {
+  __typename?: 'CouponUsageTablesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `CouponUsageTable` at the end of the edge. */
+  node: CouponUsageTable;
+};
+
+/** Methods to use when ordering `CouponUsageTable`. */
+export enum CouponUsageTablesOrderBy {
+  CouponIdAsc = 'COUPON_ID_ASC',
+  CouponIdDesc = 'COUPON_ID_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PaymentIdAsc = 'PAYMENT_ID_ASC',
+  PaymentIdDesc = 'PAYMENT_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  UsedAtAsc = 'USED_AT_ASC',
+  UsedAtDesc = 'USED_AT_DESC',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC'
+}
+
+/** The `couponUsageTable` to be created by this mutation. */
+export type CouponUsageUserIdFkeyCouponUsageCreateInput = {
+  couponId?: InputMaybe<Scalars['UUID']['input']>;
+  couponTableToCouponId?: InputMaybe<CouponUsageCouponIdFkeyInput>;
+  /** Amount user saved in paise (e.g., 50000 for ₹500 discount) */
+  discountAmount: Scalars['Int']['input'];
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  paymentId?: InputMaybe<Scalars['UUID']['input']>;
+  paymentToPaymentId?: InputMaybe<CouponUsagePaymentIdFkeyInput>;
+  usedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  userToUserId?: InputMaybe<CouponUsageUserIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `user` in the `CouponUsageTableInput` mutation. */
+export type CouponUsageUserIdFkeyInput = {
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  connectById?: InputMaybe<UserUsersPkeyConnect>;
+  /** A `UserInput` object that will be created and connected to this object. */
+  create?: InputMaybe<CouponUsageUserIdFkeyUsersCreateInput>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteById?: InputMaybe<UserUsersPkeyDelete>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateById?: InputMaybe<UserOnCouponUsageTableForCouponUsageUserIdFkeyUsingUsersPkeyUpdate>;
+};
+
+/** Input for the nested mutation of `couponUsageTable` in the `UserInput` mutation. */
+export type CouponUsageUserIdFkeyInverseInput = {
+  /** The primary key(s) for `couponUsageTable` for the far side of the relationship. */
+  connectById?: InputMaybe<Array<CouponUsageTableCouponUsagePkeyConnect>>;
+  /** The primary key(s) for `couponUsageTable` for the far side of the relationship. */
+  connectByPaymentId?: InputMaybe<Array<CouponUsageTableUniqueCouponPerPaymentConnect>>;
+  /** A `CouponUsageTableInput` object that will be created and connected to this object. */
+  create?: InputMaybe<Array<CouponUsageUserIdFkeyCouponUsageCreateInput>>;
+  /** The primary key(s) for `couponUsageTable` for the far side of the relationship. */
+  deleteById?: InputMaybe<Array<CouponUsageTableCouponUsagePkeyDelete>>;
+  /** The primary key(s) for `couponUsageTable` for the far side of the relationship. */
+  deleteByPaymentId?: InputMaybe<Array<CouponUsageTableUniqueCouponPerPaymentDelete>>;
+  /** Flag indicating whether all other `couponUsageTable` records that match this relationship should be removed. */
+  deleteOthers?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The primary key(s) and patch data for `couponUsageTable` for the far side of the relationship. */
+  updateById?: InputMaybe<Array<CouponUsageTableOnCouponUsageTableForCouponUsageUserIdFkeyUsingCouponUsagePkeyUpdate>>;
+  /** The primary key(s) and patch data for `couponUsageTable` for the far side of the relationship. */
+  updateByPaymentId?: InputMaybe<Array<CouponUsageTableOnCouponUsageTableForCouponUsageUserIdFkeyUsingUniqueCouponPerPaymentUpdate>>;
+};
+
+/** The `user` to be created by this mutation. */
+export type CouponUsageUserIdFkeyUsersCreateInput = {
+  age: Scalars['Int']['input'];
+  assessmentResultsUsingId?: InputMaybe<AssessmentResultsUserIdFkeyInverseInput>;
+  assessmentSessionsUsingId?: InputMaybe<AssessmentSessionsUserIdFkeyInverseInput>;
+  couponTablesUsingId?: InputMaybe<CouponsCreatedByFkeyInverseInput>;
+  couponUsageTablesUsingId?: InputMaybe<CouponUsageUserIdFkeyInverseInput>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  email: Scalars['String']['input'];
+  gender: Scalars['String']['input'];
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  isAdmin?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Indicates if user is internal (can test without payment and delete assessments). Admins are always internal. */
+  isInternal?: InputMaybe<Scalars['Boolean']['input']>;
+  /** User email verification status. Defaults to true until email verification is implemented. Set to false when two-factor authentication or email verification is added. */
+  isVerified?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  password?: InputMaybe<Scalars['String']['input']>;
+  paymentsUsingId?: InputMaybe<PaymentsUserIdFkeyInverseInput>;
+  /** User phone number. Optional field that can be added by user after registration. */
+  phoneNumber?: InputMaybe<Scalars['String']['input']>;
+  reminderEmailsUsingId?: InputMaybe<ReminderEmailsUserIdFkeyInverseInput>;
+  type?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** The `couponTable` to be created by this mutation. */
+export type CouponsCreatedByFkeyCouponsCreateInput = {
+  /** Unique coupon code (e.g., "LAUNCH50"). Case-insensitive. */
+  code: Scalars['String']['input'];
+  couponUsageTablesUsingId?: InputMaybe<CouponUsageCouponIdFkeyInverseInput>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Running count of how many times this coupon has been used. */
+  currentUses?: InputMaybe<Scalars['Int']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** Type of discount: "percentage" (e.g., 20% off) or "flat" (e.g., ₹500 off) */
+  discountType: Scalars['String']['input'];
+  /** Discount amount: percentage value (20 for 20%) or paise (50000 for ₹500) */
+  discountValue: Scalars['Int']['input'];
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  /** For percentage discounts only: maximum discount cap in paise (e.g., 100000 for max ₹1000 off) */
+  maxDiscountAmount?: InputMaybe<Scalars['Int']['input']>;
+  /** Total times this coupon can be used across all users. NULL = unlimited. */
+  maxTotalUses?: InputMaybe<Scalars['Int']['input']>;
+  paymentsUsingId?: InputMaybe<PaymentsCouponIdFkeyInverseInput>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  userToCreatedBy?: InputMaybe<CouponsCreatedByFkeyInput>;
+  validFrom?: InputMaybe<Scalars['Datetime']['input']>;
+  validUntil?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** Input for the nested mutation of `user` in the `CouponTableInput` mutation. */
+export type CouponsCreatedByFkeyInput = {
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  connectById?: InputMaybe<UserUsersPkeyConnect>;
+  /** A `UserInput` object that will be created and connected to this object. */
+  create?: InputMaybe<CouponsCreatedByFkeyUsersCreateInput>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteById?: InputMaybe<UserUsersPkeyDelete>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateById?: InputMaybe<UserOnCouponTableForCouponsCreatedByFkeyUsingUsersPkeyUpdate>;
+};
+
+/** Input for the nested mutation of `couponTable` in the `UserInput` mutation. */
+export type CouponsCreatedByFkeyInverseInput = {
+  /** The primary key(s) for `couponTable` for the far side of the relationship. */
+  connectByCode?: InputMaybe<Array<CouponTableCouponsCodeKeyConnect>>;
+  /** The primary key(s) for `couponTable` for the far side of the relationship. */
+  connectById?: InputMaybe<Array<CouponTableCouponsPkeyConnect>>;
+  /** A `CouponTableInput` object that will be created and connected to this object. */
+  create?: InputMaybe<Array<CouponsCreatedByFkeyCouponsCreateInput>>;
+  /** The primary key(s) for `couponTable` for the far side of the relationship. */
+  deleteByCode?: InputMaybe<Array<CouponTableCouponsCodeKeyDelete>>;
+  /** The primary key(s) for `couponTable` for the far side of the relationship. */
+  deleteById?: InputMaybe<Array<CouponTableCouponsPkeyDelete>>;
+  /** Flag indicating whether all other `couponTable` records that match this relationship should be removed. */
+  deleteOthers?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The primary key(s) and patch data for `couponTable` for the far side of the relationship. */
+  updateByCode?: InputMaybe<Array<CouponTableOnCouponTableForCouponsCreatedByFkeyUsingCouponsCodeKeyUpdate>>;
+  /** The primary key(s) and patch data for `couponTable` for the far side of the relationship. */
+  updateById?: InputMaybe<Array<CouponTableOnCouponTableForCouponsCreatedByFkeyUsingCouponsPkeyUpdate>>;
+};
+
+/** The `user` to be created by this mutation. */
+export type CouponsCreatedByFkeyUsersCreateInput = {
+  age: Scalars['Int']['input'];
+  assessmentResultsUsingId?: InputMaybe<AssessmentResultsUserIdFkeyInverseInput>;
+  assessmentSessionsUsingId?: InputMaybe<AssessmentSessionsUserIdFkeyInverseInput>;
+  couponTablesUsingId?: InputMaybe<CouponsCreatedByFkeyInverseInput>;
+  couponUsageTablesUsingId?: InputMaybe<CouponUsageUserIdFkeyInverseInput>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  email: Scalars['String']['input'];
+  gender: Scalars['String']['input'];
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  isAdmin?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Indicates if user is internal (can test without payment and delete assessments). Admins are always internal. */
+  isInternal?: InputMaybe<Scalars['Boolean']['input']>;
+  /** User email verification status. Defaults to true until email verification is implemented. Set to false when two-factor authentication or email verification is added. */
+  isVerified?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  password?: InputMaybe<Scalars['String']['input']>;
+  paymentsUsingId?: InputMaybe<PaymentsUserIdFkeyInverseInput>;
+  /** User phone number. Optional field that can be added by user after registration. */
+  phoneNumber?: InputMaybe<Scalars['String']['input']>;
+  reminderEmailsUsingId?: InputMaybe<ReminderEmailsUserIdFkeyInverseInput>;
+  type?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+export type CouponsListPayload = {
+  __typename?: 'CouponsListPayload';
+  coupons: Array<Coupon>;
+  totalCount: Scalars['Int']['output'];
+};
+
 /** All input for the create `AssessmentResponse` mutation. */
 export type CreateAssessmentResponseInput = {
   /** The `AssessmentResponse` to be created by this mutation. */
@@ -2605,6 +3447,98 @@ export type CreateAssessmentSessionQuestionPayloadAssessmentSessionQuestionEdgeA
   orderBy?: InputMaybe<Array<AssessmentSessionQuestionsOrderBy>>;
 };
 
+export type CreateCouponInput = {
+  code: Scalars['String']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  discountType: DiscountType;
+  discountValue: Scalars['Int']['input'];
+  maxDiscountAmount?: InputMaybe<Scalars['Int']['input']>;
+  maxTotalUses?: InputMaybe<Scalars['Int']['input']>;
+  validFrom?: InputMaybe<Scalars['Datetime']['input']>;
+  validUntil?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+export type CreateCouponPayload = {
+  __typename?: 'CreateCouponPayload';
+  coupon?: Maybe<Coupon>;
+  message?: Maybe<Scalars['String']['output']>;
+  success: Scalars['Boolean']['output'];
+};
+
+/** All input for the create `CouponTable` mutation. */
+export type CreateCouponTableInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `CouponTable` to be created by this mutation. */
+  couponTable: CouponTableInput;
+};
+
+/** The output of our create `CouponTable` mutation. */
+export type CreateCouponTablePayload = {
+  __typename?: 'CreateCouponTablePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `CouponTable` that was created by this mutation. */
+  couponTable?: Maybe<CouponTable>;
+  /** An edge for our `CouponTable`. May be used by Relay 1. */
+  couponTableEdge?: Maybe<CouponTablesEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `CouponTable`. */
+  userByCreatedBy?: Maybe<User>;
+};
+
+
+/** The output of our create `CouponTable` mutation. */
+export type CreateCouponTablePayloadCouponTableEdgeArgs = {
+  orderBy?: InputMaybe<Array<CouponTablesOrderBy>>;
+};
+
+/** All input for the create `CouponUsageTable` mutation. */
+export type CreateCouponUsageTableInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `CouponUsageTable` to be created by this mutation. */
+  couponUsageTable: CouponUsageTableInput;
+};
+
+/** The output of our create `CouponUsageTable` mutation. */
+export type CreateCouponUsageTablePayload = {
+  __typename?: 'CreateCouponUsageTablePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `CouponTable` that is related to this `CouponUsageTable`. */
+  coupon?: Maybe<CouponTable>;
+  /** The `CouponUsageTable` that was created by this mutation. */
+  couponUsageTable?: Maybe<CouponUsageTable>;
+  /** An edge for our `CouponUsageTable`. May be used by Relay 1. */
+  couponUsageTableEdge?: Maybe<CouponUsageTablesEdge>;
+  /** Reads a single `Payment` that is related to this `CouponUsageTable`. */
+  payment?: Maybe<Payment>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `CouponUsageTable`. */
+  user?: Maybe<User>;
+};
+
+
+/** The output of our create `CouponUsageTable` mutation. */
+export type CreateCouponUsageTablePayloadCouponUsageTableEdgeArgs = {
+  orderBy?: InputMaybe<Array<CouponUsageTablesOrderBy>>;
+};
+
 export type CreateInterpretationBandInput = {
   label: Scalars['String']['input'];
   narrative: Scalars['String']['input'];
@@ -2622,14 +3556,20 @@ export type CreateInterpretationBandPayload = {
 
 export type CreatePaymentOrderInput = {
   clientInfo?: InputMaybe<Scalars['String']['input']>;
+  couponCode?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type CreatePaymentOrderPayload = {
   __typename?: 'CreatePaymentOrderPayload';
   amount: Scalars['Int']['output'];
+  couponApplied: Scalars['Boolean']['output'];
+  couponMessage?: Maybe<Scalars['String']['output']>;
   currency: Scalars['String']['output'];
-  orderId: Scalars['String']['output'];
-  razorpayKeyId: Scalars['String']['output'];
+  discountAmount?: Maybe<Scalars['Int']['output']>;
+  isFree: Scalars['Boolean']['output'];
+  orderId?: Maybe<Scalars['String']['output']>;
+  originalAmount?: Maybe<Scalars['Int']['output']>;
+  razorpayKeyId?: Maybe<Scalars['String']['output']>;
 };
 
 export type CreateQuestionInput = {
@@ -2697,6 +3637,122 @@ export type CurrentResponseDetail = {
   responseValue: Scalars['Int']['output'];
   timeTakenSeconds?: Maybe<Scalars['Int']['output']>;
   updatedAt: Scalars['Datetime']['output'];
+};
+
+export type DeactivateCouponInput = {
+  id: Scalars['UUID']['input'];
+};
+
+export type DeactivateCouponPayload = {
+  __typename?: 'DeactivateCouponPayload';
+  message?: Maybe<Scalars['String']['output']>;
+  success: Scalars['Boolean']['output'];
+};
+
+export type DeleteCouponInput = {
+  id: Scalars['UUID']['input'];
+};
+
+export type DeleteCouponPayload = {
+  __typename?: 'DeleteCouponPayload';
+  deletedId?: Maybe<Scalars['UUID']['output']>;
+  message?: Maybe<Scalars['String']['output']>;
+  success: Scalars['Boolean']['output'];
+};
+
+/** All input for the `deleteCouponTableByCode` mutation. */
+export type DeleteCouponTableByCodeInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** Unique coupon code (e.g., "LAUNCH50"). Case-insensitive. */
+  code: Scalars['String']['input'];
+};
+
+/** All input for the `deleteCouponTable` mutation. */
+export type DeleteCouponTableInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['UUID']['input'];
+};
+
+/** The output of our delete `CouponTable` mutation. */
+export type DeleteCouponTablePayload = {
+  __typename?: 'DeleteCouponTablePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `CouponTable` that was deleted by this mutation. */
+  couponTable?: Maybe<CouponTable>;
+  /** An edge for our `CouponTable`. May be used by Relay 1. */
+  couponTableEdge?: Maybe<CouponTablesEdge>;
+  deletedCouponNodeId?: Maybe<Scalars['ID']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `CouponTable`. */
+  userByCreatedBy?: Maybe<User>;
+};
+
+
+/** The output of our delete `CouponTable` mutation. */
+export type DeleteCouponTablePayloadCouponTableEdgeArgs = {
+  orderBy?: InputMaybe<Array<CouponTablesOrderBy>>;
+};
+
+/** All input for the `deleteCouponUsageTableByPaymentId` mutation. */
+export type DeleteCouponUsageTableByPaymentIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  paymentId: Scalars['UUID']['input'];
+};
+
+/** All input for the `deleteCouponUsageTable` mutation. */
+export type DeleteCouponUsageTableInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['UUID']['input'];
+};
+
+/** The output of our delete `CouponUsageTable` mutation. */
+export type DeleteCouponUsageTablePayload = {
+  __typename?: 'DeleteCouponUsageTablePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `CouponTable` that is related to this `CouponUsageTable`. */
+  coupon?: Maybe<CouponTable>;
+  /** The `CouponUsageTable` that was deleted by this mutation. */
+  couponUsageTable?: Maybe<CouponUsageTable>;
+  /** An edge for our `CouponUsageTable`. May be used by Relay 1. */
+  couponUsageTableEdge?: Maybe<CouponUsageTablesEdge>;
+  deletedCouponUsageNodeId?: Maybe<Scalars['ID']['output']>;
+  /** Reads a single `Payment` that is related to this `CouponUsageTable`. */
+  payment?: Maybe<Payment>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `CouponUsageTable`. */
+  user?: Maybe<User>;
+};
+
+
+/** The output of our delete `CouponUsageTable` mutation. */
+export type DeleteCouponUsageTablePayloadCouponUsageTableEdgeArgs = {
+  orderBy?: InputMaybe<Array<CouponUsageTablesOrderBy>>;
 };
 
 export type DeleteInterpretationBandInput = {
@@ -2772,6 +3828,11 @@ export type DeleteUserPayload = {
 export type DeleteUserPayloadUserEdgeArgs = {
   orderBy?: InputMaybe<Array<UsersOrderBy>>;
 };
+
+export enum DiscountType {
+  Flat = 'FLAT',
+  Percentage = 'PERCENTAGE'
+}
 
 export type EnhancedResponseDetail = {
   __typename?: 'EnhancedResponseDetail';
@@ -2876,6 +3937,31 @@ export type GrantInternalAccessPayload = {
   user?: Maybe<User>;
 };
 
+/** All input for the `incrementCouponUsage` mutation. */
+export type IncrementCouponUsageInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  pCouponId: Scalars['UUID']['input'];
+  pDiscountAmount: Scalars['Int']['input'];
+  pPaymentId: Scalars['UUID']['input'];
+  pUserId: Scalars['UUID']['input'];
+};
+
+/** The output of our `incrementCouponUsage` mutation. */
+export type IncrementCouponUsagePayload = {
+  __typename?: 'IncrementCouponUsagePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
 export type LoginInput = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -2895,12 +3981,17 @@ export type LogoutPayload = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type Mutation = {
   __typename?: 'Mutation';
+  adminActivateCoupon?: Maybe<ActivateCouponPayload>;
+  adminCreateCoupon?: Maybe<CreateCouponPayload>;
+  adminDeactivateCoupon?: Maybe<DeactivateCouponPayload>;
+  adminDeleteCoupon?: Maybe<DeleteCouponPayload>;
   /**
    * Delete a user from the system (admin only)
    * Permanently removes a user and all associated data including sessions, responses, and results.
    * This action cannot be undone. Only administrators can delete users.
    */
   adminDeleteUser?: Maybe<AdminDeleteUserPayload>;
+  adminUpdateCoupon?: Maybe<UpdateCouponPayload>;
   /**
    * Bulk create multiple questions for a section (admin only)
    * Useful for importing questions from CSV/JSON
@@ -2920,6 +4011,10 @@ export type Mutation = {
   createAssessmentResponse?: Maybe<CreateAssessmentResponsePayload>;
   /** Creates a single `AssessmentSessionQuestion`. */
   createAssessmentSessionQuestion?: Maybe<CreateAssessmentSessionQuestionPayload>;
+  /** Creates a single `CouponTable`. */
+  createCouponTable?: Maybe<CreateCouponTablePayload>;
+  /** Creates a single `CouponUsageTable`. */
+  createCouponUsageTable?: Maybe<CreateCouponUsageTablePayload>;
   /** Create a new interpretation band (admin only) */
   createInterpretationBand?: Maybe<CreateInterpretationBandPayload>;
   createPaymentOrder?: Maybe<CreatePaymentOrderPayload>;
@@ -2929,6 +4024,14 @@ export type Mutation = {
   createUser?: Maybe<CreateUserPayload>;
   /** Delete an assessment question (admin only) */
   deleteAssessmentQuestion?: Maybe<DeleteQuestionPayload>;
+  /** Deletes a single `CouponTable` using a unique key. */
+  deleteCouponTable?: Maybe<DeleteCouponTablePayload>;
+  /** Deletes a single `CouponTable` using a unique key. */
+  deleteCouponTableByCode?: Maybe<DeleteCouponTablePayload>;
+  /** Deletes a single `CouponUsageTable` using a unique key. */
+  deleteCouponUsageTable?: Maybe<DeleteCouponUsageTablePayload>;
+  /** Deletes a single `CouponUsageTable` using a unique key. */
+  deleteCouponUsageTableByPaymentId?: Maybe<DeleteCouponUsageTablePayload>;
   /** Delete an interpretation band (admin only) */
   deleteInterpretationBand?: Maybe<DeleteInterpretationBandPayload>;
   /**
@@ -2958,6 +4061,8 @@ export type Mutation = {
    * Note: Admins are always internal and cannot have internal access revoked.
    */
   grantInternalAccess?: Maybe<GrantInternalAccessPayload>;
+  /** Increments coupon usage counter and records the usage for analytics. Called after successful payment. */
+  incrementCouponUsage?: Maybe<IncrementCouponUsagePayload>;
   /** Use this mutation to log in to your account; this login uses sessions so you do not need to take further action. */
   login?: Maybe<LoginPayload>;
   /** Use this mutation to logout from your account. Don't forget to clear the client state! */
@@ -3013,19 +4118,58 @@ export type Mutation = {
   updateAssessmentSessionQuestionBySessionIdAndDisplayOrder?: Maybe<UpdateAssessmentSessionQuestionPayload>;
   /** Updates a single `AssessmentSessionQuestion` using a unique key and a patch. */
   updateAssessmentSessionQuestionBySessionIdAndQuestionId?: Maybe<UpdateAssessmentSessionQuestionPayload>;
+  /** Updates a single `CouponTable` using a unique key and a patch. */
+  updateCouponTable?: Maybe<UpdateCouponTablePayload>;
+  /** Updates a single `CouponTable` using a unique key and a patch. */
+  updateCouponTableByCode?: Maybe<UpdateCouponTablePayload>;
+  /** Updates a single `CouponUsageTable` using a unique key and a patch. */
+  updateCouponUsageTable?: Maybe<UpdateCouponUsageTablePayload>;
+  /** Updates a single `CouponUsageTable` using a unique key and a patch. */
+  updateCouponUsageTableByPaymentId?: Maybe<UpdateCouponUsageTablePayload>;
   /** Update an existing interpretation band (admin only) */
   updateInterpretationBand?: Maybe<UpdateInterpretationBandPayload>;
   /** Update an existing recommended action (admin only) */
   updateRecommendedAction?: Maybe<UpdateRecommendedActionPayload>;
   /** Updates a single `User` using a unique key and a patch. */
   updateUser?: Maybe<UpdateUserPayload>;
+  validateCoupon?: Maybe<ValidateCouponPayload>;
   verifyPayment?: Maybe<VerifyPaymentPayload>;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationAdminActivateCouponArgs = {
+  input: ActivateCouponInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationAdminCreateCouponArgs = {
+  input: CreateCouponInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationAdminDeactivateCouponArgs = {
+  input: DeactivateCouponInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationAdminDeleteCouponArgs = {
+  input: DeleteCouponInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationAdminDeleteUserArgs = {
   input: AdminDeleteUserInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationAdminUpdateCouponArgs = {
+  input: UpdateCouponInput;
 };
 
 
@@ -3060,6 +4204,18 @@ export type MutationCreateAssessmentSessionQuestionArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateCouponTableArgs = {
+  input: CreateCouponTableInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateCouponUsageTableArgs = {
+  input: CreateCouponUsageTableInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateInterpretationBandArgs = {
   input: CreateInterpretationBandInput;
 };
@@ -3086,6 +4242,30 @@ export type MutationCreateUserArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteAssessmentQuestionArgs = {
   input: DeleteQuestionInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteCouponTableArgs = {
+  input: DeleteCouponTableInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteCouponTableByCodeArgs = {
+  input: DeleteCouponTableByCodeInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteCouponUsageTableArgs = {
+  input: DeleteCouponUsageTableInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteCouponUsageTableByPaymentIdArgs = {
+  input: DeleteCouponUsageTableByPaymentIdInput;
 };
 
 
@@ -3128,6 +4308,12 @@ export type MutationGrantAdminAccessArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationGrantInternalAccessArgs = {
   input: GrantInternalAccessInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationIncrementCouponUsageArgs = {
+  input: IncrementCouponUsageInput;
 };
 
 
@@ -3234,6 +4420,30 @@ export type MutationUpdateAssessmentSessionQuestionBySessionIdAndQuestionIdArgs 
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateCouponTableArgs = {
+  input: UpdateCouponTableInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateCouponTableByCodeArgs = {
+  input: UpdateCouponTableByCodeInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateCouponUsageTableArgs = {
+  input: UpdateCouponUsageTableInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateCouponUsageTableByPaymentIdArgs = {
+  input: UpdateCouponUsageTableByPaymentIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateInterpretationBandArgs = {
   input: UpdateInterpretationBandInput;
 };
@@ -3248,6 +4458,12 @@ export type MutationUpdateRecommendedActionArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateUserArgs = {
   input: UpdateUserInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationValidateCouponArgs = {
+  input: ValidateCouponInput;
 };
 
 
@@ -3304,12 +4520,27 @@ export type Payment = {
    * @deprecated Please use assessmentSession instead
    */
   assessmentSessions: AssessmentSessionsConnection;
+  /** Reads a single `CouponTable` that is related to this `Payment`. */
+  coupon?: Maybe<CouponTable>;
+  /** Reference to coupon used for this payment, if any. */
+  couponId?: Maybe<Scalars['UUID']['output']>;
+  /** Reads a single `CouponUsageTable` that is related to this `Payment`. */
+  couponUsageTable?: Maybe<CouponUsageTable>;
+  /**
+   * Reads and enables pagination through a set of `CouponUsageTable`.
+   * @deprecated Please use couponUsageTable instead
+   */
+  couponUsageTables: CouponUsageTablesConnection;
   createdAt: Scalars['Datetime']['output'];
   currency: Scalars['String']['output'];
+  /** Discount amount applied in paise (e.g., 50000 for ₹500 off). Defaults to 0. */
+  discountAmountInr?: Maybe<Scalars['Int']['output']>;
   errorCode?: Maybe<Scalars['String']['output']>;
   errorDescription?: Maybe<Scalars['String']['output']>;
   id: Scalars['UUID']['output'];
   metadata?: Maybe<Scalars['JSON']['output']>;
+  /** Original assessment price before discount in paise (e.g., 99900 for ₹999). NULL if no coupon was used. */
+  originalAmountInr?: Maybe<Scalars['Int']['output']>;
   /** Payment method used (card, upi, netbanking, wallet, etc.). Populated from Razorpay on payment capture. */
   paymentMethod?: Maybe<Scalars['String']['output']>;
   razorpayOrderId?: Maybe<Scalars['String']['output']>;
@@ -3334,8 +4565,22 @@ export type PaymentAssessmentSessionsArgs = {
   orderBy?: InputMaybe<Array<AssessmentSessionsOrderBy>>;
 };
 
+
+/** Payment records for audit trail and reconciliation. Amounts are in INR paise. Used for one-time test purchases. */
+export type PaymentCouponUsageTablesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CouponUsageTableCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CouponUsageTablesOrderBy>>;
+};
+
 /** A condition to be used against `Payment` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type PaymentCondition = {
+  /** Checks for equality with the object’s `couponId` field. */
+  couponId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `razorpayOrderId` field. */
@@ -3375,6 +4620,48 @@ export type PaymentOnAssessmentSessionForAssessmentSessionsPaymentIdFkeyUsingPay
 export type PaymentOnAssessmentSessionForAssessmentSessionsPaymentIdFkeyUsingPaymentsRazorpayPaymentIdKeyUpdate = {
   /** An object where the defined keys will be set on the `payment` being updated. */
   patch: UpdatePaymentOnAssessmentSessionForAssessmentSessionsPaymentIdFkeyPatch;
+  razorpayPaymentId: Scalars['String']['input'];
+};
+
+/** The fields on `payment` to look up the row to update. */
+export type PaymentOnCouponUsageTableForCouponUsagePaymentIdFkeyUsingPaymentsPkeyUpdate = {
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `payment` being updated. */
+  patch: UpdatePaymentOnCouponUsageTableForCouponUsagePaymentIdFkeyPatch;
+};
+
+/** The fields on `payment` to look up the row to update. */
+export type PaymentOnCouponUsageTableForCouponUsagePaymentIdFkeyUsingPaymentsRazorpayOrderIdKeyUpdate = {
+  /** An object where the defined keys will be set on the `payment` being updated. */
+  patch: UpdatePaymentOnCouponUsageTableForCouponUsagePaymentIdFkeyPatch;
+  razorpayOrderId: Scalars['String']['input'];
+};
+
+/** The fields on `payment` to look up the row to update. */
+export type PaymentOnCouponUsageTableForCouponUsagePaymentIdFkeyUsingPaymentsRazorpayPaymentIdKeyUpdate = {
+  /** An object where the defined keys will be set on the `payment` being updated. */
+  patch: UpdatePaymentOnCouponUsageTableForCouponUsagePaymentIdFkeyPatch;
+  razorpayPaymentId: Scalars['String']['input'];
+};
+
+/** The fields on `payment` to look up the row to update. */
+export type PaymentOnPaymentForPaymentsCouponIdFkeyUsingPaymentsPkeyUpdate = {
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `payment` being updated. */
+  patch: UpdatePaymentOnPaymentForPaymentsCouponIdFkeyPatch;
+};
+
+/** The fields on `payment` to look up the row to update. */
+export type PaymentOnPaymentForPaymentsCouponIdFkeyUsingPaymentsRazorpayOrderIdKeyUpdate = {
+  /** An object where the defined keys will be set on the `payment` being updated. */
+  patch: UpdatePaymentOnPaymentForPaymentsCouponIdFkeyPatch;
+  razorpayOrderId: Scalars['String']['input'];
+};
+
+/** The fields on `payment` to look up the row to update. */
+export type PaymentOnPaymentForPaymentsCouponIdFkeyUsingPaymentsRazorpayPaymentIdKeyUpdate = {
+  /** An object where the defined keys will be set on the `payment` being updated. */
+  patch: UpdatePaymentOnPaymentForPaymentsCouponIdFkeyPatch;
   razorpayPaymentId: Scalars['String']['input'];
 };
 
@@ -3435,6 +4722,38 @@ export type PaymentsConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
+/** Input for the nested mutation of `couponTable` in the `PaymentInput` mutation. */
+export type PaymentsCouponIdFkeyInput = {
+  /** The primary key(s) for `couponTable` for the far side of the relationship. */
+  connectByCode?: InputMaybe<CouponTableCouponsCodeKeyConnect>;
+  /** The primary key(s) for `couponTable` for the far side of the relationship. */
+  connectById?: InputMaybe<CouponTableCouponsPkeyConnect>;
+  /** The primary key(s) for `couponTable` for the far side of the relationship. */
+  deleteByCode?: InputMaybe<CouponTableCouponsCodeKeyDelete>;
+  /** The primary key(s) for `couponTable` for the far side of the relationship. */
+  deleteById?: InputMaybe<CouponTableCouponsPkeyDelete>;
+  /** The primary key(s) and patch data for `couponTable` for the far side of the relationship. */
+  updateByCode?: InputMaybe<CouponTableOnPaymentForPaymentsCouponIdFkeyUsingCouponsCodeKeyUpdate>;
+  /** The primary key(s) and patch data for `couponTable` for the far side of the relationship. */
+  updateById?: InputMaybe<CouponTableOnPaymentForPaymentsCouponIdFkeyUsingCouponsPkeyUpdate>;
+};
+
+/** Input for the nested mutation of `payment` in the `CouponTableInput` mutation. */
+export type PaymentsCouponIdFkeyInverseInput = {
+  /** The primary key(s) for `payment` for the far side of the relationship. */
+  connectById?: InputMaybe<Array<PaymentPaymentsPkeyConnect>>;
+  /** The primary key(s) for `payment` for the far side of the relationship. */
+  connectByRazorpayOrderId?: InputMaybe<Array<PaymentPaymentsRazorpayOrderIdKeyConnect>>;
+  /** The primary key(s) for `payment` for the far side of the relationship. */
+  connectByRazorpayPaymentId?: InputMaybe<Array<PaymentPaymentsRazorpayPaymentIdKeyConnect>>;
+  /** The primary key(s) and patch data for `payment` for the far side of the relationship. */
+  updateById?: InputMaybe<Array<PaymentOnPaymentForPaymentsCouponIdFkeyUsingPaymentsPkeyUpdate>>;
+  /** The primary key(s) and patch data for `payment` for the far side of the relationship. */
+  updateByRazorpayOrderId?: InputMaybe<Array<PaymentOnPaymentForPaymentsCouponIdFkeyUsingPaymentsRazorpayOrderIdKeyUpdate>>;
+  /** The primary key(s) and patch data for `payment` for the far side of the relationship. */
+  updateByRazorpayPaymentId?: InputMaybe<Array<PaymentOnPaymentForPaymentsCouponIdFkeyUsingPaymentsRazorpayPaymentIdKeyUpdate>>;
+};
+
 /** A `Payment` edge in the connection. */
 export type PaymentsEdge = {
   __typename?: 'PaymentsEdge';
@@ -3446,6 +4765,8 @@ export type PaymentsEdge = {
 
 /** Methods to use when ordering `Payment`. */
 export enum PaymentsOrderBy {
+  CouponIdAsc = 'COUPON_ID_ASC',
+  CouponIdDesc = 'COUPON_ID_DESC',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
   Natural = 'NATURAL',
@@ -3499,6 +4820,10 @@ export type Query = {
   __typename?: 'Query';
   /** Get admin statistics about assessment content (admin only) */
   adminAssessmentStats?: Maybe<AdminStatsPayload>;
+  adminCouponAnalytics?: Maybe<CouponAnalytics>;
+  adminCouponById?: Maybe<Coupon>;
+  adminCouponUsage?: Maybe<CouponUsageListPayload>;
+  adminListCoupons?: Maybe<CouponsListPayload>;
   /**
    * Admin only: Get payment analytics and statistics from local database.
    * Optionally filter by date range.
@@ -3579,6 +4904,10 @@ export type Query = {
    * Returns daily statistics for completed, started, and in-progress assessments
    */
   assessmentTrends?: Maybe<AssessmentTrendsPayload>;
+  couponTable?: Maybe<CouponTable>;
+  couponTableByCode?: Maybe<CouponTable>;
+  couponUsageTable?: Maybe<CouponUsageTable>;
+  couponUsageTableByPaymentId?: Maybe<CouponUsageTable>;
   /** Get the current in-progress assessment session for the logged-in user */
   currentAssessmentSession?: Maybe<AssessmentSession>;
   currentSessionId?: Maybe<Scalars['UUID']['output']>;
@@ -3593,6 +4922,8 @@ export type Query = {
    * Internal users (admins and is_internal=true) don't need payment.
    */
   currentUserPaymentStatus?: Maybe<UserPaymentStatusPayload>;
+  /** Retrieves an active, valid, and available coupon by code. Returns NULL if not found or invalid. */
+  getActiveCouponByCode?: Maybe<CouponTable>;
   /** Returns three INDEPENDENT cohort comparisons: age-based (age range, any gender), gender-based (same gender, any age), and overall (all users). When a cohort has fewer than 5 users, returns the user's own score as the cohortAverage (cohortSize = 0) so the UI always has meaningful data to display. */
   getCohortComparisonForResult?: Maybe<Scalars['JSON']['output']>;
   /** Returns cohort statistics filtered by demographics: overall, age-based, and gender-based */
@@ -3637,6 +4968,18 @@ export type Query = {
    * Includes their session details, completion status, and results if completed
    */
   usersWithAssessment?: Maybe<UsersWithAssessmentPayload>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAdminCouponByIdArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAdminCouponUsageArgs = {
+  couponId: Scalars['UUID']['input'];
 };
 
 
@@ -3912,6 +5255,36 @@ export type QueryAssessmentSessionsArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryAssessmentTrendsArgs = {
   input: AssessmentTrendsInput;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCouponTableArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCouponTableByCodeArgs = {
+  code: Scalars['String']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCouponUsageTableArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCouponUsageTableByPaymentIdArgs = {
+  paymentId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryGetActiveCouponByCodeArgs = {
+  pCode: Scalars['String']['input'];
 };
 
 
@@ -4513,6 +5886,122 @@ export type UpdateAssessmentSessionQuestionPayloadAssessmentSessionQuestionEdgeA
   orderBy?: InputMaybe<Array<AssessmentSessionQuestionsOrderBy>>;
 };
 
+export type UpdateCouponInput = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['UUID']['input'];
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  maxTotalUses?: InputMaybe<Scalars['Int']['input']>;
+  validUntil?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+export type UpdateCouponPayload = {
+  __typename?: 'UpdateCouponPayload';
+  coupon?: Maybe<Coupon>;
+  message?: Maybe<Scalars['String']['output']>;
+  success: Scalars['Boolean']['output'];
+};
+
+/** All input for the `updateCouponTableByCode` mutation. */
+export type UpdateCouponTableByCodeInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** Unique coupon code (e.g., "LAUNCH50"). Case-insensitive. */
+  code: Scalars['String']['input'];
+  /** An object where the defined keys will be set on the `CouponTable` being updated. */
+  patch: CouponTablePatch;
+};
+
+/** All input for the `updateCouponTable` mutation. */
+export type UpdateCouponTableInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `CouponTable` being updated. */
+  patch: CouponTablePatch;
+};
+
+/** The output of our update `CouponTable` mutation. */
+export type UpdateCouponTablePayload = {
+  __typename?: 'UpdateCouponTablePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `CouponTable` that was updated by this mutation. */
+  couponTable?: Maybe<CouponTable>;
+  /** An edge for our `CouponTable`. May be used by Relay 1. */
+  couponTableEdge?: Maybe<CouponTablesEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `CouponTable`. */
+  userByCreatedBy?: Maybe<User>;
+};
+
+
+/** The output of our update `CouponTable` mutation. */
+export type UpdateCouponTablePayloadCouponTableEdgeArgs = {
+  orderBy?: InputMaybe<Array<CouponTablesOrderBy>>;
+};
+
+/** All input for the `updateCouponUsageTableByPaymentId` mutation. */
+export type UpdateCouponUsageTableByPaymentIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** An object where the defined keys will be set on the `CouponUsageTable` being updated. */
+  patch: CouponUsageTablePatch;
+  paymentId: Scalars['UUID']['input'];
+};
+
+/** All input for the `updateCouponUsageTable` mutation. */
+export type UpdateCouponUsageTableInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `CouponUsageTable` being updated. */
+  patch: CouponUsageTablePatch;
+};
+
+/** The output of our update `CouponUsageTable` mutation. */
+export type UpdateCouponUsageTablePayload = {
+  __typename?: 'UpdateCouponUsageTablePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `CouponTable` that is related to this `CouponUsageTable`. */
+  coupon?: Maybe<CouponTable>;
+  /** The `CouponUsageTable` that was updated by this mutation. */
+  couponUsageTable?: Maybe<CouponUsageTable>;
+  /** An edge for our `CouponUsageTable`. May be used by Relay 1. */
+  couponUsageTableEdge?: Maybe<CouponUsageTablesEdge>;
+  /** Reads a single `Payment` that is related to this `CouponUsageTable`. */
+  payment?: Maybe<Payment>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `CouponUsageTable`. */
+  user?: Maybe<User>;
+};
+
+
+/** The output of our update `CouponUsageTable` mutation. */
+export type UpdateCouponUsageTablePayloadCouponUsageTableEdgeArgs = {
+  orderBy?: InputMaybe<Array<CouponUsageTablesOrderBy>>;
+};
+
 export type UpdateInterpretationBandInput = {
   id: Scalars['UUID']['input'];
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
@@ -4613,6 +6102,14 @@ export type User = {
   assessmentResults: AssessmentResultsConnection;
   /** Reads and enables pagination through a set of `AssessmentSession`. */
   assessmentSessions: AssessmentSessionsConnection;
+  /** Reads and enables pagination through a set of `CouponTable`. */
+  couponTablesByCouponUsageTableUserIdAndCouponId: UserCouponTablesByCouponUsageTableUserIdAndCouponIdManyToManyConnection;
+  /** Reads and enables pagination through a set of `CouponTable`. */
+  couponTablesByCreatedBy: CouponTablesConnection;
+  /** Reads and enables pagination through a set of `CouponTable`. */
+  couponTablesByPaymentUserIdAndCouponId: UserCouponTablesByPaymentUserIdAndCouponIdManyToManyConnection;
+  /** Reads and enables pagination through a set of `CouponUsageTable`. */
+  couponUsageTables: CouponUsageTablesConnection;
   createdAt: Scalars['Datetime']['output'];
   email: Scalars['String']['output'];
   gender: Scalars['String']['output'];
@@ -4654,6 +6151,50 @@ export type UserAssessmentSessionsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AssessmentSessionsOrderBy>>;
+};
+
+
+export type UserCouponTablesByCouponUsageTableUserIdAndCouponIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CouponTableCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CouponTablesOrderBy>>;
+};
+
+
+export type UserCouponTablesByCreatedByArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CouponTableCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CouponTablesOrderBy>>;
+};
+
+
+export type UserCouponTablesByPaymentUserIdAndCouponIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CouponTableCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CouponTablesOrderBy>>;
+};
+
+
+export type UserCouponUsageTablesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CouponUsageTableCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CouponUsageTablesOrderBy>>;
 };
 
 
@@ -4703,6 +6244,78 @@ export type UserCondition = {
   isInternal?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+/** A connection to a list of `CouponTable` values, with data from `CouponUsageTable`. */
+export type UserCouponTablesByCouponUsageTableUserIdAndCouponIdManyToManyConnection = {
+  __typename?: 'UserCouponTablesByCouponUsageTableUserIdAndCouponIdManyToManyConnection';
+  /** A list of edges which contains the `CouponTable`, info from the `CouponUsageTable`, and the cursor to aid in pagination. */
+  edges: Array<UserCouponTablesByCouponUsageTableUserIdAndCouponIdManyToManyEdge>;
+  /** A list of `CouponTable` objects. */
+  nodes: Array<CouponTable>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `CouponTable` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `CouponTable` edge in the connection, with data from `CouponUsageTable`. */
+export type UserCouponTablesByCouponUsageTableUserIdAndCouponIdManyToManyEdge = {
+  __typename?: 'UserCouponTablesByCouponUsageTableUserIdAndCouponIdManyToManyEdge';
+  /** Reads and enables pagination through a set of `CouponUsageTable`. */
+  couponUsageTables: CouponUsageTablesConnection;
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `CouponTable` at the end of the edge. */
+  node: CouponTable;
+};
+
+
+/** A `CouponTable` edge in the connection, with data from `CouponUsageTable`. */
+export type UserCouponTablesByCouponUsageTableUserIdAndCouponIdManyToManyEdgeCouponUsageTablesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CouponUsageTableCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CouponUsageTablesOrderBy>>;
+};
+
+/** A connection to a list of `CouponTable` values, with data from `Payment`. */
+export type UserCouponTablesByPaymentUserIdAndCouponIdManyToManyConnection = {
+  __typename?: 'UserCouponTablesByPaymentUserIdAndCouponIdManyToManyConnection';
+  /** A list of edges which contains the `CouponTable`, info from the `Payment`, and the cursor to aid in pagination. */
+  edges: Array<UserCouponTablesByPaymentUserIdAndCouponIdManyToManyEdge>;
+  /** A list of `CouponTable` objects. */
+  nodes: Array<CouponTable>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `CouponTable` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `CouponTable` edge in the connection, with data from `Payment`. */
+export type UserCouponTablesByPaymentUserIdAndCouponIdManyToManyEdge = {
+  __typename?: 'UserCouponTablesByPaymentUserIdAndCouponIdManyToManyEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `CouponTable` at the end of the edge. */
+  node: CouponTable;
+  /** Reads and enables pagination through a set of `Payment`. */
+  payments: PaymentsConnection;
+};
+
+
+/** A `CouponTable` edge in the connection, with data from `Payment`. */
+export type UserCouponTablesByPaymentUserIdAndCouponIdManyToManyEdgePaymentsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<PaymentCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PaymentsOrderBy>>;
+};
+
 export type UserInfo = {
   __typename?: 'UserInfo';
   createdAt: Scalars['Datetime']['output'];
@@ -4720,6 +6333,8 @@ export type UserInput = {
   age: Scalars['Int']['input'];
   assessmentResultsUsingId?: InputMaybe<AssessmentResultsUserIdFkeyInverseInput>;
   assessmentSessionsUsingId?: InputMaybe<AssessmentSessionsUserIdFkeyInverseInput>;
+  couponTablesUsingId?: InputMaybe<CouponsCreatedByFkeyInverseInput>;
+  couponUsageTablesUsingId?: InputMaybe<CouponUsageUserIdFkeyInverseInput>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   email: Scalars['String']['input'];
   gender: Scalars['String']['input'];
@@ -4754,6 +6369,20 @@ export type UserOnAssessmentSessionForAssessmentSessionsUserIdFkeyUsingUsersPkey
 };
 
 /** The fields on `user` to look up the row to update. */
+export type UserOnCouponTableForCouponsCreatedByFkeyUsingUsersPkeyUpdate = {
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UpdateUserOnCouponTableForCouponsCreatedByFkeyPatch;
+};
+
+/** The fields on `user` to look up the row to update. */
+export type UserOnCouponUsageTableForCouponUsageUserIdFkeyUsingUsersPkeyUpdate = {
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UpdateUserOnCouponUsageTableForCouponUsageUserIdFkeyPatch;
+};
+
+/** The fields on `user` to look up the row to update. */
 export type UserOnPaymentForPaymentsUserIdFkeyUsingUsersPkeyUpdate = {
   id: Scalars['UUID']['input'];
   /** An object where the defined keys will be set on the `user` being updated. */
@@ -4772,6 +6401,8 @@ export type UserPatch = {
   age?: InputMaybe<Scalars['Int']['input']>;
   assessmentResultsUsingId?: InputMaybe<AssessmentResultsUserIdFkeyInverseInput>;
   assessmentSessionsUsingId?: InputMaybe<AssessmentSessionsUserIdFkeyInverseInput>;
+  couponTablesUsingId?: InputMaybe<CouponsCreatedByFkeyInverseInput>;
+  couponUsageTablesUsingId?: InputMaybe<CouponUsageUserIdFkeyInverseInput>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   gender?: InputMaybe<Scalars['String']['input']>;
@@ -4888,6 +6519,20 @@ export type UsersWithAssessmentPayload = {
   inProgressCount: Scalars['Int']['output'];
   totalCount: Scalars['Int']['output'];
   users: Array<UserAssessmentInfo>;
+};
+
+export type ValidateCouponInput = {
+  code: Scalars['String']['input'];
+};
+
+export type ValidateCouponPayload = {
+  __typename?: 'ValidateCouponPayload';
+  coupon?: Maybe<CouponInfo>;
+  discountAmount: Scalars['Int']['output'];
+  finalAmount: Scalars['Int']['output'];
+  message: Scalars['String']['output'];
+  originalAmount: Scalars['Int']['output'];
+  valid: Scalars['Boolean']['output'];
 };
 
 export type VerifyPaymentInput = {
@@ -5279,9 +6924,150 @@ export type UpdateAssessmentSessionQuestionOnAssessmentSessionQuestionForAssessm
   questionId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
+/** An object where the defined keys will be set on the `couponTable` being updated. */
+export type UpdateCouponTableOnCouponTableForCouponsCreatedByFkeyPatch = {
+  /** Unique coupon code (e.g., "LAUNCH50"). Case-insensitive. */
+  code?: InputMaybe<Scalars['String']['input']>;
+  couponUsageTablesUsingId?: InputMaybe<CouponUsageCouponIdFkeyInverseInput>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Running count of how many times this coupon has been used. */
+  currentUses?: InputMaybe<Scalars['Int']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** Type of discount: "percentage" (e.g., 20% off) or "flat" (e.g., ₹500 off) */
+  discountType?: InputMaybe<Scalars['String']['input']>;
+  /** Discount amount: percentage value (20 for 20%) or paise (50000 for ₹500) */
+  discountValue?: InputMaybe<Scalars['Int']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  /** For percentage discounts only: maximum discount cap in paise (e.g., 100000 for max ₹1000 off) */
+  maxDiscountAmount?: InputMaybe<Scalars['Int']['input']>;
+  /** Total times this coupon can be used across all users. NULL = unlimited. */
+  maxTotalUses?: InputMaybe<Scalars['Int']['input']>;
+  paymentsUsingId?: InputMaybe<PaymentsCouponIdFkeyInverseInput>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  userToCreatedBy?: InputMaybe<CouponsCreatedByFkeyInput>;
+  validFrom?: InputMaybe<Scalars['Datetime']['input']>;
+  validUntil?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** An object where the defined keys will be set on the `couponTable` being updated. */
+export type UpdateCouponTableOnCouponUsageTableForCouponUsageCouponIdFkeyPatch = {
+  /** Unique coupon code (e.g., "LAUNCH50"). Case-insensitive. */
+  code?: InputMaybe<Scalars['String']['input']>;
+  couponUsageTablesUsingId?: InputMaybe<CouponUsageCouponIdFkeyInverseInput>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  createdBy?: InputMaybe<Scalars['UUID']['input']>;
+  /** Running count of how many times this coupon has been used. */
+  currentUses?: InputMaybe<Scalars['Int']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** Type of discount: "percentage" (e.g., 20% off) or "flat" (e.g., ₹500 off) */
+  discountType?: InputMaybe<Scalars['String']['input']>;
+  /** Discount amount: percentage value (20 for 20%) or paise (50000 for ₹500) */
+  discountValue?: InputMaybe<Scalars['Int']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  /** For percentage discounts only: maximum discount cap in paise (e.g., 100000 for max ₹1000 off) */
+  maxDiscountAmount?: InputMaybe<Scalars['Int']['input']>;
+  /** Total times this coupon can be used across all users. NULL = unlimited. */
+  maxTotalUses?: InputMaybe<Scalars['Int']['input']>;
+  paymentsUsingId?: InputMaybe<PaymentsCouponIdFkeyInverseInput>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  userToCreatedBy?: InputMaybe<CouponsCreatedByFkeyInput>;
+  validFrom?: InputMaybe<Scalars['Datetime']['input']>;
+  validUntil?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** An object where the defined keys will be set on the `couponTable` being updated. */
+export type UpdateCouponTableOnPaymentForPaymentsCouponIdFkeyPatch = {
+  /** Unique coupon code (e.g., "LAUNCH50"). Case-insensitive. */
+  code?: InputMaybe<Scalars['String']['input']>;
+  couponUsageTablesUsingId?: InputMaybe<CouponUsageCouponIdFkeyInverseInput>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  createdBy?: InputMaybe<Scalars['UUID']['input']>;
+  /** Running count of how many times this coupon has been used. */
+  currentUses?: InputMaybe<Scalars['Int']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** Type of discount: "percentage" (e.g., 20% off) or "flat" (e.g., ₹500 off) */
+  discountType?: InputMaybe<Scalars['String']['input']>;
+  /** Discount amount: percentage value (20 for 20%) or paise (50000 for ₹500) */
+  discountValue?: InputMaybe<Scalars['Int']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  /** For percentage discounts only: maximum discount cap in paise (e.g., 100000 for max ₹1000 off) */
+  maxDiscountAmount?: InputMaybe<Scalars['Int']['input']>;
+  /** Total times this coupon can be used across all users. NULL = unlimited. */
+  maxTotalUses?: InputMaybe<Scalars['Int']['input']>;
+  paymentsUsingId?: InputMaybe<PaymentsCouponIdFkeyInverseInput>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  userToCreatedBy?: InputMaybe<CouponsCreatedByFkeyInput>;
+  validFrom?: InputMaybe<Scalars['Datetime']['input']>;
+  validUntil?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** An object where the defined keys will be set on the `couponUsageTable` being updated. */
+export type UpdateCouponUsageTableOnCouponUsageTableForCouponUsageCouponIdFkeyPatch = {
+  couponTableToCouponId?: InputMaybe<CouponUsageCouponIdFkeyInput>;
+  /** Amount user saved in paise (e.g., 50000 for ₹500 discount) */
+  discountAmount?: InputMaybe<Scalars['Int']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  paymentId?: InputMaybe<Scalars['UUID']['input']>;
+  paymentToPaymentId?: InputMaybe<CouponUsagePaymentIdFkeyInput>;
+  usedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  userId?: InputMaybe<Scalars['UUID']['input']>;
+  userToUserId?: InputMaybe<CouponUsageUserIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `couponUsageTable` being updated. */
+export type UpdateCouponUsageTableOnCouponUsageTableForCouponUsagePaymentIdFkeyPatch = {
+  couponId?: InputMaybe<Scalars['UUID']['input']>;
+  couponTableToCouponId?: InputMaybe<CouponUsageCouponIdFkeyInput>;
+  /** Amount user saved in paise (e.g., 50000 for ₹500 discount) */
+  discountAmount?: InputMaybe<Scalars['Int']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  paymentToPaymentId?: InputMaybe<CouponUsagePaymentIdFkeyInput>;
+  usedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  userId?: InputMaybe<Scalars['UUID']['input']>;
+  userToUserId?: InputMaybe<CouponUsageUserIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `couponUsageTable` being updated. */
+export type UpdateCouponUsageTableOnCouponUsageTableForCouponUsageUserIdFkeyPatch = {
+  couponId?: InputMaybe<Scalars['UUID']['input']>;
+  couponTableToCouponId?: InputMaybe<CouponUsageCouponIdFkeyInput>;
+  /** Amount user saved in paise (e.g., 50000 for ₹500 discount) */
+  discountAmount?: InputMaybe<Scalars['Int']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  paymentId?: InputMaybe<Scalars['UUID']['input']>;
+  paymentToPaymentId?: InputMaybe<CouponUsagePaymentIdFkeyInput>;
+  usedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  userToUserId?: InputMaybe<CouponUsageUserIdFkeyInput>;
+};
+
 /** An object where the defined keys will be set on the `payment` being updated. */
 export type UpdatePaymentOnAssessmentSessionForAssessmentSessionsPaymentIdFkeyPatch = {
   assessmentSessionUsingId?: InputMaybe<AssessmentSessionsPaymentIdFkeyInverseInput>;
+  couponId?: InputMaybe<Scalars['UUID']['input']>;
+  couponTableToCouponId?: InputMaybe<PaymentsCouponIdFkeyInput>;
+  couponUsageTableUsingId?: InputMaybe<CouponUsagePaymentIdFkeyInverseInput>;
+  userId?: InputMaybe<Scalars['UUID']['input']>;
+  userToUserId?: InputMaybe<PaymentsUserIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `payment` being updated. */
+export type UpdatePaymentOnCouponUsageTableForCouponUsagePaymentIdFkeyPatch = {
+  assessmentSessionUsingId?: InputMaybe<AssessmentSessionsPaymentIdFkeyInverseInput>;
+  couponId?: InputMaybe<Scalars['UUID']['input']>;
+  couponTableToCouponId?: InputMaybe<PaymentsCouponIdFkeyInput>;
+  couponUsageTableUsingId?: InputMaybe<CouponUsagePaymentIdFkeyInverseInput>;
+  userId?: InputMaybe<Scalars['UUID']['input']>;
+  userToUserId?: InputMaybe<PaymentsUserIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `payment` being updated. */
+export type UpdatePaymentOnPaymentForPaymentsCouponIdFkeyPatch = {
+  assessmentSessionUsingId?: InputMaybe<AssessmentSessionsPaymentIdFkeyInverseInput>;
+  couponTableToCouponId?: InputMaybe<PaymentsCouponIdFkeyInput>;
+  couponUsageTableUsingId?: InputMaybe<CouponUsagePaymentIdFkeyInverseInput>;
   userId?: InputMaybe<Scalars['UUID']['input']>;
   userToUserId?: InputMaybe<PaymentsUserIdFkeyInput>;
 };
@@ -5289,6 +7075,9 @@ export type UpdatePaymentOnAssessmentSessionForAssessmentSessionsPaymentIdFkeyPa
 /** An object where the defined keys will be set on the `payment` being updated. */
 export type UpdatePaymentOnPaymentForPaymentsUserIdFkeyPatch = {
   assessmentSessionUsingId?: InputMaybe<AssessmentSessionsPaymentIdFkeyInverseInput>;
+  couponId?: InputMaybe<Scalars['UUID']['input']>;
+  couponTableToCouponId?: InputMaybe<PaymentsCouponIdFkeyInput>;
+  couponUsageTableUsingId?: InputMaybe<CouponUsagePaymentIdFkeyInverseInput>;
   userToUserId?: InputMaybe<PaymentsUserIdFkeyInput>;
 };
 
@@ -5302,6 +7091,8 @@ export type UpdateUserOnAssessmentResultForAssessmentResultsUserIdFkeyPatch = {
   age?: InputMaybe<Scalars['Int']['input']>;
   assessmentResultsUsingId?: InputMaybe<AssessmentResultsUserIdFkeyInverseInput>;
   assessmentSessionsUsingId?: InputMaybe<AssessmentSessionsUserIdFkeyInverseInput>;
+  couponTablesUsingId?: InputMaybe<CouponsCreatedByFkeyInverseInput>;
+  couponUsageTablesUsingId?: InputMaybe<CouponUsageUserIdFkeyInverseInput>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   gender?: InputMaybe<Scalars['String']['input']>;
@@ -5326,6 +7117,60 @@ export type UpdateUserOnAssessmentSessionForAssessmentSessionsUserIdFkeyPatch = 
   age?: InputMaybe<Scalars['Int']['input']>;
   assessmentResultsUsingId?: InputMaybe<AssessmentResultsUserIdFkeyInverseInput>;
   assessmentSessionsUsingId?: InputMaybe<AssessmentSessionsUserIdFkeyInverseInput>;
+  couponTablesUsingId?: InputMaybe<CouponsCreatedByFkeyInverseInput>;
+  couponUsageTablesUsingId?: InputMaybe<CouponUsageUserIdFkeyInverseInput>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  gender?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  isAdmin?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Indicates if user is internal (can test without payment and delete assessments). Admins are always internal. */
+  isInternal?: InputMaybe<Scalars['Boolean']['input']>;
+  /** User email verification status. Defaults to true until email verification is implemented. Set to false when two-factor authentication or email verification is added. */
+  isVerified?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  password?: InputMaybe<Scalars['String']['input']>;
+  paymentsUsingId?: InputMaybe<PaymentsUserIdFkeyInverseInput>;
+  /** User phone number. Optional field that can be added by user after registration. */
+  phoneNumber?: InputMaybe<Scalars['String']['input']>;
+  reminderEmailsUsingId?: InputMaybe<ReminderEmailsUserIdFkeyInverseInput>;
+  type?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** An object where the defined keys will be set on the `user` being updated. */
+export type UpdateUserOnCouponTableForCouponsCreatedByFkeyPatch = {
+  age?: InputMaybe<Scalars['Int']['input']>;
+  assessmentResultsUsingId?: InputMaybe<AssessmentResultsUserIdFkeyInverseInput>;
+  assessmentSessionsUsingId?: InputMaybe<AssessmentSessionsUserIdFkeyInverseInput>;
+  couponTablesUsingId?: InputMaybe<CouponsCreatedByFkeyInverseInput>;
+  couponUsageTablesUsingId?: InputMaybe<CouponUsageUserIdFkeyInverseInput>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  gender?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  isAdmin?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Indicates if user is internal (can test without payment and delete assessments). Admins are always internal. */
+  isInternal?: InputMaybe<Scalars['Boolean']['input']>;
+  /** User email verification status. Defaults to true until email verification is implemented. Set to false when two-factor authentication or email verification is added. */
+  isVerified?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  password?: InputMaybe<Scalars['String']['input']>;
+  paymentsUsingId?: InputMaybe<PaymentsUserIdFkeyInverseInput>;
+  /** User phone number. Optional field that can be added by user after registration. */
+  phoneNumber?: InputMaybe<Scalars['String']['input']>;
+  reminderEmailsUsingId?: InputMaybe<ReminderEmailsUserIdFkeyInverseInput>;
+  type?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** An object where the defined keys will be set on the `user` being updated. */
+export type UpdateUserOnCouponUsageTableForCouponUsageUserIdFkeyPatch = {
+  age?: InputMaybe<Scalars['Int']['input']>;
+  assessmentResultsUsingId?: InputMaybe<AssessmentResultsUserIdFkeyInverseInput>;
+  assessmentSessionsUsingId?: InputMaybe<AssessmentSessionsUserIdFkeyInverseInput>;
+  couponTablesUsingId?: InputMaybe<CouponsCreatedByFkeyInverseInput>;
+  couponUsageTablesUsingId?: InputMaybe<CouponUsageUserIdFkeyInverseInput>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   gender?: InputMaybe<Scalars['String']['input']>;
@@ -5350,6 +7195,8 @@ export type UpdateUserOnPaymentForPaymentsUserIdFkeyPatch = {
   age?: InputMaybe<Scalars['Int']['input']>;
   assessmentResultsUsingId?: InputMaybe<AssessmentResultsUserIdFkeyInverseInput>;
   assessmentSessionsUsingId?: InputMaybe<AssessmentSessionsUserIdFkeyInverseInput>;
+  couponTablesUsingId?: InputMaybe<CouponsCreatedByFkeyInverseInput>;
+  couponUsageTablesUsingId?: InputMaybe<CouponUsageUserIdFkeyInverseInput>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   gender?: InputMaybe<Scalars['String']['input']>;
@@ -5374,6 +7221,8 @@ export type UpdateUserOnReminderEmailForReminderEmailsUserIdFkeyPatch = {
   age?: InputMaybe<Scalars['Int']['input']>;
   assessmentResultsUsingId?: InputMaybe<AssessmentResultsUserIdFkeyInverseInput>;
   assessmentSessionsUsingId?: InputMaybe<AssessmentSessionsUserIdFkeyInverseInput>;
+  couponTablesUsingId?: InputMaybe<CouponsCreatedByFkeyInverseInput>;
+  couponUsageTablesUsingId?: InputMaybe<CouponUsageUserIdFkeyInverseInput>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   gender?: InputMaybe<Scalars['String']['input']>;
@@ -5392,6 +7241,58 @@ export type UpdateUserOnReminderEmailForReminderEmailsUserIdFkeyPatch = {
   type?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
+
+export type AdminActivateCouponMutationVariables = Exact<{
+  input: ActivateCouponInput;
+}>;
+
+
+export type AdminActivateCouponMutation = { __typename?: 'Mutation', adminActivateCoupon?: { __typename?: 'ActivateCouponPayload', success: boolean, message?: string | null } | null };
+
+export type AdminCouponAnalyticsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AdminCouponAnalyticsQuery = { __typename?: 'Query', adminCouponAnalytics?: { __typename?: 'CouponAnalytics', totalCoupons: number, activeCoupons: number, totalRedemptions: number, totalDiscountGiven: number } | null };
+
+export type AdminCouponByIdQueryVariables = Exact<{
+  id: Scalars['UUID']['input'];
+}>;
+
+
+export type AdminCouponByIdQuery = { __typename?: 'Query', adminCouponById?: { __typename?: 'Coupon', id: any, code: string, description?: string | null, discountType: DiscountType, discountValue: number, maxDiscountAmount?: number | null, validFrom: any, validUntil?: any | null, isActive: boolean, maxTotalUses?: number | null, currentUses: number, createdBy?: any | null, createdAt: any, updatedAt: any } | null };
+
+export type AdminCouponUsageQueryVariables = Exact<{
+  couponId: Scalars['UUID']['input'];
+}>;
+
+
+export type AdminCouponUsageQuery = { __typename?: 'Query', adminCouponUsage?: { __typename?: 'CouponUsageListPayload', totalCount: number, usageRecords: Array<{ __typename?: 'CouponUsageRecord', id: any, userName?: string | null, userEmail?: string | null, discountAmount: number, usedAt: any }> } | null };
+
+export type AdminCreateCouponMutationVariables = Exact<{
+  input: CreateCouponInput;
+}>;
+
+
+export type AdminCreateCouponMutation = { __typename?: 'Mutation', adminCreateCoupon?: { __typename?: 'CreateCouponPayload', success: boolean, message?: string | null, coupon?: { __typename?: 'Coupon', id: any, code: string, description?: string | null, discountType: DiscountType, discountValue: number, maxDiscountAmount?: number | null, validFrom: any, validUntil?: any | null, isActive: boolean, maxTotalUses?: number | null, currentUses: number, createdAt: any, updatedAt: any } | null } | null };
+
+export type AdminDeactivateCouponMutationVariables = Exact<{
+  input: DeactivateCouponInput;
+}>;
+
+
+export type AdminDeactivateCouponMutation = { __typename?: 'Mutation', adminDeactivateCoupon?: { __typename?: 'DeactivateCouponPayload', success: boolean, message?: string | null } | null };
+
+export type AdminDeleteCouponMutationVariables = Exact<{
+  input: DeleteCouponInput;
+}>;
+
+
+export type AdminDeleteCouponMutation = { __typename?: 'Mutation', adminDeleteCoupon?: { __typename?: 'DeleteCouponPayload', success: boolean, message?: string | null, deletedId?: any | null } | null };
+
+export type AdminListCouponsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AdminListCouponsQuery = { __typename?: 'Query', adminListCoupons?: { __typename?: 'CouponsListPayload', totalCount: number, coupons: Array<{ __typename?: 'Coupon', id: any, code: string, description?: string | null, discountType: DiscountType, discountValue: number, maxDiscountAmount?: number | null, validFrom: any, validUntil?: any | null, isActive: boolean, maxTotalUses?: number | null, currentUses: number, createdAt: any, updatedAt: any }> } | null };
 
 export type AdminPaymentAnalyticsQueryVariables = Exact<{
   input?: InputMaybe<AdminPaymentsFilterInput>;
@@ -5427,6 +7328,13 @@ export type AdminSettlementsListQueryVariables = Exact<{
 
 
 export type AdminSettlementsListQuery = { __typename?: 'Query', adminSettlementsList?: { __typename?: 'AdminSettlementsListPayload', entity: string, count: number, items: Array<{ __typename?: 'RazorpaySettlementItem', id: string, entity: string, amount: number, status: string, fees?: number | null, tax?: number | null, utr?: string | null, createdAt: number }> } | null };
+
+export type AdminUpdateCouponMutationVariables = Exact<{
+  input: UpdateCouponInput;
+}>;
+
+
+export type AdminUpdateCouponMutation = { __typename?: 'Mutation', adminUpdateCoupon?: { __typename?: 'UpdateCouponPayload', success: boolean, message?: string | null, coupon?: { __typename?: 'Coupon', id: any, code: string, description?: string | null, discountType: DiscountType, discountValue: number, maxDiscountAmount?: number | null, validFrom: any, validUntil?: any | null, isActive: boolean, maxTotalUses?: number | null, currentUses: number, updatedAt: any } | null } | null };
 
 export type GetAllUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -5678,10 +7586,19 @@ export type CheckPaymentStatusQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type CheckPaymentStatusQuery = { __typename?: 'Query', currentUserPaymentStatus?: { __typename?: 'UserPaymentStatusPayload', hasPaid: boolean, paymentId?: any | null, status?: string | null, amountInr?: number | null, createdAt?: string | null } | null };
 
-export type CreatePaymentOrderMutationVariables = Exact<{ [key: string]: never; }>;
+export type CreatePaymentOrderMutationVariables = Exact<{
+  input: CreatePaymentOrderInput;
+}>;
 
 
-export type CreatePaymentOrderMutation = { __typename?: 'Mutation', createPaymentOrder?: { __typename?: 'CreatePaymentOrderPayload', orderId: string, amount: number, currency: string, razorpayKeyId: string } | null };
+export type CreatePaymentOrderMutation = { __typename?: 'Mutation', createPaymentOrder?: { __typename?: 'CreatePaymentOrderPayload', orderId?: string | null, amount: number, originalAmount?: number | null, discountAmount?: number | null, currency: string, razorpayKeyId?: string | null, couponApplied: boolean, couponMessage?: string | null, isFree: boolean } | null };
+
+export type ValidateCouponMutationVariables = Exact<{
+  input: ValidateCouponInput;
+}>;
+
+
+export type ValidateCouponMutation = { __typename?: 'Mutation', validateCoupon?: { __typename?: 'ValidateCouponPayload', valid: boolean, discountAmount: number, originalAmount: number, finalAmount: number, message: string, coupon?: { __typename?: 'CouponInfo', code: string, description?: string | null, discountType: DiscountType, discountValue: number } | null } | null };
 
 export type VerifyPaymentMutationVariables = Exact<{
   orderId: Scalars['String']['input'];
@@ -5693,11 +7610,20 @@ export type VerifyPaymentMutationVariables = Exact<{
 export type VerifyPaymentMutation = { __typename?: 'Mutation', verifyPayment?: { __typename?: 'VerifyPaymentPayload', success: boolean, paymentId?: any | null, message?: string | null } | null };
 
 export const Lite_UserFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Lite_User"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"age"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"gender"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"isAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"isInternal"}}]}}]} as unknown as DocumentNode<Lite_UserFragment, unknown>;
+export const AdminActivateCouponDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"AdminActivateCoupon"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ActivateCouponInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminActivateCoupon"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<AdminActivateCouponMutation, AdminActivateCouponMutationVariables>;
+export const AdminCouponAnalyticsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AdminCouponAnalytics"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminCouponAnalytics"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCoupons"}},{"kind":"Field","name":{"kind":"Name","value":"activeCoupons"}},{"kind":"Field","name":{"kind":"Name","value":"totalRedemptions"}},{"kind":"Field","name":{"kind":"Name","value":"totalDiscountGiven"}}]}}]}}]} as unknown as DocumentNode<AdminCouponAnalyticsQuery, AdminCouponAnalyticsQueryVariables>;
+export const AdminCouponByIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AdminCouponById"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminCouponById"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"discountType"}},{"kind":"Field","name":{"kind":"Name","value":"discountValue"}},{"kind":"Field","name":{"kind":"Name","value":"maxDiscountAmount"}},{"kind":"Field","name":{"kind":"Name","value":"validFrom"}},{"kind":"Field","name":{"kind":"Name","value":"validUntil"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"maxTotalUses"}},{"kind":"Field","name":{"kind":"Name","value":"currentUses"}},{"kind":"Field","name":{"kind":"Name","value":"createdBy"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]} as unknown as DocumentNode<AdminCouponByIdQuery, AdminCouponByIdQueryVariables>;
+export const AdminCouponUsageDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AdminCouponUsage"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"couponId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminCouponUsage"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"couponId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"couponId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"usageRecords"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userName"}},{"kind":"Field","name":{"kind":"Name","value":"userEmail"}},{"kind":"Field","name":{"kind":"Name","value":"discountAmount"}},{"kind":"Field","name":{"kind":"Name","value":"usedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}}]}}]}}]} as unknown as DocumentNode<AdminCouponUsageQuery, AdminCouponUsageQueryVariables>;
+export const AdminCreateCouponDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"AdminCreateCoupon"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateCouponInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminCreateCoupon"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"coupon"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"discountType"}},{"kind":"Field","name":{"kind":"Name","value":"discountValue"}},{"kind":"Field","name":{"kind":"Name","value":"maxDiscountAmount"}},{"kind":"Field","name":{"kind":"Name","value":"validFrom"}},{"kind":"Field","name":{"kind":"Name","value":"validUntil"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"maxTotalUses"}},{"kind":"Field","name":{"kind":"Name","value":"currentUses"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]}}]} as unknown as DocumentNode<AdminCreateCouponMutation, AdminCreateCouponMutationVariables>;
+export const AdminDeactivateCouponDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"AdminDeactivateCoupon"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DeactivateCouponInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminDeactivateCoupon"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<AdminDeactivateCouponMutation, AdminDeactivateCouponMutationVariables>;
+export const AdminDeleteCouponDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"AdminDeleteCoupon"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DeleteCouponInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminDeleteCoupon"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"deletedId"}}]}}]}}]} as unknown as DocumentNode<AdminDeleteCouponMutation, AdminDeleteCouponMutationVariables>;
+export const AdminListCouponsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AdminListCoupons"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminListCoupons"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"coupons"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"discountType"}},{"kind":"Field","name":{"kind":"Name","value":"discountValue"}},{"kind":"Field","name":{"kind":"Name","value":"maxDiscountAmount"}},{"kind":"Field","name":{"kind":"Name","value":"validFrom"}},{"kind":"Field","name":{"kind":"Name","value":"validUntil"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"maxTotalUses"}},{"kind":"Field","name":{"kind":"Name","value":"currentUses"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}}]}}]}}]} as unknown as DocumentNode<AdminListCouponsQuery, AdminListCouponsQueryVariables>;
 export const AdminPaymentAnalyticsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AdminPaymentAnalytics"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"AdminPaymentsFilterInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminPaymentAnalytics"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalPayments"}},{"kind":"Field","name":{"kind":"Name","value":"totalAmount"}},{"kind":"Field","name":{"kind":"Name","value":"capturedPayments"}},{"kind":"Field","name":{"kind":"Name","value":"capturedAmount"}},{"kind":"Field","name":{"kind":"Name","value":"failedPayments"}},{"kind":"Field","name":{"kind":"Name","value":"failedAmount"}},{"kind":"Field","name":{"kind":"Name","value":"refundedPayments"}},{"kind":"Field","name":{"kind":"Name","value":"refundedAmount"}},{"kind":"Field","name":{"kind":"Name","value":"averagePaymentAmount"}},{"kind":"Field","name":{"kind":"Name","value":"successRate"}},{"kind":"Field","name":{"kind":"Name","value":"recentPayments"}},{"kind":"Field","name":{"kind":"Name","value":"paymentMethodBreakdown"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"method"}},{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"totalAmount"}},{"kind":"Field","name":{"kind":"Name","value":"successCount"}},{"kind":"Field","name":{"kind":"Name","value":"failedCount"}}]}}]}}]}}]} as unknown as DocumentNode<AdminPaymentAnalyticsQuery, AdminPaymentAnalyticsQueryVariables>;
 export const AdminPaymentDetailsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AdminPaymentDetails"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"paymentId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminPaymentDetails"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"paymentId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"paymentId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"razorpayData"}},{"kind":"Field","name":{"kind":"Name","value":"dbData"}}]}}]}}]} as unknown as DocumentNode<AdminPaymentDetailsQuery, AdminPaymentDetailsQueryVariables>;
 export const AdminPaymentsListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AdminPaymentsList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"AdminPaymentsFilterInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminPaymentsList"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"entity"}},{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"entity"}},{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currency"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"orderId"}},{"kind":"Field","name":{"kind":"Name","value":"method"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"contact"}},{"kind":"Field","name":{"kind":"Name","value":"fee"}},{"kind":"Field","name":{"kind":"Name","value":"tax"}},{"kind":"Field","name":{"kind":"Name","value":"errorCode"}},{"kind":"Field","name":{"kind":"Name","value":"errorDescription"}},{"kind":"Field","name":{"kind":"Name","value":"errorSource"}},{"kind":"Field","name":{"kind":"Name","value":"errorStep"}},{"kind":"Field","name":{"kind":"Name","value":"errorReason"}},{"kind":"Field","name":{"kind":"Name","value":"captured"}},{"kind":"Field","name":{"kind":"Name","value":"refundStatus"}},{"kind":"Field","name":{"kind":"Name","value":"amountRefunded"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"notes"}}]}}]}}]}}]} as unknown as DocumentNode<AdminPaymentsListQuery, AdminPaymentsListQueryVariables>;
 export const AdminRefundsListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AdminRefundsList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"AdminPaymentsFilterInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminRefundsList"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"entity"}},{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"entity"}},{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currency"}},{"kind":"Field","name":{"kind":"Name","value":"paymentId"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"speedRequested"}},{"kind":"Field","name":{"kind":"Name","value":"speedProcessed"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]}}]} as unknown as DocumentNode<AdminRefundsListQuery, AdminRefundsListQueryVariables>;
 export const AdminSettlementsListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AdminSettlementsList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"AdminPaymentsFilterInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminSettlementsList"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"entity"}},{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"entity"}},{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"fees"}},{"kind":"Field","name":{"kind":"Name","value":"tax"}},{"kind":"Field","name":{"kind":"Name","value":"utr"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]}}]} as unknown as DocumentNode<AdminSettlementsListQuery, AdminSettlementsListQueryVariables>;
+export const AdminUpdateCouponDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"AdminUpdateCoupon"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateCouponInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminUpdateCoupon"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"coupon"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"discountType"}},{"kind":"Field","name":{"kind":"Name","value":"discountValue"}},{"kind":"Field","name":{"kind":"Name","value":"maxDiscountAmount"}},{"kind":"Field","name":{"kind":"Name","value":"validFrom"}},{"kind":"Field","name":{"kind":"Name","value":"validUntil"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"maxTotalUses"}},{"kind":"Field","name":{"kind":"Name","value":"currentUses"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]}}]} as unknown as DocumentNode<AdminUpdateCouponMutation, AdminUpdateCouponMutationVariables>;
 export const GetAllUsersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAllUsers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"allUsers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"isAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"isInternal"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"adminCount"}},{"kind":"Field","name":{"kind":"Name","value":"usersWithoutAssessmentCount"}}]}}]}}]} as unknown as DocumentNode<GetAllUsersQuery, GetAllUsersQueryVariables>;
 export const GetAssessmentTrendsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAssessmentTrends"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"startDate"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Date"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"endDate"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Date"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assessmentTrends"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"startDate"},"value":{"kind":"Variable","name":{"kind":"Name","value":"startDate"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"endDate"},"value":{"kind":"Variable","name":{"kind":"Name","value":"endDate"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"trends"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"completedCount"}},{"kind":"Field","name":{"kind":"Name","value":"startedCount"}},{"kind":"Field","name":{"kind":"Name","value":"inProgressCount"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCompleted"}},{"kind":"Field","name":{"kind":"Name","value":"totalStarted"}},{"kind":"Field","name":{"kind":"Name","value":"totalInProgress"}}]}}]}}]} as unknown as DocumentNode<GetAssessmentTrendsQuery, GetAssessmentTrendsQueryVariables>;
 export const DeleteUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"AdminDeleteUserInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminDeleteUser"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deletedUserId"}},{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<DeleteUserMutation, DeleteUserMutationVariables>;
@@ -5735,5 +7661,6 @@ export const ResetPasswordDocument = {"kind":"Document","definitions":[{"kind":"
 export const RegisterDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Register"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"RegisterInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"register"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"Lite_User"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Lite_User"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"age"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"gender"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"isAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"isInternal"}}]}}]} as unknown as DocumentNode<RegisterMutation, RegisterMutationVariables>;
 export const UpdatePhoneNumberDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdatePhoneNumber"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"phoneNumber"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateUser"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"patch"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"phoneNumber"},"value":{"kind":"Variable","name":{"kind":"Name","value":"phoneNumber"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"Lite_User"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Lite_User"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"age"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"gender"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"isAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"isInternal"}}]}}]} as unknown as DocumentNode<UpdatePhoneNumberMutation, UpdatePhoneNumberMutationVariables>;
 export const CheckPaymentStatusDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"CheckPaymentStatus"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentUserPaymentStatus"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasPaid"}},{"kind":"Field","name":{"kind":"Name","value":"paymentId"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"amountInr"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]} as unknown as DocumentNode<CheckPaymentStatusQuery, CheckPaymentStatusQueryVariables>;
-export const CreatePaymentOrderDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreatePaymentOrder"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createPaymentOrder"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"orderId"}},{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currency"}},{"kind":"Field","name":{"kind":"Name","value":"razorpayKeyId"}}]}}]}}]} as unknown as DocumentNode<CreatePaymentOrderMutation, CreatePaymentOrderMutationVariables>;
+export const CreatePaymentOrderDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreatePaymentOrder"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreatePaymentOrderInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createPaymentOrder"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"orderId"}},{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"originalAmount"}},{"kind":"Field","name":{"kind":"Name","value":"discountAmount"}},{"kind":"Field","name":{"kind":"Name","value":"currency"}},{"kind":"Field","name":{"kind":"Name","value":"razorpayKeyId"}},{"kind":"Field","name":{"kind":"Name","value":"couponApplied"}},{"kind":"Field","name":{"kind":"Name","value":"couponMessage"}},{"kind":"Field","name":{"kind":"Name","value":"isFree"}}]}}]}}]} as unknown as DocumentNode<CreatePaymentOrderMutation, CreatePaymentOrderMutationVariables>;
+export const ValidateCouponDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"ValidateCoupon"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ValidateCouponInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"validateCoupon"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"valid"}},{"kind":"Field","name":{"kind":"Name","value":"coupon"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"discountType"}},{"kind":"Field","name":{"kind":"Name","value":"discountValue"}}]}},{"kind":"Field","name":{"kind":"Name","value":"discountAmount"}},{"kind":"Field","name":{"kind":"Name","value":"originalAmount"}},{"kind":"Field","name":{"kind":"Name","value":"finalAmount"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<ValidateCouponMutation, ValidateCouponMutationVariables>;
 export const VerifyPaymentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"VerifyPayment"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"paymentId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"signature"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"verifyPayment"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orderId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderId"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"paymentId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"paymentId"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"signature"},"value":{"kind":"Variable","name":{"kind":"Name","value":"signature"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"paymentId"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<VerifyPaymentMutation, VerifyPaymentMutationVariables>;

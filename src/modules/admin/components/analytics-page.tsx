@@ -1,6 +1,5 @@
 'use client';
 
-import { AdminSidebarLayout } from '@/components/layouts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   ChartConfig,
@@ -93,7 +92,7 @@ export const AnalyticsPage = () => {
   }, [trends]);
 
   return (
-    <AdminSidebarLayout>
+    
       <div className="p-6 md:p-8 space-y-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Analytics & Reports</h1>
@@ -261,6 +260,6 @@ export const AnalyticsPage = () => {
           </>
         )}
       </div>
-    </AdminSidebarLayout>
+    
   );
 };
