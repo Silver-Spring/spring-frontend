@@ -20,3 +20,4 @@ export * from './use-admin-update-coupon';
 export * from './use-admin-deactivate-coupon';
 export * from './use-admin-activate-coupon';
 export * from './use-admin-delete-coupon';
+export * from './use-users-without-assessment';

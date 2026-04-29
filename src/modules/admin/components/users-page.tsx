@@ -38,6 +38,7 @@ import {
   RevokeAdminDialog,
   GrantInternalAccessDialog,
   RevokeInternalAccessDialog,
+  UsersWithoutAssessmentDialog,
 } from './dialogs';
 import {
   useAllUsers,
@@ -78,6 +79,7 @@ export const UsersPage = () => {
   const [actionUserId, setActionUserId] = useState<string | null>(null);
   const [confirmDialog, setConfirmDialog] = useState<ConfirmDialogType>(null);
   const [selectedUser, setSelectedUser] = useState<SelectedUser | null>(null);
+  const [showUsersWithoutAssessmentDialog, setShowUsersWithoutAssessmentDialog] = useState(false);
 
   const handleOpenConfirmDialog = (type: ConfirmDialogType, user: SelectedUser) => {
     setSelectedUser(user);
@@ -425,13 +427,27 @@ export const UsersPage = () => {
                 <UserCheck className="h-4 w-4 text-blue-600" />
               </CardContent>
             </Card>
-            <Card>
+            <Card
+              className="cursor-pointer transition-colors hover:bg-accent/50"
+              onClick={() => setShowUsersWithoutAssessmentDialog(true)}
+            >
               <CardHeader className="pb-3">
                 <CardDescription>Users Without Assessment</CardDescription>
                 <CardTitle className="text-3xl">{usersWithoutAssessmentCount}</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="flex items-center justify-between">
                 <ClipboardX className="h-4 w-4 text-purple-600" />
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 text-xs"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowUsersWithoutAssessmentDialog(true);
+                  }}
+                >
+                  View Details
+                </Button>
               </CardContent>
             </Card>
           </div>
@@ -503,6 +519,11 @@ export const UsersPage = () => {
         onConfirm={handleConfirmAction}
         userEmail={selectedUser?.email || ''}
         loading={deleting}
+      />
+
+      <UsersWithoutAssessmentDialog
+        open={showUsersWithoutAssessmentDialog}
+        onOpenChange={setShowUsersWithoutAssessmentDialog}
       />
     </>
   );
