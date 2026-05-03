@@ -63,10 +63,10 @@ importers:
         specifier: ^1.0.11
         version: 1.0.11
       posthog-js:
-        specifier: ^1.372.1
+        specifier: ^1.372.6
         version: 1.372.6
       posthog-node:
-        specifier: ^5.30.4
+        specifier: ^5.33.0
         version: 5.33.0(rxjs@7.8.2)
       radix-ui:
         specifier: latest
@@ -78,7 +78,7 @@ importers:
         specifier: 19.2.5
         version: 19.2.5
       react-cookie:
-        specifier: ^8.1.0
+        specifier: ^8.1.2
         version: 8.1.2(@types/react@19.2.14)(react@19.2.5)
       react-day-picker:
         specifier: ^9.14.0
@@ -87,7 +87,7 @@ importers:
         specifier: 19.2.5
         version: 19.2.5(react@19.2.5)
       react-hook-form:
-        specifier: ^7.74.0
+        specifier: ^7.75.0
         version: 7.75.0(react@19.2.5)
       recharts:
         specifier: 2.15.4
@@ -102,7 +102,7 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       zod:
-        specifier: ^4.3.6
+        specifier: ^4.4.2
         version: 4.4.2
       zustand:
         specifier: ^5.0.12
@@ -154,7 +154,7 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       baseline-browser-mapping:
-        specifier: ^2.10.22
+        specifier: ^2.10.25
         version: 2.10.25
       eslint:
         specifier: ^9.39.4
