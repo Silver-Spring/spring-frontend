@@ -4,11 +4,16 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { AssessmentTypeCode } from '@/modules/assessment/constants';
 import { useState } from 'react';
 import { useGetSections, useUpdateSection } from '../../assessment/hooks';
 
-export const SectionManager = () => {
-  const { sections, loading, refetch } = useGetSections();
+type SectionManagerProps = {
+  assessmentType: AssessmentTypeCode;
+};
+
+export const SectionManager = ({ assessmentType }: SectionManagerProps) => {
+  const { sections, loading, refetch } = useGetSections(assessmentType);
   const { updateSection, loading: updating } = useUpdateSection();
 
   const [editingId, setEditingId] = useState<string | null>(null);

@@ -22,3 +22,5 @@ export * from './use-delete-question';
 export * from './use-get-sections';
 export * from './use-get-section-questions';
 export * from './use-users-with-assessment';
+export * from './use-available-assessments';
+export * from './use-assessment-type-by-code';

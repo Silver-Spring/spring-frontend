@@ -2,6 +2,7 @@
 
 import {
   CohortComparisonCard,
+  RecommendedActionsCard,
   SectionBreakdownCard,
   TabbedRadarChart,
   TotalScoreCard,
@@ -149,7 +150,12 @@ export const AssessmentResultsPage = ({ resultId }: AssessmentResultsPageProps) 
           <TotalScoreCard
             totalScore={result.totalReadinessIndex}
             completedDate={result.createdAt}
+            interpretationLabel={result.interpretationLabel}
+            interpretationNarrative={result.interpretationNarrative}
+            interpretationKeyMindset={result.interpretationKeyMindset}
           />
+
+          <RecommendedActionsCard actions={result.recommendedActions ?? []} />
 
           {/* Two Column Grid - Section Breakdown & Cohort Comparison */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6 lg:items-center">

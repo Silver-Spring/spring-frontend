@@ -1,10 +1,17 @@
 'use client';
 
 import { useQuery } from '@apollo/client/react';
+import {
+  AssessmentTypeCode,
+  DEFAULT_ASSESSMENT_TYPE,
+} from '@/modules/assessment/constants';
 import { ScoreDistributionDoc } from '../graphql/score-distribution.graphql';
 
-export const useScoreDistribution = () => {
+export const useScoreDistribution = (
+  assessmentType: AssessmentTypeCode = DEFAULT_ASSESSMENT_TYPE
+) => {
   const { data, loading, error, refetch } = useQuery(ScoreDistributionDoc, {
+    variables: { assessmentType },
     fetchPolicy: 'cache-and-network',
   });
 

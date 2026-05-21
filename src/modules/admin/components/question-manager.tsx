@@ -11,7 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useState } from 'react';
+import { AssessmentTypeCode } from '@/modules/assessment/constants';
+import { useEffect, useState } from 'react';
 import {
   useBulkCreateQuestions,
   useCreateQuestion,
@@ -21,8 +22,12 @@ import {
   useUpdateQuestion,
 } from '../../assessment/hooks';
 
-export const QuestionManager = () => {
-  const { sections, loading: sectionsLoading } = useGetSections();
+type QuestionManagerProps = {
+  assessmentType: AssessmentTypeCode;
+};
+
+export const QuestionManager = ({ assessmentType }: QuestionManagerProps) => {
+  const { sections, loading: sectionsLoading } = useGetSections(assessmentType);
   const [selectedSectionId, setSelectedSectionId] = useState<string | null>(null);
   const {
     questions,
@@ -33,6 +38,13 @@ export const QuestionManager = () => {
   const { bulkCreateQuestions, loading: bulkCreating } = useBulkCreateQuestions();
   const { updateQuestion, loading: updating } = useUpdateQuestion();
   const { deleteQuestion, loading: deleting } = useDeleteQuestion();
+
+  useEffect(() => {
+    setSelectedSectionId(null);
+    setEditingId(null);
+    setShowCreateForm(false);
+    setShowBulkImport(false);
+  }, [assessmentType]);
 
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [showBulkImport, setShowBulkImport] = useState(false);

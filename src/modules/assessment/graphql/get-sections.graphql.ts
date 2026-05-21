@@ -1,8 +1,11 @@
 import { graphql } from '@/gql';
 
 const GetAllSectionsDoc = graphql(`
-  query GetAllSections {
-    assessmentSections(orderBy: DISPLAY_ORDER_ASC) {
+  query GetAllSections($assessmentType: String = "ssri") {
+    assessmentSections(
+      condition: { assessmentTypeCode: $assessmentType }
+      orderBy: DISPLAY_ORDER_ASC
+    ) {
       nodes {
         id
         type
@@ -10,6 +13,7 @@ const GetAllSectionsDoc = graphql(`
         description
         displayOrder
         isActive
+        assessmentTypeCode
       }
     }
   }

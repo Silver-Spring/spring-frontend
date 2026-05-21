@@ -19,10 +19,10 @@ import {
 } from '@/components/ui/sidebar';
 import { Spinner } from '@/components/ui/spinner';
 import { getInitials } from '@/lib/utils';
+import { AdminAssessmentSidebarNav } from '@/modules/admin/components/admin-assessment-sidebar-nav';
 import { useLogout } from '@/modules/auth/hooks';
 import {
   BarChart3,
-  ClipboardList,
   CreditCard,
   Home,
   LayoutDashboard,
@@ -32,7 +32,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { type ReactNode } from 'react';
+import { Suspense, type ReactNode } from 'react';
 import { AuthLayout, AuthRestrict, type LayoutChildProps } from './auth-layout';
 
 interface AdminSidebarLayoutProps {
@@ -44,11 +44,6 @@ const menuItems = [
     title: 'Overview',
     url: '/admin',
     icon: LayoutDashboard,
-  },
-  {
-    title: 'Assessment Management',
-    url: '/admin/assessment',
-    icon: ClipboardList,
   },
   {
     title: 'Users',
@@ -100,13 +95,31 @@ export const AdminSidebarLayout = ({ children }: AdminSidebarLayoutProps) => {
                 <SidebarGroupLabel>Navigation</SidebarGroupLabel>
                 <SidebarGroupContent>
                   <SidebarMenu>
-                    {menuItems.map((item) => {
+                    {menuItems.slice(0, 1).map((item) => {
                       const isActive = pathname === item.url;
                       return (
                         <SidebarMenuItem key={item.title}>
                           <SidebarMenuButton asChild isActive={isActive}>
                             <Link href={item.url}>
-                              <item.icon className="h-4 w-4" />
+                              <item.icon />
+                              <span>{item.title}</span>
+                            </Link>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      );
+                    })}
+
+                    <Suspense fallback={null}>
+                      <AdminAssessmentSidebarNav />
+                    </Suspense>
+
+                    {menuItems.slice(1).map((item) => {
+                      const isActive = pathname === item.url;
+                      return (
+                        <SidebarMenuItem key={item.title}>
+                          <SidebarMenuButton asChild isActive={isActive}>
+                            <Link href={item.url}>
+                              <item.icon />
                               <span>{item.title}</span>
                             </Link>
                           </SidebarMenuButton>
@@ -126,7 +139,7 @@ export const AdminSidebarLayout = ({ children }: AdminSidebarLayoutProps) => {
                 tabIndex={0}
               >
                 <Link href="/">
-                  <Home className="h-4 w-4 mr-2" />
+                  <Home className="mr-2" />
                   Homepage
                 </Link>
               </Button>
@@ -140,12 +153,12 @@ export const AdminSidebarLayout = ({ children }: AdminSidebarLayoutProps) => {
               >
                 {loggingOut ? (
                   <>
-                    <Spinner className="h-4 w-4 mr-2" />
+                    <Spinner className="mr-2" />
                     Logging out...
                   </>
                 ) : (
                   <>
-                    <LogOut className="h-4 w-4 mr-2" />
+                    <LogOut className="mr-2" />
                     Logout
                   </>
                 )}

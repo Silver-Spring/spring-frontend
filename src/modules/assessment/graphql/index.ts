@@ -21,4 +21,6 @@ export { DeleteAssessmentQuestionDoc } from './delete-question.graphql';
 export { BulkCreateAssessmentQuestionsDoc } from './bulk-create-questions.graphql';
 export { GetAllSectionsDoc } from './get-sections.graphql';
 export { GetSectionQuestionsDoc } from './get-section-questions.graphql';
+export { AvailableAssessmentsDoc } from './available-assessments.graphql';
+export { AssessmentTypeByCodeDoc } from './assessment-type-by-code.graphql';
 

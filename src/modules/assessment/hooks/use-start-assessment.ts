@@ -1,7 +1,11 @@
 import { useMutation } from '@apollo/client/react';
 import { toast } from 'sonner';
-import { StartAssessmentDoc } from '../graphql';
 import { useAssessmentStore } from '@/stores';
+import {
+  AssessmentTypeCode,
+  DEFAULT_ASSESSMENT_TYPE,
+} from '../constants';
+import { StartAssessmentDoc } from '../graphql';
 
 export const useStartAssessment = () => {
   const { setCurrentSession } = useAssessmentStore();
@@ -18,7 +22,6 @@ export const useStartAssessment = () => {
     },
     onError: (error) => {
       toast.error('Failed to start assessment. Please try again.');
-      // Only show technical details in development
       const isDev = process.env.NODE_ENV === 'development';
       const errorMessage = isDev
         ? `Failed to start assessment. ${error.message}`
@@ -27,14 +30,23 @@ export const useStartAssessment = () => {
     },
   });
 
-  const startAssessment = async (paymentId?: string | null) => {
+  const startAssessment = async (
+    paymentId?: string | null,
+    assessmentType: AssessmentTypeCode = DEFAULT_ASSESSMENT_TYPE
+  ) => {
     try {
       const result = await startAssessmentMutation({
-        variables: { paymentId: paymentId || null },
+        variables: {
+          input: {
+            paymentId: paymentId || null,
+            assessmentType,
+          },
+        },
       });
 
       return {
         session: result.data?.startAssessment?.session || null,
+        assessmentType: result.data?.startAssessment?.assessmentType || null,
         message: result.data?.startAssessment?.message || null,
       };
     } catch (error) {

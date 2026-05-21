@@ -1,4 +1,5 @@
 import { capturePaymentError } from '@/lib/analytics';
+import { AssessmentTypeCode, DEFAULT_ASSESSMENT_TYPE } from '@/modules/assessment/constants';
 import { useMutation } from '@apollo/client/react';
 import posthog from 'posthog-js';
 import { useEffect, useRef, useState } from 'react';
@@ -42,7 +43,8 @@ export const useCreatePaymentOrder = () => {
   const createPaymentOrder = async (
     onSuccess: (paymentId: string | null) => void,
     onFailure?: (error: RazorpayErrorResponse | Error) => void,
-    couponCode?: string
+    couponCode?: string,
+    assessmentType: AssessmentTypeCode = DEFAULT_ASSESSMENT_TYPE
   ) => {
     setIsProcessing(true);
 
@@ -60,6 +62,7 @@ export const useCreatePaymentOrder = () => {
         variables: {
           input: {
             couponCode: couponCode || undefined,
+            assessmentType,
           },
         },
       });

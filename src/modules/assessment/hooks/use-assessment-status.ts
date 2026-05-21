@@ -1,9 +1,15 @@
 import { useQuery } from '@apollo/client/react';
+import {
+  AssessmentTypeCode,
+  DEFAULT_ASSESSMENT_TYPE,
+} from '../constants';
 import { AssessmentStatusDoc } from '../graphql';
 
-export const useAssessmentStatus = () => {
+export const useAssessmentStatus = (
+  assessmentType: AssessmentTypeCode = DEFAULT_ASSESSMENT_TYPE
+) => {
   const { data, loading, error, refetch } = useQuery(AssessmentStatusDoc, {
-    // Cache for 5 minutes since this data doesn't change frequently
+    variables: { assessmentType },
     fetchPolicy: 'cache-and-network',
   });
 
@@ -14,6 +20,8 @@ export const useAssessmentStatus = () => {
     completedAt: data?.assessmentStatus?.completedAt || null,
     resultId: data?.assessmentStatus?.resultId || null,
     totalReadinessIndex: data?.assessmentStatus?.totalReadinessIndex || null,
+    completedAssessments: data?.assessmentStatus?.completedAssessments ?? [],
+    availableAssessments: data?.assessmentStatus?.availableAssessments ?? [],
     loading,
     error,
     refetch,

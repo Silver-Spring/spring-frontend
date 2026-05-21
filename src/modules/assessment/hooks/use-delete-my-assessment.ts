@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client/react';
 import { toast } from 'sonner';
+import { AssessmentTypeCode } from '../constants';
 import { DeleteMyAssessmentDoc } from '../graphql/delete-my-assessment.graphql';
 
 export const useDeleteMyAssessment = () => {
@@ -20,9 +21,11 @@ export const useDeleteMyAssessment = () => {
     }
   );
 
-  const deleteMyAssessment = async () => {
+  const deleteMyAssessment = async (assessmentType?: AssessmentTypeCode) => {
     try {
-      const result = await deleteMyAssessmentMutation();
+      const result = await deleteMyAssessmentMutation({
+        variables: { assessmentType: assessmentType ?? null },
+      });
       return result.data?.deleteMyAssessment || null;
     } catch (error) {
       console.error('Error in deleteMyAssessment:', error);

@@ -1,13 +1,15 @@
 import { useQuery } from '@apollo/client/react';
+import {
+  AssessmentTypeCode,
+  DEFAULT_ASSESSMENT_TYPE,
+} from '@/modules/assessment/constants';
 import { CheckPaymentStatusDoc } from '../graphql';
 
-/**
- * Hook to check if the current user has already paid for the assessment.
- * This should be called BEFORE showing payment UI to prevent duplicate payments.
- */
-export const usePaymentStatus = () => {
+export const usePaymentStatus = (
+  assessmentType: AssessmentTypeCode = DEFAULT_ASSESSMENT_TYPE
+) => {
   const { data, loading, error, refetch } = useQuery(CheckPaymentStatusDoc, {
-    // Cache for 5 minutes to reduce unnecessary requests
+    variables: { assessmentType },
     fetchPolicy: 'cache-first',
     nextFetchPolicy: 'cache-first',
   });

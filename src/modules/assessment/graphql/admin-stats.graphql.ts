@@ -1,8 +1,8 @@
 import { graphql } from '@/gql';
 
 const AdminAssessmentStatsDoc = graphql(`
-  query AdminAssessmentStats {
-    adminAssessmentStats {
+  query AdminAssessmentStats($assessmentType: String = "ssri") {
+    adminAssessmentStats(assessmentType: $assessmentType) {
       totalSections
       totalQuestions
       totalInterpretationBands

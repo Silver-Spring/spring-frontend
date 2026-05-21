@@ -10,11 +10,16 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/chart';
 import { Spinner } from '@/components/ui/spinner';
+import {
+  AssessmentTypeCode,
+  DEFAULT_ASSESSMENT_TYPE,
+} from '@/modules/assessment/constants';
 import { useAllUsers, useAssessmentTrends, useScoreDistribution } from '@/modules/admin/hooks';
 import { useUsersWithAssessment } from '@/modules/assessment/hooks';
 import { Activity, BarChart3, TrendingUp, Users } from 'lucide-react';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Bar, BarChart, CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts';
+import { AssessmentTypeSelector } from './assessment-type-selector';
 
 const chartConfig = {
   completedCount: {
@@ -36,6 +41,8 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export const AnalyticsPage = () => {
+  const [selectedType, setSelectedType] = useState<AssessmentTypeCode>(DEFAULT_ASSESSMENT_TYPE);
+
   const {
     users: assessmentUsers,
     totalCount: totalAssessments,
@@ -52,7 +59,7 @@ export const AnalyticsPage = () => {
     distribution,
     averageScore: apiAverageScore,
     loading: loadingDistribution,
-  } = useScoreDistribution();
+  } = useScoreDistribution(selectedType);
 
   const isLoading = loadingAssessments || loadingUsers;
   const isChartsLoading = loadingTrends || loadingDistribution;
@@ -100,6 +107,12 @@ export const AnalyticsPage = () => {
             View detailed analytics and performance metrics
           </p>
         </div>
+
+        <AssessmentTypeSelector
+          value={selectedType}
+          onChange={setSelectedType}
+          label="Score distribution by assessment type"
+        />
 
         {isLoading ? (
           <div className="flex items-center justify-center h-64">

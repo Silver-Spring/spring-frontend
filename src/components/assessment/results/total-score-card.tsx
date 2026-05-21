@@ -1,18 +1,24 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { getInterpretationBand } from '@/modules/assessment/constants/interpretation-bands';
-import { useMemo } from 'react';
+import { getBandLabelColor } from '@/modules/assessment/constants/interpretation-bands';
 
 interface TotalScoreCardProps {
   totalScore: number;
   completedDate: string;
+  interpretationLabel?: string | null;
+  interpretationNarrative?: string | null;
+  interpretationKeyMindset?: string | null;
 }
 
-export const TotalScoreCard = ({ totalScore, completedDate }: TotalScoreCardProps) => {
-  const interpretationBand = useMemo(() => {
-    return getInterpretationBand(totalScore, true);
-  }, [totalScore]);
+export const TotalScoreCard = ({
+  totalScore,
+  completedDate,
+  interpretationLabel,
+  interpretationNarrative,
+  interpretationKeyMindset,
+}: TotalScoreCardProps) => {
+  const labelColor = getBandLabelColor(interpretationLabel);
 
   return (
     <Card className="bg-linear-to-br from-primary/8 via-primary/5 to-background border-primary/20 shadow-none">
@@ -23,14 +29,21 @@ export const TotalScoreCard = ({ totalScore, completedDate }: TotalScoreCardProp
         <div className="text-6xl font-bold my-4" style={{ color: 'var(--chart-1)' }}>
           {totalScore}
         </div>
-        {interpretationBand && (
+        {interpretationLabel && (
           <>
-            <div className="text-xl font-semibold text-primary mb-4">
-              {interpretationBand.label}
+            <div className={`text-xl font-semibold mb-4 ${labelColor}`}>
+              {interpretationLabel}
             </div>
-            <p className="text-sm text-green-800 dark:text-green-200 leading-relaxed max-w-2xl mx-auto">
-              {interpretationBand.description}
-            </p>
+            {interpretationNarrative && (
+              <p className="text-sm text-green-800 dark:text-green-200 leading-relaxed max-w-2xl mx-auto whitespace-pre-wrap">
+                {interpretationNarrative}
+              </p>
+            )}
+            {interpretationKeyMindset && (
+              <blockquote className="mt-4 text-sm italic text-muted-foreground max-w-xl mx-auto border-l-2 border-primary/30 pl-4">
+                {interpretationKeyMindset}
+              </blockquote>
+            )}
           </>
         )}
       </CardHeader>

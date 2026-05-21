@@ -9,7 +9,7 @@ import {
   ChartLegendContent,
 } from '@/components/ui/chart';
 import { useIsMobile } from '@/hooks';
-import { SECTION_SCORE_BANDS } from '@/modules/assessment/constants/interpretation-bands';
+import { getBandLabelColor } from '@/modules/assessment/constants/interpretation-bands';
 import { TrendingUp } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { Cell, Label, Pie, PieChart as RechartsPieChart, Sector } from 'recharts';
@@ -163,9 +163,7 @@ export const SectionBreakdownCard = ({ sectionResults }: SectionBreakdownCardPro
       const section = sectionResults.find(
         (s) => s.sectionType.toLowerCase() === data.payload.section
       );
-      const band = SECTION_SCORE_BANDS.find(
-        (b) => section && section.score >= b.min && section.score <= b.max
-      );
+      const labelColor = getBandLabelColor(section?.interpretationLabel);
 
       const percentage = (((section?.score || 0) / totalScore) * 100).toFixed(1);
 
@@ -183,7 +181,7 @@ export const SectionBreakdownCard = ({ sectionResults }: SectionBreakdownCardPro
             </div>
             <div className="flex items-center justify-between gap-6">
               <span className="text-muted-foreground">Level:</span>
-              <span className={`font-semibold ${band?.color || ''}`}>
+              <span className={`font-semibold ${labelColor}`}>
                 {section?.interpretationLabel}
               </span>
             </div>

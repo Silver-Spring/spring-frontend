@@ -1,0 +1,428 @@
+'use client';
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Spinner } from '@/components/ui/spinner';
+import { cn } from '@/lib/utils';
+import {
+  buildAssessmentHref,
+  useActivateAssessmentType,
+  useAdminAssessmentTypes,
+  useAssessmentTypeReadiness,
+  useDeactivateAssessmentType,
+  useSeedAssessmentTypeContent,
+  type AssessmentTypeReadinessCheckKey,
+} from '@/modules/admin/hooks';
+import {
+  getDefaultTemplateCode,
+  getReadinessFixViewLabel,
+  isProtectedAssessmentType,
+  READINESS_CHECK_FIX_VIEWS,
+} from '@/modules/admin/lib/assessment-type-lifecycle';
+import { CheckCircle2, CircleAlert, RefreshCw, XCircle } from 'lucide-react';
+import Link from 'next/link';
+import { useEffect, useMemo, useState } from 'react';
+
+const getCheckFixHref = (checkKey: string, assessmentType: string) => {
+  const view = READINESS_CHECK_FIX_VIEWS[checkKey as AssessmentTypeReadinessCheckKey];
+  if (!view) return null;
+  return buildAssessmentHref(view, assessmentType);
+};
+
+type AssessmentTypeReadinessSummaryProps = {
+  assessmentType: string;
+  isActive: boolean;
+};
+
+export const AssessmentTypeReadinessSummary = ({
+  assessmentType,
+  isActive,
+}: AssessmentTypeReadinessSummaryProps) => {
+  const { ready, checks, loading, error } = useAssessmentTypeReadiness(assessmentType);
+
+  if (loading) {
+    return (
+      <p className="text-xs text-muted-foreground flex items-center gap-2 mt-3">
+        <Spinner className="size-3" />
+        Checking readiness...
+      </p>
+    );
+  }
+
+  if (error) {
+    return (
+      <p className="text-xs text-destructive mt-3" role="alert">
+        Could not load readiness status
+      </p>
+    );
+  }
+
+  if (checks.length === 0) {
+    return (
+      <p className="text-xs text-muted-foreground mt-3">No readiness checks available</p>
+    );
+  }
+
+  const passedCount = checks.filter((check) => check.passed).length;
+  const firstFailed = checks.find((check) => !check.passed);
+
+  if (isActive) {
+    return (
+      <p className="text-xs text-muted-foreground mt-3 flex items-center gap-1.5">
+        <CheckCircle2 className="size-3.5 text-primary shrink-0" />
+        Published and visible to users
+      </p>
+    );
+  }
+
+  if (ready) {
+    return (
+      <p className="text-xs mt-3 flex items-center gap-1.5 text-primary font-medium">
+        <CheckCircle2 className="size-3.5 shrink-0" />
+        Ready to publish — open Overview to go live
+      </p>
+    );
+  }
+
+  return (
+    <div className="mt-3 space-y-1">
+      <p className="text-xs text-muted-foreground">
+        Readiness: {passedCount}/{checks.length} checks passed
+      </p>
+      {firstFailed && (
+        <p className="text-xs text-destructive line-clamp-2">{firstFailed.detail}</p>
+      )}
+    </div>
+  );
+};
+
+type AssessmentTypeReadinessPanelProps = {
+  assessmentType: string;
+};
+
+export const AssessmentTypeReadinessPanel = ({
+  assessmentType,
+}: AssessmentTypeReadinessPanelProps) => {
+  const { assessmentTypes } = useAdminAssessmentTypes();
+  const { ready, checks, loading, error, refetch } = useAssessmentTypeReadiness(assessmentType);
+  const { activateAssessmentType, loading: activating } = useActivateAssessmentType();
+  const { deactivateAssessmentType, loading: deactivating } = useDeactivateAssessmentType();
+  const { seedAssessmentTypeContent, loading: seeding } = useSeedAssessmentTypeContent();
+
+  const type = assessmentTypes.find((t) => t.code === assessmentType);
+  const isProtected = isProtectedAssessmentType(assessmentType);
+
+  const [templateCode, setTemplateCode] = useState('');
+  const [cloneBands, setCloneBands] = useState(true);
+  const [cloneTemplateContent, setCloneTemplateContent] = useState(false);
+  const [publishError, setPublishError] = useState<string | null>(null);
+  const [deactivateDialogOpen, setDeactivateDialogOpen] = useState(false);
+
+  const templateOptions = useMemo(
+    () => assessmentTypes.filter((t) => t.code !== assessmentType),
+    [assessmentTypes, assessmentType]
+  );
+
+  useEffect(() => {
+    setPublishError(null);
+  }, [assessmentType]);
+
+  useEffect(() => {
+    if (templateOptions.length === 0) return;
+    setTemplateCode((current) => {
+      const isCurrentValid = templateOptions.some((option) => option.code === current);
+      if (isCurrentValid) return current;
+      return getDefaultTemplateCode(templateOptions);
+    });
+  }, [templateOptions]);
+
+  const handleRefreshReadiness = async () => {
+    setPublishError(null);
+    await refetch();
+  };
+
+  const handlePublish = async () => {
+    setPublishError(null);
+    const result = await activateAssessmentType(assessmentType);
+    await refetch();
+
+    if (result && !result.success) {
+      setPublishError(
+        result.message ||
+          'Assessment type is not ready to activate. Review the failed checks below.'
+      );
+    }
+  };
+
+  const handleConfirmDeactivate = async () => {
+    await deactivateAssessmentType(assessmentType);
+    setDeactivateDialogOpen(false);
+    await refetch();
+  };
+
+  const handleReclone = async () => {
+    if (!templateCode) return;
+    await seedAssessmentTypeContent({
+      assessmentTypeCode: assessmentType,
+      templateCode,
+      cloneBands,
+      cloneTemplateContent,
+    });
+    await refetch();
+  };
+
+  const failedChecks = checks.filter((check) => !check.passed);
+
+  return (
+    <>
+      <Card className="p-6 space-y-6">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <h3 className="font-semibold text-lg">Launch readiness</h3>
+            <p className="text-sm text-muted-foreground mt-1">
+              All checks must pass before this type can go live in{' '}
+              <span className="font-medium">availableAssessments</span>.
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={handleRefreshReadiness}
+              disabled={loading}
+              aria-label="Refresh readiness checklist"
+            >
+              <RefreshCw className={cn('size-4 mr-1.5', loading && 'animate-spin')} />
+              Refresh
+            </Button>
+            {type && (
+              <Badge variant={type.isActive ? 'default' : 'secondary'}>
+                {type.isActive ? 'Live' : 'Draft'}
+              </Badge>
+            )}
+          </div>
+        </div>
+
+        {type?.isActive && (
+          <Alert>
+            <CheckCircle2 />
+            <AlertTitle>Published</AlertTitle>
+            <AlertDescription>
+              This assessment type is visible to users in{' '}
+              <span className="font-medium">availableAssessments</span>. Existing results are
+              preserved if you deactivate it later.
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {error && (
+          <Alert variant="destructive">
+            <CircleAlert />
+            <AlertTitle>Could not load readiness</AlertTitle>
+            <AlertDescription className="flex flex-wrap items-center gap-3">
+              <span>{error.message || 'Something went wrong while loading the checklist.'}</span>
+              <Button type="button" variant="outline" size="sm" onClick={handleRefreshReadiness}>
+                Try again
+              </Button>
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {loading && checks.length === 0 ? (
+          <div className="flex items-center gap-2 text-muted-foreground py-4">
+            <Spinner className="size-4" />
+            Loading readiness checklist...
+          </div>
+        ) : (
+          <ul className="space-y-3" aria-label="Readiness checklist">
+            {checks.map((check) => {
+              const fixHref = !check.passed ? getCheckFixHref(check.key, assessmentType) : null;
+              const fixLabel = getReadinessFixViewLabel(check.key);
+
+              return (
+                <li
+                  key={check.key}
+                  className={cn(
+                    'flex gap-3 rounded-lg border p-3',
+                    check.passed ? 'border-primary/20 bg-primary/5' : 'border-destructive/20'
+                  )}
+                >
+                  {check.passed ? (
+                    <CheckCircle2 className="size-5 text-primary shrink-0 mt-0.5" aria-hidden />
+                  ) : (
+                    <XCircle className="size-5 text-destructive shrink-0 mt-0.5" aria-hidden />
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-sm">{check.label}</p>
+                    <p className="text-sm text-muted-foreground mt-0.5">{check.detail}</p>
+                    {fixHref && fixLabel && (
+                      <Button variant="link" className="h-auto p-0 mt-2 text-sm" asChild>
+                        <Link href={fixHref}>Fix in {fixLabel}</Link>
+                      </Button>
+                    )}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+
+        {!type?.isActive && !loading && !error && (
+          <div className="rounded-lg border border-dashed p-4 space-y-3">
+            <div className="flex items-start gap-2">
+              <CircleAlert className="size-4 text-muted-foreground shrink-0 mt-0.5" />
+              <p className="text-sm text-muted-foreground">
+                {ready
+                  ? 'All checks passed. You can publish this assessment type.'
+                  : failedChecks.length > 0
+                    ? `Complete ${failedChecks.length} failed check${failedChecks.length === 1 ? '' : 's'} before publishing.`
+                    : 'Complete the failed checks above before publishing.'}
+              </p>
+            </div>
+
+            {publishError && (
+              <Alert variant="destructive">
+                <CircleAlert />
+                <AlertTitle>Publish failed</AlertTitle>
+                <AlertDescription>{publishError}</AlertDescription>
+              </Alert>
+            )}
+
+            <Button onClick={handlePublish} disabled={!ready || activating}>
+              {activating ? 'Publishing...' : 'Publish assessment type'}
+            </Button>
+          </div>
+        )}
+
+        {type?.isActive && !isProtected && (
+          <div className="pt-2 border-t">
+            <Button
+              variant="outline"
+              onClick={() => setDeactivateDialogOpen(true)}
+              disabled={deactivating}
+            >
+              {deactivating ? 'Deactivating...' : 'Deactivate (hide from users)'}
+            </Button>
+          </div>
+        )}
+
+        {type?.isActive && isProtected && (
+          <p className="text-xs text-muted-foreground border-t pt-4">
+            {assessmentType.toUpperCase()} is a protected baseline type and cannot be deactivated.
+          </p>
+        )}
+
+        <div className="border-t pt-6 space-y-4">
+          <div>
+            <h4 className="font-medium">Re-clone from template</h4>
+            <p className="text-sm text-muted-foreground mt-1">
+              Copy missing interpretation bands and/or PDF template content from another type.
+              Existing bands with the same label and dimension are skipped.
+            </p>
+          </div>
+
+          {templateOptions.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              No other assessment types are available to use as a template. Create another type
+              first, or use the create wizard to clone from SSRI on initial setup.
+            </p>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="reclone-template">Template type</Label>
+                  <Select value={templateCode} onValueChange={setTemplateCode}>
+                    <SelectTrigger id="reclone-template" className="mt-2">
+                      <SelectValue placeholder="Select template" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {templateOptions.map((option) => (
+                        <SelectItem key={option.code} value={option.code}>
+                          {option.name} ({option.code.toUpperCase()})
+                          {!option.isActive ? ' — draft' : ''}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <label className="flex items-center gap-2 text-sm">
+                  <Checkbox
+                    checked={cloneBands}
+                    onCheckedChange={(checked) => setCloneBands(checked === true)}
+                    aria-label="Clone interpretation bands"
+                  />
+                  Clone interpretation bands
+                </label>
+                <label className="flex items-center gap-2 text-sm">
+                  <Checkbox
+                    checked={cloneTemplateContent}
+                    onCheckedChange={(checked) => setCloneTemplateContent(checked === true)}
+                    aria-label="Clone PDF template content"
+                  />
+                  Clone PDF template content
+                </label>
+              </div>
+              <Button
+                variant="secondary"
+                onClick={handleReclone}
+                disabled={
+                  seeding || !templateCode || (!cloneBands && !cloneTemplateContent)
+                }
+              >
+                {seeding ? 'Cloning...' : 'Re-clone from template'}
+              </Button>
+            </>
+          )}
+        </div>
+      </Card>
+
+      <AlertDialog open={deactivateDialogOpen} onOpenChange={setDeactivateDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Deactivate {type?.name ?? assessmentType.toUpperCase()}?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This hides the assessment type from users. New purchases and starts will not be
+              available until you publish again. Existing completed results are preserved.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deactivating}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={deactivating}
+              onClick={(event) => {
+                event.preventDefault();
+                void handleConfirmDeactivate();
+              }}
+            >
+              {deactivating ? 'Deactivating...' : 'Deactivate'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
+  );
+};
