@@ -9,13 +9,13 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
+import { cn } from '@/lib/utils';
 import {
   ALL_ASSESSMENT_TYPES_FILTER,
   AssessmentTypeFilter,
   DEFAULT_ASSESSMENT_TYPE,
 } from '@/modules/assessment/constants';
 import { useAdminAssessmentTypes } from '@/modules/admin/hooks';
-import { useOptionalAssessmentTypeContext } from '../context/assessment-type-context';
 
 type AssessmentTypeSelectorProps = {
   value?: AssessmentTypeFilter;
@@ -23,6 +23,7 @@ type AssessmentTypeSelectorProps = {
   label?: string;
   className?: string;
   includeAllTypes?: boolean;
+  layout?: 'stacked' | 'inline';
 };
 
 export const AssessmentTypeSelector = ({
@@ -31,25 +32,26 @@ export const AssessmentTypeSelector = ({
   label = 'Assessment Type',
   className,
   includeAllTypes = false,
+  layout = 'stacked',
 }: AssessmentTypeSelectorProps) => {
-  const context = useOptionalAssessmentTypeContext();
   const { assessmentTypes, loading } = useAdminAssessmentTypes();
 
-  const selectedType = value ?? context?.selectedType ?? DEFAULT_ASSESSMENT_TYPE;
+  const selectedType = value ?? DEFAULT_ASSESSMENT_TYPE;
 
   const handleChange = (nextType: string) => {
-    if (onChange) {
-      onChange(nextType);
-      return;
-    }
-    context?.setSelectedType(nextType);
+    onChange?.(nextType);
   };
 
   if (loading && assessmentTypes.length === 0) {
     return (
-      <div className={className}>
-        <Label>{label}</Label>
-        <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
+      <div className={cn(layout === 'inline' && 'flex items-center gap-3', className)}>
+        <Label className={cn(layout === 'inline' && 'shrink-0')}>{label}</Label>
+        <div
+          className={cn(
+            'flex items-center gap-2 text-sm text-muted-foreground',
+            layout === 'stacked' && 'mt-2'
+          )}
+        >
           <Spinner className="size-4" />
           Loading types...
         </div>
@@ -62,11 +64,21 @@ export const AssessmentTypeSelector = ({
       ? assessmentTypes
       : [{ code: DEFAULT_ASSESSMENT_TYPE, name: 'SSRI', isActive: true }];
 
+  const isInline = layout === 'inline';
+
   return (
-    <div className={className}>
-      <Label htmlFor="assessment-type-select">{label}</Label>
+    <div className={cn(isInline ? 'flex items-center gap-3' : 'space-y-2', className)}>
+      <Label
+        htmlFor="assessment-type-select"
+        className={cn(isInline && 'shrink-0 whitespace-nowrap')}
+      >
+        {label}
+      </Label>
       <Select value={selectedType} onValueChange={handleChange}>
-        <SelectTrigger id="assessment-type-select" className="mt-2 w-full max-w-xs">
+        <SelectTrigger
+          id="assessment-type-select"
+          className={cn('w-full', isInline ? 'h-9 min-w-[160px] max-w-[200px]' : 'max-w-xs')}
+        >
           <SelectValue placeholder="Select assessment type" />
         </SelectTrigger>
         <SelectContent>

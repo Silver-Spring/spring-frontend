@@ -2,7 +2,9 @@ import type { InternalRefetchQueriesInclude } from '@apollo/client';
 import { AdminAssessmentStatsDoc, GetAllSectionsDoc } from '@/modules/assessment/graphql';
 import {
   AdminAssessmentTypesDoc,
+  AssessmentTemplateContentsDoc,
   AssessmentTypeReadinessDoc,
+  AssessmentTypeStagesDoc,
 } from '../graphql';
 import { interpretationBandsRefetchQueries } from './interpretation-bands-refetch';
 
@@ -13,6 +15,28 @@ export const assessmentTypeLifecycleRefetchQueries = (
     { query: AdminAssessmentTypesDoc },
     { query: AssessmentTypeReadinessDoc, variables: { type: assessmentType } },
     { query: AdminAssessmentStatsDoc, variables: { assessmentType } },
+  ] as InternalRefetchQueriesInclude;
+
+export const assessmentTypeStagesRefetchQueries = (
+  assessmentType: string
+): InternalRefetchQueriesInclude =>
+  [
+    {
+      query: AssessmentTypeStagesDoc,
+      variables: { assessmentTypeCode: assessmentType },
+    },
+    ...interpretationBandsRefetchQueries(assessmentType),
+  ] as InternalRefetchQueriesInclude;
+
+export const assessmentTemplateContentRefetchQueries = (
+  assessmentType: string
+): InternalRefetchQueriesInclude =>
+  [
+    {
+      query: AssessmentTemplateContentsDoc,
+      variables: { assessmentTypeCode: assessmentType },
+    },
+    ...assessmentTypeLifecycleRefetchQueries(assessmentType),
   ] as InternalRefetchQueriesInclude;
 
 export const assessmentTypeSeedRefetchQueries = (

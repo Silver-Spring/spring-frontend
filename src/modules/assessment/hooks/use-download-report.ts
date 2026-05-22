@@ -1,12 +1,8 @@
+import { getApiBaseUrl } from '@/lib/api-base-url';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import Cookies from 'js-cookie';
 import { TOKEN_NAME } from '@/modules/auth/hooks';
-
-const getApiBaseUrl = (): string => {
-  const graphqlUrl = process.env.NEXT_PUBLIC_GRAPHQL_URL || '';
-  return graphqlUrl.replace('/graphql', '');
-};
 
 interface DownloadReportOptions {
   resultId: string;

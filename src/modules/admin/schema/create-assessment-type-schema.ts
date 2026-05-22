@@ -9,8 +9,6 @@ export const CREATE_ASSESSMENT_TYPE_BASICS_FIELDS = [
   'priceAmount',
   'sectionCount',
   'questionsPerSection',
-  'minScore',
-  'maxScore',
   'scoringFormula',
   'displayOrder',
 ] as const;
@@ -39,39 +37,28 @@ export const createAssessmentTypeBasicsObjectSchema = z.object({
       .number()
       .int()
       .min(1, 'At least one section is required')
-      .max(5, 'Maximum 5 sections'),
+      .max(10, 'Maximum 10 sections'),
     questionsPerSection: z
       .number()
       .int()
       .min(1, 'At least one question per section is required')
       .max(50, 'Maximum 50 questions per section'),
-    minScore: z.number().int('Min score must be a whole number'),
-    maxScore: z.number().int('Max score must be a whole number'),
     scoringFormula: z.enum(['sum', 'average'], {
       error: 'Select a scoring formula',
     }),
     displayOrder: z.number().int().min(0, 'Display order cannot be negative'),
   });
 
-export const createAssessmentTypeBasicsSchema = createAssessmentTypeBasicsObjectSchema.refine(
-  (data) => data.maxScore > data.minScore,
-  {
-    message: 'Max score must be greater than min score',
-    path: ['maxScore'],
-  }
-);
+export const createAssessmentTypeBasicsSchema = createAssessmentTypeBasicsObjectSchema;
 
 export const createAssessmentTypeCloneSchema = z.object({
   seedSections: z.boolean(),
   cloneFromTemplate: z.string(),
 });
 
-export const createAssessmentTypeWizardSchema = createAssessmentTypeBasicsObjectSchema
-  .extend(createAssessmentTypeCloneSchema.shape)
-  .refine((data) => data.maxScore > data.minScore, {
-    message: 'Max score must be greater than min score',
-    path: ['maxScore'],
-  });
+export const createAssessmentTypeWizardSchema = createAssessmentTypeBasicsObjectSchema.extend(
+  createAssessmentTypeCloneSchema.shape
+);
 
 export type CreateAssessmentTypeWizardValues = z.infer<
   typeof createAssessmentTypeWizardSchema
@@ -84,8 +71,6 @@ export const CREATE_ASSESSMENT_TYPE_WIZARD_DEFAULTS: CreateAssessmentTypeWizardV
   priceAmount: 250000,
   sectionCount: 5,
   questionsPerSection: 10,
-  minScore: 50,
-  maxScore: 500,
   scoringFormula: 'sum',
   displayOrder: 0,
   seedSections: true,

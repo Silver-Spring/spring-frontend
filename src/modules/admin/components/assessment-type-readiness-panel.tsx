@@ -210,15 +210,13 @@ export const AssessmentTypeReadinessPanel = ({
       <Card className="p-6 space-y-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <h3 className="font-semibold text-lg">Launch readiness</h3>
+            <h3 className="font-semibold text-lg">Publish checklist</h3>
             <p className="text-sm text-muted-foreground mt-1">
-              All checks must pass before this type can go live in{' '}
-              <span className="font-medium">availableAssessments</span>.
+              All checks must pass before publishing.
               {sectionCount != null && requiredSectionBands != null && (
                 <>
                   {' '}
-                  Target: {sectionCount} section{sectionCount === 1 ? '' : 's'},{' '}
-                  {requiredSectionBands} section bands ({stagesPerSection} stages each), 5 overall
+                  Needs {sectionCount} sections, {requiredSectionBands} section bands, 5 overall
                   bands.
                 </>
               )}

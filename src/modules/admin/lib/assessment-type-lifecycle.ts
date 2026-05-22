@@ -17,9 +17,9 @@ export const READINESS_CHECK_FIX_VIEWS: Partial<
 };
 
 export const READINESS_FIX_VIEW_LABELS: Record<ReadinessFixView, string> = {
-  content: 'Content',
-  scoring: 'Scoring',
-  settings: 'Settings',
+  content: 'Sections & questions',
+  scoring: 'Score bands',
+  settings: 'Type details',
 };
 
 export const isProtectedAssessmentType = (code: string): boolean =>

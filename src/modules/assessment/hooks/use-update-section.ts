@@ -26,6 +26,11 @@ export const useUpdateSection = (assessmentType?: string) => {
     id: string;
     name?: string;
     description?: string;
+    aboutDescription?: string;
+    subtitle?: string;
+    emoji?: string;
+    displayColor?: string;
+    displayOrder?: number;
     isActive?: boolean;
   }) => {
     const result = await updateSectionMutation({

@@ -8,7 +8,8 @@ import { toast } from 'sonner';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 import { Spinner } from '@/components/ui/spinner';
 import {
   DropdownMenu,
@@ -19,10 +20,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { DataTable } from '@/components/ui/data-table';
-import {
-  ALL_ASSESSMENT_TYPES_FILTER,
-  AssessmentTypeFilter,
-} from '@/modules/assessment/constants';
+import { ALL_ASSESSMENT_TYPES_FILTER, AssessmentTypeFilter } from '@/modules/assessment/constants';
 import { useResendReport, useUsersWithAssessment } from '../../assessment/hooks';
 import type { UserAssessmentInfo } from '@/gql/graphql';
 import { RefreshCw } from 'lucide-react';
@@ -101,9 +99,7 @@ export const UsersAssessmentTable = () => {
               accessorKey: 'assessmentTypeCode',
               header: 'Type',
               cell: ({ row }) => (
-                <Badge variant="secondary">
-                  {row.original.assessmentTypeCode.toUpperCase()}
-                </Badge>
+                <Badge variant="secondary">{row.original.assessmentTypeCode.toUpperCase()}</Badge>
               ),
             } satisfies ColumnDef<UserAssessmentInfo>,
           ]
@@ -294,31 +290,34 @@ export const UsersAssessmentTable = () => {
 
   return (
     <Card>
-      <CardHeader>
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div className="flex-1 space-y-4">
-            <div>
-              <CardTitle>Users Assessment Overview</CardTitle>
-              <CardDescription>
-                Total: {totalCount} | Completed: {completedCount} | In Progress:{' '}
-                {inProgressCount}
-              </CardDescription>
-            </div>
+      <CardContent className="space-y-4">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge variant="outline">{totalCount} total</Badge>
+            <Badge variant="secondary">{completedCount} completed</Badge>
+            <Badge variant="secondary">{inProgressCount} in progress</Badge>
+          </div>
+          <div className="flex flex-wrap items-center gap-3 lg:justify-end">
             <AssessmentTypeSelector
               value={selectedTypeFilter}
               onChange={setSelectedTypeFilter}
-              label="Filter by assessment type"
+              label="Assessment type"
               includeAllTypes
-              className="max-w-xs"
+              layout="inline"
             />
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleRefresh}
+              disabled={loading}
+              className="h-9 shrink-0"
+            >
+              <RefreshCw className={cn('h-4 w-4 mr-2', loading && 'animate-spin')} />
+              Refresh
+            </Button>
           </div>
-          <Button variant="outline" size="sm" onClick={handleRefresh} className="w-full md:w-auto">
-            <RefreshCw className="h-4 w-4 mr-2" />
-            Refresh
-          </Button>
         </div>
-      </CardHeader>
-      <CardContent>
+
         {users.length === 0 ? (
           <div className="text-center py-10 text-muted-foreground">
             No users have taken the assessment yet.

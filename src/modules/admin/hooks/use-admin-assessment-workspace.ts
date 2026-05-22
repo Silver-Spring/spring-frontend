@@ -11,6 +11,7 @@ export type AssessmentWorkspaceView =
   | 'overview'
   | 'content'
   | 'scoring'
+  | 'reports'
   | 'settings'
   | 'catalog'
   | 'users';
@@ -19,6 +20,7 @@ const TYPE_VIEWS: AssessmentWorkspaceView[] = [
   'overview',
   'content',
   'scoring',
+  'reports',
   'settings',
 ];
 
@@ -53,6 +55,7 @@ export const useAdminAssessmentWorkspace = () => {
       param === 'overview' ||
       param === 'content' ||
       param === 'scoring' ||
+      param === 'reports' ||
       param === 'settings'
     ) {
       return param;
@@ -91,9 +94,4 @@ export const useAdminAssessmentWorkspace = () => {
   };
 };
 
-export const TYPE_PANEL_LINKS: { view: AssessmentWorkspaceView; label: string }[] = [
-  { view: 'overview', label: 'Overview' },
-  { view: 'content', label: 'Content' },
-  { view: 'scoring', label: 'Scoring' },
-  { view: 'settings', label: 'Settings' },
-];
+export { TYPE_PANEL_LINKS } from '@/modules/admin/lib/assessment-workspace-nav';

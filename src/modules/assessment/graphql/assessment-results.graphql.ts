@@ -5,6 +5,12 @@ const GetAssessmentResultDoc = graphql(`
     assessmentResult(id: $id) {
       id
       assessmentTypeCode
+      assessmentTypeByAssessmentTypeCode {
+        name
+        minScore
+        maxScore
+        scoringFormula
+      }
       totalReadinessIndex
       interpretationLabel
       interpretationNarrative
@@ -16,10 +22,20 @@ const GetAssessmentResultDoc = graphql(`
       assessmentSectionResultsByResultId {
         nodes {
           sectionType
+          sectionName
+          sectionEmoji
+          sectionDisplayColor
           score
           interpretationLabel
           interpretationNarrative
           interpretationBandId
+          section {
+            name
+            emoji
+            displayColor
+            description
+            displayOrder
+          }
         }
       }
       

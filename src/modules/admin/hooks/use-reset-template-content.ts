@@ -3,6 +3,7 @@
 import { useMutation } from '@apollo/client/react';
 import { toast } from 'sonner';
 import { ResetTemplateContentDoc } from '../graphql';
+import { assessmentTemplateContentRefetchQueries } from './assessment-type-lifecycle-refetch';
 
 export const useResetTemplateContent = () => {
   const [resetMutation, { loading }] = useMutation(ResetTemplateContentDoc, {
@@ -17,7 +18,10 @@ export const useResetTemplateContent = () => {
   });
 
   const resetTemplateContent = async (assessmentType: string, contentKey: string) => {
-    const result = await resetMutation({ variables: { assessmentType, contentKey } });
+    const result = await resetMutation({
+      variables: { assessmentType, contentKey },
+      refetchQueries: assessmentTemplateContentRefetchQueries(assessmentType),
+    });
     return result.data?.resetTemplateContent;
   };
 

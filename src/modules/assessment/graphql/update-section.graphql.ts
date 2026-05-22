@@ -7,6 +7,10 @@ const UpdateAssessmentSectionDoc = graphql(`
         id
         name
         description
+        aboutDescription
+        subtitle
+        emoji
+        displayColor
         displayOrder
         isActive
         updatedAt

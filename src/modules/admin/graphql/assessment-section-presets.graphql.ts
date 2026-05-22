@@ -6,6 +6,8 @@ const AssessmentSectionPresetsDoc = graphql(`
       type
       name
       description
+      emoji
+      displayColor
       displayOrder
     }
   }

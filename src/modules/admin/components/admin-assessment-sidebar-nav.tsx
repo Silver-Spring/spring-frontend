@@ -16,7 +16,10 @@ import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
 import { useAdminAssessmentTypes } from '@/modules/admin/hooks/use-admin-assessment-types';
 import {
+  GLOBAL_WORKSPACE_NAV,
   TYPE_PANEL_LINKS,
+} from '@/modules/admin/lib/assessment-workspace-nav';
+import {
   useAdminAssessmentWorkspace,
   type AssessmentWorkspaceView,
 } from '@/modules/admin/hooks/use-admin-assessment-workspace';
@@ -69,7 +72,7 @@ const AssessmentTypeNavItem = memo(function AssessmentTypeNavItem({
         </CollapsibleTrigger>
         <CollapsibleContent>
           <SidebarMenuSub>
-            {TYPE_PANEL_LINKS.map(({ view, label }) => (
+            {TYPE_PANEL_LINKS.map(({ view, label, icon: Icon }) => (
               <SidebarMenuSubItem key={`${type.code}-${view}`}>
                 <SidebarMenuSubButton
                   asChild
@@ -77,7 +80,8 @@ const AssessmentTypeNavItem = memo(function AssessmentTypeNavItem({
                   size="sm"
                 >
                   <Link href={buildHref(view, type.code)} prefetch={false}>
-                    {label}
+                    <Icon className="size-4 shrink-0" aria-hidden="true" />
+                    <span className="truncate">{label}</span>
                   </Link>
                 </SidebarMenuSubButton>
               </SidebarMenuSubItem>
@@ -95,7 +99,10 @@ export const AdminAssessmentSidebarNav = () => {
   const { selectedType, isViewActive, buildHref } = useAdminAssessmentWorkspace();
 
   const sortedTypes = useMemo(
-    () => [...assessmentTypes].sort((a, b) => a.displayOrder - b.displayOrder || a.name.localeCompare(b.name)),
+    () =>
+      [...assessmentTypes].sort(
+        (a, b) => a.displayOrder - b.displayOrder || a.name.localeCompare(b.name)
+      ),
     [assessmentTypes]
   );
 
@@ -138,20 +145,16 @@ export const AdminAssessmentSidebarNav = () => {
               ))
             )}
 
-            <SidebarMenuSubItem>
-              <SidebarMenuSubButton asChild isActive={isViewActive('catalog')}>
-                <Link href={buildHref('catalog')} prefetch={false}>
-                  All Types
-                </Link>
-              </SidebarMenuSubButton>
-            </SidebarMenuSubItem>
-            <SidebarMenuSubItem>
-              <SidebarMenuSubButton asChild isActive={isViewActive('users')}>
-                <Link href={buildHref('users')} prefetch={false}>
-                  User Results
-                </Link>
-              </SidebarMenuSubButton>
-            </SidebarMenuSubItem>
+            {GLOBAL_WORKSPACE_NAV.map(({ view, label, icon: Icon }) => (
+              <SidebarMenuSubItem key={view}>
+                <SidebarMenuSubButton asChild isActive={isViewActive(view)}>
+                  <Link href={buildHref(view)} prefetch={false}>
+                    <Icon className="size-4 shrink-0" aria-hidden="true" />
+                    <span>{label}</span>
+                  </Link>
+                </SidebarMenuSubButton>
+              </SidebarMenuSubItem>
+            ))}
           </SidebarMenuSub>
         </CollapsibleContent>
       </SidebarMenuItem>

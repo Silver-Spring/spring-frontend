@@ -12,6 +12,7 @@ import { AssessmentTypeCode, formatPriceFromPaise } from '@/modules/assessment/c
 import {
   buildAssessmentHref,
   useAdminAssessmentTypes,
+  useRecomputeAutoStageRanges,
   useUpdateAssessmentType,
 } from '@/modules/admin/hooks';
 import { useGetSections } from '@/modules/assessment/hooks';
@@ -44,9 +45,12 @@ export const AssessmentTypeSettingsPanel = ({ assessmentType }: AssessmentTypePa
     sectionCount: '',
   });
   const [isEditing, setIsEditing] = useState(false);
+  const [showRecomputePrompt, setShowRecomputePrompt] = useState(false);
+  const { recomputeAutoStageRanges, loading: recomputingRanges } = useRecomputeAutoStageRanges();
 
   useEffect(() => {
     setIsEditing(false);
+    setShowRecomputePrompt(false);
   }, [assessmentType]);
 
   const startEdit = () => {
@@ -74,11 +78,13 @@ export const AssessmentTypeSettingsPanel = ({ assessmentType }: AssessmentTypePa
 
     const nextSectionCount = parseInt(editForm.sectionCount, 10);
     if (!type.isActive && Number.isFinite(nextSectionCount)) {
-      if (nextSectionCount < 1 || nextSectionCount > 5) {
-        toast.error('Section count must be between 1 and 5');
+      if (nextSectionCount < 1 || nextSectionCount > 10) {
+        toast.error('Section count must be between 1 and 10');
         return;
       }
     }
+
+    const previousSectionCount = type.sectionCount;
 
     const result = await updateAssessmentType({
       code: type.code,
@@ -94,7 +100,19 @@ export const AssessmentTypeSettingsPanel = ({ assessmentType }: AssessmentTypePa
     if (result?.success) {
       setIsEditing(false);
       refetch();
+      if (
+        !type.isActive &&
+        Number.isFinite(nextSectionCount) &&
+        nextSectionCount !== previousSectionCount
+      ) {
+        setShowRecomputePrompt(true);
+      }
     }
+  };
+
+  const handleRecomputeStageRanges = async () => {
+    await recomputeAutoStageRanges(assessmentType);
+    setShowRecomputePrompt(false);
   };
 
   if (loading) {
@@ -118,20 +136,47 @@ export const AssessmentTypeSettingsPanel = ({ assessmentType }: AssessmentTypePa
 
   return (
     <Card className="p-6 flex flex-col gap-6">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h3 className="font-semibold">Type Configuration</h3>
-          <p className="text-sm text-muted-foreground mt-1">
-            Pricing and display settings for {type.code.toUpperCase()}. Publish or deactivate from
-            Overview.
-          </p>
-        </div>
+      <div className="flex flex-wrap items-center justify-end gap-4">
         {!isEditing && (
           <Button variant="outline" size="sm" onClick={startEdit}>
             Edit
           </Button>
         )}
       </div>
+
+      {showRecomputePrompt && (
+        <Alert>
+          <CircleAlert />
+          <AlertTitle>Update stage score ranges?</AlertTitle>
+          <AlertDescription className="space-y-3">
+            <p>
+              Section count changed. Overall score bounds were recalculated, but stage ranges were
+              not. Reset ranges to match the new bounds, or edit them manually in Scoring.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                type="button"
+                size="sm"
+                onClick={handleRecomputeStageRanges}
+                disabled={recomputingRanges}
+              >
+                {recomputingRanges ? 'Resetting...' : 'Reset to auto ranges'}
+              </Button>
+              <Button type="button" size="sm" variant="outline" asChild>
+                <Link href={buildAssessmentHref('scoring', assessmentType)}>Open Score bands</Link>
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                variant="ghost"
+                onClick={() => setShowRecomputePrompt(false)}
+              >
+                Dismiss
+              </Button>
+            </div>
+          </AlertDescription>
+        </Alert>
+      )}
 
       {type.isActive && (
         <Alert>
@@ -160,7 +205,7 @@ export const AssessmentTypeSettingsPanel = ({ assessmentType }: AssessmentTypePa
                 </p>
                 <Button variant="link" className="h-auto p-0" asChild>
                   <Link href={buildAssessmentHref('content', assessmentType)}>
-                    Manage sections in Content
+                    Manage sections
                   </Link>
                 </Button>
               </AlertDescription>
@@ -213,15 +258,15 @@ export const AssessmentTypeSettingsPanel = ({ assessmentType }: AssessmentTypePa
                   id="settings-section-count"
                   type="number"
                   min={1}
-                  max={5}
+                  max={10}
                   value={editForm.sectionCount}
                   onChange={(e) => setEditForm({ ...editForm, sectionCount: e.target.value })}
                   className="mt-2"
                   aria-describedby="settings-section-count-help"
                 />
                 <p id="settings-section-count-help" className="text-xs text-muted-foreground mt-1">
-                  Readiness requires exactly this many active sections. Does not auto-add or remove
-                  rows — use Content to match.
+                  Readiness requires exactly this many active sections (max 10). Preset seed covers
+                  only the first 5.
                 </p>
               </div>
             )}

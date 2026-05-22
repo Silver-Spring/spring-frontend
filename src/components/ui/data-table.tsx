@@ -94,7 +94,7 @@ export function DataTable<TData, TValue>({
   return (
     <div className="w-full flex flex-col gap-4 p-1">
       {(showSearch || showColumnVisibility) && (
-        <div className="flex flex-col gap-4 md:flex-row md:items-center">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           {showSearch && filterColumn && (
             <Input
               placeholder={filterPlaceholder}
@@ -103,13 +103,13 @@ export function DataTable<TData, TValue>({
                 table.getColumn(filterColumn)?.setFilterValue(event.target.value)
               }
               name={filterColumn}
-              className="w-full md:max-w-sm"
+              className="h-9 w-full sm:max-w-sm"
             />
           )}
           {showColumnVisibility && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="w-full md:w-auto md:ml-auto">
+                <Button variant="outline" className="h-9 w-full shrink-0 sm:w-auto">
                   <LayoutGrid className="mr-2 h-4 w-4" />
                   <span className="hidden lg:inline">Customize Columns</span>
                   <span className="lg:hidden">Columns</span>

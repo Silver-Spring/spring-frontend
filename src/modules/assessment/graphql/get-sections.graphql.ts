@@ -11,6 +11,10 @@ const GetAllSectionsDoc = graphql(`
         type
         name
         description
+        aboutDescription
+        subtitle
+        emoji
+        displayColor
         displayOrder
         isActive
         assessmentTypeCode

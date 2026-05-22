@@ -32,6 +32,7 @@ import {
 import { Spinner } from '@/components/ui/spinner';
 import { Textarea } from '@/components/ui/textarea';
 import { DEFAULT_ASSESSMENT_TYPE, formatPriceFromPaise } from '@/modules/assessment/constants';
+import { computeScoreBounds } from '@/modules/assessment/lib/section-display';
 import {
   buildAssessmentHref,
   useAdminAssessmentTypes,
@@ -57,7 +58,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useForm, useFormContext, useWatch } from 'react-hook-form';
 
 const WIZARD_STEPS = [
@@ -118,9 +119,11 @@ const BasicsStepFields = ({ existingCodes }: { existingCodes: Set<string> }) => 
   const form = useFormContext<CreateAssessmentTypeWizardValues>();
   const sectionCount = useWatch({ control: form.control, name: 'sectionCount' }) ?? 0;
   const questionsPerSection = useWatch({ control: form.control, name: 'questionsPerSection' }) ?? 0;
+  const scoringFormula = useWatch({ control: form.control, name: 'scoringFormula' }) ?? 'sum';
   const watchedCode = useWatch({ control: form.control, name: 'code' })?.toLowerCase().trim();
   const codeCollision = Boolean(watchedCode && existingCodes.has(watchedCode));
   const previewTotalQuestions = sectionCount * questionsPerSection;
+  const scoreBounds = computeScoreBounds(sectionCount, scoringFormula);
 
   return (
   <div className="space-y-6">
@@ -242,14 +245,15 @@ const BasicsStepFields = ({ existingCodes }: { existingCodes: Set<string> }) => 
                 {...field}
                 type="number"
                 min={1}
-                max={5}
+                max={10}
                 onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
                 aria-label="Section count"
               />
             </FormControl>
             <div className={WIZARD_FIELD_FOOTER_CLASS}>
               <FormDescription>
-                First N preset dimensions (1–5). Total questions = sections × questions per section.
+                Target active sections (1–10). Preset seed covers the first 5 only; use manual adds
+                for 6–10.
               </FormDescription>
               <FormMessage />
             </div>
@@ -283,44 +287,6 @@ const BasicsStepFields = ({ existingCodes }: { existingCodes: Set<string> }) => 
 
     <div className={WIZARD_FORM_ROW_CLASS}>
       <FormField
-        name="minScore"
-        render={({ field }) => (
-          <FormItem className="gap-2">
-            <FormLabel className={WIZARD_FIELD_LABEL_CLASS}>Min overall score</FormLabel>
-            <FormControl>
-              <Input
-                {...field}
-                type="number"
-                onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
-                aria-label="Minimum score"
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <FormField
-        name="maxScore"
-        render={({ field }) => (
-          <FormItem className="gap-2">
-            <FormLabel className={WIZARD_FIELD_LABEL_CLASS}>Max overall score</FormLabel>
-            <FormControl>
-              <Input
-                {...field}
-                type="number"
-                onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
-                aria-label="Maximum score"
-              />
-            </FormControl>
-
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-    </div>
-
-    <div className={WIZARD_FORM_ROW_CLASS}>
-      <FormField
         name="scoringFormula"
         render={({ field }) => (
           <FormItem className="gap-2">
@@ -341,6 +307,12 @@ const BasicsStepFields = ({ existingCodes }: { existingCodes: Set<string> }) => 
           </FormItem>
         )}
       />
+      <div className="rounded-md border bg-muted/30 px-3 py-3 text-sm">
+        <p className="font-medium">Computed score bounds</p>
+        <p className="text-muted-foreground mt-1">
+          {scoreBounds.minScore}–{scoreBounds.maxScore} overall ({scoringFormula} formula)
+        </p>
+      </div>
     </div>
 
     {previewTotalQuestions > 0 && (
@@ -360,6 +332,13 @@ const CloneStepFields = ({
 }) => {
   const form = useFormContext<CreateAssessmentTypeWizardValues>();
   const sectionCount = useWatch({ control: form.control, name: 'sectionCount' }) ?? 5;
+  const seedPresetCount = Math.min(sectionCount, 5);
+
+  useEffect(() => {
+    if (sectionCount > 5) {
+      form.setValue('seedSections', false);
+    }
+  }, [sectionCount, form]);
 
   return (
   <div className="space-y-6">
@@ -372,13 +351,23 @@ const CloneStepFields = ({
               checked={field.value}
               onCheckedChange={(checked) => field.onChange(checked === true)}
               aria-label="Seed standard dimension sections"
+              disabled={sectionCount > 5}
             />
           </FormControl>
           <div className="space-y-1">
             <FormLabel className="text-base font-medium">Seed dimension sections</FormLabel>
             <FormDescription>
-              Seeds the first {sectionCount} preset dimension{sectionCount === 1 ? '' : 's'} when
-              enabled. Recommended for new types.
+              {sectionCount > 5 ? (
+                <>
+                  Preset seed supports up to 5 sections. With {sectionCount} sections, disable seed
+                  and add sections manually in Content after creation.
+                </>
+              ) : (
+                <>
+                  Seeds the first {seedPresetCount} preset dimension
+                  {seedPresetCount === 1 ? '' : 's'} when enabled. Recommended for new types.
+                </>
+              )}
             </FormDescription>
           </div>
         </FormItem>
@@ -592,6 +581,8 @@ export const CreateAssessmentTypeWizard = () => {
         ? null
         : values.cloneFromTemplate || DEFAULT_ASSESSMENT_TYPE;
 
+    const seedSections = values.sectionCount > 5 ? false : values.seedSections;
+
     const result = await createAssessmentType({
       code: values.code.trim().toLowerCase(),
       name: values.name,
@@ -599,11 +590,9 @@ export const CreateAssessmentTypeWizard = () => {
       priceAmount: values.priceAmount,
       sectionCount: values.sectionCount,
       questionsPerSection: values.questionsPerSection,
-      minScore: values.minScore,
-      maxScore: values.maxScore,
       scoringFormula: values.scoringFormula,
       displayOrder: values.displayOrder,
-      seedSections: values.seedSections,
+      seedSections,
       cloneFromTemplate,
     });
 
@@ -618,7 +607,7 @@ export const CreateAssessmentTypeWizard = () => {
       totalQuestions:
         result.assessmentType.totalQuestions ?? values.sectionCount * values.questionsPerSection,
       clonedFrom: cloneFromTemplate,
-      seededSections: values.seedSections,
+      seededSections: seedSections,
     });
     setStepIndex(2);
   };

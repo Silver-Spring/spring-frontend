@@ -7,11 +7,13 @@ import {
   TabbedRadarChart,
   TotalScoreCard,
 } from '@/components/assessment/results';
+import type { EnrichedSectionResult } from '@/components/assessment/results/section-breakdown-card';
 import { ProtectedLayout } from '@/components/layouts';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
 import { useAssessmentResults, useDownloadReport } from '@/modules/assessment/hooks';
+import { resolveSectionDisplay } from '@/modules/assessment/lib/section-display';
 import { ArrowLeft, Download, Loader2 } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import posthog from 'posthog-js';
@@ -49,9 +51,26 @@ export const AssessmentResultsPage = ({ resultId }: AssessmentResultsPageProps) 
     await downloadReport({ resultId: result.id });
   }, [result?.id, result?.totalReadinessIndex, downloadReport]);
 
-  const sectionResults = useMemo(() => {
-    return result?.assessmentSectionResultsByResultId?.nodes || [];
+  const sectionResults = useMemo((): EnrichedSectionResult[] => {
+    const nodes = result?.assessmentSectionResultsByResultId?.nodes ?? [];
+    return [...nodes]
+      .map((row) => ({
+        row,
+        display: resolveSectionDisplay(row),
+      }))
+      .sort((a, b) => (a.display.displayOrder ?? 999) - (b.display.displayOrder ?? 999))
+      .map(({ row, display }) => ({
+        sectionType: row.sectionType,
+        score: row.score,
+        interpretationLabel: row.interpretationLabel,
+        interpretationNarrative: row.interpretationNarrative,
+        displayName: display.name,
+        displayEmoji: display.emoji,
+        displayColor: display.color,
+      }));
   }, [result]);
+
+  const assessmentTypeInfo = result?.assessmentTypeByAssessmentTypeCode;
 
   // Prepare cohort data for components
   const cohortData = useMemo(() => {
@@ -150,6 +169,9 @@ export const AssessmentResultsPage = ({ resultId }: AssessmentResultsPageProps) 
           <TotalScoreCard
             totalScore={result.totalReadinessIndex}
             completedDate={result.createdAt}
+            assessmentTypeName={assessmentTypeInfo?.name}
+            minScore={assessmentTypeInfo?.minScore}
+            maxScore={assessmentTypeInfo?.maxScore}
             interpretationLabel={result.interpretationLabel}
             interpretationNarrative={result.interpretationNarrative}
             interpretationKeyMindset={result.interpretationKeyMindset}

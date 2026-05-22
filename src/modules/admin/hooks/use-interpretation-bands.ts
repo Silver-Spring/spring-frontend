@@ -9,12 +9,7 @@ import {
 
 export type BandScope = 'section' | 'overall';
 
-export type SectionTypeKey =
-  | 'psychological'
-  | 'social'
-  | 'mental'
-  | 'physical'
-  | 'lifestyle';
+export type SectionTypeKey = string;
 
 type UseInterpretationBandsOptions = {
   loadSection?: boolean;

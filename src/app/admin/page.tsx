@@ -1,7 +1,7 @@
 'use client';
 
-import { AdminPage } from '@/modules/admin/components';
+import { AdminDashboardPage } from '@/modules/admin/components/dashboard/admin-dashboard-page';
 
 export default function Admin() {
-  return <AdminPage />;
+  return <AdminDashboardPage />;
 }

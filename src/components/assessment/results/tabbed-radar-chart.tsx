@@ -43,19 +43,7 @@ const CHART_CONFIG = {
   },
 } satisfies ChartConfig;
 
-const SECTION_SHORT_NAMES: Record<string, string> = {
-  'Psychological Readiness': 'Psychological',
-  'Social Support': 'Social',
-  'Mental Wellness': 'Mental',
-  'Physical Health': 'Physical',
-  'Lifestyle Factors': 'Lifestyle',
-};
-
-const shortenSectionName = (name: string): string => {
-  const mapped = SECTION_SHORT_NAMES[name];
-  if (mapped) return mapped;
-  return name.replace(/\s+Readiness$/i, '');
-};
+const shortenSectionName = (name: string): string => name.replace(/\s+Readiness$/i, '');
 
 export const TabbedRadarChart = ({
   ageCohort,

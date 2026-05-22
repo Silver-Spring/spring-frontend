@@ -9,7 +9,6 @@ import {
   ChartLegendContent,
 } from '@/components/ui/chart';
 import { useIsMobile } from '@/hooks';
-import { getBandLabelColor } from '@/modules/assessment/constants/interpretation-bands';
 import { TrendingUp } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { Cell, Label, Pie, PieChart as RechartsPieChart, Sector } from 'recharts';
@@ -38,7 +37,7 @@ const renderCustomLabel = ({ cx, cy, midAngle, outerRadius, payload }: any) => {
         </tspan>
       ))}
       <tspan x={x} dy="1.4em" className="fill-primary font-bold text-sm">
-        {payload.score}
+        {payload.scoreLabel}
       </tspan>
     </text>
   );
@@ -82,50 +81,19 @@ const renderActiveShape = (props: any) => {
   );
 };
 
-interface SectionResult {
+export type EnrichedSectionResult = {
   sectionType: string;
   score: number;
   interpretationLabel: string;
   interpretationNarrative?: string | null;
-}
-
-interface SectionBreakdownCardProps {
-  sectionResults: SectionResult[];
-}
-
-const SECTION_NAMES: Record<string, string> = {
-  psychological: 'Psychological Readiness',
-  social: 'Social Support',
-  mental: 'Mental Wellness',
-  physical: 'Physical Health',
-  lifestyle: 'Lifestyle Factors',
+  displayName: string;
+  displayEmoji: string;
+  displayColor: string;
 };
 
-const chartConfig = {
-  score: {
-    label: 'Score',
-  },
-  psychological: {
-    label: 'Psychological Readiness',
-    color: 'var(--chart-1)',
-  },
-  social: {
-    label: 'Social Support',
-    color: 'var(--chart-2)',
-  },
-  mental: {
-    label: 'Mental Wellness',
-    color: 'var(--chart-3)',
-  },
-  physical: {
-    label: 'Physical Health',
-    color: 'var(--chart-4)',
-  },
-  lifestyle: {
-    label: 'Lifestyle Factors',
-    color: 'var(--chart-5)',
-  },
-} satisfies ChartConfig;
+interface SectionBreakdownCardProps {
+  sectionResults: EnrichedSectionResult[];
+}
 
 export const SectionBreakdownCard = ({ sectionResults }: SectionBreakdownCardProps) => {
   const isMobile = useIsMobile();
@@ -136,16 +104,27 @@ export const SectionBreakdownCard = ({ sectionResults }: SectionBreakdownCardPro
     return sectionResults.reduce((sum, section) => sum + section.score, 0);
   }, [sectionResults]);
 
-  const chartData = useMemo(() => {
-    return sectionResults.map((section) => {
-      const sectionKey = section.sectionType.toLowerCase();
-      return {
-        section: sectionKey,
-        score: section.score,
-        label: SECTION_NAMES[section.sectionType] || section.sectionType,
-        fill: `var(--color-${sectionKey})`,
+  const chartConfig = useMemo(() => {
+    const config: ChartConfig = {
+      score: { label: 'Score' },
+    };
+    sectionResults.forEach((section) => {
+      config[section.sectionType] = {
+        label: section.displayName,
+        color: section.displayColor,
       };
     });
+    return config;
+  }, [sectionResults]);
+
+  const chartData = useMemo(() => {
+    return sectionResults.map((section) => ({
+      section: section.sectionType,
+      score: section.score,
+      scoreLabel: `${section.score} • ${section.interpretationLabel}`,
+      label: section.displayName,
+      fill: section.displayColor,
+    }));
   }, [sectionResults]);
 
   const handleMouseEnter = useCallback((_: any, index: number) => {
@@ -160,10 +139,7 @@ export const SectionBreakdownCard = ({ sectionResults }: SectionBreakdownCardPro
     ({ active, payload }: any) => {
       if (!active || !payload?.length) return null;
       const data = payload[0];
-      const section = sectionResults.find(
-        (s) => s.sectionType.toLowerCase() === data.payload.section
-      );
-      const labelColor = getBandLabelColor(section?.interpretationLabel);
+      const section = sectionResults.find((s) => s.sectionType === data.payload.section);
 
       const percentage = (((section?.score || 0) / totalScore) * 100).toFixed(1);
 
@@ -173,17 +149,13 @@ export const SectionBreakdownCard = ({ sectionResults }: SectionBreakdownCardPro
           <div className="space-y-2 text-sm">
             <div className="flex items-center justify-between gap-6">
               <span className="text-muted-foreground">Score:</span>
-              <span className="font-bold text-lg text-foreground">{data.value}</span>
+              <span className="font-bold text-lg text-foreground">
+                {section?.score} • {section?.interpretationLabel}
+              </span>
             </div>
             <div className="flex items-center justify-between gap-6">
               <span className="text-muted-foreground">Contribution:</span>
               <span className="font-semibold text-foreground">{percentage}%</span>
-            </div>
-            <div className="flex items-center justify-between gap-6">
-              <span className="text-muted-foreground">Level:</span>
-              <span className={`font-semibold ${labelColor}`}>
-                {section?.interpretationLabel}
-              </span>
             </div>
             {section?.interpretationNarrative && (
               <p className="text-xs text-muted-foreground mt-3 pt-3 border-t italic">
