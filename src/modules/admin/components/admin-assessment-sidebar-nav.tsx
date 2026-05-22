@@ -6,7 +6,6 @@ import {
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
 import {
-  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
@@ -24,7 +23,7 @@ import {
 import { ChevronRight, ClipboardList } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 
 const SidebarMenuChevron = ({ className }: { className?: string }) => (
   <ChevronRight
@@ -59,9 +58,13 @@ const AssessmentTypeNavItem = memo(function AssessmentTypeNavItem({
       <SidebarMenuSubItem>
         <CollapsibleTrigger asChild>
           <SidebarMenuSubButton isActive={isTypeActive}>
-            <span className="truncate">{type.name}</span>
-            {!type.isActive && <SidebarMenuBadge>Draft</SidebarMenuBadge>}
-            <SidebarMenuChevron />
+            <span className="min-w-0 flex-1 truncate">{type.name}</span>
+            {!type.isActive && (
+              <span className="shrink-0 rounded-md bg-sidebar-accent px-1.5 py-0.5 text-[10px] font-medium leading-none text-muted-foreground">
+                Draft
+              </span>
+            )}
+            <SidebarMenuChevron className="shrink-0" />
           </SidebarMenuSubButton>
         </CollapsibleTrigger>
         <CollapsibleContent>
@@ -91,6 +94,11 @@ export const AdminAssessmentSidebarNav = () => {
   const { assessmentTypes, loading } = useAdminAssessmentTypes();
   const { selectedType, isViewActive, buildHref } = useAdminAssessmentWorkspace();
 
+  const sortedTypes = useMemo(
+    () => [...assessmentTypes].sort((a, b) => a.displayOrder - b.displayOrder || a.name.localeCompare(b.name)),
+    [assessmentTypes]
+  );
+
   const isAssessmentRoute = pathname === '/admin/assessment';
 
   return (
@@ -113,7 +121,7 @@ export const AdminAssessmentSidebarNav = () => {
                 </div>
               </SidebarMenuSubItem>
             ) : (
-              assessmentTypes.map((type) => (
+              sortedTypes.map((type) => (
                 <AssessmentTypeNavItem
                   key={type.code}
                   type={type}

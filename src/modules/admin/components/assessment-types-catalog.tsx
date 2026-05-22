@@ -8,10 +8,16 @@ import { formatPriceFromPaise } from '@/modules/assessment/constants';
 import { buildAssessmentHref, useAdminAssessmentTypes } from '@/modules/admin/hooks';
 import Link from 'next/link';
 import { Plus } from 'lucide-react';
+import { useMemo } from 'react';
 import { AssessmentTypeReadinessSummary } from './assessment-type-readiness-panel';
 
 export const AssessmentTypesCatalog = () => {
   const { assessmentTypes, loading } = useAdminAssessmentTypes();
+
+  const sortedTypes = useMemo(
+    () => [...assessmentTypes].sort((a, b) => a.displayOrder - b.displayOrder || a.name.localeCompare(b.name)),
+    [assessmentTypes]
+  );
 
   if (loading) {
     return (
@@ -41,7 +47,7 @@ export const AssessmentTypesCatalog = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {assessmentTypes.length === 0 ? (
+        {sortedTypes.length === 0 ? (
           <Card className="p-8 md:col-span-2">
             <div className="text-center space-y-4">
               <p className="text-muted-foreground">
@@ -56,7 +62,7 @@ export const AssessmentTypesCatalog = () => {
             </div>
           </Card>
         ) : (
-          assessmentTypes.map((type) => (
+          sortedTypes.map((type) => (
             <Card key={type.code} className="p-5">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0 flex-1">

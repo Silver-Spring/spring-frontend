@@ -5,6 +5,9 @@ const AssessmentTypeReadinessDoc = graphql(`
     assessmentTypeReadiness(assessmentType: $type) {
       code
       ready
+      sectionCount
+      requiredSectionBands
+      stagesPerSection
       checks {
         key
         label

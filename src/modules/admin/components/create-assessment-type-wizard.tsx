@@ -1,6 +1,5 @@
 'use client';
 
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -14,6 +13,14 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemGroup,
+  ItemMedia,
+  ItemTitle,
+} from '@/components/ui/item';
 import { Progress } from '@/components/ui/progress';
 import {
   Select,
@@ -51,7 +58,7 @@ import {
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useFormContext, useWatch } from 'react-hook-form';
 
 const WIZARD_STEPS = [
   { id: 'basics', label: 'Basics', description: 'Identity, pricing, and scoring' },
@@ -64,9 +71,14 @@ type CreatedAssessmentType = {
   name: string;
   sectionCount: number;
   questionsPerSection: number;
+  totalQuestions: number;
   clonedFrom: string | null;
   seededSections: boolean;
 };
+
+const WIZARD_FORM_ROW_CLASS = 'grid grid-cols-1 md:grid-cols-2 gap-4';
+const WIZARD_FIELD_LABEL_CLASS = 'min-h-10 flex items-end leading-snug';
+const WIZARD_FIELD_FOOTER_CLASS = 'min-h-10 space-y-1';
 
 const StepIndicator = ({ currentStepIndex }: { currentStepIndex: number }) => (
   <ol className="flex flex-col sm:flex-row gap-4 sm:gap-6 mb-8">
@@ -78,11 +90,7 @@ const StepIndicator = ({ currentStepIndex }: { currentStepIndex: number }) => (
         <li key={step.id} className="flex items-start gap-3 flex-1 min-w-0">
           <div
             className={
-              isComplete
-                ? 'text-primary'
-                : isCurrent
-                  ? 'text-primary'
-                  : 'text-muted-foreground'
+              isComplete ? 'text-primary' : isCurrent ? 'text-primary' : 'text-muted-foreground'
             }
             aria-hidden
           >
@@ -106,44 +114,65 @@ const StepIndicator = ({ currentStepIndex }: { currentStepIndex: number }) => (
   </ol>
 );
 
-const BasicsStepFields = () => (
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <FormField
-      name="code"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>Code</FormLabel>
-          <FormControl>
-            <Input
-              {...field}
-              placeholder="e.g. prai"
-              autoComplete="off"
-              aria-label="Assessment type code"
-            />
-          </FormControl>
-          <FormDescription>
-            Lowercase slug. Immutable after creation (letters, numbers, -, _).
-          </FormDescription>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-    <FormField
-      name="name"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>Display name</FormLabel>
-          <FormControl>
-            <Input {...field} placeholder="e.g. PRAI Assessment" aria-label="Display name" />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
+const BasicsStepFields = ({ existingCodes }: { existingCodes: Set<string> }) => {
+  const form = useFormContext<CreateAssessmentTypeWizardValues>();
+  const sectionCount = useWatch({ control: form.control, name: 'sectionCount' }) ?? 0;
+  const questionsPerSection = useWatch({ control: form.control, name: 'questionsPerSection' }) ?? 0;
+  const watchedCode = useWatch({ control: form.control, name: 'code' })?.toLowerCase().trim();
+  const codeCollision = Boolean(watchedCode && existingCodes.has(watchedCode));
+  const previewTotalQuestions = sectionCount * questionsPerSection;
+
+  return (
+  <div className="space-y-6">
+    <div className={WIZARD_FORM_ROW_CLASS}>
+      <FormField
+        name="code"
+        render={({ field }) => (
+          <FormItem className="gap-2">
+            <FormLabel className={WIZARD_FIELD_LABEL_CLASS}>Code</FormLabel>
+            <FormControl>
+              <Input
+                {...field}
+                placeholder="e.g. prai"
+                autoComplete="off"
+                aria-label="Assessment type code"
+              />
+            </FormControl>
+            <div className={WIZARD_FIELD_FOOTER_CLASS}>
+              <FormDescription>
+                Lowercase slug. Immutable after creation (letters, numbers, -, _).
+              </FormDescription>
+              {codeCollision && (
+                <p className="text-sm text-destructive" role="alert">
+                  This code is already in use. Choose a different code.
+                </p>
+              )}
+              <FormMessage />
+            </div>
+          </FormItem>
+        )}
+      />
+      <FormField
+        name="name"
+        render={({ field }) => (
+          <FormItem className="gap-2">
+            <FormLabel className={WIZARD_FIELD_LABEL_CLASS}>Display name</FormLabel>
+            <FormControl>
+              <Input {...field} placeholder="e.g. PRAI Assessment" aria-label="Display name" />
+            </FormControl>
+            <div className={WIZARD_FIELD_FOOTER_CLASS}>
+              <FormDescription>This is the name that will be displayed to users.</FormDescription>
+              <FormMessage />
+            </div>
+          </FormItem>
+        )}
+      />
+    </div>
+
     <FormField
       name="description"
       render={({ field }) => (
-        <FormItem className="md:col-span-2">
+        <FormItem className="gap-2">
           <FormLabel>Description</FormLabel>
           <FormControl>
             <Textarea
@@ -157,143 +186,182 @@ const BasicsStepFields = () => (
         </FormItem>
       )}
     />
-    <FormField
-      name="priceAmount"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>Price (paise)</FormLabel>
-          <FormControl>
-            <Input
-              {...field}
-              type="number"
-              min={1}
-              onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
-              aria-label="Price in paise"
-            />
-          </FormControl>
-          <FormDescription>250000 paise = {formatPriceFromPaise(250000)}</FormDescription>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-    <FormField
-      name="displayOrder"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>Display order</FormLabel>
-          <FormControl>
-            <Input
-              {...field}
-              type="number"
-              min={0}
-              onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
-              aria-label="Display order"
-            />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-    <FormField
-      name="sectionCount"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>Sections</FormLabel>
-          <FormControl>
-            <Input
-              {...field}
-              type="number"
-              min={1}
-              onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
-              aria-label="Section count"
-            />
-          </FormControl>
-          <FormDescription>Default: 5 dimensions</FormDescription>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-    <FormField
-      name="questionsPerSection"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>Questions per section</FormLabel>
-          <FormControl>
-            <Input
-              {...field}
-              type="number"
-              min={1}
-              onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
-              aria-label="Questions per section"
-            />
-          </FormControl>
-          <FormDescription>Users need this many active questions per section to publish</FormDescription>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-    <FormField
-      name="minScore"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>Min overall score</FormLabel>
-          <FormControl>
-            <Input
-              {...field}
-              type="number"
-              onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
-              aria-label="Minimum score"
-            />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-    <FormField
-      name="maxScore"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>Max overall score</FormLabel>
-          <FormControl>
-            <Input
-              {...field}
-              type="number"
-              onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
-              aria-label="Maximum score"
-            />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-    <FormField
-      name="scoringFormula"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>Scoring formula</FormLabel>
-          <Select onValueChange={field.onChange} value={field.value}>
+
+    <div className={WIZARD_FORM_ROW_CLASS}>
+      <FormField
+        name="priceAmount"
+        render={({ field }) => (
+          <FormItem className="gap-2">
+            <FormLabel className={WIZARD_FIELD_LABEL_CLASS}>Price (paise)</FormLabel>
             <FormControl>
-              <SelectTrigger aria-label="Scoring formula">
-                <SelectValue placeholder="Select formula" />
-              </SelectTrigger>
+              <Input
+                {...field}
+                type="number"
+                min={1}
+                onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                aria-label="Price in paise"
+              />
             </FormControl>
-            <SelectContent>
-              <SelectItem value="sum">sum</SelectItem>
-              <SelectItem value="average">average</SelectItem>
-            </SelectContent>
-          </Select>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
+            <div className={WIZARD_FIELD_FOOTER_CLASS}>
+              <FormDescription>250000 paise = {formatPriceFromPaise(250000)}</FormDescription>
+              <FormMessage />
+            </div>
+          </FormItem>
+        )}
+      />
+      <FormField
+        name="displayOrder"
+        render={({ field }) => (
+          <FormItem className="gap-2">
+            <FormLabel className={WIZARD_FIELD_LABEL_CLASS}>Display order</FormLabel>
+            <FormControl>
+              <Input
+                {...field}
+                type="number"
+                min={0}
+                onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                aria-label="Display order"
+              />
+            </FormControl>
+            <div className={WIZARD_FIELD_FOOTER_CLASS}>
+              <FormMessage />
+            </div>
+          </FormItem>
+        )}
+      />
+    </div>
+
+    <div className={WIZARD_FORM_ROW_CLASS}>
+      <FormField
+        name="sectionCount"
+        render={({ field }) => (
+          <FormItem className="gap-2">
+            <FormLabel className={WIZARD_FIELD_LABEL_CLASS}>Sections</FormLabel>
+            <FormControl>
+              <Input
+                {...field}
+                type="number"
+                min={1}
+                max={5}
+                onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                aria-label="Section count"
+              />
+            </FormControl>
+            <div className={WIZARD_FIELD_FOOTER_CLASS}>
+              <FormDescription>
+                First N preset dimensions (1–5). Total questions = sections × questions per section.
+              </FormDescription>
+              <FormMessage />
+            </div>
+          </FormItem>
+        )}
+      />
+      <FormField
+        name="questionsPerSection"
+        render={({ field }) => (
+          <FormItem className="gap-2">
+            <FormLabel className={WIZARD_FIELD_LABEL_CLASS}>Questions per section</FormLabel>
+            <FormControl>
+              <Input
+                {...field}
+                type="number"
+                min={1}
+                onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                aria-label="Questions per section"
+              />
+            </FormControl>
+            <div className={WIZARD_FIELD_FOOTER_CLASS}>
+              <FormDescription>
+                Users need this many active questions per section to publish
+              </FormDescription>
+              <FormMessage />
+            </div>
+          </FormItem>
+        )}
+      />
+    </div>
+
+    <div className={WIZARD_FORM_ROW_CLASS}>
+      <FormField
+        name="minScore"
+        render={({ field }) => (
+          <FormItem className="gap-2">
+            <FormLabel className={WIZARD_FIELD_LABEL_CLASS}>Min overall score</FormLabel>
+            <FormControl>
+              <Input
+                {...field}
+                type="number"
+                onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                aria-label="Minimum score"
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        name="maxScore"
+        render={({ field }) => (
+          <FormItem className="gap-2">
+            <FormLabel className={WIZARD_FIELD_LABEL_CLASS}>Max overall score</FormLabel>
+            <FormControl>
+              <Input
+                {...field}
+                type="number"
+                onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                aria-label="Maximum score"
+              />
+            </FormControl>
+
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    </div>
+
+    <div className={WIZARD_FORM_ROW_CLASS}>
+      <FormField
+        name="scoringFormula"
+        render={({ field }) => (
+          <FormItem className="gap-2">
+            <FormLabel className={WIZARD_FIELD_LABEL_CLASS}>Scoring formula</FormLabel>
+            <Select onValueChange={field.onChange} value={field.value}>
+              <FormControl>
+                <SelectTrigger aria-label="Scoring formula">
+                  <SelectValue placeholder="Select formula" />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                <SelectItem value="sum">sum</SelectItem>
+                <SelectItem value="average">average</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    </div>
+
+    {previewTotalQuestions > 0 && (
+      <p className="text-sm text-muted-foreground rounded-md border bg-muted/30 px-3 py-2">
+        Preview: {previewTotalQuestions} total questions ({sectionCount} section
+        {sectionCount === 1 ? '' : 's'} × {questionsPerSection} each) — required for publish.
+      </p>
+    )}
   </div>
-);
+  );
+};
 
 const CloneStepFields = ({
   templateOptions,
 }: {
   templateOptions: { code: string; name: string; isActive: boolean }[];
-}) => (
+}) => {
+  const form = useFormContext<CreateAssessmentTypeWizardValues>();
+  const sectionCount = useWatch({ control: form.control, name: 'sectionCount' }) ?? 5;
+
+  return (
   <div className="space-y-6">
     <FormField
       name="seedSections"
@@ -309,8 +377,8 @@ const CloneStepFields = ({
           <div className="space-y-1">
             <FormLabel className="text-base font-medium">Seed dimension sections</FormLabel>
             <FormDescription>
-              Creates 5 standard sections (psychological, social, mental, physical, lifestyle).
-              Recommended for new types.
+              Seeds the first {sectionCount} preset dimension{sectionCount === 1 ? '' : 's'} when
+              enabled. Recommended for new types.
             </FormDescription>
           </div>
         </FormItem>
@@ -330,109 +398,137 @@ const CloneStepFields = ({
             </FormControl>
             <SelectContent>
               <SelectItem value={SKIP_CLONE_TEMPLATE_VALUE}>
-                None — skip bands and PDF template
+                None — skip interpretation bands
               </SelectItem>
               {templateOptions.map((type) => (
                 <SelectItem key={type.code} value={type.code}>
-                  {type.name} ({type.code.toUpperCase()})
-                  {!type.isActive ? ' — draft' : ''}
+                  {type.name} ({type.code.toUpperCase()}){!type.isActive ? ' — draft' : ''}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
           <FormDescription>
-            Clones 25 section + 5 overall interpretation bands, recommended actions, and PDF
-            template keys. Questions are never cloned — you will add those next.
+            Clones section and overall interpretation bands plus recommended actions from the
+            template type. Questions are never cloned — you will add those next.
           </FormDescription>
           <FormMessage />
         </FormItem>
       )}
     />
   </div>
-);
+  );
+};
 
 const SuccessStep = ({
   created,
   onNavigateContent,
   onNavigateOverview,
+  onNavigateScoring,
 }: {
   created: CreatedAssessmentType;
   onNavigateContent: () => void;
   onNavigateOverview: () => void;
+  onNavigateScoring: () => void;
 }) => {
-  const totalQuestions = created.sectionCount * created.questionsPerSection;
+  const totalQuestions =
+    Number.isFinite(created.totalQuestions) && created.totalQuestions > 0
+      ? created.totalQuestions
+      : created.sectionCount * created.questionsPerSection;
+
+  const sectionBandCount = created.sectionCount * 5;
+  const totalBandCount = sectionBandCount + 5;
 
   return (
     <div className="space-y-6">
-      <div className="rounded-lg border border-primary/30 bg-primary/5 p-5">
-        <div className="flex items-start gap-3">
-          <CheckCircle2 className="size-6 text-primary shrink-0 mt-0.5" />
-          <div>
-            <h3 className="font-semibold text-lg">Draft created: {created.name}</h3>
-            <p className="text-sm text-muted-foreground mt-1">
-              <Badge variant="secondary" className="mr-2">
-                Draft
-              </Badge>
-              Code <span className="font-mono">{created.code}</span> is inactive and hidden from
-              users until you publish.
-            </p>
-          </div>
-        </div>
+      <Item variant="outline" className="border-primary/30 bg-primary/5">
+        <ItemMedia>
+          <CheckCircle2 className="size-6 text-primary" />
+        </ItemMedia>
+        <ItemContent>
+          <ItemTitle className="text-base font-semibold">Draft created: {created.name}</ItemTitle>
+          <ItemDescription className="line-clamp-none">
+            Code <span className="font-mono">&quot;{created.code}&quot;</span> is inactive and
+            hidden from users until you publish.
+          </ItemDescription>
+        </ItemContent>
+      </Item>
+
+      <div className="space-y-3">
+        <h4 className="text-base font-medium">What we set up automatically</h4>
+        <ItemGroup className="gap-2">
+          {created.seededSections && (
+            <Item variant="outline" size="sm">
+              <ItemContent>
+                <ItemDescription className="line-clamp-none">
+                  {created.sectionCount} dimension sections ({created.sectionCount} configured)
+                </ItemDescription>
+              </ItemContent>
+            </Item>
+          )}
+          <Item variant="outline" size="sm">
+            <ItemContent>
+              <ItemDescription className="line-clamp-none">
+                {created.clonedFrom ? (
+                  <>
+                    {totalBandCount} interpretation bands ({sectionBandCount} section + 5 overall)
+                    and recommended actions cloned from {created.clonedFrom.toUpperCase()}
+                  </>
+                ) : (
+                  'No interpretation bands cloned — add these manually in Scoring'
+                )}
+              </ItemDescription>
+            </ItemContent>
+          </Item>
+        </ItemGroup>
       </div>
 
-      <Card className="p-5 space-y-3">
-        <h4 className="font-medium">What we set up automatically</h4>
-        <ul className="text-sm text-muted-foreground space-y-2 list-disc pl-5">
-          {created.seededSections && (
-            <li>5 dimension sections ({created.sectionCount} configured)</li>
-          )}
-          {created.clonedFrom ? (
-            <li>
-              30 interpretation bands + recommended actions cloned from{' '}
-              {created.clonedFrom.toUpperCase()}
-            </li>
-          ) : (
-            <li>No bands or template content cloned — add these manually in Scoring / Reports</li>
-          )}
-        </ul>
-      </Card>
-
-      <Card className="p-5 space-y-4">
-        <h4 className="font-medium">What you need to do next</h4>
-        <ol className="space-y-4">
-          <li className="flex gap-3">
-            <ListChecks className="size-5 text-primary shrink-0 mt-0.5" />
-            <div>
-              <p className="font-medium text-sm">Add questions</p>
-              <p className="text-sm text-muted-foreground">
+      <div className="space-y-3">
+        <h4 className="text-base font-medium">What you need to do next</h4>
+        <ItemGroup className="gap-2">
+          <Item variant="outline" size="sm">
+            <ItemMedia variant="icon">
+              <ListChecks className="text-primary" />
+            </ItemMedia>
+            <ItemContent>
+              <ItemTitle>Add questions</ItemTitle>
+              <ItemDescription className="line-clamp-none">
                 Add {totalQuestions} active questions ({created.questionsPerSection} per section).
                 This is required before you can publish.
-              </p>
-            </div>
-          </li>
-          <li className="flex gap-3">
-            <Layers className="size-5 text-primary shrink-0 mt-0.5" />
-            <div>
-              <p className="font-medium text-sm">Customize interpretation (optional)</p>
-              <p className="text-sm text-muted-foreground">
+              </ItemDescription>
+            </ItemContent>
+          </Item>
+          <Item variant="outline" size="sm">
+            <ItemMedia variant="icon">
+              <Layers className="text-primary" />
+            </ItemMedia>
+            <ItemContent>
+              <ItemTitle>Customize interpretation (optional)</ItemTitle>
+              <ItemDescription className="line-clamp-none">
                 Edit dimension-specific narratives and recommended actions in Scoring.
-              </p>
-            </div>
-          </li>
-          <li className="flex gap-3">
-            <ClipboardList className="size-5 text-primary shrink-0 mt-0.5" />
-            <div>
-              <p className="font-medium text-sm">Review readiness & publish</p>
-              <p className="text-sm text-muted-foreground">
+              </ItemDescription>
+            </ItemContent>
+          </Item>
+          <Item variant="outline" size="sm">
+            <ItemMedia variant="icon">
+              <ClipboardList className="text-primary" />
+            </ItemMedia>
+            <ItemContent>
+              <ItemTitle>Review readiness & publish</ItemTitle>
+              <ItemDescription className="line-clamp-none">
                 Overview shows a checklist. Publish only when all checks pass.
-              </p>
-            </div>
-          </li>
-        </ol>
-      </Card>
+              </ItemDescription>
+            </ItemContent>
+          </Item>
+        </ItemGroup>
+      </div>
 
       <div className="flex flex-wrap gap-3">
         <Button onClick={onNavigateContent}>Add Questions</Button>
+        {!created.clonedFrom && (
+          <Button variant="outline" onClick={onNavigateScoring}>
+            Set up Scoring
+          </Button>
+        )}
         <Button variant="outline" onClick={onNavigateOverview}>
           View Overview & Readiness
         </Button>
@@ -460,6 +556,11 @@ export const CreateAssessmentTypeWizard = () => {
 
   const watchedCode = form.watch('code')?.toLowerCase().trim();
 
+  const existingCodes = useMemo(
+    () => new Set(assessmentTypes.map((type) => type.code)),
+    [assessmentTypes]
+  );
+
   const templateOptions = useMemo(() => {
     return assessmentTypes.filter((type) => type.code !== watchedCode);
   }, [assessmentTypes, watchedCode]);
@@ -470,6 +571,8 @@ export const CreateAssessmentTypeWizard = () => {
   const handleNextFromBasics = async () => {
     const valid = await form.trigger([...CREATE_ASSESSMENT_TYPE_BASICS_FIELDS]);
     if (!valid) return;
+    const code = form.getValues('code')?.toLowerCase().trim();
+    if (code && existingCodes.has(code)) return;
     setStepIndex(1);
   };
 
@@ -509,8 +612,11 @@ export const CreateAssessmentTypeWizard = () => {
     setCreatedType({
       code: result.assessmentType.code,
       name: result.assessmentType.name,
-      sectionCount: result.assessmentType.sectionCount,
-      questionsPerSection: result.assessmentType.questionsPerSection,
+      // Form values are source of truth — create mutation may omit section counts in response
+      sectionCount: values.sectionCount,
+      questionsPerSection: values.questionsPerSection,
+      totalQuestions:
+        result.assessmentType.totalQuestions ?? values.sectionCount * values.questionsPerSection,
       clonedFrom: cloneFromTemplate,
       seededSections: values.seedSections,
     });
@@ -520,6 +626,11 @@ export const CreateAssessmentTypeWizard = () => {
   const handleNavigateContent = () => {
     if (!createdType) return;
     router.push(buildAssessmentHref('content', createdType.code));
+  };
+
+  const handleNavigateScoring = () => {
+    if (!createdType) return;
+    router.push(buildAssessmentHref('scoring', createdType.code));
   };
 
   const handleNavigateOverview = () => {
@@ -560,6 +671,7 @@ export const CreateAssessmentTypeWizard = () => {
           created={createdType}
           onNavigateContent={handleNavigateContent}
           onNavigateOverview={handleNavigateOverview}
+          onNavigateScoring={handleNavigateScoring}
         />
       ) : (
         <Form {...form}>
@@ -580,7 +692,7 @@ export const CreateAssessmentTypeWizard = () => {
               {stepIndex === 0 && (
                 <>
                   <h2 className="font-semibold text-lg mb-4">Basics</h2>
-                  <BasicsStepFields />
+                  <BasicsStepFields existingCodes={existingCodes} />
                 </>
               )}
               {stepIndex === 1 && (

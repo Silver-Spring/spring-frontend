@@ -10,17 +10,19 @@ import {
 } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
 import {
-  AssessmentTypeCode,
+  ALL_ASSESSMENT_TYPES_FILTER,
+  AssessmentTypeFilter,
   DEFAULT_ASSESSMENT_TYPE,
 } from '@/modules/assessment/constants';
 import { useAdminAssessmentTypes } from '@/modules/admin/hooks';
 import { useOptionalAssessmentTypeContext } from '../context/assessment-type-context';
 
 type AssessmentTypeSelectorProps = {
-  value?: AssessmentTypeCode;
-  onChange?: (type: AssessmentTypeCode) => void;
+  value?: AssessmentTypeFilter;
+  onChange?: (type: AssessmentTypeFilter) => void;
   label?: string;
   className?: string;
+  includeAllTypes?: boolean;
 };
 
 export const AssessmentTypeSelector = ({
@@ -28,6 +30,7 @@ export const AssessmentTypeSelector = ({
   onChange,
   label = 'Assessment Type',
   className,
+  includeAllTypes = false,
 }: AssessmentTypeSelectorProps) => {
   const context = useOptionalAssessmentTypeContext();
   const { assessmentTypes, loading } = useAdminAssessmentTypes();
@@ -67,6 +70,9 @@ export const AssessmentTypeSelector = ({
           <SelectValue placeholder="Select assessment type" />
         </SelectTrigger>
         <SelectContent>
+          {includeAllTypes && (
+            <SelectItem value={ALL_ASSESSMENT_TYPES_FILTER}>All types</SelectItem>
+          )}
           {options.map((type) => (
             <SelectItem key={type.code} value={type.code}>
               {type.name} ({type.code.toUpperCase()})

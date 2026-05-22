@@ -17,13 +17,6 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
   Sheet,
   SheetContent,
   SheetDescription,
@@ -41,6 +34,7 @@ import {
   useCreateRecommendedAction,
   useDeleteInterpretationBand,
   useDeleteRecommendedAction,
+  useAssessmentTypeReadiness,
   useInterpretationBands,
   useUpdateInterpretationBand,
   useUpdateRecommendedAction,
@@ -48,8 +42,8 @@ import {
   type InterpretationBandNode,
   type OverallInterpretationBandNode,
   type SectionInterpretationBandNode,
-  type SectionTypeKey,
 } from '@/modules/admin/hooks';
+import { useGetSections } from '@/modules/assessment/hooks';
 import { Pencil, Plus, Trash2 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -81,13 +75,8 @@ type StagePreset = {
   displayRangeLabel?: string;
 };
 
-const SECTION_TYPES: { key: SectionTypeKey; label: string }[] = [
-  { key: 'psychological', label: 'Psychological Adaptation' },
-  { key: 'social', label: 'Social Connection' },
-  { key: 'mental', label: 'Mental Engagement' },
-  { key: 'physical', label: 'Physical Wellness' },
-  { key: 'lifestyle', label: 'Lifestyle Integration' },
-];
+const normalizeSectionType = (type: string | null | undefined): string =>
+  (type ?? '').trim().toLowerCase();
 
 const SECTION_STAGES: StagePreset[] = [
   { label: 'Vulnerable', rangeStart: 10, rangeEnd: 29, displayOrder: 1 },
@@ -338,6 +327,8 @@ const BandEditForm = ({
   assessmentType,
   editingBand,
   preset,
+  contextSectionType,
+  contextSectionLabel,
   onCancel,
   onSuccess,
 }: {
@@ -345,6 +336,8 @@ const BandEditForm = ({
   assessmentType: AssessmentTypeCode;
   editingBand: InterpretationBandNode | null;
   preset?: Partial<BandFormState>;
+  contextSectionType?: string;
+  contextSectionLabel?: string;
   onCancel: () => void;
   onSuccess: () => void;
 }) => {
@@ -358,9 +351,17 @@ const BandEditForm = ({
   const [form, setForm] = useState<BandFormState>(EMPTY_BAND_FORM);
 
   useEffect(() => {
+    const resolvedSectionType =
+      (editingBand && 'sectionType' in editingBand
+        ? normalizeSectionType(editingBand.sectionType)
+        : '') ||
+      normalizeSectionType(contextSectionType) ||
+      normalizeSectionType(preset?.sectionType) ||
+      '';
+
     if (editingBand) {
       setForm({
-        sectionType: 'sectionType' in editingBand ? (editingBand.sectionType ?? '') : '',
+        sectionType: resolvedSectionType,
         rangeStart: String(editingBand.rangeStart),
         rangeEnd: String(editingBand.rangeEnd),
         label: editingBand.label,
@@ -372,18 +373,26 @@ const BandEditForm = ({
       });
       return;
     }
-    if (preset) {
-      setForm({ ...EMPTY_BAND_FORM, ...preset });
+    if (preset || contextSectionType) {
+      setForm({
+        ...EMPTY_BAND_FORM,
+        ...preset,
+        sectionType: resolvedSectionType,
+      });
       return;
     }
     setForm(EMPTY_BAND_FORM);
-  }, [editingBand, preset]);
+  }, [editingBand, preset, contextSectionType]);
 
   const isOverall = bandScope === 'overall';
   const isSection = bandScope === 'section';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (isSection && !editingBand && !form.sectionType) {
+      return;
+    }
 
     if (editingBand) {
       await updateInterpretationBand({
@@ -427,25 +436,12 @@ const BandEditForm = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {isSection && (
           <div className="md:col-span-2">
-            <Label htmlFor="band-section-type">Dimension</Label>
-            <Select
-              value={form.sectionType}
-              onValueChange={(value) => setForm({ ...form, sectionType: value })}
-              disabled={!!editingBand}
-            >
-              <SelectTrigger id="band-section-type" className="mt-2 w-full">
-                <SelectValue placeholder="Select dimension" />
-              </SelectTrigger>
-              <SelectContent>
-                {SECTION_TYPES.map((section) => (
-                  <SelectItem key={section.key} value={section.key}>
-                    {section.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Label>Dimension</Label>
+            <p className="text-sm font-medium mt-2">
+              {contextSectionLabel || form.sectionType || 'Unknown dimension'}
+            </p>
             <p className="text-xs text-muted-foreground mt-1">
-              Which dimension this interpretation applies to.
+              Set by the matrix cell you selected. Each row is one active section.
             </p>
           </div>
         )}
@@ -543,7 +539,7 @@ const BandEditForm = ({
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <Button type="submit" disabled={creating || updating || (isSection && !form.sectionType)}>
+        <Button type="submit" disabled={creating || updating}>
           {creating || updating ? 'Saving...' : editingBand ? 'Save Changes' : 'Create Band'}
         </Button>
         <Button type="button" variant="outline" onClick={onCancel}>
@@ -584,6 +580,8 @@ const BandEditSheet = ({
   bandScope,
   band,
   preset,
+  contextSectionType,
+  contextSectionLabel,
   onSaved,
 }: {
   open: boolean;
@@ -592,13 +590,16 @@ const BandEditSheet = ({
   bandScope: BandScope;
   band: InterpretationBandNode | null;
   preset?: Partial<BandFormState>;
+  contextSectionType?: string;
+  contextSectionLabel?: string;
   onSaved: () => void;
 }) => {
+  const dimensionSuffix = contextSectionLabel ? ` · ${contextSectionLabel}` : '';
   const title = band
-    ? `${band.label}${
-        'sectionType' in band && band.sectionType ? ` · ${band.sectionType}` : ''
-      }`
-    : 'Create band';
+    ? `${band.label}${dimensionSuffix}`
+    : preset?.label
+      ? `${preset.label}${dimensionSuffix}`
+      : 'Create band';
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -617,6 +618,8 @@ const BandEditSheet = ({
             assessmentType={assessmentType}
             editingBand={band}
             preset={preset}
+            contextSectionType={contextSectionType}
+            contextSectionLabel={contextSectionLabel}
             onCancel={() => onOpenChange(false)}
             onSuccess={() => {
               onSaved();
@@ -636,30 +639,79 @@ const BandEditSheet = ({
   );
 };
 
-const SectionBandMatrix = ({ assessmentType }: { assessmentType: AssessmentTypeCode }) => {
-  const { sectionBands, loading, refetch } = useInterpretationBands(assessmentType);
+const SectionBandMatrix = ({
+  assessmentType,
+  sectionBands,
+  bandsLoading,
+  requiredSectionBands,
+  stagesPerSection,
+  onBandsChanged,
+}: {
+  assessmentType: AssessmentTypeCode;
+  sectionBands: SectionInterpretationBandNode[];
+  bandsLoading: boolean;
+  requiredSectionBands: number | null;
+  stagesPerSection: number;
+  onBandsChanged: () => void;
+}) => {
+  const { sections, loading: sectionsLoading } = useGetSections(assessmentType);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [selectedBand, setSelectedBand] = useState<SectionInterpretationBandNode | null>(null);
   const [preset, setPreset] = useState<Partial<BandFormState> | undefined>();
+  const [matrixContext, setMatrixContext] = useState<{
+    type: string;
+    label: string;
+  } | null>(null);
+
+  const activeSections = useMemo(
+    () =>
+      [...sections]
+        .filter((section) => section.isActive)
+        .sort((a, b) => a.displayOrder - b.displayOrder),
+    [sections]
+  );
+
+  const activeSectionTypes = useMemo(
+    () => new Set(activeSections.map((section) => normalizeSectionType(String(section.type)))),
+    [activeSections]
+  );
+
+  const filteredSectionBands = useMemo(
+    () =>
+      sectionBands.filter(
+        (band) =>
+          band.sectionType &&
+          activeSectionTypes.has(normalizeSectionType(band.sectionType))
+      ),
+    [sectionBands, activeSectionTypes]
+  );
+
+  const expectedBandCount =
+    requiredSectionBands ?? activeSections.length * (stagesPerSection ?? 5);
 
   const bandMap = useMemo(() => {
     const map = new Map<string, SectionInterpretationBandNode>();
-    sectionBands.forEach((band) => {
+    filteredSectionBands.forEach((band) => {
       if (band.sectionType) {
-        map.set(`${band.sectionType}:${band.label}`, band);
+        map.set(`${normalizeSectionType(band.sectionType)}:${band.label}`, band);
       }
     });
     return map;
-  }, [sectionBands]);
+  }, [filteredSectionBands]);
 
-  const handleCellClick = (sectionType: SectionTypeKey, stage: StagePreset) => {
-    const existing = bandMap.get(`${sectionType}:${stage.label}`);
+  const handleCellClick = (
+    section: (typeof activeSections)[number],
+    stage: StagePreset
+  ) => {
+    const sectionTypeKey = normalizeSectionType(String(section.type));
+    const existing = bandMap.get(`${sectionTypeKey}:${stage.label}`);
+    setMatrixContext({ type: sectionTypeKey, label: section.name });
     setSelectedBand(existing ?? null);
     setPreset(
       existing
         ? undefined
         : {
-            sectionType,
+            sectionType: sectionTypeKey,
             label: stage.label,
             rangeStart: String(stage.rangeStart),
             rangeEnd: String(stage.rangeEnd),
@@ -670,7 +722,21 @@ const SectionBandMatrix = ({ assessmentType }: { assessmentType: AssessmentTypeC
     setSheetOpen(true);
   };
 
-  if (loading) {
+  const filledCellCount = useMemo(() => {
+    let count = 0;
+    activeSections.forEach((section) => {
+      SECTION_STAGES.forEach((stage) => {
+        if (bandMap.has(`${normalizeSectionType(String(section.type))}:${stage.label}`)) {
+          count += 1;
+        }
+      });
+    });
+    return count;
+  }, [activeSections, bandMap]);
+
+  const totalCellCount = activeSections.length * SECTION_STAGES.length;
+
+  if (sectionsLoading || bandsLoading) {
     return (
       <div className="flex justify-center py-12">
         <Spinner className="size-8" />
@@ -678,10 +744,20 @@ const SectionBandMatrix = ({ assessmentType }: { assessmentType: AssessmentTypeC
     );
   }
 
+  if (activeSections.length === 0) {
+    return (
+      <p className="text-sm text-muted-foreground py-8 text-center">
+        No active sections for this type. Add or reactivate sections in the Content tab to
+        configure dimension bands.
+      </p>
+    );
+  }
+
   return (
     <>
       <p className="text-sm text-muted-foreground mb-4">
-        {sectionBands.length} section bands configured (expected 25). Each dimension has its own
+        {filteredSectionBands.length} section bands configured (expected {expectedBandCount}).
+        Matrix: {filledCellCount}/{totalCellCount} cells filled. Each active dimension has its own
         narrative per stage.
       </p>
       <div className="overflow-x-auto">
@@ -697,22 +773,24 @@ const SectionBandMatrix = ({ assessmentType }: { assessmentType: AssessmentTypeC
             </tr>
           </thead>
           <tbody>
-            {SECTION_TYPES.map((section) => (
-              <tr key={section.key} className="border-t">
-                <td className="p-2 font-medium align-top">{section.label}</td>
+            {activeSections.map((section) => (
+              <tr key={section.id} className="border-t">
+                <td className="p-2 font-medium align-top">{section.name}</td>
                 {SECTION_STAGES.map((stage) => {
-                  const band = bandMap.get(`${section.key}:${stage.label}`);
+                  const band = bandMap.get(
+                    `${normalizeSectionType(String(section.type))}:${stage.label}`
+                  );
                   return (
                     <td key={stage.label} className="p-1">
                       <button
                         type="button"
-                        onClick={() => handleCellClick(section.key, stage)}
+                        onClick={() => handleCellClick(section, stage)}
                         className={cn(
                           'w-full rounded-md border p-2 text-left transition-colors hover:bg-muted/60 min-h-[72px]',
                           band ? 'border-primary/30 bg-primary/5' : 'border-dashed text-muted-foreground',
                           band && !band.isActive && 'opacity-50'
                         )}
-                        aria-label={`Edit ${section.label} ${stage.label} band`}
+                        aria-label={`Edit ${section.name} ${stage.label} band`}
                       >
                         {band ? (
                           <>
@@ -741,14 +819,25 @@ const SectionBandMatrix = ({ assessmentType }: { assessmentType: AssessmentTypeC
         bandScope="section"
         band={selectedBand}
         preset={preset}
-        onSaved={refetch}
+        contextSectionType={matrixContext?.type}
+        contextSectionLabel={matrixContext?.label}
+        onSaved={onBandsChanged}
       />
     </>
   );
 };
 
-const OverallBandPanel = ({ assessmentType }: { assessmentType: AssessmentTypeCode }) => {
-  const { overallBands, loading, refetch } = useInterpretationBands(assessmentType);
+const OverallBandPanel = ({
+  assessmentType,
+  overallBands,
+  loading,
+  onBandsChanged,
+}: {
+  assessmentType: AssessmentTypeCode;
+  overallBands: OverallInterpretationBandNode[];
+  loading: boolean;
+  onBandsChanged: () => void;
+}) => {
   const { updateInterpretationBand, loading: updating } =
     useUpdateInterpretationBand(assessmentType);
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -869,33 +958,61 @@ const OverallBandPanel = ({ assessmentType }: { assessmentType: AssessmentTypeCo
         bandScope="overall"
         band={selectedBand}
         preset={preset}
-        onSaved={refetch}
+        onSaved={onBandsChanged}
       />
     </>
   );
 };
 
 export const InterpretationBandManager = ({ assessmentType }: AssessmentTypePanelProps) => {
+  const [activeTab, setActiveTab] = useState('section');
+  const { requiredSectionBands, stagesPerSection } = useAssessmentTypeReadiness(assessmentType);
+  const { sectionBands, overallBands, loading, refetch } = useInterpretationBands(
+    assessmentType,
+    {
+      loadSection: true,
+      loadOverall: activeTab === 'overall',
+    }
+  );
+  const sectionBandLabel =
+    requiredSectionBands != null
+      ? `Section bands (${requiredSectionBands})`
+      : `Section bands (${stagesPerSection} per dimension)`;
+
   return (
     <Card className="p-6">
       <div className="mb-6">
         <h3 className="font-semibold text-lg">Interpretation Bands</h3>
         <p className="text-sm text-muted-foreground mt-1">
-          25 dimension-specific section bands and 5 overall bands for{' '}
-          {assessmentType.toUpperCase()}.
+          Dimension-specific section bands and 5 overall bands for {assessmentType.toUpperCase()}.
+          Matrix rows follow active sections from the Content tab.
         </p>
       </div>
 
-      <Tabs defaultValue="section">
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
-          <TabsTrigger value="section">Section bands (25)</TabsTrigger>
+          <TabsTrigger value="section">{sectionBandLabel}</TabsTrigger>
           <TabsTrigger value="overall">Overall bands (5)</TabsTrigger>
         </TabsList>
         <TabsContent value="section" className="mt-4">
-          <SectionBandMatrix assessmentType={assessmentType} />
+          <SectionBandMatrix
+            assessmentType={assessmentType}
+            sectionBands={sectionBands}
+            bandsLoading={loading}
+            requiredSectionBands={requiredSectionBands}
+            stagesPerSection={stagesPerSection}
+            onBandsChanged={refetch}
+          />
         </TabsContent>
         <TabsContent value="overall" className="mt-4">
-          <OverallBandPanel assessmentType={assessmentType} />
+          {activeTab === 'overall' && (
+            <OverallBandPanel
+              assessmentType={assessmentType}
+              overallBands={overallBands}
+              loading={loading}
+              onBandsChanged={refetch}
+            />
+          )}
         </TabsContent>
       </Tabs>
 

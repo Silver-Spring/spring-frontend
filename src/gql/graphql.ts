@@ -184,6 +184,29 @@ export type AssessmentCohortStatCondition = {
   lastUpdatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
+/** An input for mutations affecting `AssessmentCohortStat` */
+export type AssessmentCohortStatInput = {
+  assessmentTypeCode?: InputMaybe<Scalars['String']['input']>;
+  assessmentTypeToAssessmentTypeCode?: InputMaybe<AssessmentCohortStatsAssessmentTypeCodeFkeyInput>;
+  /** Average lifestyle readiness score across all users */
+  avgLifestyleScore?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Average mental readiness score across all users */
+  avgMentalScore?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Average physical readiness score across all users */
+  avgPhysicalScore?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Average psychological readiness score across all users */
+  avgPsychologicalScore?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Average social readiness score across all users */
+  avgSocialScore?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Average Total Readiness Index across all users */
+  avgTotalReadinessIndex?: InputMaybe<Scalars['BigFloat']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  /** Timestamp of the last statistics update */
+  lastUpdatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Total number of completed assessments */
+  totalAssessments?: InputMaybe<Scalars['Int']['input']>;
+};
+
 /** The fields on `assessmentCohortStat` to look up the row to update. */
 export type AssessmentCohortStatOnAssessmentCohortStatForAssessmentCohortStatsAssessmentTypeCodeFkeyUsingAssessmentCohortStatsPkeyUpdate = {
   id: Scalars['UUID']['input'];
@@ -196,6 +219,51 @@ export type AssessmentCohortStatOnAssessmentCohortStatForAssessmentCohortStatsAs
   assessmentTypeCode: Scalars['String']['input'];
   /** An object where the defined keys will be set on the `assessmentCohortStat` being updated. */
   patch: UpdateAssessmentCohortStatOnAssessmentCohortStatForAssessmentCohortStatsAssessmentTypeCodeFkeyPatch;
+};
+
+/** Represents an update to a `AssessmentCohortStat`. Fields that are set will be updated. */
+export type AssessmentCohortStatPatch = {
+  assessmentTypeCode?: InputMaybe<Scalars['String']['input']>;
+  assessmentTypeToAssessmentTypeCode?: InputMaybe<AssessmentCohortStatsAssessmentTypeCodeFkeyInput>;
+  /** Average lifestyle readiness score across all users */
+  avgLifestyleScore?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Average mental readiness score across all users */
+  avgMentalScore?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Average physical readiness score across all users */
+  avgPhysicalScore?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Average psychological readiness score across all users */
+  avgPsychologicalScore?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Average social readiness score across all users */
+  avgSocialScore?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Average Total Readiness Index across all users */
+  avgTotalReadinessIndex?: InputMaybe<Scalars['BigFloat']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  /** Timestamp of the last statistics update */
+  lastUpdatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Total number of completed assessments */
+  totalAssessments?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** The `assessmentCohortStat` to be created by this mutation. */
+export type AssessmentCohortStatsAssessmentTypeCodeFkeyAssessmentCohortStatsCreateInput = {
+  assessmentTypeToAssessmentTypeCode?: InputMaybe<AssessmentCohortStatsAssessmentTypeCodeFkeyInput>;
+  /** Average lifestyle readiness score across all users */
+  avgLifestyleScore?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Average mental readiness score across all users */
+  avgMentalScore?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Average physical readiness score across all users */
+  avgPhysicalScore?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Average psychological readiness score across all users */
+  avgPsychologicalScore?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Average social readiness score across all users */
+  avgSocialScore?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Average Total Readiness Index across all users */
+  avgTotalReadinessIndex?: InputMaybe<Scalars['BigFloat']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  /** Timestamp of the last statistics update */
+  lastUpdatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Total number of completed assessments */
+  totalAssessments?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** Input for the nested mutation of `assessmentType` in the `AssessmentCohortStatInput` mutation. */
@@ -216,6 +284,8 @@ export type AssessmentCohortStatsAssessmentTypeCodeFkeyInverseInput = {
   connectByAssessmentTypeCode?: InputMaybe<AssessmentCohortStatAssessmentCohortStatsTypeUniqueConnect>;
   /** The primary key(s) for `assessmentCohortStat` for the far side of the relationship. */
   connectById?: InputMaybe<AssessmentCohortStatAssessmentCohortStatsPkeyConnect>;
+  /** A `AssessmentCohortStatInput` object that will be created and connected to this object. */
+  create?: InputMaybe<Array<AssessmentCohortStatsAssessmentTypeCodeFkeyAssessmentCohortStatsCreateInput>>;
   /** The primary key(s) and patch data for `assessmentCohortStat` for the far side of the relationship. */
   updateByAssessmentTypeCode?: InputMaybe<AssessmentCohortStatOnAssessmentCohortStatForAssessmentCohortStatsAssessmentTypeCodeFkeyUsingAssessmentCohortStatsTypeUniqueUpdate>;
   /** The primary key(s) and patch data for `assessmentCohortStat` for the far side of the relationship. */
@@ -1242,6 +1312,8 @@ export type AssessmentResult = {
   pdfPath?: Maybe<Scalars['String']['output']>;
   /** Array of recommended actions based on assessment results */
   recommendedActions?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  /** Report content version at completion; compared to assessment_types.report_content_version on download */
+  reportContentVersion?: Maybe<Scalars['Int']['output']>;
   /** Reads a single `AssessmentSession` that is related to this `AssessmentResult`. */
   session?: Maybe<AssessmentSession>;
   /** Unique reference to the assessment session */
@@ -1369,8 +1441,11 @@ export type AssessmentResultAssessmentSectionsByAssessmentSectionResultResultIdA
   node: AssessmentSection;
   /** Section score (10-100, calculated as average of 10 responses × 10) */
   score: Scalars['Int']['output'];
+  sectionDisplayColor?: Maybe<Scalars['String']['output']>;
+  sectionEmoji?: Maybe<Scalars['String']['output']>;
+  sectionName?: Maybe<Scalars['String']['output']>;
   /** Section type (denormalized for easier querying) */
-  sectionType: AssessmentSectionType;
+  sectionType: Scalars['String']['output'];
 };
 
 /**
@@ -1619,14 +1694,18 @@ export type AssessmentSection = {
   createdAt: Scalars['Datetime']['output'];
   /** Detailed description of what this section assesses */
   description?: Maybe<Scalars['String']['output']>;
+  /** Hex color (#RRGGBB) for charts and PDF dimension bars */
+  displayColor?: Maybe<Scalars['String']['output']>;
   /** Order in which sections should be displayed to admins */
   displayOrder: Scalars['Int']['output'];
+  /** Emoji displayed in PDF section headers and admin UI */
+  emoji?: Maybe<Scalars['String']['output']>;
   id: Scalars['UUID']['output'];
   isActive: Scalars['Boolean']['output'];
   /** Display name of the section */
   name: Scalars['String']['output'];
   /** Type of the assessment section (unique) */
-  type: AssessmentSectionType;
+  type: Scalars['String']['output'];
   updatedAt: Scalars['Datetime']['output'];
 };
 
@@ -1744,8 +1823,11 @@ export type AssessmentSectionAssessmentResultsByAssessmentSectionResultSectionId
   node: AssessmentResult;
   /** Section score (10-100, calculated as average of 10 responses × 10) */
   score: Scalars['Int']['output'];
+  sectionDisplayColor?: Maybe<Scalars['String']['output']>;
+  sectionEmoji?: Maybe<Scalars['String']['output']>;
+  sectionName?: Maybe<Scalars['String']['output']>;
   /** Section type (denormalized for easier querying) */
-  sectionType: AssessmentSectionType;
+  sectionType: Scalars['String']['output'];
 };
 
 /** The fields on `assessmentSection` to look up the row to connect. */
@@ -1757,7 +1839,7 @@ export type AssessmentSectionAssessmentSectionsPkeyConnect = {
 export type AssessmentSectionAssessmentSectionsTypeAssessmentTypeUniqueConnect = {
   assessmentTypeCode: Scalars['String']['input'];
   /** Type of the assessment section (unique) */
-  type: AssessmentSectionType;
+  type: Scalars['String']['input'];
 };
 
 /**
@@ -1774,7 +1856,7 @@ export type AssessmentSectionCondition = {
   /** Checks for equality with the object’s `isActive` field. */
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `type` field. */
-  type?: InputMaybe<AssessmentSectionType>;
+  type?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** The fields on `assessmentSection` to look up the row to update. */
@@ -1790,7 +1872,7 @@ export type AssessmentSectionOnAssessmentQuestionForAssessmentQuestionsSectionId
   /** An object where the defined keys will be set on the `assessmentSection` being updated. */
   patch: UpdateAssessmentSectionOnAssessmentQuestionForAssessmentQuestionsSectionIdFkeyPatch;
   /** Type of the assessment section (unique) */
-  type: AssessmentSectionType;
+  type: Scalars['String']['input'];
 };
 
 /** The fields on `assessmentSection` to look up the row to update. */
@@ -1806,7 +1888,7 @@ export type AssessmentSectionOnAssessmentSectionForAssessmentSectionsAssessmentT
   /** An object where the defined keys will be set on the `assessmentSection` being updated. */
   patch: UpdateAssessmentSectionOnAssessmentSectionForAssessmentSectionsAssessmentTypeCodeFkeyPatch;
   /** Type of the assessment section (unique) */
-  type: AssessmentSectionType;
+  type: Scalars['String']['input'];
 };
 
 /** The fields on `assessmentSection` to look up the row to update. */
@@ -1822,7 +1904,17 @@ export type AssessmentSectionOnAssessmentSectionResultForAssessmentSectionResult
   /** An object where the defined keys will be set on the `assessmentSection` being updated. */
   patch: UpdateAssessmentSectionOnAssessmentSectionResultForAssessmentSectionResultsSectionIdFkeyPatch;
   /** Type of the assessment section (unique) */
-  type: AssessmentSectionType;
+  type: Scalars['String']['input'];
+};
+
+export type AssessmentSectionPreset = {
+  __typename?: 'AssessmentSectionPreset';
+  description: Scalars['String']['output'];
+  displayColor?: Maybe<Scalars['String']['output']>;
+  displayOrder: Scalars['Int']['output'];
+  emoji?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
+  type: Scalars['String']['output'];
 };
 
 /** Detailed section-wise results with interpretations for each assessment */
@@ -1846,10 +1938,13 @@ export type AssessmentSectionResult = {
   score: Scalars['Int']['output'];
   /** Reads a single `AssessmentSection` that is related to this `AssessmentSectionResult`. */
   section?: Maybe<AssessmentSection>;
+  sectionDisplayColor?: Maybe<Scalars['String']['output']>;
+  sectionEmoji?: Maybe<Scalars['String']['output']>;
   /** Reference to the section */
   sectionId: Scalars['UUID']['output'];
+  sectionName?: Maybe<Scalars['String']['output']>;
   /** Section type (denormalized for easier querying) */
-  sectionType: AssessmentSectionType;
+  sectionType: Scalars['String']['output'];
 };
 
 /** The fields on `assessmentSectionResult` to look up the row to connect. */
@@ -1870,7 +1965,7 @@ export type AssessmentSectionResultAssessmentSectionResultsResultIdSectionTypeKe
   /** Reference to the main assessment result */
   resultId: Scalars['UUID']['input'];
   /** Section type (denormalized for easier querying) */
-  sectionType: AssessmentSectionType;
+  sectionType: Scalars['String']['input'];
 };
 
 /**
@@ -1889,7 +1984,7 @@ export type AssessmentSectionResultCondition = {
   /** Checks for equality with the object’s `sectionId` field. */
   sectionId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `sectionType` field. */
-  sectionType?: InputMaybe<AssessmentSectionType>;
+  sectionType?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** The fields on `assessmentSectionResult` to look up the row to update. */
@@ -1916,7 +2011,7 @@ export type AssessmentSectionResultOnAssessmentSectionResultForAssessmentSection
   /** Reference to the main assessment result */
   resultId: Scalars['UUID']['input'];
   /** Section type (denormalized for easier querying) */
-  sectionType: AssessmentSectionType;
+  sectionType: Scalars['String']['input'];
 };
 
 /** The fields on `assessmentSectionResult` to look up the row to update. */
@@ -1943,7 +2038,7 @@ export type AssessmentSectionResultOnAssessmentSectionResultForAssessmentSection
   /** Reference to the main assessment result */
   resultId: Scalars['UUID']['input'];
   /** Section type (denormalized for easier querying) */
-  sectionType: AssessmentSectionType;
+  sectionType: Scalars['String']['input'];
 };
 
 /** The fields on `assessmentSectionResult` to look up the row to update. */
@@ -1970,7 +2065,7 @@ export type AssessmentSectionResultOnAssessmentSectionResultForAssessmentSection
   /** Reference to the main assessment result */
   resultId: Scalars['UUID']['input'];
   /** Section type (denormalized for easier querying) */
-  sectionType: AssessmentSectionType;
+  sectionType: Scalars['String']['input'];
 };
 
 /** A connection to a list of `AssessmentSectionResult` values. */
@@ -2093,15 +2188,6 @@ export type AssessmentSectionResultsSectionIdFkeyInverseInput = {
   /** The primary key(s) and patch data for `assessmentSectionResult` for the far side of the relationship. */
   updateByResultIdAndSectionType?: InputMaybe<Array<AssessmentSectionResultOnAssessmentSectionResultForAssessmentSectionResultsSectionIdFkeyUsingAssessmentSectionResultsResultIdSectionTypeKeyUpdate>>;
 };
-
-/** Fixed types of assessment sections: psychological, social, mental, physical, lifestyle. These cannot be modified and represent the core structure of the retirement readiness assessment. */
-export enum AssessmentSectionType {
-  Lifestyle = 'LIFESTYLE',
-  Mental = 'MENTAL',
-  Physical = 'PHYSICAL',
-  Psychological = 'PSYCHOLOGICAL',
-  Social = 'SOCIAL'
-}
 
 /** Input for the nested mutation of `assessmentType` in the `AssessmentSectionInput` mutation. */
 export type AssessmentSectionsAssessmentTypeCodeFkeyInput = {
@@ -2899,6 +2985,8 @@ export type AssessmentTrendData = {
 };
 
 export type AssessmentTrendsInput = {
+  /** Optional filter by assessment type code (e.g. "ssri", "prai"). Omit to include all types. */
+  assessmentType?: InputMaybe<Scalars['String']['input']>;
   endDate: Scalars['Date']['input'];
   startDate: Scalars['Date']['input'];
 };
@@ -2933,6 +3021,8 @@ export type AssessmentType = {
   assessmentSessionsByAssessmentTypeCode: AssessmentSessionsConnection;
   /** Reads and enables pagination through a set of `AssessmentTemplateContent`. */
   assessmentTemplateContentsByAssessmentTypeCode: AssessmentTemplateContentsConnection;
+  /** Reads and enables pagination through a set of `AssessmentTypeStageTable`. */
+  assessmentTypeStageTablesByAssessmentTypeCode: AssessmentTypeStageTablesConnection;
   /** Unique identifier for the assessment type (e.g., ssri, prai) */
   code: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `CouponTable`. */
@@ -2952,6 +3042,8 @@ export type AssessmentType = {
   paymentsByAssessmentTypeCode: PaymentsConnection;
   priceAmount: Scalars['Int']['output'];
   questionsPerSection: Scalars['Int']['output'];
+  /** Incremented when report display content changes; PDFs regen lazily on download when stale */
+  reportContentVersion: Scalars['Int']['output'];
   /** Formula type: sum (add section scores) or average (mean of section scores scaled to min/max) */
   scoringFormula: Scalars['String']['output'];
   sectionCount: Scalars['Int']['output'];
@@ -3048,6 +3140,18 @@ export type AssessmentTypeAssessmentTemplateContentsByAssessmentTypeCodeArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AssessmentTemplateContentsOrderBy>>;
+};
+
+
+/** Defines available assessment types (SSRI, PRAI, etc.) with scoring and pricing configuration */
+export type AssessmentTypeAssessmentTypeStageTablesByAssessmentTypeCodeArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentTypeStageTableCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentTypeStageTablesOrderBy>>;
 };
 
 
@@ -3328,6 +3432,21 @@ export type AssessmentTypeOnAssessmentTemplateContentForAssessmentTemplateConten
 };
 
 /** The fields on `assessmentType` to look up the row to update. */
+export type AssessmentTypeOnAssessmentTypeStageTableForAssessmentTypeStagesAssessmentTypeCodeFkeyUsingAssessmentTypesCodeKeyUpdate = {
+  /** Unique identifier for the assessment type (e.g., ssri, prai) */
+  code: Scalars['String']['input'];
+  /** An object where the defined keys will be set on the `assessmentType` being updated. */
+  patch: UpdateAssessmentTypeOnAssessmentTypeStageTableForAssessmentTypeStagesAssessmentTypeCodeFkeyPatch;
+};
+
+/** The fields on `assessmentType` to look up the row to update. */
+export type AssessmentTypeOnAssessmentTypeStageTableForAssessmentTypeStagesAssessmentTypeCodeFkeyUsingAssessmentTypesPkeyUpdate = {
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `assessmentType` being updated. */
+  patch: UpdateAssessmentTypeOnAssessmentTypeStageTableForAssessmentTypeStagesAssessmentTypeCodeFkeyPatch;
+};
+
+/** The fields on `assessmentType` to look up the row to update. */
 export type AssessmentTypeOnPaymentForPaymentsAssessmentTypeCodeFkeyUsingAssessmentTypesCodeKeyUpdate = {
   /** Unique identifier for the assessment type (e.g., ssri, prai) */
   code: Scalars['String']['input'];
@@ -3398,6 +3517,137 @@ export type AssessmentTypeReadinessPayload = {
   checks: Array<AssessmentTypeReadinessCheck>;
   code: Scalars['String']['output'];
   ready: Scalars['Boolean']['output'];
+  requiredSectionBands: Scalars['Int']['output'];
+  sectionCount: Scalars['Int']['output'];
+  stagesPerSection: Scalars['Int']['output'];
+};
+
+export type AssessmentTypeStage = {
+  __typename?: 'AssessmentTypeStage';
+  assessmentTypeCode: Scalars['String']['output'];
+  displayOrder: Scalars['Int']['output'];
+  id: Scalars['UUID']['output'];
+  label: Scalars['String']['output'];
+  overallRangeEnd: Scalars['Int']['output'];
+  overallRangeStart: Scalars['Int']['output'];
+  sectionRangeEnd: Scalars['Int']['output'];
+  sectionRangeStart: Scalars['Int']['output'];
+};
+
+export type AssessmentTypeStageLabelInput = {
+  displayOrder: Scalars['Int']['input'];
+  label: Scalars['String']['input'];
+};
+
+/** Global stage labels and score ranges per assessment type (5 stages shared across all sections) */
+export type AssessmentTypeStageTable = {
+  __typename?: 'AssessmentTypeStageTable';
+  /** Reads a single `AssessmentType` that is related to this `AssessmentTypeStageTable`. */
+  assessmentTypeByAssessmentTypeCode?: Maybe<AssessmentType>;
+  assessmentTypeCode: Scalars['String']['output'];
+  createdAt: Scalars['Datetime']['output'];
+  displayOrder: Scalars['Int']['output'];
+  id: Scalars['UUID']['output'];
+  label: Scalars['String']['output'];
+  overallRangeEnd: Scalars['Int']['output'];
+  overallRangeStart: Scalars['Int']['output'];
+  sectionRangeEnd: Scalars['Int']['output'];
+  sectionRangeStart: Scalars['Int']['output'];
+  updatedAt: Scalars['Datetime']['output'];
+};
+
+/** The fields on `assessmentTypeStageTable` to look up the row to connect. */
+export type AssessmentTypeStageTableAssessmentTypeStagesAssessmentTypeCodeDisplayOrderKeyConnect = {
+  assessmentTypeCode: Scalars['String']['input'];
+  displayOrder: Scalars['Int']['input'];
+};
+
+/** The fields on `assessmentTypeStageTable` to look up the row to connect. */
+export type AssessmentTypeStageTableAssessmentTypeStagesPkeyConnect = {
+  id: Scalars['UUID']['input'];
+};
+
+/**
+ * A condition to be used against `AssessmentTypeStageTable` object types. All
+ * fields are tested for equality and combined with a logical ‘and.’
+ */
+export type AssessmentTypeStageTableCondition = {
+  /** Checks for equality with the object’s `assessmentTypeCode` field. */
+  assessmentTypeCode?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** The fields on `assessmentTypeStageTable` to look up the row to update. */
+export type AssessmentTypeStageTableOnAssessmentTypeStageTableForAssessmentTypeStagesAssessmentTypeCodeFkeyUsingAssessmentTypeStagesAssessmentTypeCodeDisplayOrderKeyUpdate = {
+  assessmentTypeCode: Scalars['String']['input'];
+  displayOrder: Scalars['Int']['input'];
+  /** An object where the defined keys will be set on the `assessmentTypeStageTable` being updated. */
+  patch: UpdateAssessmentTypeStageTableOnAssessmentTypeStageTableForAssessmentTypeStagesAssessmentTypeCodeFkeyPatch;
+};
+
+/** The fields on `assessmentTypeStageTable` to look up the row to update. */
+export type AssessmentTypeStageTableOnAssessmentTypeStageTableForAssessmentTypeStagesAssessmentTypeCodeFkeyUsingAssessmentTypeStagesPkeyUpdate = {
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `assessmentTypeStageTable` being updated. */
+  patch: UpdateAssessmentTypeStageTableOnAssessmentTypeStageTableForAssessmentTypeStagesAssessmentTypeCodeFkeyPatch;
+};
+
+/** A connection to a list of `AssessmentTypeStageTable` values. */
+export type AssessmentTypeStageTablesConnection = {
+  __typename?: 'AssessmentTypeStageTablesConnection';
+  /** A list of edges which contains the `AssessmentTypeStageTable` and cursor to aid in pagination. */
+  edges: Array<AssessmentTypeStageTablesEdge>;
+  /** A list of `AssessmentTypeStageTable` objects. */
+  nodes: Array<AssessmentTypeStageTable>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `AssessmentTypeStageTable` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `AssessmentTypeStageTable` edge in the connection. */
+export type AssessmentTypeStageTablesEdge = {
+  __typename?: 'AssessmentTypeStageTablesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `AssessmentTypeStageTable` at the end of the edge. */
+  node: AssessmentTypeStageTable;
+};
+
+/** Methods to use when ordering `AssessmentTypeStageTable`. */
+export enum AssessmentTypeStageTablesOrderBy {
+  AssessmentTypeCodeAsc = 'ASSESSMENT_TYPE_CODE_ASC',
+  AssessmentTypeCodeDesc = 'ASSESSMENT_TYPE_CODE_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** Input for the nested mutation of `assessmentType` in the `AssessmentTypeStageTableInput` mutation. */
+export type AssessmentTypeStagesAssessmentTypeCodeFkeyInput = {
+  /** The primary key(s) for `assessmentType` for the far side of the relationship. */
+  connectByCode?: InputMaybe<AssessmentTypeAssessmentTypesCodeKeyConnect>;
+  /** The primary key(s) for `assessmentType` for the far side of the relationship. */
+  connectById?: InputMaybe<AssessmentTypeAssessmentTypesPkeyConnect>;
+  /** The primary key(s) and patch data for `assessmentType` for the far side of the relationship. */
+  updateByCode?: InputMaybe<AssessmentTypeOnAssessmentTypeStageTableForAssessmentTypeStagesAssessmentTypeCodeFkeyUsingAssessmentTypesCodeKeyUpdate>;
+  /** The primary key(s) and patch data for `assessmentType` for the far side of the relationship. */
+  updateById?: InputMaybe<AssessmentTypeOnAssessmentTypeStageTableForAssessmentTypeStagesAssessmentTypeCodeFkeyUsingAssessmentTypesPkeyUpdate>;
+};
+
+/** Input for the nested mutation of `assessmentTypeStageTable` in the `AssessmentTypeInput` mutation. */
+export type AssessmentTypeStagesAssessmentTypeCodeFkeyInverseInput = {
+  /** The primary key(s) for `assessmentTypeStageTable` for the far side of the relationship. */
+  connectByAssessmentTypeCodeAndDisplayOrder?: InputMaybe<Array<AssessmentTypeStageTableAssessmentTypeStagesAssessmentTypeCodeDisplayOrderKeyConnect>>;
+  /** The primary key(s) for `assessmentTypeStageTable` for the far side of the relationship. */
+  connectById?: InputMaybe<Array<AssessmentTypeStageTableAssessmentTypeStagesPkeyConnect>>;
+  /** The primary key(s) and patch data for `assessmentTypeStageTable` for the far side of the relationship. */
+  updateByAssessmentTypeCodeAndDisplayOrder?: InputMaybe<Array<AssessmentTypeStageTableOnAssessmentTypeStageTableForAssessmentTypeStagesAssessmentTypeCodeFkeyUsingAssessmentTypeStagesAssessmentTypeCodeDisplayOrderKeyUpdate>>;
+  /** The primary key(s) and patch data for `assessmentTypeStageTable` for the far side of the relationship. */
+  updateById?: InputMaybe<Array<AssessmentTypeStageTableOnAssessmentTypeStageTableForAssessmentTypeStagesAssessmentTypeCodeFkeyUsingAssessmentTypeStagesPkeyUpdate>>;
 };
 
 /** A connection to a list of `User` values, with data from `AssessmentResult`. */
@@ -4484,6 +4734,41 @@ export type CouponsListPayload = {
   totalCount: Scalars['Int']['output'];
 };
 
+/** All input for the create `AssessmentCohortStat` mutation. */
+export type CreateAssessmentCohortStatInput = {
+  /** The `AssessmentCohortStat` to be created by this mutation. */
+  assessmentCohortStat: AssessmentCohortStatInput;
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** The output of our create `AssessmentCohortStat` mutation. */
+export type CreateAssessmentCohortStatPayload = {
+  __typename?: 'CreateAssessmentCohortStatPayload';
+  /** The `AssessmentCohortStat` that was created by this mutation. */
+  assessmentCohortStat?: Maybe<AssessmentCohortStat>;
+  /** An edge for our `AssessmentCohortStat`. May be used by Relay 1. */
+  assessmentCohortStatEdge?: Maybe<AssessmentCohortStatsEdge>;
+  /** Reads a single `AssessmentType` that is related to this `AssessmentCohortStat`. */
+  assessmentTypeByAssessmentTypeCode?: Maybe<AssessmentType>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `AssessmentCohortStat` mutation. */
+export type CreateAssessmentCohortStatPayloadAssessmentCohortStatEdgeArgs = {
+  orderBy?: InputMaybe<Array<AssessmentCohortStatsOrderBy>>;
+};
+
 /** All input for the create `AssessmentResponse` mutation. */
 export type CreateAssessmentResponseInput = {
   /** The `AssessmentResponse` to be created by this mutation. */
@@ -4519,6 +4804,25 @@ export type CreateAssessmentResponsePayload = {
 /** The output of our create `AssessmentResponse` mutation. */
 export type CreateAssessmentResponsePayloadAssessmentResponseEdgeArgs = {
   orderBy?: InputMaybe<Array<AssessmentResponsesOrderBy>>;
+};
+
+export type CreateAssessmentSectionInput = {
+  assessmentTypeCode: Scalars['String']['input'];
+  /** Clone 5 stage bands for this section from template (default: ssri). Pass null to create empty bands. */
+  cloneBandsFromTemplate?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  displayColor?: InputMaybe<Scalars['String']['input']>;
+  displayOrder?: InputMaybe<Scalars['Int']['input']>;
+  emoji?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  type?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type CreateAssessmentSectionPayload = {
+  __typename?: 'CreateAssessmentSectionPayload';
+  message?: Maybe<Scalars['String']['output']>;
+  section?: Maybe<AssessmentSection>;
+  success: Scalars['Boolean']['output'];
 };
 
 /** All input for the create `AssessmentSessionQuestion` mutation. */
@@ -4777,12 +5081,34 @@ export type CurrentResponseDetail = {
   updatedAt: Scalars['Datetime']['output'];
 };
 
+export type DeactivateAssessmentSectionInput = {
+  id: Scalars['UUID']['input'];
+};
+
+export type DeactivateAssessmentSectionPayload = {
+  __typename?: 'DeactivateAssessmentSectionPayload';
+  message?: Maybe<Scalars['String']['output']>;
+  section?: Maybe<AssessmentSection>;
+  success: Scalars['Boolean']['output'];
+};
+
 export type DeactivateCouponInput = {
   id: Scalars['UUID']['input'];
 };
 
 export type DeactivateCouponPayload = {
   __typename?: 'DeactivateCouponPayload';
+  message?: Maybe<Scalars['String']['output']>;
+  success: Scalars['Boolean']['output'];
+};
+
+export type DeleteAssessmentSectionInput = {
+  force?: InputMaybe<Scalars['Boolean']['input']>;
+  id: Scalars['UUID']['input'];
+};
+
+export type DeleteAssessmentSectionPayload = {
+  __typename?: 'DeleteAssessmentSectionPayload';
   message?: Maybe<Scalars['String']['output']>;
   success: Scalars['Boolean']['output'];
 };
@@ -5142,6 +5468,8 @@ export type Mutation = {
    * All 50 questions must be answered.
    */
   completeAssessment?: Maybe<CompleteAssessmentPayload>;
+  /** Creates a single `AssessmentCohortStat`. */
+  createAssessmentCohortStat?: Maybe<CreateAssessmentCohortStatPayload>;
   /**
    * Create a new assessment question (admin only)
    * Display order is automatically assigned as the next available number in the section.
@@ -5149,6 +5477,8 @@ export type Mutation = {
   createAssessmentQuestion?: Maybe<CreateQuestionPayload>;
   /** Creates a single `AssessmentResponse`. */
   createAssessmentResponse?: Maybe<CreateAssessmentResponsePayload>;
+  /** Create a section for a draft assessment type from the preset dimension list (admin only). */
+  createAssessmentSection?: Maybe<CreateAssessmentSectionPayload>;
   /** Creates a single `AssessmentSessionQuestion`. */
   createAssessmentSessionQuestion?: Maybe<CreateAssessmentSessionQuestionPayload>;
   createAssessmentType?: Maybe<AssessmentTypePayload>;
@@ -5163,9 +5493,16 @@ export type Mutation = {
   createRecommendedAction?: Maybe<CreateRecommendedActionPayload>;
   /** Creates a single `User`. */
   createUser?: Maybe<CreateUserPayload>;
+  /** Soft-deactivate a section on a draft assessment type (admin only). */
+  deactivateAssessmentSection?: Maybe<DeactivateAssessmentSectionPayload>;
   deactivateAssessmentType?: Maybe<AssessmentTypePayload>;
   /** Delete an assessment question (admin only) */
   deleteAssessmentQuestion?: Maybe<DeleteQuestionPayload>;
+  /**
+   * Hard-delete a section on a draft assessment type (admin only).
+   * Blocked when active questions or historical results exist unless force rules apply.
+   */
+  deleteAssessmentSection?: Maybe<DeleteAssessmentSectionPayload>;
   /** Deletes a single `CouponTable` using a unique key. */
   deleteCouponTable?: Maybe<DeleteCouponTablePayload>;
   /** Deletes a single `CouponTable` using a unique key. */
@@ -5228,6 +5565,8 @@ export type Mutation = {
    */
   revokeInternalAccess?: Maybe<RevokeInternalAccessPayload>;
   seedAssessmentTypeContent?: Maybe<AssessmentTypePayload>;
+  /** Seed preset sections for a draft type using its configured sectionCount (idempotent). */
+  seedAssessmentTypeSections?: Maybe<SeedAssessmentTypeSectionsPayload>;
   /**
    * Start a new assessment session.
    * - Regular users: Must provide paymentId and can only take test once
@@ -5240,6 +5579,10 @@ export type Mutation = {
    * Intelligently advances session state when navigating forward.
    */
   submitOrUpdateResponse?: Maybe<SubmitOrUpdateResponsePayload>;
+  /** Updates a single `AssessmentCohortStat` using a unique key and a patch. */
+  updateAssessmentCohortStat?: Maybe<UpdateAssessmentCohortStatPayload>;
+  /** Updates a single `AssessmentCohortStat` using a unique key and a patch. */
+  updateAssessmentCohortStatByAssessmentTypeCode?: Maybe<UpdateAssessmentCohortStatPayload>;
   /** Update an existing assessment question (admin only) */
   updateAssessmentQuestion?: Maybe<UpdateQuestionPayload>;
   /** Updates a single `AssessmentResponse` using a unique key and a patch. */
@@ -5261,6 +5604,8 @@ export type Mutation = {
   /** Updates a single `AssessmentSessionQuestion` using a unique key and a patch. */
   updateAssessmentSessionQuestionBySessionIdAndQuestionId?: Maybe<UpdateAssessmentSessionQuestionPayload>;
   updateAssessmentType?: Maybe<AssessmentTypePayload>;
+  /** Update global stage labels for an assessment type (admin only). */
+  updateAssessmentTypeStages?: Maybe<UpdateAssessmentTypeStagesPayload>;
   /** Updates a single `CouponTable` using a unique key and a patch. */
   updateCouponTable?: Maybe<UpdateCouponTablePayload>;
   /** Updates a single `CouponTable` using a unique key and a patch. */
@@ -5336,6 +5681,12 @@ export type MutationCompleteAssessmentArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateAssessmentCohortStatArgs = {
+  input: CreateAssessmentCohortStatInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateAssessmentQuestionArgs = {
   input: CreateQuestionInput;
 };
@@ -5344,6 +5695,12 @@ export type MutationCreateAssessmentQuestionArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateAssessmentResponseArgs = {
   input: CreateAssessmentResponseInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateAssessmentSectionArgs = {
+  input: CreateAssessmentSectionInput;
 };
 
 
@@ -5396,6 +5753,12 @@ export type MutationCreateUserArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeactivateAssessmentSectionArgs = {
+  input: DeactivateAssessmentSectionInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeactivateAssessmentTypeArgs = {
   code: Scalars['String']['input'];
 };
@@ -5404,6 +5767,12 @@ export type MutationDeactivateAssessmentTypeArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteAssessmentQuestionArgs = {
   input: DeleteQuestionInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteAssessmentSectionArgs = {
+  input: DeleteAssessmentSectionInput;
 };
 
 
@@ -5529,6 +5898,12 @@ export type MutationSeedAssessmentTypeContentArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationSeedAssessmentTypeSectionsArgs = {
+  input: SeedAssessmentTypeSectionsInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationStartAssessmentArgs = {
   input: StartAssessmentInput;
 };
@@ -5537,6 +5912,18 @@ export type MutationStartAssessmentArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationSubmitOrUpdateResponseArgs = {
   input: SubmitOrUpdateResponseInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateAssessmentCohortStatArgs = {
+  input: UpdateAssessmentCohortStatInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateAssessmentCohortStatByAssessmentTypeCodeArgs = {
+  input: UpdateAssessmentCohortStatByAssessmentTypeCodeInput;
 };
 
 
@@ -5591,6 +5978,12 @@ export type MutationUpdateAssessmentSessionQuestionBySessionIdAndQuestionIdArgs 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateAssessmentTypeArgs = {
   input: UpdateAssessmentTypeInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateAssessmentTypeStagesArgs = {
+  input: UpdateAssessmentTypeStagesInput;
 };
 
 
@@ -6214,6 +6607,8 @@ export type Query = {
   assessmentResults?: Maybe<AssessmentResultsConnection>;
   assessmentSection?: Maybe<AssessmentSection>;
   assessmentSectionByAssessmentTypeCodeAndType?: Maybe<AssessmentSection>;
+  /** Preset dimension list for section create/seed UIs (admin only). */
+  assessmentSectionPresets: Array<AssessmentSectionPreset>;
   assessmentSectionResult?: Maybe<AssessmentSectionResult>;
   assessmentSectionResultByResultIdAndSectionId?: Maybe<AssessmentSectionResult>;
   assessmentSectionResultByResultIdAndSectionType?: Maybe<AssessmentSectionResult>;
@@ -6247,6 +6642,10 @@ export type Query = {
   assessmentTypeByCode?: Maybe<AssessmentType>;
   /** Readiness checklist for activating an assessment type (admin only). */
   assessmentTypeReadiness: AssessmentTypeReadinessPayload;
+  assessmentTypeStageTable?: Maybe<AssessmentTypeStageTable>;
+  assessmentTypeStageTableByAssessmentTypeCodeAndDisplayOrder?: Maybe<AssessmentTypeStageTable>;
+  /** Global stage labels and score ranges for an assessment type (admin only). */
+  assessmentTypeStages: Array<AssessmentTypeStage>;
   /** Reads and enables pagination through a set of `AssessmentType`. */
   assessmentTypes?: Maybe<AssessmentTypesConnection>;
   /** List all active assessment types available to users */
@@ -6513,7 +6912,7 @@ export type QueryAssessmentSectionArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryAssessmentSectionByAssessmentTypeCodeAndTypeArgs = {
   assessmentTypeCode: Scalars['String']['input'];
-  type: AssessmentSectionType;
+  type: Scalars['String']['input'];
 };
 
 
@@ -6533,7 +6932,7 @@ export type QueryAssessmentSectionResultByResultIdAndSectionIdArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryAssessmentSectionResultByResultIdAndSectionTypeArgs = {
   resultId: Scalars['UUID']['input'];
-  sectionType: AssessmentSectionType;
+  sectionType: Scalars['String']['input'];
 };
 
 
@@ -6663,6 +7062,25 @@ export type QueryAssessmentTypeByCodeArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryAssessmentTypeReadinessArgs = {
   assessmentType: Scalars['String']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAssessmentTypeStageTableArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAssessmentTypeStageTableByAssessmentTypeCodeAndDisplayOrderArgs = {
+  assessmentTypeCode: Scalars['String']['input'];
+  displayOrder: Scalars['Int']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAssessmentTypeStagesArgs = {
+  assessmentTypeCode: Scalars['String']['input'];
 };
 
 
@@ -6847,6 +7265,12 @@ export type QueryUsersArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<UsersOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryUsersWithAssessmentArgs = {
+  assessmentType?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type QuestionSummaryItem = {
@@ -7116,6 +7540,17 @@ export type SeedAssessmentTypeContentInput = {
   templateCode?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type SeedAssessmentTypeSectionsInput = {
+  assessmentTypeCode: Scalars['String']['input'];
+};
+
+export type SeedAssessmentTypeSectionsPayload = {
+  __typename?: 'SeedAssessmentTypeSectionsPayload';
+  message?: Maybe<Scalars['String']['output']>;
+  sectionsCreated: Scalars['Int']['output'];
+  success: Scalars['Boolean']['output'];
+};
+
 export type SessionQuestionDetail = {
   __typename?: 'SessionQuestionDetail';
   displayOrder: Scalars['Int']['output'];
@@ -7180,6 +7615,54 @@ export type TemplateContentPayload = {
   __typename?: 'TemplateContentPayload';
   message?: Maybe<Scalars['String']['output']>;
   success: Scalars['Boolean']['output'];
+};
+
+/** All input for the `updateAssessmentCohortStatByAssessmentTypeCode` mutation. */
+export type UpdateAssessmentCohortStatByAssessmentTypeCodeInput = {
+  assessmentTypeCode: Scalars['String']['input'];
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** An object where the defined keys will be set on the `AssessmentCohortStat` being updated. */
+  patch: AssessmentCohortStatPatch;
+};
+
+/** All input for the `updateAssessmentCohortStat` mutation. */
+export type UpdateAssessmentCohortStatInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `AssessmentCohortStat` being updated. */
+  patch: AssessmentCohortStatPatch;
+};
+
+/** The output of our update `AssessmentCohortStat` mutation. */
+export type UpdateAssessmentCohortStatPayload = {
+  __typename?: 'UpdateAssessmentCohortStatPayload';
+  /** The `AssessmentCohortStat` that was updated by this mutation. */
+  assessmentCohortStat?: Maybe<AssessmentCohortStat>;
+  /** An edge for our `AssessmentCohortStat`. May be used by Relay 1. */
+  assessmentCohortStatEdge?: Maybe<AssessmentCohortStatsEdge>;
+  /** Reads a single `AssessmentType` that is related to this `AssessmentCohortStat`. */
+  assessmentTypeByAssessmentTypeCode?: Maybe<AssessmentType>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `AssessmentCohortStat` mutation. */
+export type UpdateAssessmentCohortStatPayloadAssessmentCohortStatEdgeArgs = {
+  orderBy?: InputMaybe<Array<AssessmentCohortStatsOrderBy>>;
 };
 
 /** All input for the `updateAssessmentResponseBySessionIdAndQuestionId` mutation. */
@@ -7352,6 +7835,18 @@ export type UpdateAssessmentTypeInput = {
   sectionCount?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type UpdateAssessmentTypeStagesInput = {
+  assessmentTypeCode: Scalars['String']['input'];
+  stages: Array<AssessmentTypeStageLabelInput>;
+};
+
+export type UpdateAssessmentTypeStagesPayload = {
+  __typename?: 'UpdateAssessmentTypeStagesPayload';
+  message?: Maybe<Scalars['String']['output']>;
+  stages: Array<AssessmentTypeStage>;
+  success: Scalars['Boolean']['output'];
+};
+
 export type UpdateCouponInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['UUID']['input'];
@@ -7517,6 +8012,9 @@ export type UpdateRecommendedActionPayload = {
 
 export type UpdateSectionInput = {
   description?: InputMaybe<Scalars['String']['input']>;
+  displayColor?: InputMaybe<Scalars['String']['input']>;
+  displayOrder?: InputMaybe<Scalars['Int']['input']>;
+  emoji?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['UUID']['input'];
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
@@ -7760,6 +8258,7 @@ export type UserReminderEmailsArgs = {
 
 export type UserAssessmentInfo = {
   __typename?: 'UserAssessmentInfo';
+  assessmentTypeCode: Scalars['String']['output'];
   completedAt?: Maybe<Scalars['Datetime']['output']>;
   expiresAt: Scalars['Datetime']['output'];
   interpretationLabel?: Maybe<Scalars['String']['output']>;
@@ -8276,6 +8775,23 @@ export type VerifyPaymentPayload = {
 /** An object where the defined keys will be set on the `assessmentCohortStat` being updated. */
 export type UpdateAssessmentCohortStatOnAssessmentCohortStatForAssessmentCohortStatsAssessmentTypeCodeFkeyPatch = {
   assessmentTypeToAssessmentTypeCode?: InputMaybe<AssessmentCohortStatsAssessmentTypeCodeFkeyInput>;
+  /** Average lifestyle readiness score across all users */
+  avgLifestyleScore?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Average mental readiness score across all users */
+  avgMentalScore?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Average physical readiness score across all users */
+  avgPhysicalScore?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Average psychological readiness score across all users */
+  avgPsychologicalScore?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Average social readiness score across all users */
+  avgSocialScore?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Average Total Readiness Index across all users */
+  avgTotalReadinessIndex?: InputMaybe<Scalars['BigFloat']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  /** Timestamp of the last statistics update */
+  lastUpdatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Total number of completed assessments */
+  totalAssessments?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** An object where the defined keys will be set on the `assessmentInterpretationBand` being updated. */
@@ -8565,14 +9081,18 @@ export type UpdateAssessmentSectionOnAssessmentQuestionForAssessmentQuestionsSec
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Detailed description of what this section assesses */
   description?: InputMaybe<Scalars['String']['input']>;
+  /** Hex color (#RRGGBB) for charts and PDF dimension bars */
+  displayColor?: InputMaybe<Scalars['String']['input']>;
   /** Order in which sections should be displayed to admins */
   displayOrder?: InputMaybe<Scalars['Int']['input']>;
+  /** Emoji displayed in PDF section headers and admin UI */
+  emoji?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   /** Display name of the section */
   name?: InputMaybe<Scalars['String']['input']>;
   /** Type of the assessment section (unique) */
-  type?: InputMaybe<AssessmentSectionType>;
+  type?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
@@ -8584,14 +9104,18 @@ export type UpdateAssessmentSectionOnAssessmentSectionForAssessmentSectionsAsses
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Detailed description of what this section assesses */
   description?: InputMaybe<Scalars['String']['input']>;
+  /** Hex color (#RRGGBB) for charts and PDF dimension bars */
+  displayColor?: InputMaybe<Scalars['String']['input']>;
   /** Order in which sections should be displayed to admins */
   displayOrder?: InputMaybe<Scalars['Int']['input']>;
+  /** Emoji displayed in PDF section headers and admin UI */
+  emoji?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   /** Display name of the section */
   name?: InputMaybe<Scalars['String']['input']>;
   /** Type of the assessment section (unique) */
-  type?: InputMaybe<AssessmentSectionType>;
+  type?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
@@ -8604,14 +9128,18 @@ export type UpdateAssessmentSectionOnAssessmentSectionResultForAssessmentSection
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Detailed description of what this section assesses */
   description?: InputMaybe<Scalars['String']['input']>;
+  /** Hex color (#RRGGBB) for charts and PDF dimension bars */
+  displayColor?: InputMaybe<Scalars['String']['input']>;
   /** Order in which sections should be displayed to admins */
   displayOrder?: InputMaybe<Scalars['Int']['input']>;
+  /** Emoji displayed in PDF section headers and admin UI */
+  emoji?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   /** Display name of the section */
   name?: InputMaybe<Scalars['String']['input']>;
   /** Type of the assessment section (unique) */
-  type?: InputMaybe<AssessmentSectionType>;
+  type?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
@@ -8856,6 +9384,7 @@ export type UpdateAssessmentTypeOnAssessmentCohortStatForAssessmentCohortStatsAs
   assessmentSectionsUsingCode?: InputMaybe<AssessmentSectionsAssessmentTypeCodeFkeyInverseInput>;
   assessmentSessionsUsingCode?: InputMaybe<AssessmentSessionsAssessmentTypeCodeFkeyInverseInput>;
   assessmentTemplateContentsUsingCode?: InputMaybe<AssessmentTemplateContentAssessmentTypeCodeFkeyInverseInput>;
+  assessmentTypeStageTablesUsingCode?: InputMaybe<AssessmentTypeStagesAssessmentTypeCodeFkeyInverseInput>;
   /** Unique identifier for the assessment type (e.g., ssri, prai) */
   code?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
@@ -8870,6 +9399,8 @@ export type UpdateAssessmentTypeOnAssessmentCohortStatForAssessmentCohortStatsAs
   paymentsUsingCode?: InputMaybe<PaymentsAssessmentTypeCodeFkeyInverseInput>;
   priceAmount?: InputMaybe<Scalars['Int']['input']>;
   questionsPerSection?: InputMaybe<Scalars['Int']['input']>;
+  /** Incremented when report display content changes; PDFs regen lazily on download when stale */
+  reportContentVersion?: InputMaybe<Scalars['Int']['input']>;
   /** Formula type: sum (add section scores) or average (mean of section scores scaled to min/max) */
   scoringFormula?: InputMaybe<Scalars['String']['input']>;
   sectionCount?: InputMaybe<Scalars['Int']['input']>;
@@ -8886,6 +9417,7 @@ export type UpdateAssessmentTypeOnAssessmentInterpretationBandForAssessmentInter
   assessmentSectionsUsingCode?: InputMaybe<AssessmentSectionsAssessmentTypeCodeFkeyInverseInput>;
   assessmentSessionsUsingCode?: InputMaybe<AssessmentSessionsAssessmentTypeCodeFkeyInverseInput>;
   assessmentTemplateContentsUsingCode?: InputMaybe<AssessmentTemplateContentAssessmentTypeCodeFkeyInverseInput>;
+  assessmentTypeStageTablesUsingCode?: InputMaybe<AssessmentTypeStagesAssessmentTypeCodeFkeyInverseInput>;
   /** Unique identifier for the assessment type (e.g., ssri, prai) */
   code?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
@@ -8900,6 +9432,8 @@ export type UpdateAssessmentTypeOnAssessmentInterpretationBandForAssessmentInter
   paymentsUsingCode?: InputMaybe<PaymentsAssessmentTypeCodeFkeyInverseInput>;
   priceAmount?: InputMaybe<Scalars['Int']['input']>;
   questionsPerSection?: InputMaybe<Scalars['Int']['input']>;
+  /** Incremented when report display content changes; PDFs regen lazily on download when stale */
+  reportContentVersion?: InputMaybe<Scalars['Int']['input']>;
   /** Formula type: sum (add section scores) or average (mean of section scores scaled to min/max) */
   scoringFormula?: InputMaybe<Scalars['String']['input']>;
   sectionCount?: InputMaybe<Scalars['Int']['input']>;
@@ -8916,6 +9450,7 @@ export type UpdateAssessmentTypeOnAssessmentResultForAssessmentResultsAssessment
   assessmentSectionsUsingCode?: InputMaybe<AssessmentSectionsAssessmentTypeCodeFkeyInverseInput>;
   assessmentSessionsUsingCode?: InputMaybe<AssessmentSessionsAssessmentTypeCodeFkeyInverseInput>;
   assessmentTemplateContentsUsingCode?: InputMaybe<AssessmentTemplateContentAssessmentTypeCodeFkeyInverseInput>;
+  assessmentTypeStageTablesUsingCode?: InputMaybe<AssessmentTypeStagesAssessmentTypeCodeFkeyInverseInput>;
   /** Unique identifier for the assessment type (e.g., ssri, prai) */
   code?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
@@ -8930,6 +9465,8 @@ export type UpdateAssessmentTypeOnAssessmentResultForAssessmentResultsAssessment
   paymentsUsingCode?: InputMaybe<PaymentsAssessmentTypeCodeFkeyInverseInput>;
   priceAmount?: InputMaybe<Scalars['Int']['input']>;
   questionsPerSection?: InputMaybe<Scalars['Int']['input']>;
+  /** Incremented when report display content changes; PDFs regen lazily on download when stale */
+  reportContentVersion?: InputMaybe<Scalars['Int']['input']>;
   /** Formula type: sum (add section scores) or average (mean of section scores scaled to min/max) */
   scoringFormula?: InputMaybe<Scalars['String']['input']>;
   sectionCount?: InputMaybe<Scalars['Int']['input']>;
@@ -8946,6 +9483,7 @@ export type UpdateAssessmentTypeOnAssessmentSectionForAssessmentSectionsAssessme
   assessmentSectionsUsingCode?: InputMaybe<AssessmentSectionsAssessmentTypeCodeFkeyInverseInput>;
   assessmentSessionsUsingCode?: InputMaybe<AssessmentSessionsAssessmentTypeCodeFkeyInverseInput>;
   assessmentTemplateContentsUsingCode?: InputMaybe<AssessmentTemplateContentAssessmentTypeCodeFkeyInverseInput>;
+  assessmentTypeStageTablesUsingCode?: InputMaybe<AssessmentTypeStagesAssessmentTypeCodeFkeyInverseInput>;
   /** Unique identifier for the assessment type (e.g., ssri, prai) */
   code?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
@@ -8960,6 +9498,8 @@ export type UpdateAssessmentTypeOnAssessmentSectionForAssessmentSectionsAssessme
   paymentsUsingCode?: InputMaybe<PaymentsAssessmentTypeCodeFkeyInverseInput>;
   priceAmount?: InputMaybe<Scalars['Int']['input']>;
   questionsPerSection?: InputMaybe<Scalars['Int']['input']>;
+  /** Incremented when report display content changes; PDFs regen lazily on download when stale */
+  reportContentVersion?: InputMaybe<Scalars['Int']['input']>;
   /** Formula type: sum (add section scores) or average (mean of section scores scaled to min/max) */
   scoringFormula?: InputMaybe<Scalars['String']['input']>;
   sectionCount?: InputMaybe<Scalars['Int']['input']>;
@@ -8976,6 +9516,7 @@ export type UpdateAssessmentTypeOnAssessmentSessionForAssessmentSessionsAssessme
   assessmentSectionsUsingCode?: InputMaybe<AssessmentSectionsAssessmentTypeCodeFkeyInverseInput>;
   assessmentSessionsUsingCode?: InputMaybe<AssessmentSessionsAssessmentTypeCodeFkeyInverseInput>;
   assessmentTemplateContentsUsingCode?: InputMaybe<AssessmentTemplateContentAssessmentTypeCodeFkeyInverseInput>;
+  assessmentTypeStageTablesUsingCode?: InputMaybe<AssessmentTypeStagesAssessmentTypeCodeFkeyInverseInput>;
   /** Unique identifier for the assessment type (e.g., ssri, prai) */
   code?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
@@ -8990,6 +9531,8 @@ export type UpdateAssessmentTypeOnAssessmentSessionForAssessmentSessionsAssessme
   paymentsUsingCode?: InputMaybe<PaymentsAssessmentTypeCodeFkeyInverseInput>;
   priceAmount?: InputMaybe<Scalars['Int']['input']>;
   questionsPerSection?: InputMaybe<Scalars['Int']['input']>;
+  /** Incremented when report display content changes; PDFs regen lazily on download when stale */
+  reportContentVersion?: InputMaybe<Scalars['Int']['input']>;
   /** Formula type: sum (add section scores) or average (mean of section scores scaled to min/max) */
   scoringFormula?: InputMaybe<Scalars['String']['input']>;
   sectionCount?: InputMaybe<Scalars['Int']['input']>;
@@ -9006,6 +9549,7 @@ export type UpdateAssessmentTypeOnAssessmentTemplateContentForAssessmentTemplate
   assessmentSectionsUsingCode?: InputMaybe<AssessmentSectionsAssessmentTypeCodeFkeyInverseInput>;
   assessmentSessionsUsingCode?: InputMaybe<AssessmentSessionsAssessmentTypeCodeFkeyInverseInput>;
   assessmentTemplateContentsUsingCode?: InputMaybe<AssessmentTemplateContentAssessmentTypeCodeFkeyInverseInput>;
+  assessmentTypeStageTablesUsingCode?: InputMaybe<AssessmentTypeStagesAssessmentTypeCodeFkeyInverseInput>;
   /** Unique identifier for the assessment type (e.g., ssri, prai) */
   code?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
@@ -9020,6 +9564,41 @@ export type UpdateAssessmentTypeOnAssessmentTemplateContentForAssessmentTemplate
   paymentsUsingCode?: InputMaybe<PaymentsAssessmentTypeCodeFkeyInverseInput>;
   priceAmount?: InputMaybe<Scalars['Int']['input']>;
   questionsPerSection?: InputMaybe<Scalars['Int']['input']>;
+  /** Incremented when report display content changes; PDFs regen lazily on download when stale */
+  reportContentVersion?: InputMaybe<Scalars['Int']['input']>;
+  /** Formula type: sum (add section scores) or average (mean of section scores scaled to min/max) */
+  scoringFormula?: InputMaybe<Scalars['String']['input']>;
+  sectionCount?: InputMaybe<Scalars['Int']['input']>;
+  templateVersion?: InputMaybe<Scalars['String']['input']>;
+  totalQuestions?: InputMaybe<Scalars['Int']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** An object where the defined keys will be set on the `assessmentType` being updated. */
+export type UpdateAssessmentTypeOnAssessmentTypeStageTableForAssessmentTypeStagesAssessmentTypeCodeFkeyPatch = {
+  assessmentCohortStatUsingCode?: InputMaybe<AssessmentCohortStatsAssessmentTypeCodeFkeyInverseInput>;
+  assessmentInterpretationBandsUsingCode?: InputMaybe<AssessmentInterpretationBandsAssessmentTypeCodeFkeyInverseInput>;
+  assessmentResultsUsingCode?: InputMaybe<AssessmentResultsAssessmentTypeCodeFkeyInverseInput>;
+  assessmentSectionsUsingCode?: InputMaybe<AssessmentSectionsAssessmentTypeCodeFkeyInverseInput>;
+  assessmentSessionsUsingCode?: InputMaybe<AssessmentSessionsAssessmentTypeCodeFkeyInverseInput>;
+  assessmentTemplateContentsUsingCode?: InputMaybe<AssessmentTemplateContentAssessmentTypeCodeFkeyInverseInput>;
+  assessmentTypeStageTablesUsingCode?: InputMaybe<AssessmentTypeStagesAssessmentTypeCodeFkeyInverseInput>;
+  /** Unique identifier for the assessment type (e.g., ssri, prai) */
+  code?: InputMaybe<Scalars['String']['input']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  displayOrder?: InputMaybe<Scalars['Int']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  maxScore?: InputMaybe<Scalars['Int']['input']>;
+  metadata?: InputMaybe<Scalars['JSON']['input']>;
+  minScore?: InputMaybe<Scalars['Int']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  paymentsUsingCode?: InputMaybe<PaymentsAssessmentTypeCodeFkeyInverseInput>;
+  priceAmount?: InputMaybe<Scalars['Int']['input']>;
+  questionsPerSection?: InputMaybe<Scalars['Int']['input']>;
+  /** Incremented when report display content changes; PDFs regen lazily on download when stale */
+  reportContentVersion?: InputMaybe<Scalars['Int']['input']>;
   /** Formula type: sum (add section scores) or average (mean of section scores scaled to min/max) */
   scoringFormula?: InputMaybe<Scalars['String']['input']>;
   sectionCount?: InputMaybe<Scalars['Int']['input']>;
@@ -9036,6 +9615,7 @@ export type UpdateAssessmentTypeOnPaymentForPaymentsAssessmentTypeCodeFkeyPatch 
   assessmentSectionsUsingCode?: InputMaybe<AssessmentSectionsAssessmentTypeCodeFkeyInverseInput>;
   assessmentSessionsUsingCode?: InputMaybe<AssessmentSessionsAssessmentTypeCodeFkeyInverseInput>;
   assessmentTemplateContentsUsingCode?: InputMaybe<AssessmentTemplateContentAssessmentTypeCodeFkeyInverseInput>;
+  assessmentTypeStageTablesUsingCode?: InputMaybe<AssessmentTypeStagesAssessmentTypeCodeFkeyInverseInput>;
   /** Unique identifier for the assessment type (e.g., ssri, prai) */
   code?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
@@ -9050,12 +9630,19 @@ export type UpdateAssessmentTypeOnPaymentForPaymentsAssessmentTypeCodeFkeyPatch 
   paymentsUsingCode?: InputMaybe<PaymentsAssessmentTypeCodeFkeyInverseInput>;
   priceAmount?: InputMaybe<Scalars['Int']['input']>;
   questionsPerSection?: InputMaybe<Scalars['Int']['input']>;
+  /** Incremented when report display content changes; PDFs regen lazily on download when stale */
+  reportContentVersion?: InputMaybe<Scalars['Int']['input']>;
   /** Formula type: sum (add section scores) or average (mean of section scores scaled to min/max) */
   scoringFormula?: InputMaybe<Scalars['String']['input']>;
   sectionCount?: InputMaybe<Scalars['Int']['input']>;
   templateVersion?: InputMaybe<Scalars['String']['input']>;
   totalQuestions?: InputMaybe<Scalars['Int']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** An object where the defined keys will be set on the `assessmentTypeStageTable` being updated. */
+export type UpdateAssessmentTypeStageTableOnAssessmentTypeStageTableForAssessmentTypeStagesAssessmentTypeCodeFkeyPatch = {
+  assessmentTypeToAssessmentTypeCode?: InputMaybe<AssessmentTypeStagesAssessmentTypeCodeFkeyInput>;
 };
 
 /** An object where the defined keys will be set on the `couponTable` being updated. */
@@ -9506,9 +10093,15 @@ export type GetAllUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetAllUsersQuery = { __typename?: 'Query', allUsers?: { __typename?: 'AllUsersPayload', totalCount: number, adminCount: number, usersWithoutAssessmentCount: number, users: Array<{ __typename?: 'UserInfo', id: any, email: string, name?: string | null, phoneNumber?: string | null, isAdmin: boolean, isInternal: boolean, createdAt: any, updatedAt: any }> } | null };
 
+export type AssessmentSectionPresetsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AssessmentSectionPresetsQuery = { __typename?: 'Query', assessmentSectionPresets: Array<{ __typename?: 'AssessmentSectionPreset', type: string, name: string, description: string, displayOrder: number }> };
+
 export type GetAssessmentTrendsQueryVariables = Exact<{
   startDate: Scalars['Date']['input'];
   endDate: Scalars['Date']['input'];
+  assessmentType?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -9519,7 +10112,14 @@ export type AssessmentTypeReadinessQueryVariables = Exact<{
 }>;
 
 
-export type AssessmentTypeReadinessQuery = { __typename?: 'Query', assessmentTypeReadiness: { __typename?: 'AssessmentTypeReadinessPayload', code: string, ready: boolean, checks: Array<{ __typename?: 'AssessmentTypeReadinessCheck', key: string, label: string, passed: boolean, detail: string }> } };
+export type AssessmentTypeReadinessQuery = { __typename?: 'Query', assessmentTypeReadiness: { __typename?: 'AssessmentTypeReadinessPayload', code: string, ready: boolean, sectionCount: number, requiredSectionBands: number, stagesPerSection: number, checks: Array<{ __typename?: 'AssessmentTypeReadinessCheck', key: string, label: string, passed: boolean, detail: string }> } };
+
+export type CreateAssessmentSectionMutationVariables = Exact<{
+  input: CreateAssessmentSectionInput;
+}>;
+
+
+export type CreateAssessmentSectionMutation = { __typename?: 'Mutation', createAssessmentSection?: { __typename?: 'CreateAssessmentSectionPayload', success: boolean, message?: string | null, section?: { __typename?: 'AssessmentSection', id: any, type: string, name: string, description?: string | null, displayOrder: number, isActive: boolean, assessmentTypeCode: string } | null } | null };
 
 export type CreateAssessmentTypeMutationVariables = Exact<{
   input: CreateAssessmentTypeInput;
@@ -9535,12 +10135,26 @@ export type CreateInterpretationBandMutationVariables = Exact<{
 
 export type CreateInterpretationBandMutation = { __typename?: 'Mutation', createInterpretationBand?: { __typename?: 'CreateInterpretationBandPayload', success: boolean, message?: string | null, band?: { __typename?: 'AssessmentInterpretationBand', id: any, assessmentTypeCode: string, bandScope: string, sectionType?: string | null, label: string, rangeStart: number, rangeEnd: number, displayRangeLabel?: string | null, narrative: string, keyMindset?: string | null, displayOrder: number, isActive: boolean } | null } | null };
 
+export type DeactivateAssessmentSectionMutationVariables = Exact<{
+  input: DeactivateAssessmentSectionInput;
+}>;
+
+
+export type DeactivateAssessmentSectionMutation = { __typename?: 'Mutation', deactivateAssessmentSection?: { __typename?: 'DeactivateAssessmentSectionPayload', success: boolean, message?: string | null, section?: { __typename?: 'AssessmentSection', id: any, type: string, isActive: boolean } | null } | null };
+
 export type DeactivateAssessmentTypeMutationVariables = Exact<{
   code: Scalars['String']['input'];
 }>;
 
 
 export type DeactivateAssessmentTypeMutation = { __typename?: 'Mutation', deactivateAssessmentType?: { __typename?: 'AssessmentTypePayload', success: boolean, message?: string | null } | null };
+
+export type DeleteAssessmentSectionMutationVariables = Exact<{
+  input: DeleteAssessmentSectionInput;
+}>;
+
+
+export type DeleteAssessmentSectionMutation = { __typename?: 'Mutation', deleteAssessmentSection?: { __typename?: 'DeleteAssessmentSectionPayload', success: boolean, message?: string | null } | null };
 
 export type DeleteInterpretationBandMutationVariables = Exact<{
   input: DeleteInterpretationBandInput;
@@ -9641,6 +10255,13 @@ export type SeedAssessmentTypeContentMutationVariables = Exact<{
 
 export type SeedAssessmentTypeContentMutation = { __typename?: 'Mutation', seedAssessmentTypeContent?: { __typename?: 'AssessmentTypePayload', success: boolean, message?: string | null, assessmentType?: { __typename?: 'AssessmentTypeInfo', code: string, name: string, isActive: boolean } | null } | null };
 
+export type SeedAssessmentTypeSectionsMutationVariables = Exact<{
+  input: SeedAssessmentTypeSectionsInput;
+}>;
+
+
+export type SeedAssessmentTypeSectionsMutation = { __typename?: 'Mutation', seedAssessmentTypeSections?: { __typename?: 'SeedAssessmentTypeSectionsPayload', success: boolean, message?: string | null, sectionsCreated: number } | null };
+
 export type UpdateAssessmentTypeMutationVariables = Exact<{
   input: UpdateAssessmentTypeInput;
 }>;
@@ -9691,7 +10312,7 @@ export type GetAssessmentResultQueryVariables = Exact<{
 }>;
 
 
-export type GetAssessmentResultQuery = { __typename?: 'Query', assessmentResult?: { __typename?: 'AssessmentResult', id: any, assessmentTypeCode: string, totalReadinessIndex: number, interpretationLabel?: string | null, interpretationNarrative?: string | null, interpretationKeyMindset?: string | null, recommendedActions?: Array<string | null> | null, pdfPath?: string | null, createdAt: any, assessmentSectionResultsByResultId: { __typename?: 'AssessmentSectionResultsConnection', nodes: Array<{ __typename?: 'AssessmentSectionResult', sectionType: AssessmentSectionType, score: number, interpretationLabel: string, interpretationNarrative: string, interpretationBandId: any }> }, cohortComparison?: { __typename?: 'CohortComparison', userAge: number, userGender: string, ageCohort?: { __typename?: 'AgeCohort', ageRange: string, cohortSize: number, totalScore: { __typename?: 'CohortTotalScore', userScore: number, cohortAverage: number }, sectionScores: Array<{ __typename?: 'CohortSectionScore', sectionType: string, sectionName: string, userScore: number, cohortAverage: number }> } | null, genderCohort?: { __typename?: 'GenderCohort', gender: string, cohortSize: number, totalScore: { __typename?: 'CohortTotalScore', userScore: number, cohortAverage: number }, sectionScores: Array<{ __typename?: 'CohortSectionScore', sectionType: string, sectionName: string, userScore: number, cohortAverage: number }> } | null, overallCohort?: { __typename?: 'OverallCohort', cohortSize: number, totalScore: { __typename?: 'CohortTotalScore', userScore: number, cohortAverage: number }, sectionScores: Array<{ __typename?: 'CohortSectionScore', sectionType: string, sectionName: string, userScore: number, cohortAverage: number }> } | null } | null } | null };
+export type GetAssessmentResultQuery = { __typename?: 'Query', assessmentResult?: { __typename?: 'AssessmentResult', id: any, assessmentTypeCode: string, totalReadinessIndex: number, interpretationLabel?: string | null, interpretationNarrative?: string | null, interpretationKeyMindset?: string | null, recommendedActions?: Array<string | null> | null, pdfPath?: string | null, createdAt: any, assessmentSectionResultsByResultId: { __typename?: 'AssessmentSectionResultsConnection', nodes: Array<{ __typename?: 'AssessmentSectionResult', sectionType: string, score: number, interpretationLabel: string, interpretationNarrative: string, interpretationBandId: any }> }, cohortComparison?: { __typename?: 'CohortComparison', userAge: number, userGender: string, ageCohort?: { __typename?: 'AgeCohort', ageRange: string, cohortSize: number, totalScore: { __typename?: 'CohortTotalScore', userScore: number, cohortAverage: number }, sectionScores: Array<{ __typename?: 'CohortSectionScore', sectionType: string, sectionName: string, userScore: number, cohortAverage: number }> } | null, genderCohort?: { __typename?: 'GenderCohort', gender: string, cohortSize: number, totalScore: { __typename?: 'CohortTotalScore', userScore: number, cohortAverage: number }, sectionScores: Array<{ __typename?: 'CohortSectionScore', sectionType: string, sectionName: string, userScore: number, cohortAverage: number }> } | null, overallCohort?: { __typename?: 'OverallCohort', cohortSize: number, totalScore: { __typename?: 'CohortTotalScore', userScore: number, cohortAverage: number }, sectionScores: Array<{ __typename?: 'CohortSectionScore', sectionType: string, sectionName: string, userScore: number, cohortAverage: number }> } | null } | null } | null };
 
 export type AssessmentStatusQueryVariables = Exact<{
   assessmentType?: InputMaybe<Scalars['String']['input']>;
@@ -9766,7 +10387,7 @@ export type GetAllSectionsQueryVariables = Exact<{
 }>;
 
 
-export type GetAllSectionsQuery = { __typename?: 'Query', assessmentSections?: { __typename?: 'AssessmentSectionsConnection', nodes: Array<{ __typename?: 'AssessmentSection', id: any, type: AssessmentSectionType, name: string, description?: string | null, displayOrder: number, isActive: boolean, assessmentTypeCode: string }> } | null };
+export type GetAllSectionsQuery = { __typename?: 'Query', assessmentSections?: { __typename?: 'AssessmentSectionsConnection', nodes: Array<{ __typename?: 'AssessmentSection', id: any, type: string, name: string, description?: string | null, displayOrder: number, isActive: boolean, assessmentTypeCode: string }> } | null };
 
 export type GetSessionQuestionQueryVariables = Exact<{
   sessionId: Scalars['UUID']['input'];
@@ -9818,10 +10439,12 @@ export type UpdateAssessmentSectionMutationVariables = Exact<{
 
 export type UpdateAssessmentSectionMutation = { __typename?: 'Mutation', updateAssessmentSection?: { __typename?: 'UpdateSectionPayload', success: boolean, message?: string | null, section?: { __typename?: 'AssessmentSection', id: any, name: string, description?: string | null, displayOrder: number, isActive: boolean, updatedAt: any } | null } | null };
 
-export type GetUsersWithAssessmentQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetUsersWithAssessmentQueryVariables = Exact<{
+  assessmentType?: InputMaybe<Scalars['String']['input']>;
+}>;
 
 
-export type GetUsersWithAssessmentQuery = { __typename?: 'Query', usersWithAssessment?: { __typename?: 'UsersWithAssessmentPayload', totalCount: number, completedCount: number, inProgressCount: number, users: Array<{ __typename?: 'UserAssessmentInfo', userId: any, userName?: string | null, userEmail: string, sessionId: any, resultId?: any | null, status: string, startedAt: any, completedAt?: any | null, expiresAt: any, totalScore?: number | null, interpretationLabel?: string | null }> } | null };
+export type GetUsersWithAssessmentQuery = { __typename?: 'Query', usersWithAssessment?: { __typename?: 'UsersWithAssessmentPayload', totalCount: number, completedCount: number, inProgressCount: number, users: Array<{ __typename?: 'UserAssessmentInfo', userId: any, userName?: string | null, userEmail: string, sessionId: any, resultId?: any | null, assessmentTypeCode: string, status: string, startedAt: any, completedAt?: any | null, expiresAt: any, totalScore?: number | null, interpretationLabel?: string | null }> } | null };
 
 export type CurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -9931,11 +10554,15 @@ export const AdminRefundsListDocument = {"kind":"Document","definitions":[{"kind
 export const AdminSettlementsListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AdminSettlementsList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"AdminPaymentsFilterInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminSettlementsList"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"entity"}},{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"entity"}},{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"fees"}},{"kind":"Field","name":{"kind":"Name","value":"tax"}},{"kind":"Field","name":{"kind":"Name","value":"utr"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]}}]} as unknown as DocumentNode<AdminSettlementsListQuery, AdminSettlementsListQueryVariables>;
 export const AdminUpdateCouponDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"AdminUpdateCoupon"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateCouponInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminUpdateCoupon"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"coupon"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"discountType"}},{"kind":"Field","name":{"kind":"Name","value":"discountValue"}},{"kind":"Field","name":{"kind":"Name","value":"maxDiscountAmount"}},{"kind":"Field","name":{"kind":"Name","value":"validFrom"}},{"kind":"Field","name":{"kind":"Name","value":"validUntil"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"maxTotalUses"}},{"kind":"Field","name":{"kind":"Name","value":"currentUses"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]}}]} as unknown as DocumentNode<AdminUpdateCouponMutation, AdminUpdateCouponMutationVariables>;
 export const GetAllUsersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAllUsers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"allUsers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"isAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"isInternal"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"adminCount"}},{"kind":"Field","name":{"kind":"Name","value":"usersWithoutAssessmentCount"}}]}}]}}]} as unknown as DocumentNode<GetAllUsersQuery, GetAllUsersQueryVariables>;
-export const GetAssessmentTrendsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAssessmentTrends"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"startDate"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Date"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"endDate"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Date"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assessmentTrends"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"startDate"},"value":{"kind":"Variable","name":{"kind":"Name","value":"startDate"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"endDate"},"value":{"kind":"Variable","name":{"kind":"Name","value":"endDate"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"trends"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"completedCount"}},{"kind":"Field","name":{"kind":"Name","value":"startedCount"}},{"kind":"Field","name":{"kind":"Name","value":"inProgressCount"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCompleted"}},{"kind":"Field","name":{"kind":"Name","value":"totalStarted"}},{"kind":"Field","name":{"kind":"Name","value":"totalInProgress"}}]}}]}}]} as unknown as DocumentNode<GetAssessmentTrendsQuery, GetAssessmentTrendsQueryVariables>;
-export const AssessmentTypeReadinessDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AssessmentTypeReadiness"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"type"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assessmentTypeReadiness"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"assessmentType"},"value":{"kind":"Variable","name":{"kind":"Name","value":"type"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"ready"}},{"kind":"Field","name":{"kind":"Name","value":"checks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"key"}},{"kind":"Field","name":{"kind":"Name","value":"label"}},{"kind":"Field","name":{"kind":"Name","value":"passed"}},{"kind":"Field","name":{"kind":"Name","value":"detail"}}]}}]}}]}}]} as unknown as DocumentNode<AssessmentTypeReadinessQuery, AssessmentTypeReadinessQueryVariables>;
+export const AssessmentSectionPresetsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AssessmentSectionPresets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assessmentSectionPresets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}}]}}]}}]} as unknown as DocumentNode<AssessmentSectionPresetsQuery, AssessmentSectionPresetsQueryVariables>;
+export const GetAssessmentTrendsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAssessmentTrends"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"startDate"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Date"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"endDate"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Date"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"assessmentType"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assessmentTrends"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"startDate"},"value":{"kind":"Variable","name":{"kind":"Name","value":"startDate"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"endDate"},"value":{"kind":"Variable","name":{"kind":"Name","value":"endDate"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"assessmentType"},"value":{"kind":"Variable","name":{"kind":"Name","value":"assessmentType"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"trends"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"completedCount"}},{"kind":"Field","name":{"kind":"Name","value":"startedCount"}},{"kind":"Field","name":{"kind":"Name","value":"inProgressCount"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCompleted"}},{"kind":"Field","name":{"kind":"Name","value":"totalStarted"}},{"kind":"Field","name":{"kind":"Name","value":"totalInProgress"}}]}}]}}]} as unknown as DocumentNode<GetAssessmentTrendsQuery, GetAssessmentTrendsQueryVariables>;
+export const AssessmentTypeReadinessDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AssessmentTypeReadiness"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"type"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assessmentTypeReadiness"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"assessmentType"},"value":{"kind":"Variable","name":{"kind":"Name","value":"type"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"ready"}},{"kind":"Field","name":{"kind":"Name","value":"sectionCount"}},{"kind":"Field","name":{"kind":"Name","value":"requiredSectionBands"}},{"kind":"Field","name":{"kind":"Name","value":"stagesPerSection"}},{"kind":"Field","name":{"kind":"Name","value":"checks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"key"}},{"kind":"Field","name":{"kind":"Name","value":"label"}},{"kind":"Field","name":{"kind":"Name","value":"passed"}},{"kind":"Field","name":{"kind":"Name","value":"detail"}}]}}]}}]}}]} as unknown as DocumentNode<AssessmentTypeReadinessQuery, AssessmentTypeReadinessQueryVariables>;
+export const CreateAssessmentSectionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateAssessmentSection"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateAssessmentSectionInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createAssessmentSection"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"section"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"assessmentTypeCode"}}]}}]}}]}}]} as unknown as DocumentNode<CreateAssessmentSectionMutation, CreateAssessmentSectionMutationVariables>;
 export const CreateAssessmentTypeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateAssessmentType"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateAssessmentTypeInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createAssessmentType"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"assessmentType"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"totalQuestions"}},{"kind":"Field","name":{"kind":"Name","value":"sectionCount"}},{"kind":"Field","name":{"kind":"Name","value":"questionsPerSection"}},{"kind":"Field","name":{"kind":"Name","value":"minScore"}},{"kind":"Field","name":{"kind":"Name","value":"maxScore"}},{"kind":"Field","name":{"kind":"Name","value":"scoringFormula"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}}]}}]}}]}}]} as unknown as DocumentNode<CreateAssessmentTypeMutation, CreateAssessmentTypeMutationVariables>;
 export const CreateInterpretationBandDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateInterpretationBand"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateInterpretationBandInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createInterpretationBand"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"band"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"assessmentTypeCode"}},{"kind":"Field","name":{"kind":"Name","value":"bandScope"}},{"kind":"Field","name":{"kind":"Name","value":"sectionType"}},{"kind":"Field","name":{"kind":"Name","value":"label"}},{"kind":"Field","name":{"kind":"Name","value":"rangeStart"}},{"kind":"Field","name":{"kind":"Name","value":"rangeEnd"}},{"kind":"Field","name":{"kind":"Name","value":"displayRangeLabel"}},{"kind":"Field","name":{"kind":"Name","value":"narrative"}},{"kind":"Field","name":{"kind":"Name","value":"keyMindset"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}}]}}]}}]}}]} as unknown as DocumentNode<CreateInterpretationBandMutation, CreateInterpretationBandMutationVariables>;
+export const DeactivateAssessmentSectionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeactivateAssessmentSection"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DeactivateAssessmentSectionInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deactivateAssessmentSection"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"section"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}}]}}]}}]}}]} as unknown as DocumentNode<DeactivateAssessmentSectionMutation, DeactivateAssessmentSectionMutationVariables>;
 export const DeactivateAssessmentTypeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeactivateAssessmentType"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"code"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deactivateAssessmentType"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"code"},"value":{"kind":"Variable","name":{"kind":"Name","value":"code"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<DeactivateAssessmentTypeMutation, DeactivateAssessmentTypeMutationVariables>;
+export const DeleteAssessmentSectionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteAssessmentSection"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DeleteAssessmentSectionInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteAssessmentSection"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<DeleteAssessmentSectionMutation, DeleteAssessmentSectionMutationVariables>;
 export const DeleteInterpretationBandDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteInterpretationBand"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DeleteInterpretationBandInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteInterpretationBand"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<DeleteInterpretationBandMutation, DeleteInterpretationBandMutationVariables>;
 export const DeleteUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"AdminDeleteUserInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminDeleteUser"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deletedUserId"}},{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<DeleteUserMutation, DeleteUserMutationVariables>;
 export const GrantAdminDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"GrantAdmin"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"grantAdminAccess"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"userId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"isAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"isInternal"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<GrantAdminMutation, GrantAdminMutationVariables>;
@@ -9950,6 +10577,7 @@ export const RevokeAdminDocument = {"kind":"Document","definitions":[{"kind":"Op
 export const RevokeInternalAccessDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"RevokeInternalAccess"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"revokeInternalAccess"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"userId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"isAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"isInternal"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<RevokeInternalAccessMutation, RevokeInternalAccessMutationVariables>;
 export const GetScoreDistributionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetScoreDistribution"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"assessmentType"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"defaultValue":{"kind":"StringValue","value":"ssri","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"scoreDistribution"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"assessmentType"},"value":{"kind":"Variable","name":{"kind":"Name","value":"assessmentType"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"distribution"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"range"}},{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"percentage"}},{"kind":"Field","name":{"kind":"Name","value":"label"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalAssessments"}},{"kind":"Field","name":{"kind":"Name","value":"averageScore"}}]}}]}}]} as unknown as DocumentNode<GetScoreDistributionQuery, GetScoreDistributionQueryVariables>;
 export const SeedAssessmentTypeContentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SeedAssessmentTypeContent"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SeedAssessmentTypeContentInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"seedAssessmentTypeContent"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"assessmentType"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}}]}}]}}]}}]} as unknown as DocumentNode<SeedAssessmentTypeContentMutation, SeedAssessmentTypeContentMutationVariables>;
+export const SeedAssessmentTypeSectionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SeedAssessmentTypeSections"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SeedAssessmentTypeSectionsInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"seedAssessmentTypeSections"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"sectionsCreated"}}]}}]}}]} as unknown as DocumentNode<SeedAssessmentTypeSectionsMutation, SeedAssessmentTypeSectionsMutationVariables>;
 export const UpdateAssessmentTypeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateAssessmentType"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateAssessmentTypeInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateAssessmentType"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assessmentType"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<UpdateAssessmentTypeMutation, UpdateAssessmentTypeMutationVariables>;
 export const UpdateInterpretationBandDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateInterpretationBand"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateInterpretationBandInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateInterpretationBand"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"band"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"sectionType"}},{"kind":"Field","name":{"kind":"Name","value":"label"}},{"kind":"Field","name":{"kind":"Name","value":"rangeStart"}},{"kind":"Field","name":{"kind":"Name","value":"rangeEnd"}},{"kind":"Field","name":{"kind":"Name","value":"displayRangeLabel"}},{"kind":"Field","name":{"kind":"Name","value":"narrative"}},{"kind":"Field","name":{"kind":"Name","value":"keyMindset"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateInterpretationBandMutation, UpdateInterpretationBandMutationVariables>;
 export const UpdateTemplateContentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateTemplateContent"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateTemplateContentInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateTemplateContent"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<UpdateTemplateContentMutation, UpdateTemplateContentMutationVariables>;
@@ -9976,7 +10604,7 @@ export const StartAssessmentDocument = {"kind":"Document","definitions":[{"kind"
 export const SubmitOrUpdateResponseDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SubmitOrUpdateResponse"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SubmitOrUpdateResponseInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submitOrUpdateResponse"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"response"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"sessionId"}},{"kind":"Field","name":{"kind":"Name","value":"questionId"}},{"kind":"Field","name":{"kind":"Name","value":"responseValue"}},{"kind":"Field","name":{"kind":"Name","value":"timeTakenSeconds"}},{"kind":"Field","name":{"kind":"Name","value":"isUpdate"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"session"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"currentQuestionNumber"}},{"kind":"Field","name":{"kind":"Name","value":"lastAnsweredQuestion"}},{"kind":"Field","name":{"kind":"Name","value":"lastActivityTime"}},{"kind":"Field","name":{"kind":"Name","value":"expiresAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"progress"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"answeredCount"}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"percentComplete"}}]}},{"kind":"Field","name":{"kind":"Name","value":"nextQuestion"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"questionNumber"}},{"kind":"Field","name":{"kind":"Name","value":"hasNext"}}]}},{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<SubmitOrUpdateResponseMutation, SubmitOrUpdateResponseMutationVariables>;
 export const UpdateAssessmentQuestionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateAssessmentQuestion"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateQuestionInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateAssessmentQuestion"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"question"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"questionText"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<UpdateAssessmentQuestionMutation, UpdateAssessmentQuestionMutationVariables>;
 export const UpdateAssessmentSectionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateAssessmentSection"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateSectionInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateAssessmentSection"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"section"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<UpdateAssessmentSectionMutation, UpdateAssessmentSectionMutationVariables>;
-export const GetUsersWithAssessmentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetUsersWithAssessment"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"usersWithAssessment"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"userName"}},{"kind":"Field","name":{"kind":"Name","value":"userEmail"}},{"kind":"Field","name":{"kind":"Name","value":"sessionId"}},{"kind":"Field","name":{"kind":"Name","value":"resultId"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"startedAt"}},{"kind":"Field","name":{"kind":"Name","value":"completedAt"}},{"kind":"Field","name":{"kind":"Name","value":"expiresAt"}},{"kind":"Field","name":{"kind":"Name","value":"totalScore"}},{"kind":"Field","name":{"kind":"Name","value":"interpretationLabel"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"completedCount"}},{"kind":"Field","name":{"kind":"Name","value":"inProgressCount"}}]}}]}}]} as unknown as DocumentNode<GetUsersWithAssessmentQuery, GetUsersWithAssessmentQueryVariables>;
+export const GetUsersWithAssessmentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetUsersWithAssessment"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"assessmentType"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"usersWithAssessment"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"assessmentType"},"value":{"kind":"Variable","name":{"kind":"Name","value":"assessmentType"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"userName"}},{"kind":"Field","name":{"kind":"Name","value":"userEmail"}},{"kind":"Field","name":{"kind":"Name","value":"sessionId"}},{"kind":"Field","name":{"kind":"Name","value":"resultId"}},{"kind":"Field","name":{"kind":"Name","value":"assessmentTypeCode"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"startedAt"}},{"kind":"Field","name":{"kind":"Name","value":"completedAt"}},{"kind":"Field","name":{"kind":"Name","value":"expiresAt"}},{"kind":"Field","name":{"kind":"Name","value":"totalScore"}},{"kind":"Field","name":{"kind":"Name","value":"interpretationLabel"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"completedCount"}},{"kind":"Field","name":{"kind":"Name","value":"inProgressCount"}}]}}]}}]} as unknown as DocumentNode<GetUsersWithAssessmentQuery, GetUsersWithAssessmentQueryVariables>;
 export const CurrentUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"CurrentUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"Lite_User"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Lite_User"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"age"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"gender"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"isAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"isInternal"}}]}}]} as unknown as DocumentNode<CurrentUserQuery, CurrentUserQueryVariables>;
 export const ForgotPasswordDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"forgotPassword"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ForgotPasswordInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"forgotPassword"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}}]}}]}}]} as unknown as DocumentNode<ForgotPasswordMutation, ForgotPasswordMutationVariables>;
 export const LoginDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"login"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"LoginInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"login"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Lite_User"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Lite_User"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"age"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"gender"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"isAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"isInternal"}}]}}]} as unknown as DocumentNode<LoginMutation, LoginMutationVariables>;

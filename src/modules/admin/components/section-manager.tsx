@@ -14,7 +14,7 @@ type SectionManagerProps = {
 
 export const SectionManager = ({ assessmentType }: SectionManagerProps) => {
   const { sections, loading, refetch } = useGetSections(assessmentType);
-  const { updateSection, loading: updating } = useUpdateSection();
+  const { updateSection, loading: updating } = useUpdateSection(assessmentType);
 
   const [editingId, setEditingId] = useState<string | null>(null);
 

@@ -20,8 +20,7 @@ export const CREATE_ASSESSMENT_TYPE_CLONE_FIELDS = [
   'cloneFromTemplate',
 ] as const;
 
-export const createAssessmentTypeBasicsSchema = z
-  .object({
+export const createAssessmentTypeBasicsObjectSchema = z.object({
     code: z
       .string()
       .min(2, 'Code must be at least 2 characters')
@@ -40,7 +39,7 @@ export const createAssessmentTypeBasicsSchema = z
       .number()
       .int()
       .min(1, 'At least one section is required')
-      .max(10, 'Maximum 10 sections'),
+      .max(5, 'Maximum 5 sections'),
     questionsPerSection: z
       .number()
       .int()
@@ -52,20 +51,27 @@ export const createAssessmentTypeBasicsSchema = z
       error: 'Select a scoring formula',
     }),
     displayOrder: z.number().int().min(0, 'Display order cannot be negative'),
-  })
-  .refine((data) => data.maxScore > data.minScore, {
+  });
+
+export const createAssessmentTypeBasicsSchema = createAssessmentTypeBasicsObjectSchema.refine(
+  (data) => data.maxScore > data.minScore,
+  {
     message: 'Max score must be greater than min score',
     path: ['maxScore'],
-  });
+  }
+);
 
 export const createAssessmentTypeCloneSchema = z.object({
   seedSections: z.boolean(),
   cloneFromTemplate: z.string(),
 });
 
-export const createAssessmentTypeWizardSchema = createAssessmentTypeBasicsSchema.merge(
-  createAssessmentTypeCloneSchema
-);
+export const createAssessmentTypeWizardSchema = createAssessmentTypeBasicsObjectSchema
+  .extend(createAssessmentTypeCloneSchema.shape)
+  .refine((data) => data.maxScore > data.minScore, {
+    message: 'Max score must be greater than min score',
+    path: ['maxScore'],
+  });
 
 export type CreateAssessmentTypeWizardValues = z.infer<
   typeof createAssessmentTypeWizardSchema

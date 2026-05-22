@@ -16,7 +16,18 @@ export type SectionTypeKey =
   | 'physical'
   | 'lifestyle';
 
-export const useInterpretationBands = (assessmentType: string) => {
+type UseInterpretationBandsOptions = {
+  loadSection?: boolean;
+  loadOverall?: boolean;
+};
+
+export const useInterpretationBands = (
+  assessmentType: string,
+  options?: UseInterpretationBandsOptions
+) => {
+  const loadSection = options?.loadSection ?? true;
+  const loadOverall = options?.loadOverall ?? true;
+
   const {
     data: sectionData,
     loading: sectionLoading,
@@ -24,6 +35,7 @@ export const useInterpretationBands = (assessmentType: string) => {
     refetch: refetchSection,
   } = useQuery(SectionInterpretationBandsDoc, {
     variables: { type: assessmentType },
+    skip: !loadSection,
     notifyOnNetworkStatusChange: true,
   });
 
@@ -34,6 +46,7 @@ export const useInterpretationBands = (assessmentType: string) => {
     refetch: refetchOverall,
   } = useQuery(OverallInterpretationBandsDoc, {
     variables: { type: assessmentType },
+    skip: !loadOverall,
     notifyOnNetworkStatusChange: true,
   });
 
@@ -41,13 +54,16 @@ export const useInterpretationBands = (assessmentType: string) => {
   const overallBands = overallData?.assessmentInterpretationBands?.nodes ?? [];
 
   const refetch = useCallback(async () => {
-    await Promise.all([refetchSection(), refetchOverall()]);
-  }, [refetchSection, refetchOverall]);
+    await Promise.all([
+      loadSection ? refetchSection() : Promise.resolve(),
+      loadOverall ? refetchOverall() : Promise.resolve(),
+    ]);
+  }, [loadSection, loadOverall, refetchSection, refetchOverall]);
 
   return {
     sectionBands,
     overallBands,
-    loading: sectionLoading || overallLoading,
+    loading: (loadSection && sectionLoading) || (loadOverall && overallLoading),
     error: sectionError ?? overallError,
     refetch,
   };

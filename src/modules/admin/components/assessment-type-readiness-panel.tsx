@@ -55,10 +55,7 @@ type AssessmentTypeReadinessSummaryProps = {
   isActive: boolean;
 };
 
-export const AssessmentTypeReadinessSummary = ({
-  assessmentType,
-  isActive,
-}: AssessmentTypeReadinessSummaryProps) => {
+const DraftReadinessSummary = ({ assessmentType }: { assessmentType: string }) => {
   const { ready, checks, loading, error } = useAssessmentTypeReadiness(assessmentType);
 
   if (loading) {
@@ -87,15 +84,6 @@ export const AssessmentTypeReadinessSummary = ({
   const passedCount = checks.filter((check) => check.passed).length;
   const firstFailed = checks.find((check) => !check.passed);
 
-  if (isActive) {
-    return (
-      <p className="text-xs text-muted-foreground mt-3 flex items-center gap-1.5">
-        <CheckCircle2 className="size-3.5 text-primary shrink-0" />
-        Published and visible to users
-      </p>
-    );
-  }
-
   if (ready) {
     return (
       <p className="text-xs mt-3 flex items-center gap-1.5 text-primary font-medium">
@@ -117,6 +105,22 @@ export const AssessmentTypeReadinessSummary = ({
   );
 };
 
+export const AssessmentTypeReadinessSummary = ({
+  assessmentType,
+  isActive,
+}: AssessmentTypeReadinessSummaryProps) => {
+  if (isActive) {
+    return (
+      <p className="text-xs text-muted-foreground mt-3 flex items-center gap-1.5">
+        <CheckCircle2 className="size-3.5 text-primary shrink-0" />
+        Published and visible to users
+      </p>
+    );
+  }
+
+  return <DraftReadinessSummary assessmentType={assessmentType} />;
+};
+
 type AssessmentTypeReadinessPanelProps = {
   assessmentType: string;
 };
@@ -125,7 +129,16 @@ export const AssessmentTypeReadinessPanel = ({
   assessmentType,
 }: AssessmentTypeReadinessPanelProps) => {
   const { assessmentTypes } = useAdminAssessmentTypes();
-  const { ready, checks, loading, error, refetch } = useAssessmentTypeReadiness(assessmentType);
+  const {
+    ready,
+    checks,
+    sectionCount,
+    requiredSectionBands,
+    stagesPerSection,
+    loading,
+    error,
+    refetch,
+  } = useAssessmentTypeReadiness(assessmentType);
   const { activateAssessmentType, loading: activating } = useActivateAssessmentType();
   const { deactivateAssessmentType, loading: deactivating } = useDeactivateAssessmentType();
   const { seedAssessmentTypeContent, loading: seeding } = useSeedAssessmentTypeContent();
@@ -135,8 +148,8 @@ export const AssessmentTypeReadinessPanel = ({
 
   const [templateCode, setTemplateCode] = useState('');
   const [cloneBands, setCloneBands] = useState(true);
-  const [cloneTemplateContent, setCloneTemplateContent] = useState(false);
   const [publishError, setPublishError] = useState<string | null>(null);
+  const [publishDialogOpen, setPublishDialogOpen] = useState(false);
   const [deactivateDialogOpen, setDeactivateDialogOpen] = useState(false);
 
   const templateOptions = useMemo(
@@ -165,7 +178,7 @@ export const AssessmentTypeReadinessPanel = ({
   const handlePublish = async () => {
     setPublishError(null);
     const result = await activateAssessmentType(assessmentType);
-    await refetch();
+    setPublishDialogOpen(false);
 
     if (result && !result.success) {
       setPublishError(
@@ -178,7 +191,6 @@ export const AssessmentTypeReadinessPanel = ({
   const handleConfirmDeactivate = async () => {
     await deactivateAssessmentType(assessmentType);
     setDeactivateDialogOpen(false);
-    await refetch();
   };
 
   const handleReclone = async () => {
@@ -187,9 +199,8 @@ export const AssessmentTypeReadinessPanel = ({
       assessmentTypeCode: assessmentType,
       templateCode,
       cloneBands,
-      cloneTemplateContent,
+      cloneTemplateContent: false,
     });
-    await refetch();
   };
 
   const failedChecks = checks.filter((check) => !check.passed);
@@ -203,6 +214,14 @@ export const AssessmentTypeReadinessPanel = ({
             <p className="text-sm text-muted-foreground mt-1">
               All checks must pass before this type can go live in{' '}
               <span className="font-medium">availableAssessments</span>.
+              {sectionCount != null && requiredSectionBands != null && (
+                <>
+                  {' '}
+                  Target: {sectionCount} section{sectionCount === 1 ? '' : 's'},{' '}
+                  {requiredSectionBands} section bands ({stagesPerSection} stages each), 5 overall
+                  bands.
+                </>
+              )}
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -310,7 +329,7 @@ export const AssessmentTypeReadinessPanel = ({
               </Alert>
             )}
 
-            <Button onClick={handlePublish} disabled={!ready || activating}>
+            <Button onClick={() => setPublishDialogOpen(true)} disabled={!ready || activating}>
               {activating ? 'Publishing...' : 'Publish assessment type'}
             </Button>
           </div>
@@ -338,8 +357,8 @@ export const AssessmentTypeReadinessPanel = ({
           <div>
             <h4 className="font-medium">Re-clone from template</h4>
             <p className="text-sm text-muted-foreground mt-1">
-              Copy missing interpretation bands and/or PDF template content from another type.
-              Existing bands with the same label and dimension are skipped.
+              Copy missing interpretation bands from another type. Existing bands with the same
+              label and dimension are skipped.
             </p>
           </div>
 
@@ -368,30 +387,18 @@ export const AssessmentTypeReadinessPanel = ({
                   </Select>
                 </div>
               </div>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <label className="flex items-center gap-2 text-sm">
-                  <Checkbox
-                    checked={cloneBands}
-                    onCheckedChange={(checked) => setCloneBands(checked === true)}
-                    aria-label="Clone interpretation bands"
-                  />
-                  Clone interpretation bands
-                </label>
-                <label className="flex items-center gap-2 text-sm">
-                  <Checkbox
-                    checked={cloneTemplateContent}
-                    onCheckedChange={(checked) => setCloneTemplateContent(checked === true)}
-                    aria-label="Clone PDF template content"
-                  />
-                  Clone PDF template content
-                </label>
-              </div>
+              <label className="flex items-center gap-2 text-sm">
+                <Checkbox
+                  checked={cloneBands}
+                  onCheckedChange={(checked) => setCloneBands(checked === true)}
+                  aria-label="Clone interpretation bands"
+                />
+                Clone interpretation bands
+              </label>
               <Button
                 variant="secondary"
                 onClick={handleReclone}
-                disabled={
-                  seeding || !templateCode || (!cloneBands && !cloneTemplateContent)
-                }
+                disabled={seeding || !templateCode || !cloneBands}
               >
                 {seeding ? 'Cloning...' : 'Re-clone from template'}
               </Button>
@@ -399,6 +406,30 @@ export const AssessmentTypeReadinessPanel = ({
           )}
         </div>
       </Card>
+
+      <AlertDialog open={publishDialogOpen} onOpenChange={setPublishDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Publish {type?.name ?? assessmentType.toUpperCase()}?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This makes the assessment type visible in availableAssessments. Users can purchase
+              and start it immediately. You can deactivate it later to hide it from new users.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={activating}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={activating}
+              onClick={(event) => {
+                event.preventDefault();
+                void handlePublish();
+              }}
+            >
+              {activating ? 'Publishing...' : 'Publish'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <AlertDialog open={deactivateDialogOpen} onOpenChange={setDeactivateDialogOpen}>
         <AlertDialogContent>

@@ -6,6 +6,7 @@ import { ArrowUpDown, Copy, Eye, Mail, MoreHorizontal } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { toast } from 'sonner';
 import Link from 'next/link';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
@@ -18,9 +19,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { DataTable } from '@/components/ui/data-table';
+import {
+  ALL_ASSESSMENT_TYPES_FILTER,
+  AssessmentTypeFilter,
+} from '@/modules/assessment/constants';
 import { useResendReport, useUsersWithAssessment } from '../../assessment/hooks';
 import type { UserAssessmentInfo } from '@/gql/graphql';
 import { RefreshCw } from 'lucide-react';
+import { AssessmentTypeSelector } from './assessment-type-selector';
 
 const getStatusColor = (status: string): string =>
   status === 'completed'
@@ -28,8 +34,13 @@ const getStatusColor = (status: string): string =>
     : 'text-yellow-600 bg-yellow-50 px-2 py-1 rounded-full text-xs font-medium';
 
 export const UsersAssessmentTable = () => {
+  const [selectedTypeFilter, setSelectedTypeFilter] = useState<AssessmentTypeFilter>(
+    ALL_ASSESSMENT_TYPES_FILTER
+  );
+  const isAllTypes = selectedTypeFilter === ALL_ASSESSMENT_TYPES_FILTER;
+
   const { users, totalCount, completedCount, inProgressCount, loading, refetch } =
-    useUsersWithAssessment();
+    useUsersWithAssessment(selectedTypeFilter);
   const { resendReport, loading: resending } = useResendReport();
   const [resendingId, setResendingId] = useState<string | null>(null);
 
@@ -84,6 +95,19 @@ export const UsersAssessmentTable = () => {
           );
         },
       },
+      ...(isAllTypes
+        ? [
+            {
+              accessorKey: 'assessmentTypeCode',
+              header: 'Type',
+              cell: ({ row }) => (
+                <Badge variant="secondary">
+                  {row.original.assessmentTypeCode.toUpperCase()}
+                </Badge>
+              ),
+            } satisfies ColumnDef<UserAssessmentInfo>,
+          ]
+        : []),
       {
         accessorKey: 'status',
         header: 'Status',
@@ -255,7 +279,7 @@ export const UsersAssessmentTable = () => {
         },
       },
     ],
-    [resending, resendingId, handleResendReport]
+    [resending, resendingId, handleResendReport, isAllTypes]
   );
 
   if (loading) {
@@ -271,12 +295,22 @@ export const UsersAssessmentTable = () => {
   return (
     <Card>
       <CardHeader>
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div className="flex-1">
-            <CardTitle>Users Assessment Overview</CardTitle>
-            <CardDescription>
-              Total: {totalCount} | Completed: {completedCount} | In Progress: {inProgressCount}
-            </CardDescription>
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div className="flex-1 space-y-4">
+            <div>
+              <CardTitle>Users Assessment Overview</CardTitle>
+              <CardDescription>
+                Total: {totalCount} | Completed: {completedCount} | In Progress:{' '}
+                {inProgressCount}
+              </CardDescription>
+            </div>
+            <AssessmentTypeSelector
+              value={selectedTypeFilter}
+              onChange={setSelectedTypeFilter}
+              label="Filter by assessment type"
+              includeAllTypes
+              className="max-w-xs"
+            />
           </div>
           <Button variant="outline" size="sm" onClick={handleRefresh} className="w-full md:w-auto">
             <RefreshCw className="h-4 w-4 mr-2" />

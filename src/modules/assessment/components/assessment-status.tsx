@@ -24,6 +24,7 @@ import {
   useDeleteMyAssessment,
   useStartAssessment,
 } from '../hooks';
+import { isDuplicateInProgressSessionError } from '../lib/assessment-session-errors';
 
 export function AssessmentStatus() {
   const router = useRouter();
@@ -82,6 +83,48 @@ export function AssessmentStatus() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handleStartAssessmentError = useCallback(
+    async (error: unknown) => {
+      if (!isDuplicateInProgressSessionError(error)) {
+        toast.error('Failed to start assessment. Please try again.');
+        return;
+      }
+
+      const [{ data: sessionData }] = await Promise.all([
+        refetchCurrentSession(),
+        refetchAssessmentStatus(),
+      ]);
+
+      const sessionId = sessionData?.currentAssessmentSession?.id ?? currentSession?.id;
+
+      if (sessionId) {
+        toast.error('You have an assessment in progress. Continue where you left off.', {
+          description: isInternal
+            ? 'Delete your current assessment first if you want to start over.'
+            : undefined,
+          action: {
+            label: 'Resume',
+            onClick: () => router.push(`/assessment/${sessionId}`),
+          },
+        });
+        return;
+      }
+
+      toast.error('You have an assessment in progress. Please refresh the page to continue.', {
+        description: isInternal
+          ? 'Use Delete Assessment below if you need to start over.'
+          : undefined,
+      });
+    },
+    [
+      currentSession?.id,
+      isInternal,
+      refetchAssessmentStatus,
+      refetchCurrentSession,
+      router,
+    ]
+  );
+
   const handleStartAssessmentWithPayment = useCallback(
     async (newPaymentId: string) => {
       try {
@@ -98,10 +141,10 @@ export function AssessmentStatus() {
           toast.error('Unable to start assessment. Please try again.');
         }
       } catch (error) {
-        toast.error('Failed to start assessment. Please try again.');
+        await handleStartAssessmentError(error);
       }
     },
-    [startAssessment, refetchAssessmentStatus, refetchCurrentSession, router]
+    [startAssessment, refetchAssessmentStatus, refetchCurrentSession, router, handleStartAssessmentError]
   );
 
   const handlePaymentAndStart = useCallback(
@@ -138,8 +181,7 @@ export function AssessmentStatus() {
                     toast.error('Unable to start assessment. Please try again.');
                   }
                 } catch (error) {
-                  console.error('Failed to start assessment:', error);
-                  toast.error('Failed to start assessment. Please contact support.');
+                  await handleStartAssessmentError(error);
                 }
               } else {
                 toast.error('Payment not found. Please contact support.');
@@ -163,6 +205,7 @@ export function AssessmentStatus() {
       refetchAssessmentStatus,
       refetchCurrentSession,
       router,
+      handleStartAssessmentError,
     ]
   );
 
@@ -183,7 +226,7 @@ export function AssessmentStatus() {
           toast.error('Unable to start assessment. Please try again.');
         }
       } catch (error) {
-        toast.error('Failed to start assessment. Please try again.');
+        await handleStartAssessmentError(error);
       }
     } else if (hasPaid) {
       // User has already paid, start assessment
@@ -206,7 +249,7 @@ export function AssessmentStatus() {
           toast.error('Unable to start assessment. Please try again.');
         }
       } catch (error) {
-        toast.error('Failed to start assessment. Please try again.');
+        await handleStartAssessmentError(error);
       }
     } else {
       // Scroll to pricing section for payment
@@ -223,6 +266,7 @@ export function AssessmentStatus() {
     refetchAssessmentStatus,
     refetchCurrentSession,
     router,
+    handleStartAssessmentError,
   ]);
 
   const handlePricingSectionClick = useCallback(

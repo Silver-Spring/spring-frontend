@@ -1,6 +1,11 @@
 export { AdminAssessmentTypesDoc } from './admin-assessment-types.graphql';
 export { CreateAssessmentTypeDoc } from './create-assessment-type.graphql';
 export { AssessmentTypeReadinessDoc } from './assessment-type-readiness.graphql';
+export { AssessmentSectionPresetsDoc } from './assessment-section-presets.graphql';
+export { CreateAssessmentSectionDoc } from './create-assessment-section.graphql';
+export { DeactivateAssessmentSectionDoc } from './deactivate-assessment-section.graphql';
+export { DeleteAssessmentSectionDoc } from './delete-assessment-section.graphql';
+export { SeedAssessmentTypeSectionsDoc } from './seed-assessment-type-sections.graphql';
 export { SeedAssessmentTypeContentDoc } from './seed-assessment-type-content.graphql';
 export { UpdateAssessmentTypeDoc } from './update-assessment-type.graphql';
 export { ActivateAssessmentTypeDoc } from './activate-assessment-type.graphql';

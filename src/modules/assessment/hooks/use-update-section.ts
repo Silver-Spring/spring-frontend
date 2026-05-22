@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/client/react';
 import { toast } from 'sonner';
 import { UpdateAssessmentSectionDoc, GetAllSectionsDoc } from '../graphql';
 
-export const useUpdateSection = () => {
+export const useUpdateSection = (assessmentType?: string) => {
   const [updateSectionMutation, { data, loading, error }] = useMutation(
     UpdateAssessmentSectionDoc,
     {
@@ -19,7 +19,6 @@ export const useUpdateSection = () => {
           : 'Failed to update section. Please try again.';
         toast.error(errorMessage);
       },
-      refetchQueries: [{ query: GetAllSectionsDoc }],
     }
   );
 
@@ -28,10 +27,12 @@ export const useUpdateSection = () => {
     name?: string;
     description?: string;
     isActive?: boolean;
-    // displayOrder removed - now read-only and managed by backend
   }) => {
     const result = await updateSectionMutation({
       variables: { input },
+      refetchQueries: assessmentType
+        ? [{ query: GetAllSectionsDoc, variables: { assessmentType } }]
+        : [{ query: GetAllSectionsDoc }],
     });
 
     return {

@@ -20,14 +20,6 @@ export const useStartAssessment = () => {
         toast.success('Assessment started successfully!');
       }
     },
-    onError: (error) => {
-      toast.error('Failed to start assessment. Please try again.');
-      const isDev = process.env.NODE_ENV === 'development';
-      const errorMessage = isDev
-        ? `Failed to start assessment. ${error.message}`
-        : 'Failed to start assessment. Please try again or contact support.';
-      toast.error(errorMessage);
-    },
   });
 
   const startAssessment = async (

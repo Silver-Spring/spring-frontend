@@ -8,11 +8,13 @@ import {
 import { ScoreDistributionDoc } from '../graphql/score-distribution.graphql';
 
 export const useScoreDistribution = (
-  assessmentType: AssessmentTypeCode = DEFAULT_ASSESSMENT_TYPE
+  assessmentType: AssessmentTypeCode = DEFAULT_ASSESSMENT_TYPE,
+  options?: { skip?: boolean }
 ) => {
   const { data, loading, error, refetch } = useQuery(ScoreDistributionDoc, {
     variables: { assessmentType },
     fetchPolicy: 'cache-and-network',
+    skip: options?.skip,
   });
 
   return {

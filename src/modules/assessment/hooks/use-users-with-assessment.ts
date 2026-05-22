@@ -1,10 +1,16 @@
 'use client';
 
 import { useQuery } from '@apollo/client/react';
+import { toAssessmentTypeQueryVariable, type AssessmentTypeFilter } from '../constants';
 import { UsersWithAssessmentDoc } from '../graphql/users-with-assessment.graphql';
 
-export const useUsersWithAssessment = () => {
+export const useUsersWithAssessment = (assessmentTypeFilter?: AssessmentTypeFilter) => {
+  const assessmentType = assessmentTypeFilter
+    ? toAssessmentTypeQueryVariable(assessmentTypeFilter)
+    : undefined;
+
   const { data, loading, error, refetch } = useQuery(UsersWithAssessmentDoc, {
+    variables: { assessmentType },
     fetchPolicy: 'network-only',
   });
 
