@@ -12,6 +12,7 @@ export type AssessmentWorkspaceView =
   | 'content'
   | 'scoring'
   | 'reports'
+  | 'pdf-theme'
   | 'settings'
   | 'catalog'
   | 'users';
@@ -21,6 +22,7 @@ const TYPE_VIEWS: AssessmentWorkspaceView[] = [
   'content',
   'scoring',
   'reports',
+  'pdf-theme',
   'settings',
 ];
 
@@ -56,6 +58,7 @@ export const useAdminAssessmentWorkspace = () => {
       param === 'content' ||
       param === 'scoring' ||
       param === 'reports' ||
+      param === 'pdf-theme' ||
       param === 'settings'
     ) {
       return param;

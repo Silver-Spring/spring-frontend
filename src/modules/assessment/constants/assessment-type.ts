@@ -51,6 +51,53 @@ export const TEMPLATE_CONTENT_LABELS: Record<TemplateContentKey, string> = {
   about_disclaimer: 'About disclaimer',
 };
 
+export const PDF_THEME_KEYS = [
+  'pdf_primary_color',
+  'pdf_cover_bg_color',
+  'pdf_box_bg_color',
+  'pdf_font_heading',
+  'pdf_font_body',
+] as const;
+
+export type PdfThemeKey = (typeof PDF_THEME_KEYS)[number];
+
+export const PDF_THEME_LABELS: Record<PdfThemeKey, string> = {
+  pdf_primary_color: 'Brand color',
+  pdf_cover_bg_color: 'Cover & page background',
+  pdf_box_bg_color: 'Callout box background',
+  pdf_font_heading: 'Heading font',
+  pdf_font_body: 'Body font',
+};
+
+export const PDF_COLOR_KEYS: readonly PdfThemeKey[] = [
+  'pdf_primary_color',
+  'pdf_cover_bg_color',
+  'pdf_box_bg_color',
+] as const;
+
+export const PDF_FONT_KEYS: readonly PdfThemeKey[] = [
+  'pdf_font_heading',
+  'pdf_font_body',
+] as const;
+
+export const PDF_FONT_OPTIONS = [
+  'Playfair Display',
+  'Source Sans 3',
+  'Georgia',
+  'Lato',
+  'Montserrat',
+] as const;
+
+export type PdfFontOption = (typeof PDF_FONT_OPTIONS)[number];
+
+export const PDF_THEME_DEFAULTS: Record<PdfThemeKey, string> = {
+  pdf_primary_color: '#16a34a',
+  pdf_cover_bg_color: '#f0fdf4',
+  pdf_box_bg_color: '#dcfce7',
+  pdf_font_heading: 'Playfair Display',
+  pdf_font_body: 'Source Sans 3',
+};
+
 export const formatPriceFromPaise = (paise: number): string => {
   return `₹${(paise / 100).toFixed(2)}`;
 };

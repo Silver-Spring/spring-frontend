@@ -5,6 +5,7 @@ import {
   FolderOpen,
   LayoutDashboard,
   Layers,
+  Palette,
   Settings2,
   Users,
   type LucideIcon,
@@ -46,6 +47,13 @@ export const TYPE_WORKSPACE_NAV: WorkspaceNavItem[] = [
     title: 'Report copy',
     description: 'PDF cover, header, and about-page text.',
     icon: FileText,
+  },
+  {
+    view: 'pdf-theme',
+    label: 'PDF theme',
+    title: 'PDF theme',
+    description: 'Brand colors and fonts for the generated report.',
+    icon: Palette,
   },
   {
     view: 'settings',

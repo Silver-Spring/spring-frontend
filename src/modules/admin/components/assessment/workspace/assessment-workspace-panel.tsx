@@ -64,6 +64,14 @@ const AssessmentTypeSettingsPanel = dynamic(
   { loading: panelLoading }
 );
 
+const PdfThemeEditor = dynamic(
+  () =>
+    import('../../pdf-theme-editor').then((mod) => ({
+      default: mod.PdfThemeEditor,
+    })),
+  { loading: panelLoading }
+);
+
 type AssessmentWorkspacePanelProps = {
   view: AssessmentWorkspaceView;
   assessmentType: AssessmentTypeCode;
@@ -94,6 +102,8 @@ const AssessmentWorkspacePanel = ({
       return <InterpretationBandManager assessmentType={assessmentType} />;
     case 'reports':
       return <TemplateContentEditor assessmentType={assessmentType} />;
+    case 'pdf-theme':
+      return <PdfThemeEditor assessmentType={assessmentType} />;
     case 'settings':
       return <AssessmentTypeSettingsPanel assessmentType={assessmentType} />;
     case 'overview':
