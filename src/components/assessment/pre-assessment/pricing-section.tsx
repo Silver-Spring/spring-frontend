@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
-import { Check, ArrowRight, Sparkles } from 'lucide-react';
+import { Check, ArrowRight } from 'lucide-react';
 import { CouponInput } from './coupon-input';
 
 interface PricingSectionProps {

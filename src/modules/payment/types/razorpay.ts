@@ -1,3 +1,15 @@
+export interface RazorpayInstance {
+  open: () => void;
+  close: () => void;
+  on: (event: string, handler: (response: RazorpayErrorResponse) => void) => void;
+}
+
+declare global {
+  interface Window {
+    Razorpay?: new (options: Record<string, unknown>) => RazorpayInstance;
+  }
+}
+
 export interface RazorpayOptions {
   keyId: string;
   amount: number;

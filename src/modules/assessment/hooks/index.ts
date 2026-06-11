@@ -1,4 +1,6 @@
 export * from './use-start-assessment';
+export * from './use-start-couple-assessment';
+export * from './use-join-couple-assessment';
 export * from './use-complete-assessment';
 export * from './use-current-session';
 export * from './use-session-questions';

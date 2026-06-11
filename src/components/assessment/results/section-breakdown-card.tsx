@@ -12,10 +12,32 @@ import { useIsMobile } from '@/hooks';
 import { TrendingUp } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { Cell, Label, Pie, PieChart as RechartsPieChart, Sector } from 'recharts';
+import type { TooltipContentProps } from 'recharts';
+
+type PieLabelProps = {
+  cx: number;
+  cy: number;
+  midAngle?: number;
+  outerRadius: number;
+  innerRadius: number;
+  value: number | string;
+  payload?: { label: string; scoreLabel: string };
+};
+
+type ActiveShapeProps = {
+  cx: number;
+  cy: number;
+  innerRadius: number;
+  outerRadius: number;
+  startAngle: number;
+  endAngle: number;
+  fill?: string;
+};
 
 const RADIAN = Math.PI / 180;
 
-const renderCustomLabel = ({ cx, cy, midAngle, outerRadius, payload }: any) => {
+const renderCustomLabel = ({ cx, cy, midAngle = 0, outerRadius, payload }: PieLabelProps) => {
+  if (!payload) return null;
   const radius = outerRadius + 40;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
@@ -43,7 +65,14 @@ const renderCustomLabel = ({ cx, cy, midAngle, outerRadius, payload }: any) => {
   );
 };
 
-const renderMobileLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, value }: any) => {
+const renderMobileLabel = ({
+  cx,
+  cy,
+  midAngle = 0,
+  innerRadius,
+  outerRadius,
+  value,
+}: PieLabelProps) => {
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
@@ -62,8 +91,8 @@ const renderMobileLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, value }
   );
 };
 
-const renderActiveShape = (props: any) => {
-  const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill } = props;
+const renderActiveShape = (props: ActiveShapeProps) => {
+  const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill = 'currentColor' } = props;
 
   return (
     <Sector
@@ -127,7 +156,7 @@ export const SectionBreakdownCard = ({ sectionResults }: SectionBreakdownCardPro
     }));
   }, [sectionResults]);
 
-  const handleMouseEnter = useCallback((_: any, index: number) => {
+  const handleMouseEnter = useCallback((_: unknown, index: number) => {
     setActiveIndex(index);
   }, []);
 
@@ -136,7 +165,7 @@ export const SectionBreakdownCard = ({ sectionResults }: SectionBreakdownCardPro
   }, []);
 
   const renderTooltipContent = useCallback(
-    ({ active, payload }: any) => {
+    ({ active, payload }: TooltipContentProps) => {
       if (!active || !payload?.length) return null;
       const data = payload[0];
       const section = sectionResults.find((s) => s.sectionType === data.payload.section);
@@ -203,7 +232,6 @@ export const SectionBreakdownCard = ({ sectionResults }: SectionBreakdownCardPro
                   return renderCustomLabel(props);
                 }}
                 labelLine={false}
-                activeIndex={activeIndex}
                 activeShape={renderActiveShape}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}

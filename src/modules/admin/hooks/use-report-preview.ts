@@ -83,6 +83,7 @@ export const useReportPreview = ({
       return;
     }
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void loadPreview();
   }, [enabled, loadPreview]);
 

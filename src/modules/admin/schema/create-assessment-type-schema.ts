@@ -10,7 +10,9 @@ export const CREATE_ASSESSMENT_TYPE_BASICS_FIELDS = [
   'sectionCount',
   'questionsPerSection',
   'scoringFormula',
-  'displayOrder',
+  'isDyadic',
+  'responseScaleMin',
+  'responseScaleMax',
 ] as const;
 
 export const CREATE_ASSESSMENT_TYPE_CLONE_FIELDS = [
@@ -31,8 +33,8 @@ export const createAssessmentTypeBasicsObjectSchema = z.object({
     description: z.string().max(500, 'Description is too long').optional(),
     priceAmount: z
       .number({ error: 'Price is required' })
-      .int('Price must be a whole number of paise')
-      .positive('Price must be greater than zero'),
+      .positive('Price must be greater than zero')
+      .max(100000, 'Price cannot exceed ₹1,00,000'),
     sectionCount: z
       .number()
       .int()
@@ -46,7 +48,19 @@ export const createAssessmentTypeBasicsObjectSchema = z.object({
     scoringFormula: z.enum(['sum', 'average'], {
       error: 'Select a scoring formula',
     }),
-    displayOrder: z.number().int().min(0, 'Display order cannot be negative'),
+    isDyadic: z.boolean(),
+    responseScaleMin: z
+      .number()
+      .int()
+      .min(1, 'Scale min must be at least 1'),
+    responseScaleMax: z
+      .number()
+      .int()
+      .min(2, 'Scale max must be at least 2'),
+    profileQuestionsCount: z
+      .number()
+      .int()
+      .min(0, 'Profile questions count cannot be negative'),
   });
 
 export const createAssessmentTypeBasicsSchema = createAssessmentTypeBasicsObjectSchema;
@@ -68,13 +82,16 @@ export const CREATE_ASSESSMENT_TYPE_WIZARD_DEFAULTS: CreateAssessmentTypeWizardV
   code: '',
   name: '',
   description: '',
-  priceAmount: 250000,
+  priceAmount: 2500,
   sectionCount: 5,
   questionsPerSection: 10,
   scoringFormula: 'sum',
-  displayOrder: 0,
   seedSections: true,
   cloneFromTemplate: 'ssri',
+  isDyadic: false,
+  responseScaleMin: 1,
+  responseScaleMax: 10,
+  profileQuestionsCount: 0,
 };
 
 export const SKIP_CLONE_TEMPLATE_VALUE = '__none__';

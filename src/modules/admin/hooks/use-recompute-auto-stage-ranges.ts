@@ -2,7 +2,7 @@
 
 import { useMutation } from '@apollo/client/react';
 import { toast } from 'sonner';
-import { AssessmentTypeStagesDoc, RecomputeAutoStageRangesDoc } from '../graphql';
+import { RecomputeAutoStageRangesDoc } from '../graphql';
 import { assessmentTypeStagesRefetchQueries } from './assessment-type-lifecycle-refetch';
 
 export const useRecomputeAutoStageRanges = () => {

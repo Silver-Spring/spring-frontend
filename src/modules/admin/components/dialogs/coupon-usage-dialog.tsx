@@ -91,12 +91,12 @@ export const CouponUsageDialog = ({ open, onOpenChange, couponId }: CouponUsageD
           <div className="mt-4 overflow-y-auto flex-1 px-6 pb-6">
             {usageRecords.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
-                No usage records found. This coupon hasn't been used yet.
+                No usage records found. This coupon hasn&apos;t been used yet.
               </div>
             ) : (
               <DataTable
                 columns={columns}
-                data={usageRecords as any}
+                data={usageRecords as UsageRecord[]}
                 filterColumn="userName"
                 filterPlaceholder="Search by user name..."
               />

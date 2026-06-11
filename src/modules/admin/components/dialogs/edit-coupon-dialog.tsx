@@ -68,7 +68,13 @@ export const EditCouponDialog = ({
 
   const handleSubmit = async (values: EditCouponFormValues) => {
     try {
-      const input: any = {
+      const input: {
+        id: string;
+        isActive: boolean;
+        description?: string;
+        validUntil?: string;
+        maxTotalUses?: number;
+      } = {
         id: couponId,
         isActive: values.isActive,
       };
@@ -77,10 +83,8 @@ export const EditCouponDialog = ({
         input.description = values.description.trim();
       }
 
-      // Always include validUntil, pass null if empty to clear the date
-      input.validUntil = values.validUntil || null;
-
-      input.maxTotalUses = values.maxTotalUses || null;
+      input.validUntil = values.validUntil || undefined;
+      input.maxTotalUses = values.maxTotalUses || undefined;
 
       await updateCoupon(input);
       onSuccess();

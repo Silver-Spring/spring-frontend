@@ -4,7 +4,7 @@ import { useLazyQuery } from '@apollo/client/react';
 import { AdminPaymentDetailsDoc } from '../graphql/admin-payment-details.graphql';
 
 export const useAdminPaymentDetails = () => {
-  const [fetchPaymentDetails, { data, loading, error }] = useLazyQuery(
+  const [fetchPaymentDetails, { loading, error }] = useLazyQuery(
     AdminPaymentDetailsDoc,
     {
       fetchPolicy: 'network-only',

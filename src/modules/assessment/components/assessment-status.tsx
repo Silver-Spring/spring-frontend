@@ -24,6 +24,7 @@ import {
   useDeleteMyAssessment,
   useStartAssessment,
 } from '../hooks';
+import { DEFAULT_ASSESSMENT_TYPE } from '../constants';
 import { isDuplicateInProgressSessionError } from '../lib/assessment-session-errors';
 
 export function AssessmentStatus() {
@@ -38,6 +39,7 @@ export function AssessmentStatus() {
     completedAt,
     resultId,
     totalReadinessIndex,
+    availableAssessments,
     loading: statusLoading,
     refetch: refetchAssessmentStatus,
   } = useAssessmentStatus();
@@ -58,6 +60,14 @@ export function AssessmentStatus() {
     loading: paymentLoading,
     refetch: refetchPaymentStatus,
   } = usePaymentStatus();
+
+  const assessmentTypeInfo = useMemo(
+    () =>
+      availableAssessments.find(
+        (t) => t.code === (currentSession?.assessmentTypeCode ?? DEFAULT_ASSESSMENT_TYPE)
+      ),
+    [availableAssessments, currentSession?.assessmentTypeCode]
+  );
 
   const isLoading = useMemo(
     () => statusLoading || sessionLoading || paymentLoading,
@@ -116,13 +126,7 @@ export function AssessmentStatus() {
           : undefined,
       });
     },
-    [
-      currentSession?.id,
-      isInternal,
-      refetchAssessmentStatus,
-      refetchCurrentSession,
-      router,
-    ]
+    [currentSession?.id, isInternal, refetchAssessmentStatus, refetchCurrentSession, router]
   );
 
   const handleStartAssessmentWithPayment = useCallback(
@@ -144,7 +148,13 @@ export function AssessmentStatus() {
         await handleStartAssessmentError(error);
       }
     },
-    [startAssessment, refetchAssessmentStatus, refetchCurrentSession, router, handleStartAssessmentError]
+    [
+      startAssessment,
+      refetchAssessmentStatus,
+      refetchCurrentSession,
+      router,
+      handleStartAssessmentError,
+    ]
   );
 
   const handlePaymentAndStart = useCallback(
@@ -193,7 +203,7 @@ export function AssessmentStatus() {
           },
           couponCode
         );
-      } catch (error) {
+      } catch {
         toast.error('Payment failed. Please try again.');
       }
     },
@@ -283,7 +293,7 @@ export function AssessmentStatus() {
       });
       router.push(`/assessment/${currentSession.id}`);
     }
-  }, [currentSession?.id, router]);
+  }, [currentSession, router]);
 
   const handleViewResults = useCallback(() => {
     if (resultId) {
@@ -303,7 +313,7 @@ export function AssessmentStatus() {
         setShowDeleteDialog(false);
         router.push('/assessment');
       }
-    } catch (error) {
+    } catch {
       toast.error('Failed to delete assessment. Please try again.');
     }
   }, [deleteMyAssessment, refetchAssessmentStatus, refetchCurrentSession, router]);
@@ -350,15 +360,17 @@ export function AssessmentStatus() {
                 <TrendingUp className="size-6 text-primary" />
               </div>
               <div>
-                <h3 className="font-semibold">Your SSRI Score</h3>
-                <p className="text-xs text-muted-foreground">
-                  Silver Spring Retirement Readiness Index
-                </p>
+                <h3 className="font-semibold">Your Score</h3>
+                {assessmentTypeInfo?.name && (
+                  <p className="text-xs text-muted-foreground">{assessmentTypeInfo.name}</p>
+                )}
               </div>
             </div>
             <div className="flex items-baseline gap-2">
               <span className="text-5xl font-bold text-primary">{totalReadinessIndex}</span>
-              <span className="text-lg text-muted-foreground">/ 500</span>
+              <span className="text-lg text-muted-foreground">
+                / {assessmentTypeInfo?.maxScore ?? 500}
+              </span>
             </div>
             {formattedCompletedDate && (
               <p className="mt-4 text-xs text-muted-foreground">

@@ -1,8 +1,7 @@
-import { AdminKpiCard } from '@/modules/admin/components/shared/admin-kpi-card';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AssessmentTypeCode } from '@/modules/assessment/constants';
 import { useAdminStats } from '@/modules/assessment/hooks';
-import { BarChart3, CheckCircle2, ClipboardList, FileText } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 
 type AssessmentContentStatsProps = {
   assessmentType: AssessmentTypeCode;
@@ -11,82 +10,54 @@ type AssessmentContentStatsProps = {
 const AssessmentContentStats = ({ assessmentType }: AssessmentContentStatsProps) => {
   const { stats, loading, error } = useAdminStats(assessmentType);
 
-  if (loading) {
-    return (
-      <Card className="p-6">
-        <p className="text-sm text-muted-foreground">Loading...</p>
-      </Card>
-    );
-  }
+  if (loading || error || !stats) return null;
 
-  if (error) {
-    return (
-      <Card className="p-6">
-        <p className="text-sm text-destructive">Could not load stats.</p>
-      </Card>
-    );
-  }
+  const hasInactive = stats.inactiveQuestions > 0;
+  const hasSections = stats.questionsBySectionType && stats.questionsBySectionType.length > 0;
 
-  if (!stats) {
-    return null;
-  }
-
-  const inactiveCount = stats.inactiveQuestions;
+  if (!hasSections) return null;
 
   return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        <AdminKpiCard
-          label="Sections"
-          value={stats.totalSections}
-          insight="Scoring dimensions"
-          icon={FileText}
-        />
-        <AdminKpiCard
-          label="Questions"
-          value={stats.totalQuestions}
-          insight={`${stats.activeQuestions} active`}
-          icon={ClipboardList}
-        />
-        <AdminKpiCard
-          label="Active"
-          value={stats.activeQuestions}
-          insight="Visible to users"
-          icon={CheckCircle2}
-          tone="success"
-        />
-        <AdminKpiCard
-          label="Inactive"
-          value={inactiveCount}
-          insight={inactiveCount > 0 ? 'Hidden from users' : 'None'}
-          icon={BarChart3}
-          tone={inactiveCount > 0 ? 'warning' : 'muted'}
-        />
-      </div>
-
-      {stats.questionsBySectionType && stats.questionsBySectionType.length > 0 && (
-        <Card className="p-5">
-          <h4 className="text-sm font-medium mb-3">By section</h4>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {stats.questionsBySectionType.map(
-              (section: {
-                type: string;
-                name: string;
-                question_count: string;
-                active_count: string;
-              }) => (
-                <div key={section.type} className="rounded-md border p-3">
-                  <p className="text-sm font-medium">{section.name}</p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {section.active_count}/{section.question_count} active
+    <Card>
+      <CardHeader className="pb-3">
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-sm font-semibold">Question coverage</CardTitle>
+          <span className="text-sm text-muted-foreground">
+            {stats.activeQuestions}/{stats.totalQuestions} active
+            {hasInactive && (
+              <span className="ml-2 inline-flex items-center gap-1 text-amber-600 dark:text-amber-400">
+                <AlertCircle className="size-3.5" aria-hidden="true" />
+                {stats.inactiveQuestions} inactive
+              </span>
+            )}
+          </span>
+        </div>
+      </CardHeader>
+      <CardContent className="pt-0">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+          {stats.questionsBySectionType.map(
+            (section: {
+              type: string;
+              name: string;
+              question_count: string;
+              active_count: string;
+            }) => {
+              const total = parseInt(section.question_count, 10);
+              const active = parseInt(section.active_count, 10);
+              const allActive = active === total;
+              return (
+                <div key={section.type} className="rounded-md border p-2.5">
+                  <p className="text-xs font-medium truncate">{section.name}</p>
+                  <p className={`text-xs mt-1 ${allActive ? 'text-muted-foreground' : 'text-amber-600 dark:text-amber-400'}`}>
+                    {active}/{total} active
                   </p>
                 </div>
-              )
-            )}
-          </div>
-        </Card>
-      )}
-    </div>
+              );
+            }
+          )}
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

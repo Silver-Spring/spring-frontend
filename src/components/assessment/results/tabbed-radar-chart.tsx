@@ -1,15 +1,12 @@
 'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-} from '@/components/ui/chart';
+import { ChartConfig, ChartContainer, ChartTooltip } from '@/components/ui/chart';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { BarChart3 } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { Legend, PolarAngleAxis, PolarGrid, PolarRadiusAxis, Radar, RadarChart } from 'recharts';
+import type { TooltipContentProps } from 'recharts';
 
 interface CohortData {
   label: string;
@@ -81,7 +78,7 @@ export const TabbedRadarChart = ({
 
   const [activeTab, setActiveTab] = useState(tabs[0]?.value || 'age');
 
-  const renderTooltipContent = useCallback(({ active, payload }: any) => {
+  const renderTooltipContent = useCallback(({ active, payload }: TooltipContentProps) => {
     if (!active || !payload?.length) return null;
     const data = payload[0].payload;
 
@@ -114,7 +111,7 @@ export const TabbedRadarChart = ({
   if (tabs.length === 0) return null;
 
   return (
-      <Card className="bg-linear-to-br from-primary/8 via-primary/5 to-background border-primary/20 shadow-none">
+    <Card className="bg-linear-to-br from-primary/8 via-primary/5 to-background border-primary/20 shadow-none">
       <CardHeader>
         <div className="flex items-start gap-3">
           <div className="p-2 rounded-lg bg-primary/10">

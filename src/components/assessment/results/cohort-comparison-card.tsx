@@ -13,6 +13,12 @@ import { Users } from 'lucide-react';
 import { useMemo } from 'react';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
+type ChartDataEntry = {
+  category: string;
+  userScore: number;
+  [key: string]: number | string;
+};
+
 interface CohortData {
   label: string;
   cohortSize: number;
@@ -55,7 +61,7 @@ export const CohortComparisonCard = ({
   overallCohort,
 }: CohortComparisonCardProps) => {
   const chartData = useMemo(() => {
-    const data: any[] = [
+    const data: ChartDataEntry[] = [
       {
         category: 'Total Score',
         userScore,

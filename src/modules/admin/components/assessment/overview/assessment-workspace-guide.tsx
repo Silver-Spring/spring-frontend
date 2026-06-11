@@ -4,6 +4,13 @@ import { WORKSPACE_TAB_GUIDE } from '@/modules/admin/lib/assessment-workspace-co
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 
+const STEP_HINTS: Record<string, string> = {
+  content: 'Add sections and questions',
+  scoring: 'Define score bands and narratives',
+  reports: 'Write the PDF cover and about text',
+  settings: 'Set name, price, and structure',
+};
+
 type AssessmentWorkspaceGuideProps = {
   assessmentType: string;
 };
@@ -11,24 +18,30 @@ type AssessmentWorkspaceGuideProps = {
 const AssessmentWorkspaceGuide = ({ assessmentType }: AssessmentWorkspaceGuideProps) => (
   <Card>
     <CardHeader className="pb-3">
-      <CardTitle className="text-base">Setup order</CardTitle>
+      <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+        Setup checklist
+      </CardTitle>
     </CardHeader>
-    <CardContent>
-      <ol className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+    <CardContent className="p-0">
+      <ol className="divide-y">
         {WORKSPACE_TAB_GUIDE.map((tab, index) => {
           const Icon = tab.icon;
+          const hint = STEP_HINTS[tab.view] ?? tab.label;
 
           return (
             <li key={tab.view}>
               <Link
                 href={buildAssessmentHref(tab.view, assessmentType)}
-                className="group flex items-center gap-3 rounded-lg border p-3 transition-colors hover:bg-muted/50 hover:border-primary/30"
+                className="group flex items-center gap-3 px-6 py-3.5 transition-colors hover:bg-muted/40"
               >
-                <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-medium">
+                <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-semibold text-muted-foreground group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
                   {index + 1}
                 </span>
                 <Icon className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
-                <span className="min-w-0 flex-1 text-sm font-medium">{tab.label}</span>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-medium leading-none">{tab.label}</p>
+                  <p className="mt-0.5 text-xs text-muted-foreground">{hint}</p>
+                </div>
                 <ArrowRight
                   className="size-4 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100"
                   aria-hidden="true"

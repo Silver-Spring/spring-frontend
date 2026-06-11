@@ -1,5 +1,4 @@
 import { useMutation, useApolloClient } from '@apollo/client/react';
-import { useRouter } from 'next/navigation';
 import { useCookies } from 'react-cookie';
 import { toast } from 'sonner';
 import { TOKEN_NAME } from '.';
@@ -11,8 +10,6 @@ export const useLogout = () => {
   const [, , deleteCookie] = useCookies();
   const client = useApolloClient();
   const clearUser = useUserStore((state) => state.clearUser);
-
-  const router = useRouter();
 
   const [logoutMutation, { loading, error }] = useMutation(LogoutDoc, {
     onCompleted: () => {

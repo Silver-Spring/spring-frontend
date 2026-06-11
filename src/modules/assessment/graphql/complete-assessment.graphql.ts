@@ -16,6 +16,8 @@ const CompleteAssessmentDoc = graphql(`
       success
       message
       pdfPath
+      coupleComplete
+      waitingForPartner
     }
   }
 `);

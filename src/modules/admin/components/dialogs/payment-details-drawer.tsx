@@ -40,8 +40,8 @@ export const PaymentDetailsDrawer = ({
   const isMobile = useIsMobile();
   const { getPaymentDetails, loading, error } = useAdminPaymentDetails();
   const [details, setDetails] = useState<{
-    razorpayData: any;
-    dbData: any;
+    razorpayData: Record<string, unknown>;
+    dbData: Record<string, unknown>;
   } | null>(null);
 
   useEffect(() => {
@@ -52,6 +52,7 @@ export const PaymentDetailsDrawer = ({
         }
       });
     } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setDetails(null);
     }
   }, [open, paymentId, getPaymentDetails]);

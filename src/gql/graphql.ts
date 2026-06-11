@@ -327,9 +327,748 @@ export enum AssessmentCohortStatsOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
+/** Groups two partner sessions under one payment for dyadic assessments. */
+export type AssessmentCouple = {
+  __typename?: 'AssessmentCouple';
+  /** Reads and enables pagination through a set of `AssessmentDomainResult`. */
+  assessmentDomainResultsByCoupleId: AssessmentDomainResultsConnection;
+  /** Reads and enables pagination through a set of `AssessmentInterpretationBand`. */
+  assessmentInterpretationBandsByAssessmentResultCoupleIdAndInterpretationBandId: AssessmentCoupleAssessmentInterpretationBandsByAssessmentResultCoupleIdAndInterpretationBandIdManyToManyConnection;
+  /** Reads and enables pagination through a set of `AssessmentResult`. */
+  assessmentResultsByCoupleId: AssessmentResultsConnection;
+  /** Reads and enables pagination through a set of `AssessmentSession`. */
+  assessmentSessionsByCoupleId: AssessmentSessionsConnection;
+  /** Reads a single `AssessmentType` that is related to this `AssessmentCouple`. */
+  assessmentTypeByAssessmentTypeCode?: Maybe<AssessmentType>;
+  assessmentTypeCode: Scalars['String']['output'];
+  /** Reads and enables pagination through a set of `AssessmentType`. */
+  assessmentTypesByAssessmentResultCoupleIdAndAssessmentTypeCode: AssessmentCoupleAssessmentTypesByAssessmentResultCoupleIdAndAssessmentTypeCodeManyToManyConnection;
+  /** Reads and enables pagination through a set of `AssessmentType`. */
+  assessmentTypesByAssessmentSessionCoupleIdAndAssessmentTypeCode: AssessmentCoupleAssessmentTypesByAssessmentSessionCoupleIdAndAssessmentTypeCodeManyToManyConnection;
+  createdAt: Scalars['Datetime']['output'];
+  id: Scalars['UUID']['output'];
+  inviteCode: Scalars['String']['output'];
+  /** Reads a single `AssessmentSession` that is related to this `AssessmentCouple`. */
+  partnerASession?: Maybe<AssessmentSession>;
+  partnerASessionId?: Maybe<Scalars['UUID']['output']>;
+  /** Reads a single `AssessmentSession` that is related to this `AssessmentCouple`. */
+  partnerBSession?: Maybe<AssessmentSession>;
+  partnerBSessionId?: Maybe<Scalars['UUID']['output']>;
+  /** Reads a single `Payment` that is related to this `AssessmentCouple`. */
+  payment?: Maybe<Payment>;
+  paymentId: Scalars['UUID']['output'];
+  /** Reads and enables pagination through a set of `Payment`. */
+  paymentsByAssessmentSessionCoupleIdAndPaymentId: AssessmentCouplePaymentsByAssessmentSessionCoupleIdAndPaymentIdManyToManyConnection;
+  status: Scalars['String']['output'];
+  updatedAt: Scalars['Datetime']['output'];
+  /** Reads and enables pagination through a set of `User`. */
+  usersByAssessmentResultCoupleIdAndUserId: AssessmentCoupleUsersByAssessmentResultCoupleIdAndUserIdManyToManyConnection;
+  /** Reads and enables pagination through a set of `User`. */
+  usersByAssessmentSessionCoupleIdAndUserId: AssessmentCoupleUsersByAssessmentSessionCoupleIdAndUserIdManyToManyConnection;
+};
+
+
+/** Groups two partner sessions under one payment for dyadic assessments. */
+export type AssessmentCoupleAssessmentDomainResultsByCoupleIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentDomainResultCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentDomainResultsOrderBy>>;
+};
+
+
+/** Groups two partner sessions under one payment for dyadic assessments. */
+export type AssessmentCoupleAssessmentInterpretationBandsByAssessmentResultCoupleIdAndInterpretationBandIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentInterpretationBandCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentInterpretationBandsOrderBy>>;
+};
+
+
+/** Groups two partner sessions under one payment for dyadic assessments. */
+export type AssessmentCoupleAssessmentResultsByCoupleIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentResultCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentResultsOrderBy>>;
+};
+
+
+/** Groups two partner sessions under one payment for dyadic assessments. */
+export type AssessmentCoupleAssessmentSessionsByCoupleIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentSessionCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentSessionsOrderBy>>;
+};
+
+
+/** Groups two partner sessions under one payment for dyadic assessments. */
+export type AssessmentCoupleAssessmentTypesByAssessmentResultCoupleIdAndAssessmentTypeCodeArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentTypeCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentTypesOrderBy>>;
+};
+
+
+/** Groups two partner sessions under one payment for dyadic assessments. */
+export type AssessmentCoupleAssessmentTypesByAssessmentSessionCoupleIdAndAssessmentTypeCodeArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentTypeCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentTypesOrderBy>>;
+};
+
+
+/** Groups two partner sessions under one payment for dyadic assessments. */
+export type AssessmentCouplePaymentsByAssessmentSessionCoupleIdAndPaymentIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<PaymentCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PaymentsOrderBy>>;
+};
+
+
+/** Groups two partner sessions under one payment for dyadic assessments. */
+export type AssessmentCoupleUsersByAssessmentResultCoupleIdAndUserIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<UserCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<UsersOrderBy>>;
+};
+
+
+/** Groups two partner sessions under one payment for dyadic assessments. */
+export type AssessmentCoupleUsersByAssessmentSessionCoupleIdAndUserIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<UserCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<UsersOrderBy>>;
+};
+
+/** The fields on `assessmentCouple` to look up the row to connect. */
+export type AssessmentCoupleAssessmentCouplesInviteCodeKeyConnect = {
+  inviteCode: Scalars['String']['input'];
+};
+
+/** The fields on `assessmentCouple` to look up the row to connect. */
+export type AssessmentCoupleAssessmentCouplesPkeyConnect = {
+  id: Scalars['UUID']['input'];
+};
+
+/** A connection to a list of `AssessmentInterpretationBand` values, with data from `AssessmentResult`. */
+export type AssessmentCoupleAssessmentInterpretationBandsByAssessmentResultCoupleIdAndInterpretationBandIdManyToManyConnection = {
+  __typename?: 'AssessmentCoupleAssessmentInterpretationBandsByAssessmentResultCoupleIdAndInterpretationBandIdManyToManyConnection';
+  /** A list of edges which contains the `AssessmentInterpretationBand`, info from the `AssessmentResult`, and the cursor to aid in pagination. */
+  edges: Array<AssessmentCoupleAssessmentInterpretationBandsByAssessmentResultCoupleIdAndInterpretationBandIdManyToManyEdge>;
+  /** A list of `AssessmentInterpretationBand` objects. */
+  nodes: Array<AssessmentInterpretationBand>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `AssessmentInterpretationBand` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `AssessmentInterpretationBand` edge in the connection, with data from `AssessmentResult`. */
+export type AssessmentCoupleAssessmentInterpretationBandsByAssessmentResultCoupleIdAndInterpretationBandIdManyToManyEdge = {
+  __typename?: 'AssessmentCoupleAssessmentInterpretationBandsByAssessmentResultCoupleIdAndInterpretationBandIdManyToManyEdge';
+  /** Reads and enables pagination through a set of `AssessmentResult`. */
+  assessmentResultsByInterpretationBandId: AssessmentResultsConnection;
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `AssessmentInterpretationBand` at the end of the edge. */
+  node: AssessmentInterpretationBand;
+};
+
+
+/** A `AssessmentInterpretationBand` edge in the connection, with data from `AssessmentResult`. */
+export type AssessmentCoupleAssessmentInterpretationBandsByAssessmentResultCoupleIdAndInterpretationBandIdManyToManyEdgeAssessmentResultsByInterpretationBandIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentResultCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentResultsOrderBy>>;
+};
+
+/** A connection to a list of `AssessmentType` values, with data from `AssessmentResult`. */
+export type AssessmentCoupleAssessmentTypesByAssessmentResultCoupleIdAndAssessmentTypeCodeManyToManyConnection = {
+  __typename?: 'AssessmentCoupleAssessmentTypesByAssessmentResultCoupleIdAndAssessmentTypeCodeManyToManyConnection';
+  /** A list of edges which contains the `AssessmentType`, info from the `AssessmentResult`, and the cursor to aid in pagination. */
+  edges: Array<AssessmentCoupleAssessmentTypesByAssessmentResultCoupleIdAndAssessmentTypeCodeManyToManyEdge>;
+  /** A list of `AssessmentType` objects. */
+  nodes: Array<AssessmentType>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `AssessmentType` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `AssessmentType` edge in the connection, with data from `AssessmentResult`. */
+export type AssessmentCoupleAssessmentTypesByAssessmentResultCoupleIdAndAssessmentTypeCodeManyToManyEdge = {
+  __typename?: 'AssessmentCoupleAssessmentTypesByAssessmentResultCoupleIdAndAssessmentTypeCodeManyToManyEdge';
+  /** Reads and enables pagination through a set of `AssessmentResult`. */
+  assessmentResultsByAssessmentTypeCode: AssessmentResultsConnection;
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `AssessmentType` at the end of the edge. */
+  node: AssessmentType;
+};
+
+
+/** A `AssessmentType` edge in the connection, with data from `AssessmentResult`. */
+export type AssessmentCoupleAssessmentTypesByAssessmentResultCoupleIdAndAssessmentTypeCodeManyToManyEdgeAssessmentResultsByAssessmentTypeCodeArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentResultCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentResultsOrderBy>>;
+};
+
+/** A connection to a list of `AssessmentType` values, with data from `AssessmentSession`. */
+export type AssessmentCoupleAssessmentTypesByAssessmentSessionCoupleIdAndAssessmentTypeCodeManyToManyConnection = {
+  __typename?: 'AssessmentCoupleAssessmentTypesByAssessmentSessionCoupleIdAndAssessmentTypeCodeManyToManyConnection';
+  /** A list of edges which contains the `AssessmentType`, info from the `AssessmentSession`, and the cursor to aid in pagination. */
+  edges: Array<AssessmentCoupleAssessmentTypesByAssessmentSessionCoupleIdAndAssessmentTypeCodeManyToManyEdge>;
+  /** A list of `AssessmentType` objects. */
+  nodes: Array<AssessmentType>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `AssessmentType` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `AssessmentType` edge in the connection, with data from `AssessmentSession`. */
+export type AssessmentCoupleAssessmentTypesByAssessmentSessionCoupleIdAndAssessmentTypeCodeManyToManyEdge = {
+  __typename?: 'AssessmentCoupleAssessmentTypesByAssessmentSessionCoupleIdAndAssessmentTypeCodeManyToManyEdge';
+  /** Reads and enables pagination through a set of `AssessmentSession`. */
+  assessmentSessionsByAssessmentTypeCode: AssessmentSessionsConnection;
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `AssessmentType` at the end of the edge. */
+  node: AssessmentType;
+};
+
+
+/** A `AssessmentType` edge in the connection, with data from `AssessmentSession`. */
+export type AssessmentCoupleAssessmentTypesByAssessmentSessionCoupleIdAndAssessmentTypeCodeManyToManyEdgeAssessmentSessionsByAssessmentTypeCodeArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentSessionCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentSessionsOrderBy>>;
+};
+
+/**
+ * A condition to be used against `AssessmentCouple` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type AssessmentCoupleCondition = {
+  /** Checks for equality with the object’s `assessmentTypeCode` field. */
+  assessmentTypeCode?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `inviteCode` field. */
+  inviteCode?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `partnerASessionId` field. */
+  partnerASessionId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `partnerBSessionId` field. */
+  partnerBSessionId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `paymentId` field. */
+  paymentId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** The fields on `assessmentCouple` to look up the row to update. */
+export type AssessmentCoupleOnAssessmentCoupleForAssessmentCouplesAssessmentTypeCodeFkeyUsingAssessmentCouplesInviteCodeKeyUpdate = {
+  inviteCode: Scalars['String']['input'];
+  /** An object where the defined keys will be set on the `assessmentCouple` being updated. */
+  patch: UpdateAssessmentCoupleOnAssessmentCoupleForAssessmentCouplesAssessmentTypeCodeFkeyPatch;
+};
+
+/** The fields on `assessmentCouple` to look up the row to update. */
+export type AssessmentCoupleOnAssessmentCoupleForAssessmentCouplesAssessmentTypeCodeFkeyUsingAssessmentCouplesPkeyUpdate = {
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `assessmentCouple` being updated. */
+  patch: UpdateAssessmentCoupleOnAssessmentCoupleForAssessmentCouplesAssessmentTypeCodeFkeyPatch;
+};
+
+/** The fields on `assessmentCouple` to look up the row to update. */
+export type AssessmentCoupleOnAssessmentCoupleForAssessmentCouplesPartnerASessionIdFkeyUsingAssessmentCouplesInviteCodeKeyUpdate = {
+  inviteCode: Scalars['String']['input'];
+  /** An object where the defined keys will be set on the `assessmentCouple` being updated. */
+  patch: UpdateAssessmentCoupleOnAssessmentCoupleForAssessmentCouplesPartnerASessionIdFkeyPatch;
+};
+
+/** The fields on `assessmentCouple` to look up the row to update. */
+export type AssessmentCoupleOnAssessmentCoupleForAssessmentCouplesPartnerASessionIdFkeyUsingAssessmentCouplesPkeyUpdate = {
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `assessmentCouple` being updated. */
+  patch: UpdateAssessmentCoupleOnAssessmentCoupleForAssessmentCouplesPartnerASessionIdFkeyPatch;
+};
+
+/** The fields on `assessmentCouple` to look up the row to update. */
+export type AssessmentCoupleOnAssessmentCoupleForAssessmentCouplesPartnerBSessionIdFkeyUsingAssessmentCouplesInviteCodeKeyUpdate = {
+  inviteCode: Scalars['String']['input'];
+  /** An object where the defined keys will be set on the `assessmentCouple` being updated. */
+  patch: UpdateAssessmentCoupleOnAssessmentCoupleForAssessmentCouplesPartnerBSessionIdFkeyPatch;
+};
+
+/** The fields on `assessmentCouple` to look up the row to update. */
+export type AssessmentCoupleOnAssessmentCoupleForAssessmentCouplesPartnerBSessionIdFkeyUsingAssessmentCouplesPkeyUpdate = {
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `assessmentCouple` being updated. */
+  patch: UpdateAssessmentCoupleOnAssessmentCoupleForAssessmentCouplesPartnerBSessionIdFkeyPatch;
+};
+
+/** The fields on `assessmentCouple` to look up the row to update. */
+export type AssessmentCoupleOnAssessmentCoupleForAssessmentCouplesPaymentIdFkeyUsingAssessmentCouplesInviteCodeKeyUpdate = {
+  inviteCode: Scalars['String']['input'];
+  /** An object where the defined keys will be set on the `assessmentCouple` being updated. */
+  patch: UpdateAssessmentCoupleOnAssessmentCoupleForAssessmentCouplesPaymentIdFkeyPatch;
+};
+
+/** The fields on `assessmentCouple` to look up the row to update. */
+export type AssessmentCoupleOnAssessmentCoupleForAssessmentCouplesPaymentIdFkeyUsingAssessmentCouplesPkeyUpdate = {
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `assessmentCouple` being updated. */
+  patch: UpdateAssessmentCoupleOnAssessmentCoupleForAssessmentCouplesPaymentIdFkeyPatch;
+};
+
+/** The fields on `assessmentCouple` to look up the row to update. */
+export type AssessmentCoupleOnAssessmentDomainResultForAssessmentDomainResultsCoupleIdFkeyUsingAssessmentCouplesInviteCodeKeyUpdate = {
+  inviteCode: Scalars['String']['input'];
+  /** An object where the defined keys will be set on the `assessmentCouple` being updated. */
+  patch: UpdateAssessmentCoupleOnAssessmentDomainResultForAssessmentDomainResultsCoupleIdFkeyPatch;
+};
+
+/** The fields on `assessmentCouple` to look up the row to update. */
+export type AssessmentCoupleOnAssessmentDomainResultForAssessmentDomainResultsCoupleIdFkeyUsingAssessmentCouplesPkeyUpdate = {
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `assessmentCouple` being updated. */
+  patch: UpdateAssessmentCoupleOnAssessmentDomainResultForAssessmentDomainResultsCoupleIdFkeyPatch;
+};
+
+/** The fields on `assessmentCouple` to look up the row to update. */
+export type AssessmentCoupleOnAssessmentResultForAssessmentResultsCoupleIdFkeyUsingAssessmentCouplesInviteCodeKeyUpdate = {
+  inviteCode: Scalars['String']['input'];
+  /** An object where the defined keys will be set on the `assessmentCouple` being updated. */
+  patch: UpdateAssessmentCoupleOnAssessmentResultForAssessmentResultsCoupleIdFkeyPatch;
+};
+
+/** The fields on `assessmentCouple` to look up the row to update. */
+export type AssessmentCoupleOnAssessmentResultForAssessmentResultsCoupleIdFkeyUsingAssessmentCouplesPkeyUpdate = {
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `assessmentCouple` being updated. */
+  patch: UpdateAssessmentCoupleOnAssessmentResultForAssessmentResultsCoupleIdFkeyPatch;
+};
+
+/** The fields on `assessmentCouple` to look up the row to update. */
+export type AssessmentCoupleOnAssessmentSessionForFkSessionsCoupleIdUsingAssessmentCouplesInviteCodeKeyUpdate = {
+  inviteCode: Scalars['String']['input'];
+  /** An object where the defined keys will be set on the `assessmentCouple` being updated. */
+  patch: UpdateAssessmentCoupleOnAssessmentSessionForFkSessionsCoupleIdPatch;
+};
+
+/** The fields on `assessmentCouple` to look up the row to update. */
+export type AssessmentCoupleOnAssessmentSessionForFkSessionsCoupleIdUsingAssessmentCouplesPkeyUpdate = {
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `assessmentCouple` being updated. */
+  patch: UpdateAssessmentCoupleOnAssessmentSessionForFkSessionsCoupleIdPatch;
+};
+
+/** A connection to a list of `Payment` values, with data from `AssessmentSession`. */
+export type AssessmentCouplePaymentsByAssessmentSessionCoupleIdAndPaymentIdManyToManyConnection = {
+  __typename?: 'AssessmentCouplePaymentsByAssessmentSessionCoupleIdAndPaymentIdManyToManyConnection';
+  /** A list of edges which contains the `Payment`, info from the `AssessmentSession`, and the cursor to aid in pagination. */
+  edges: Array<AssessmentCouplePaymentsByAssessmentSessionCoupleIdAndPaymentIdManyToManyEdge>;
+  /** A list of `Payment` objects. */
+  nodes: Array<Payment>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Payment` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `Payment` edge in the connection, with data from `AssessmentSession`. */
+export type AssessmentCouplePaymentsByAssessmentSessionCoupleIdAndPaymentIdManyToManyEdge = {
+  __typename?: 'AssessmentCouplePaymentsByAssessmentSessionCoupleIdAndPaymentIdManyToManyEdge';
+  /** Reads and enables pagination through a set of `AssessmentSession`. */
+  assessmentSessions: AssessmentSessionsConnection;
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `Payment` at the end of the edge. */
+  node: Payment;
+};
+
+
+/** A `Payment` edge in the connection, with data from `AssessmentSession`. */
+export type AssessmentCouplePaymentsByAssessmentSessionCoupleIdAndPaymentIdManyToManyEdgeAssessmentSessionsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentSessionCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentSessionsOrderBy>>;
+};
+
+/** A connection to a list of `User` values, with data from `AssessmentResult`. */
+export type AssessmentCoupleUsersByAssessmentResultCoupleIdAndUserIdManyToManyConnection = {
+  __typename?: 'AssessmentCoupleUsersByAssessmentResultCoupleIdAndUserIdManyToManyConnection';
+  /** A list of edges which contains the `User`, info from the `AssessmentResult`, and the cursor to aid in pagination. */
+  edges: Array<AssessmentCoupleUsersByAssessmentResultCoupleIdAndUserIdManyToManyEdge>;
+  /** A list of `User` objects. */
+  nodes: Array<User>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `User` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `User` edge in the connection, with data from `AssessmentResult`. */
+export type AssessmentCoupleUsersByAssessmentResultCoupleIdAndUserIdManyToManyEdge = {
+  __typename?: 'AssessmentCoupleUsersByAssessmentResultCoupleIdAndUserIdManyToManyEdge';
+  /** Reads and enables pagination through a set of `AssessmentResult`. */
+  assessmentResults: AssessmentResultsConnection;
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `User` at the end of the edge. */
+  node: User;
+};
+
+
+/** A `User` edge in the connection, with data from `AssessmentResult`. */
+export type AssessmentCoupleUsersByAssessmentResultCoupleIdAndUserIdManyToManyEdgeAssessmentResultsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentResultCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentResultsOrderBy>>;
+};
+
+/** A connection to a list of `User` values, with data from `AssessmentSession`. */
+export type AssessmentCoupleUsersByAssessmentSessionCoupleIdAndUserIdManyToManyConnection = {
+  __typename?: 'AssessmentCoupleUsersByAssessmentSessionCoupleIdAndUserIdManyToManyConnection';
+  /** A list of edges which contains the `User`, info from the `AssessmentSession`, and the cursor to aid in pagination. */
+  edges: Array<AssessmentCoupleUsersByAssessmentSessionCoupleIdAndUserIdManyToManyEdge>;
+  /** A list of `User` objects. */
+  nodes: Array<User>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `User` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `User` edge in the connection, with data from `AssessmentSession`. */
+export type AssessmentCoupleUsersByAssessmentSessionCoupleIdAndUserIdManyToManyEdge = {
+  __typename?: 'AssessmentCoupleUsersByAssessmentSessionCoupleIdAndUserIdManyToManyEdge';
+  /** Reads and enables pagination through a set of `AssessmentSession`. */
+  assessmentSessions: AssessmentSessionsConnection;
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `User` at the end of the edge. */
+  node: User;
+};
+
+
+/** A `User` edge in the connection, with data from `AssessmentSession`. */
+export type AssessmentCoupleUsersByAssessmentSessionCoupleIdAndUserIdManyToManyEdgeAssessmentSessionsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentSessionCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentSessionsOrderBy>>;
+};
+
+/** Input for the nested mutation of `assessmentType` in the `AssessmentCoupleInput` mutation. */
+export type AssessmentCouplesAssessmentTypeCodeFkeyInput = {
+  /** The primary key(s) for `assessmentType` for the far side of the relationship. */
+  connectByCode?: InputMaybe<AssessmentTypeAssessmentTypesCodeKeyConnect>;
+  /** The primary key(s) for `assessmentType` for the far side of the relationship. */
+  connectById?: InputMaybe<AssessmentTypeAssessmentTypesPkeyConnect>;
+  /** The primary key(s) and patch data for `assessmentType` for the far side of the relationship. */
+  updateByCode?: InputMaybe<AssessmentTypeOnAssessmentCoupleForAssessmentCouplesAssessmentTypeCodeFkeyUsingAssessmentTypesCodeKeyUpdate>;
+  /** The primary key(s) and patch data for `assessmentType` for the far side of the relationship. */
+  updateById?: InputMaybe<AssessmentTypeOnAssessmentCoupleForAssessmentCouplesAssessmentTypeCodeFkeyUsingAssessmentTypesPkeyUpdate>;
+};
+
+/** Input for the nested mutation of `assessmentCouple` in the `AssessmentTypeInput` mutation. */
+export type AssessmentCouplesAssessmentTypeCodeFkeyInverseInput = {
+  /** The primary key(s) for `assessmentCouple` for the far side of the relationship. */
+  connectById?: InputMaybe<Array<AssessmentCoupleAssessmentCouplesPkeyConnect>>;
+  /** The primary key(s) for `assessmentCouple` for the far side of the relationship. */
+  connectByInviteCode?: InputMaybe<Array<AssessmentCoupleAssessmentCouplesInviteCodeKeyConnect>>;
+  /** The primary key(s) and patch data for `assessmentCouple` for the far side of the relationship. */
+  updateById?: InputMaybe<Array<AssessmentCoupleOnAssessmentCoupleForAssessmentCouplesAssessmentTypeCodeFkeyUsingAssessmentCouplesPkeyUpdate>>;
+  /** The primary key(s) and patch data for `assessmentCouple` for the far side of the relationship. */
+  updateByInviteCode?: InputMaybe<Array<AssessmentCoupleOnAssessmentCoupleForAssessmentCouplesAssessmentTypeCodeFkeyUsingAssessmentCouplesInviteCodeKeyUpdate>>;
+};
+
+/** A connection to a list of `AssessmentCouple` values. */
+export type AssessmentCouplesConnection = {
+  __typename?: 'AssessmentCouplesConnection';
+  /** A list of edges which contains the `AssessmentCouple` and cursor to aid in pagination. */
+  edges: Array<AssessmentCouplesEdge>;
+  /** A list of `AssessmentCouple` objects. */
+  nodes: Array<AssessmentCouple>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `AssessmentCouple` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `AssessmentCouple` edge in the connection. */
+export type AssessmentCouplesEdge = {
+  __typename?: 'AssessmentCouplesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `AssessmentCouple` at the end of the edge. */
+  node: AssessmentCouple;
+};
+
+/** Methods to use when ordering `AssessmentCouple`. */
+export enum AssessmentCouplesOrderBy {
+  AssessmentTypeCodeAsc = 'ASSESSMENT_TYPE_CODE_ASC',
+  AssessmentTypeCodeDesc = 'ASSESSMENT_TYPE_CODE_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  InviteCodeAsc = 'INVITE_CODE_ASC',
+  InviteCodeDesc = 'INVITE_CODE_DESC',
+  Natural = 'NATURAL',
+  PartnerASessionIdAsc = 'PARTNER_A_SESSION_ID_ASC',
+  PartnerASessionIdDesc = 'PARTNER_A_SESSION_ID_DESC',
+  PartnerBSessionIdAsc = 'PARTNER_B_SESSION_ID_ASC',
+  PartnerBSessionIdDesc = 'PARTNER_B_SESSION_ID_DESC',
+  PaymentIdAsc = 'PAYMENT_ID_ASC',
+  PaymentIdDesc = 'PAYMENT_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** Input for the nested mutation of `assessmentSession` in the `AssessmentCoupleInput` mutation. */
+export type AssessmentCouplesPartnerASessionIdFkeyInput = {
+  /** The primary key(s) for `assessmentSession` for the far side of the relationship. */
+  connectById?: InputMaybe<AssessmentSessionAssessmentSessionsPkeyConnect>;
+  /** The primary key(s) and patch data for `assessmentSession` for the far side of the relationship. */
+  updateById?: InputMaybe<AssessmentSessionOnAssessmentCoupleForAssessmentCouplesPartnerASessionIdFkeyUsingAssessmentSessionsPkeyUpdate>;
+};
+
+/** Input for the nested mutation of `assessmentCouple` in the `AssessmentSessionInput` mutation. */
+export type AssessmentCouplesPartnerASessionIdFkeyInverseInput = {
+  /** The primary key(s) for `assessmentCouple` for the far side of the relationship. */
+  connectById?: InputMaybe<Array<AssessmentCoupleAssessmentCouplesPkeyConnect>>;
+  /** The primary key(s) for `assessmentCouple` for the far side of the relationship. */
+  connectByInviteCode?: InputMaybe<Array<AssessmentCoupleAssessmentCouplesInviteCodeKeyConnect>>;
+  /** The primary key(s) and patch data for `assessmentCouple` for the far side of the relationship. */
+  updateById?: InputMaybe<Array<AssessmentCoupleOnAssessmentCoupleForAssessmentCouplesPartnerASessionIdFkeyUsingAssessmentCouplesPkeyUpdate>>;
+  /** The primary key(s) and patch data for `assessmentCouple` for the far side of the relationship. */
+  updateByInviteCode?: InputMaybe<Array<AssessmentCoupleOnAssessmentCoupleForAssessmentCouplesPartnerASessionIdFkeyUsingAssessmentCouplesInviteCodeKeyUpdate>>;
+};
+
+/** Input for the nested mutation of `assessmentSession` in the `AssessmentCoupleInput` mutation. */
+export type AssessmentCouplesPartnerBSessionIdFkeyInput = {
+  /** The primary key(s) for `assessmentSession` for the far side of the relationship. */
+  connectById?: InputMaybe<AssessmentSessionAssessmentSessionsPkeyConnect>;
+  /** The primary key(s) and patch data for `assessmentSession` for the far side of the relationship. */
+  updateById?: InputMaybe<AssessmentSessionOnAssessmentCoupleForAssessmentCouplesPartnerBSessionIdFkeyUsingAssessmentSessionsPkeyUpdate>;
+};
+
+/** Input for the nested mutation of `assessmentCouple` in the `AssessmentSessionInput` mutation. */
+export type AssessmentCouplesPartnerBSessionIdFkeyInverseInput = {
+  /** The primary key(s) for `assessmentCouple` for the far side of the relationship. */
+  connectById?: InputMaybe<Array<AssessmentCoupleAssessmentCouplesPkeyConnect>>;
+  /** The primary key(s) for `assessmentCouple` for the far side of the relationship. */
+  connectByInviteCode?: InputMaybe<Array<AssessmentCoupleAssessmentCouplesInviteCodeKeyConnect>>;
+  /** The primary key(s) and patch data for `assessmentCouple` for the far side of the relationship. */
+  updateById?: InputMaybe<Array<AssessmentCoupleOnAssessmentCoupleForAssessmentCouplesPartnerBSessionIdFkeyUsingAssessmentCouplesPkeyUpdate>>;
+  /** The primary key(s) and patch data for `assessmentCouple` for the far side of the relationship. */
+  updateByInviteCode?: InputMaybe<Array<AssessmentCoupleOnAssessmentCoupleForAssessmentCouplesPartnerBSessionIdFkeyUsingAssessmentCouplesInviteCodeKeyUpdate>>;
+};
+
+/** Input for the nested mutation of `payment` in the `AssessmentCoupleInput` mutation. */
+export type AssessmentCouplesPaymentIdFkeyInput = {
+  /** The primary key(s) for `payment` for the far side of the relationship. */
+  connectById?: InputMaybe<PaymentPaymentsPkeyConnect>;
+  /** The primary key(s) for `payment` for the far side of the relationship. */
+  connectByRazorpayOrderId?: InputMaybe<PaymentPaymentsRazorpayOrderIdKeyConnect>;
+  /** The primary key(s) for `payment` for the far side of the relationship. */
+  connectByRazorpayPaymentId?: InputMaybe<PaymentPaymentsRazorpayPaymentIdKeyConnect>;
+  /** The primary key(s) and patch data for `payment` for the far side of the relationship. */
+  updateById?: InputMaybe<PaymentOnAssessmentCoupleForAssessmentCouplesPaymentIdFkeyUsingPaymentsPkeyUpdate>;
+  /** The primary key(s) and patch data for `payment` for the far side of the relationship. */
+  updateByRazorpayOrderId?: InputMaybe<PaymentOnAssessmentCoupleForAssessmentCouplesPaymentIdFkeyUsingPaymentsRazorpayOrderIdKeyUpdate>;
+  /** The primary key(s) and patch data for `payment` for the far side of the relationship. */
+  updateByRazorpayPaymentId?: InputMaybe<PaymentOnAssessmentCoupleForAssessmentCouplesPaymentIdFkeyUsingPaymentsRazorpayPaymentIdKeyUpdate>;
+};
+
+/** Input for the nested mutation of `assessmentCouple` in the `PaymentInput` mutation. */
+export type AssessmentCouplesPaymentIdFkeyInverseInput = {
+  /** The primary key(s) for `assessmentCouple` for the far side of the relationship. */
+  connectById?: InputMaybe<Array<AssessmentCoupleAssessmentCouplesPkeyConnect>>;
+  /** The primary key(s) for `assessmentCouple` for the far side of the relationship. */
+  connectByInviteCode?: InputMaybe<Array<AssessmentCoupleAssessmentCouplesInviteCodeKeyConnect>>;
+  /** The primary key(s) and patch data for `assessmentCouple` for the far side of the relationship. */
+  updateById?: InputMaybe<Array<AssessmentCoupleOnAssessmentCoupleForAssessmentCouplesPaymentIdFkeyUsingAssessmentCouplesPkeyUpdate>>;
+  /** The primary key(s) and patch data for `assessmentCouple` for the far side of the relationship. */
+  updateByInviteCode?: InputMaybe<Array<AssessmentCoupleOnAssessmentCoupleForAssessmentCouplesPaymentIdFkeyUsingAssessmentCouplesInviteCodeKeyUpdate>>;
+};
+
+/** Per-domain dyadic assessment results: individual partner scores, couple averages, and alignment gaps. */
+export type AssessmentDomainResult = {
+  __typename?: 'AssessmentDomainResult';
+  alignmentGap: Scalars['BigFloat']['output'];
+  assessmentTypeCode: Scalars['String']['output'];
+  /** Reads a single `AssessmentCouple` that is related to this `AssessmentDomainResult`. */
+  couple?: Maybe<AssessmentCouple>;
+  coupleAverage: Scalars['BigFloat']['output'];
+  coupleId: Scalars['UUID']['output'];
+  createdAt: Scalars['Datetime']['output'];
+  domainKey: Scalars['String']['output'];
+  domainName: Scalars['String']['output'];
+  gapLabel: Scalars['String']['output'];
+  id: Scalars['UUID']['output'];
+  partnerAScore: Scalars['BigFloat']['output'];
+  partnerBScore: Scalars['BigFloat']['output'];
+  strengthLabel: Scalars['String']['output'];
+};
+
+/** The fields on `assessmentDomainResult` to look up the row to connect. */
+export type AssessmentDomainResultAssessmentDomainResultsCoupleIdDomainKeyKeyConnect = {
+  coupleId: Scalars['UUID']['input'];
+  domainKey: Scalars['String']['input'];
+};
+
+/** The fields on `assessmentDomainResult` to look up the row to connect. */
+export type AssessmentDomainResultAssessmentDomainResultsPkeyConnect = {
+  id: Scalars['UUID']['input'];
+};
+
+/**
+ * A condition to be used against `AssessmentDomainResult` object types. All fields
+ * are tested for equality and combined with a logical ‘and.’
+ */
+export type AssessmentDomainResultCondition = {
+  /** Checks for equality with the object’s `coupleId` field. */
+  coupleId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** The fields on `assessmentDomainResult` to look up the row to update. */
+export type AssessmentDomainResultOnAssessmentDomainResultForAssessmentDomainResultsCoupleIdFkeyUsingAssessmentDomainResultsCoupleIdDomainKeyKeyUpdate = {
+  coupleId: Scalars['UUID']['input'];
+  domainKey: Scalars['String']['input'];
+  /** An object where the defined keys will be set on the `assessmentDomainResult` being updated. */
+  patch: UpdateAssessmentDomainResultOnAssessmentDomainResultForAssessmentDomainResultsCoupleIdFkeyPatch;
+};
+
+/** The fields on `assessmentDomainResult` to look up the row to update. */
+export type AssessmentDomainResultOnAssessmentDomainResultForAssessmentDomainResultsCoupleIdFkeyUsingAssessmentDomainResultsPkeyUpdate = {
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `assessmentDomainResult` being updated. */
+  patch: UpdateAssessmentDomainResultOnAssessmentDomainResultForAssessmentDomainResultsCoupleIdFkeyPatch;
+};
+
+/** A connection to a list of `AssessmentDomainResult` values. */
+export type AssessmentDomainResultsConnection = {
+  __typename?: 'AssessmentDomainResultsConnection';
+  /** A list of edges which contains the `AssessmentDomainResult` and cursor to aid in pagination. */
+  edges: Array<AssessmentDomainResultsEdge>;
+  /** A list of `AssessmentDomainResult` objects. */
+  nodes: Array<AssessmentDomainResult>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `AssessmentDomainResult` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** Input for the nested mutation of `assessmentCouple` in the `AssessmentDomainResultInput` mutation. */
+export type AssessmentDomainResultsCoupleIdFkeyInput = {
+  /** The primary key(s) for `assessmentCouple` for the far side of the relationship. */
+  connectById?: InputMaybe<AssessmentCoupleAssessmentCouplesPkeyConnect>;
+  /** The primary key(s) for `assessmentCouple` for the far side of the relationship. */
+  connectByInviteCode?: InputMaybe<AssessmentCoupleAssessmentCouplesInviteCodeKeyConnect>;
+  /** The primary key(s) and patch data for `assessmentCouple` for the far side of the relationship. */
+  updateById?: InputMaybe<AssessmentCoupleOnAssessmentDomainResultForAssessmentDomainResultsCoupleIdFkeyUsingAssessmentCouplesPkeyUpdate>;
+  /** The primary key(s) and patch data for `assessmentCouple` for the far side of the relationship. */
+  updateByInviteCode?: InputMaybe<AssessmentCoupleOnAssessmentDomainResultForAssessmentDomainResultsCoupleIdFkeyUsingAssessmentCouplesInviteCodeKeyUpdate>;
+};
+
+/** Input for the nested mutation of `assessmentDomainResult` in the `AssessmentCoupleInput` mutation. */
+export type AssessmentDomainResultsCoupleIdFkeyInverseInput = {
+  /** The primary key(s) for `assessmentDomainResult` for the far side of the relationship. */
+  connectByCoupleIdAndDomainKey?: InputMaybe<Array<AssessmentDomainResultAssessmentDomainResultsCoupleIdDomainKeyKeyConnect>>;
+  /** The primary key(s) for `assessmentDomainResult` for the far side of the relationship. */
+  connectById?: InputMaybe<Array<AssessmentDomainResultAssessmentDomainResultsPkeyConnect>>;
+  /** The primary key(s) and patch data for `assessmentDomainResult` for the far side of the relationship. */
+  updateByCoupleIdAndDomainKey?: InputMaybe<Array<AssessmentDomainResultOnAssessmentDomainResultForAssessmentDomainResultsCoupleIdFkeyUsingAssessmentDomainResultsCoupleIdDomainKeyKeyUpdate>>;
+  /** The primary key(s) and patch data for `assessmentDomainResult` for the far side of the relationship. */
+  updateById?: InputMaybe<Array<AssessmentDomainResultOnAssessmentDomainResultForAssessmentDomainResultsCoupleIdFkeyUsingAssessmentDomainResultsPkeyUpdate>>;
+};
+
+/** A `AssessmentDomainResult` edge in the connection. */
+export type AssessmentDomainResultsEdge = {
+  __typename?: 'AssessmentDomainResultsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `AssessmentDomainResult` at the end of the edge. */
+  node: AssessmentDomainResult;
+};
+
+/** Methods to use when ordering `AssessmentDomainResult`. */
+export enum AssessmentDomainResultsOrderBy {
+  CoupleIdAsc = 'COUPLE_ID_ASC',
+  CoupleIdDesc = 'COUPLE_ID_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
 /** Score interpretation bands for the assessment results. Narratives are shared across all sections. */
 export type AssessmentInterpretationBand = {
   __typename?: 'AssessmentInterpretationBand';
+  /** Reads and enables pagination through a set of `AssessmentCouple`. */
+  assessmentCouplesByAssessmentResultInterpretationBandIdAndCoupleId: AssessmentInterpretationBandAssessmentCouplesByAssessmentResultInterpretationBandIdAndCoupleIdManyToManyConnection;
   /** Reads and enables pagination through a set of `AssessmentRecommendedAction`. */
   assessmentRecommendedActionsByInterpretationBandId: AssessmentRecommendedActionsConnection;
   /** Reads and enables pagination through a set of `AssessmentResult`. */
@@ -369,6 +1108,18 @@ export type AssessmentInterpretationBand = {
   updatedAt: Scalars['Datetime']['output'];
   /** Reads and enables pagination through a set of `User`. */
   usersByAssessmentResultInterpretationBandIdAndUserId: AssessmentInterpretationBandUsersByAssessmentResultInterpretationBandIdAndUserIdManyToManyConnection;
+};
+
+
+/** Score interpretation bands for the assessment results. Narratives are shared across all sections. */
+export type AssessmentInterpretationBandAssessmentCouplesByAssessmentResultInterpretationBandIdAndCoupleIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentCoupleCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentCouplesOrderBy>>;
 };
 
 
@@ -453,6 +1204,42 @@ export type AssessmentInterpretationBandUsersByAssessmentResultInterpretationBan
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<UsersOrderBy>>;
+};
+
+/** A connection to a list of `AssessmentCouple` values, with data from `AssessmentResult`. */
+export type AssessmentInterpretationBandAssessmentCouplesByAssessmentResultInterpretationBandIdAndCoupleIdManyToManyConnection = {
+  __typename?: 'AssessmentInterpretationBandAssessmentCouplesByAssessmentResultInterpretationBandIdAndCoupleIdManyToManyConnection';
+  /** A list of edges which contains the `AssessmentCouple`, info from the `AssessmentResult`, and the cursor to aid in pagination. */
+  edges: Array<AssessmentInterpretationBandAssessmentCouplesByAssessmentResultInterpretationBandIdAndCoupleIdManyToManyEdge>;
+  /** A list of `AssessmentCouple` objects. */
+  nodes: Array<AssessmentCouple>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `AssessmentCouple` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `AssessmentCouple` edge in the connection, with data from `AssessmentResult`. */
+export type AssessmentInterpretationBandAssessmentCouplesByAssessmentResultInterpretationBandIdAndCoupleIdManyToManyEdge = {
+  __typename?: 'AssessmentInterpretationBandAssessmentCouplesByAssessmentResultInterpretationBandIdAndCoupleIdManyToManyEdge';
+  /** Reads and enables pagination through a set of `AssessmentResult`. */
+  assessmentResultsByCoupleId: AssessmentResultsConnection;
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `AssessmentCouple` at the end of the edge. */
+  node: AssessmentCouple;
+};
+
+
+/** A `AssessmentCouple` edge in the connection, with data from `AssessmentResult`. */
+export type AssessmentInterpretationBandAssessmentCouplesByAssessmentResultInterpretationBandIdAndCoupleIdManyToManyEdgeAssessmentResultsByCoupleIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentResultCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentResultsOrderBy>>;
 };
 
 /** The fields on `assessmentInterpretationBand` to look up the row to connect. */
@@ -732,6 +1519,8 @@ export type AssessmentProgressPayload = {
 /** Questions for the psychometric assessment test. Default 50 questions (10 per section) are seeded from the Silver Spring Retirement Readiness Assessment. Admins can add additional questions to any section. */
 export type AssessmentQuestion = {
   __typename?: 'AssessmentQuestion';
+  /** Optional labeled answer choices. NULL = numeric scale from assessment_type. Non-null = [{value: Int, label: String}, ...]. */
+  answerOptions?: Maybe<Scalars['JSON']['output']>;
   /** Reads and enables pagination through a set of `AssessmentResponse`. */
   assessmentResponsesByQuestionId: AssessmentResponsesConnection;
   /** Reads and enables pagination through a set of `AssessmentSessionQuestion`. */
@@ -745,6 +1534,8 @@ export type AssessmentQuestion = {
   displayOrder: Scalars['Int']['output'];
   id: Scalars['UUID']['output'];
   isActive: Scalars['Boolean']['output'];
+  /** scored = counted in section score (default). profile = displayed/stored but excluded from scoring. */
+  questionCategory: Scalars['String']['output'];
   /** The actual question text to be displayed to the user */
   questionText: Scalars['String']['output'];
   /** Reads a single `AssessmentSection` that is related to this `AssessmentQuestion`. */
@@ -1293,6 +2084,14 @@ export type AssessmentResult = {
    * Frontend can display any combination of available cohorts.
    */
   cohortComparison?: Maybe<CohortComparison>;
+  /** Reads a single `AssessmentCouple` that is related to this `AssessmentResult`. */
+  couple?: Maybe<AssessmentCouple>;
+  /** For dyadic assessments — links back to the couple record. NULL for individual assessments. */
+  coupleId?: Maybe<Scalars['UUID']['output']>;
+  /** Derived readiness label from couple_total_score. NULL for individual types. */
+  coupleReadinessLabel?: Maybe<Scalars['String']['output']>;
+  /** Combined couple total (partner_a_total + partner_b_total). Populated when both complete. NULL for individual types. */
+  coupleTotalScore?: Maybe<Scalars['Int']['output']>;
   createdAt: Scalars['Datetime']['output'];
   /** Timestamp when the report was emailed */
   emailedAt?: Maybe<Scalars['Datetime']['output']>;
@@ -1308,6 +2107,8 @@ export type AssessmentResult = {
   interpretationNarrative?: Maybe<Scalars['String']['output']>;
   /** Whether the report has been emailed to the user */
   isEmailed: Scalars['Boolean']['output'];
+  /** Raw sum of this partner's domain scores (e.g. 18–72 for CRTRA). NULL for individual types. */
+  partnerTotalScore?: Maybe<Scalars['Int']['output']>;
   /** File path to the generated PDF report */
   pdfPath?: Maybe<Scalars['String']['output']>;
   /** Array of recommended actions based on assessment results */
@@ -1455,6 +2256,8 @@ export type AssessmentResultAssessmentSectionsByAssessmentSectionResultResultIdA
 export type AssessmentResultCondition = {
   /** Checks for equality with the object’s `assessmentTypeCode` field. */
   assessmentTypeCode?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `coupleId` field. */
+  coupleId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `id` field. */
@@ -1482,6 +2285,21 @@ export type AssessmentResultOnAssessmentResultForAssessmentResultsAssessmentType
 export type AssessmentResultOnAssessmentResultForAssessmentResultsAssessmentTypeCodeFkeyUsingAssessmentResultsSessionIdKeyUpdate = {
   /** An object where the defined keys will be set on the `assessmentResult` being updated. */
   patch: UpdateAssessmentResultOnAssessmentResultForAssessmentResultsAssessmentTypeCodeFkeyPatch;
+  /** Unique reference to the assessment session */
+  sessionId: Scalars['UUID']['input'];
+};
+
+/** The fields on `assessmentResult` to look up the row to update. */
+export type AssessmentResultOnAssessmentResultForAssessmentResultsCoupleIdFkeyUsingAssessmentResultsPkeyUpdate = {
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `assessmentResult` being updated. */
+  patch: UpdateAssessmentResultOnAssessmentResultForAssessmentResultsCoupleIdFkeyPatch;
+};
+
+/** The fields on `assessmentResult` to look up the row to update. */
+export type AssessmentResultOnAssessmentResultForAssessmentResultsCoupleIdFkeyUsingAssessmentResultsSessionIdKeyUpdate = {
+  /** An object where the defined keys will be set on the `assessmentResult` being updated. */
+  patch: UpdateAssessmentResultOnAssessmentResultForAssessmentResultsCoupleIdFkeyPatch;
   /** Unique reference to the assessment session */
   sessionId: Scalars['UUID']['input'];
 };
@@ -1583,6 +2401,30 @@ export type AssessmentResultsConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
+/** Input for the nested mutation of `assessmentCouple` in the `AssessmentResultInput` mutation. */
+export type AssessmentResultsCoupleIdFkeyInput = {
+  /** The primary key(s) for `assessmentCouple` for the far side of the relationship. */
+  connectById?: InputMaybe<AssessmentCoupleAssessmentCouplesPkeyConnect>;
+  /** The primary key(s) for `assessmentCouple` for the far side of the relationship. */
+  connectByInviteCode?: InputMaybe<AssessmentCoupleAssessmentCouplesInviteCodeKeyConnect>;
+  /** The primary key(s) and patch data for `assessmentCouple` for the far side of the relationship. */
+  updateById?: InputMaybe<AssessmentCoupleOnAssessmentResultForAssessmentResultsCoupleIdFkeyUsingAssessmentCouplesPkeyUpdate>;
+  /** The primary key(s) and patch data for `assessmentCouple` for the far side of the relationship. */
+  updateByInviteCode?: InputMaybe<AssessmentCoupleOnAssessmentResultForAssessmentResultsCoupleIdFkeyUsingAssessmentCouplesInviteCodeKeyUpdate>;
+};
+
+/** Input for the nested mutation of `assessmentResult` in the `AssessmentCoupleInput` mutation. */
+export type AssessmentResultsCoupleIdFkeyInverseInput = {
+  /** The primary key(s) for `assessmentResult` for the far side of the relationship. */
+  connectById?: InputMaybe<Array<AssessmentResultAssessmentResultsPkeyConnect>>;
+  /** The primary key(s) for `assessmentResult` for the far side of the relationship. */
+  connectBySessionId?: InputMaybe<Array<AssessmentResultAssessmentResultsSessionIdKeyConnect>>;
+  /** The primary key(s) and patch data for `assessmentResult` for the far side of the relationship. */
+  updateById?: InputMaybe<Array<AssessmentResultOnAssessmentResultForAssessmentResultsCoupleIdFkeyUsingAssessmentResultsPkeyUpdate>>;
+  /** The primary key(s) and patch data for `assessmentResult` for the far side of the relationship. */
+  updateBySessionId?: InputMaybe<Array<AssessmentResultOnAssessmentResultForAssessmentResultsCoupleIdFkeyUsingAssessmentResultsSessionIdKeyUpdate>>;
+};
+
 /** A `AssessmentResult` edge in the connection. */
 export type AssessmentResultsEdge = {
   __typename?: 'AssessmentResultsEdge';
@@ -1616,6 +2458,8 @@ export type AssessmentResultsInterpretationBandIdFkeyInverseInput = {
 export enum AssessmentResultsOrderBy {
   AssessmentTypeCodeAsc = 'ASSESSMENT_TYPE_CODE_ASC',
   AssessmentTypeCodeDesc = 'ASSESSMENT_TYPE_CODE_DESC',
+  CoupleIdAsc = 'COUPLE_ID_ASC',
+  CoupleIdDesc = 'COUPLE_ID_DESC',
   CreatedAtAsc = 'CREATED_AT_ASC',
   CreatedAtDesc = 'CREATED_AT_DESC',
   IdAsc = 'ID_ASC',
@@ -1706,6 +2550,8 @@ export type AssessmentSection = {
   isActive: Scalars['Boolean']['output'];
   /** Display name of the section */
   name: Scalars['String']['output'];
+  /** scored = contributes to assessment score (default). profile = all questions always included, never randomly sampled. */
+  sectionCategory: Scalars['String']['output'];
   /** Italic tagline on PDF dimension intro pages (e.g. Who am I without work?) */
   subtitle?: Maybe<Scalars['String']['output']>;
   /** Type of the assessment section (unique) */
@@ -2260,6 +3106,10 @@ export enum AssessmentSectionsOrderBy {
 /** Assessment test sessions for users. Each user can only have one session per payment. */
 export type AssessmentSession = {
   __typename?: 'AssessmentSession';
+  /** Reads and enables pagination through a set of `AssessmentCouple`. */
+  assessmentCouplesByPartnerASessionId: AssessmentCouplesConnection;
+  /** Reads and enables pagination through a set of `AssessmentCouple`. */
+  assessmentCouplesByPartnerBSessionId: AssessmentCouplesConnection;
   /** Reads and enables pagination through a set of `AssessmentQuestion`. */
   assessmentQuestionsByAssessmentResponseSessionIdAndQuestionId: AssessmentSessionAssessmentQuestionsByAssessmentResponseSessionIdAndQuestionIdManyToManyConnection;
   /** Reads and enables pagination through a set of `AssessmentQuestion`. */
@@ -2275,10 +3125,22 @@ export type AssessmentSession = {
   assessmentResultsBySessionId: AssessmentResultsConnection;
   /** Reads and enables pagination through a set of `AssessmentSessionQuestion`. */
   assessmentSessionQuestionsBySessionId: AssessmentSessionQuestionsConnection;
+  /** Reads and enables pagination through a set of `AssessmentSession`. */
+  assessmentSessionsByAssessmentCouplePartnerASessionIdAndPartnerBSessionId: AssessmentSessionAssessmentSessionsByAssessmentCouplePartnerASessionIdAndPartnerBSessionIdManyToManyConnection;
+  /** Reads and enables pagination through a set of `AssessmentSession`. */
+  assessmentSessionsByAssessmentCouplePartnerBSessionIdAndPartnerASessionId: AssessmentSessionAssessmentSessionsByAssessmentCouplePartnerBSessionIdAndPartnerASessionIdManyToManyConnection;
   /** Reads a single `AssessmentType` that is related to this `AssessmentSession`. */
   assessmentTypeByAssessmentTypeCode?: Maybe<AssessmentType>;
   assessmentTypeCode: Scalars['String']['output'];
+  /** Reads and enables pagination through a set of `AssessmentType`. */
+  assessmentTypesByAssessmentCouplePartnerASessionIdAndAssessmentTypeCode: AssessmentSessionAssessmentTypesByAssessmentCouplePartnerASessionIdAndAssessmentTypeCodeManyToManyConnection;
+  /** Reads and enables pagination through a set of `AssessmentType`. */
+  assessmentTypesByAssessmentCouplePartnerBSessionIdAndAssessmentTypeCode: AssessmentSessionAssessmentTypesByAssessmentCouplePartnerBSessionIdAndAssessmentTypeCodeManyToManyConnection;
   completionTime?: Maybe<Scalars['Datetime']['output']>;
+  /** Reads a single `AssessmentCouple` that is related to this `AssessmentSession`. */
+  couple?: Maybe<AssessmentCouple>;
+  /** References assessment_couples.id for dyadic assessments. NULL for individual. */
+  coupleId?: Maybe<Scalars['UUID']['output']>;
   createdAt: Scalars['Datetime']['output'];
   /** Current question number (1-50) for resume capability */
   currentQuestionNumber: Scalars['Int']['output'];
@@ -2289,10 +3151,16 @@ export type AssessmentSession = {
   lastActivityTime: Scalars['Datetime']['output'];
   /** The last question number that the user actually answered (separate from current_question_number which tracks navigation) */
   lastAnsweredQuestion?: Maybe<Scalars['Int']['output']>;
+  /** partner_a or partner_b for dyadic assessments. NULL for individual assessments. */
+  partnerRole?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Payment` that is related to this `AssessmentSession`. */
   payment?: Maybe<Payment>;
   /** Reference to the payment made for this assessment. Nullable for internal users who can test without payment. Payment validation is enforced in start_assessment_session function. */
   paymentId?: Maybe<Scalars['UUID']['output']>;
+  /** Reads and enables pagination through a set of `Payment`. */
+  paymentsByAssessmentCouplePartnerASessionIdAndPaymentId: AssessmentSessionPaymentsByAssessmentCouplePartnerASessionIdAndPaymentIdManyToManyConnection;
+  /** Reads and enables pagination through a set of `Payment`. */
+  paymentsByAssessmentCouplePartnerBSessionIdAndPaymentId: AssessmentSessionPaymentsByAssessmentCouplePartnerBSessionIdAndPaymentIdManyToManyConnection;
   startTime: Scalars['Datetime']['output'];
   /** Current status of the assessment session */
   status: AssessmentStatus;
@@ -2300,6 +3168,30 @@ export type AssessmentSession = {
   /** Reads a single `User` that is related to this `AssessmentSession`. */
   user?: Maybe<User>;
   userId: Scalars['UUID']['output'];
+};
+
+
+/** Assessment test sessions for users. Each user can only have one session per payment. */
+export type AssessmentSessionAssessmentCouplesByPartnerASessionIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentCoupleCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentCouplesOrderBy>>;
+};
+
+
+/** Assessment test sessions for users. Each user can only have one session per payment. */
+export type AssessmentSessionAssessmentCouplesByPartnerBSessionIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentCoupleCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentCouplesOrderBy>>;
 };
 
 
@@ -2362,6 +3254,78 @@ export type AssessmentSessionAssessmentSessionQuestionsBySessionIdArgs = {
   orderBy?: InputMaybe<Array<AssessmentSessionQuestionsOrderBy>>;
 };
 
+
+/** Assessment test sessions for users. Each user can only have one session per payment. */
+export type AssessmentSessionAssessmentSessionsByAssessmentCouplePartnerASessionIdAndPartnerBSessionIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentSessionCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentSessionsOrderBy>>;
+};
+
+
+/** Assessment test sessions for users. Each user can only have one session per payment. */
+export type AssessmentSessionAssessmentSessionsByAssessmentCouplePartnerBSessionIdAndPartnerASessionIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentSessionCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentSessionsOrderBy>>;
+};
+
+
+/** Assessment test sessions for users. Each user can only have one session per payment. */
+export type AssessmentSessionAssessmentTypesByAssessmentCouplePartnerASessionIdAndAssessmentTypeCodeArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentTypeCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentTypesOrderBy>>;
+};
+
+
+/** Assessment test sessions for users. Each user can only have one session per payment. */
+export type AssessmentSessionAssessmentTypesByAssessmentCouplePartnerBSessionIdAndAssessmentTypeCodeArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentTypeCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentTypesOrderBy>>;
+};
+
+
+/** Assessment test sessions for users. Each user can only have one session per payment. */
+export type AssessmentSessionPaymentsByAssessmentCouplePartnerASessionIdAndPaymentIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<PaymentCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PaymentsOrderBy>>;
+};
+
+
+/** Assessment test sessions for users. Each user can only have one session per payment. */
+export type AssessmentSessionPaymentsByAssessmentCouplePartnerBSessionIdAndPaymentIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<PaymentCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PaymentsOrderBy>>;
+};
+
 /** A connection to a list of `AssessmentQuestion` values, with data from `AssessmentResponse`. */
 export type AssessmentSessionAssessmentQuestionsByAssessmentResponseSessionIdAndQuestionIdManyToManyConnection = {
   __typename?: 'AssessmentSessionAssessmentQuestionsByAssessmentResponseSessionIdAndQuestionIdManyToManyConnection';
@@ -2421,9 +3385,153 @@ export type AssessmentSessionAssessmentQuestionsByAssessmentSessionQuestionSessi
   node: AssessmentQuestion;
 };
 
+/** A connection to a list of `AssessmentSession` values, with data from `AssessmentCouple`. */
+export type AssessmentSessionAssessmentSessionsByAssessmentCouplePartnerASessionIdAndPartnerBSessionIdManyToManyConnection = {
+  __typename?: 'AssessmentSessionAssessmentSessionsByAssessmentCouplePartnerASessionIdAndPartnerBSessionIdManyToManyConnection';
+  /** A list of edges which contains the `AssessmentSession`, info from the `AssessmentCouple`, and the cursor to aid in pagination. */
+  edges: Array<AssessmentSessionAssessmentSessionsByAssessmentCouplePartnerASessionIdAndPartnerBSessionIdManyToManyEdge>;
+  /** A list of `AssessmentSession` objects. */
+  nodes: Array<AssessmentSession>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `AssessmentSession` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `AssessmentSession` edge in the connection, with data from `AssessmentCouple`. */
+export type AssessmentSessionAssessmentSessionsByAssessmentCouplePartnerASessionIdAndPartnerBSessionIdManyToManyEdge = {
+  __typename?: 'AssessmentSessionAssessmentSessionsByAssessmentCouplePartnerASessionIdAndPartnerBSessionIdManyToManyEdge';
+  /** Reads and enables pagination through a set of `AssessmentCouple`. */
+  assessmentCouplesByPartnerBSessionId: AssessmentCouplesConnection;
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `AssessmentSession` at the end of the edge. */
+  node: AssessmentSession;
+};
+
+
+/** A `AssessmentSession` edge in the connection, with data from `AssessmentCouple`. */
+export type AssessmentSessionAssessmentSessionsByAssessmentCouplePartnerASessionIdAndPartnerBSessionIdManyToManyEdgeAssessmentCouplesByPartnerBSessionIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentCoupleCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentCouplesOrderBy>>;
+};
+
+/** A connection to a list of `AssessmentSession` values, with data from `AssessmentCouple`. */
+export type AssessmentSessionAssessmentSessionsByAssessmentCouplePartnerBSessionIdAndPartnerASessionIdManyToManyConnection = {
+  __typename?: 'AssessmentSessionAssessmentSessionsByAssessmentCouplePartnerBSessionIdAndPartnerASessionIdManyToManyConnection';
+  /** A list of edges which contains the `AssessmentSession`, info from the `AssessmentCouple`, and the cursor to aid in pagination. */
+  edges: Array<AssessmentSessionAssessmentSessionsByAssessmentCouplePartnerBSessionIdAndPartnerASessionIdManyToManyEdge>;
+  /** A list of `AssessmentSession` objects. */
+  nodes: Array<AssessmentSession>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `AssessmentSession` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `AssessmentSession` edge in the connection, with data from `AssessmentCouple`. */
+export type AssessmentSessionAssessmentSessionsByAssessmentCouplePartnerBSessionIdAndPartnerASessionIdManyToManyEdge = {
+  __typename?: 'AssessmentSessionAssessmentSessionsByAssessmentCouplePartnerBSessionIdAndPartnerASessionIdManyToManyEdge';
+  /** Reads and enables pagination through a set of `AssessmentCouple`. */
+  assessmentCouplesByPartnerASessionId: AssessmentCouplesConnection;
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `AssessmentSession` at the end of the edge. */
+  node: AssessmentSession;
+};
+
+
+/** A `AssessmentSession` edge in the connection, with data from `AssessmentCouple`. */
+export type AssessmentSessionAssessmentSessionsByAssessmentCouplePartnerBSessionIdAndPartnerASessionIdManyToManyEdgeAssessmentCouplesByPartnerASessionIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentCoupleCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentCouplesOrderBy>>;
+};
+
 /** The fields on `assessmentSession` to look up the row to connect. */
 export type AssessmentSessionAssessmentSessionsPkeyConnect = {
   id: Scalars['UUID']['input'];
+};
+
+/** A connection to a list of `AssessmentType` values, with data from `AssessmentCouple`. */
+export type AssessmentSessionAssessmentTypesByAssessmentCouplePartnerASessionIdAndAssessmentTypeCodeManyToManyConnection = {
+  __typename?: 'AssessmentSessionAssessmentTypesByAssessmentCouplePartnerASessionIdAndAssessmentTypeCodeManyToManyConnection';
+  /** A list of edges which contains the `AssessmentType`, info from the `AssessmentCouple`, and the cursor to aid in pagination. */
+  edges: Array<AssessmentSessionAssessmentTypesByAssessmentCouplePartnerASessionIdAndAssessmentTypeCodeManyToManyEdge>;
+  /** A list of `AssessmentType` objects. */
+  nodes: Array<AssessmentType>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `AssessmentType` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `AssessmentType` edge in the connection, with data from `AssessmentCouple`. */
+export type AssessmentSessionAssessmentTypesByAssessmentCouplePartnerASessionIdAndAssessmentTypeCodeManyToManyEdge = {
+  __typename?: 'AssessmentSessionAssessmentTypesByAssessmentCouplePartnerASessionIdAndAssessmentTypeCodeManyToManyEdge';
+  /** Reads and enables pagination through a set of `AssessmentCouple`. */
+  assessmentCouplesByAssessmentTypeCode: AssessmentCouplesConnection;
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `AssessmentType` at the end of the edge. */
+  node: AssessmentType;
+};
+
+
+/** A `AssessmentType` edge in the connection, with data from `AssessmentCouple`. */
+export type AssessmentSessionAssessmentTypesByAssessmentCouplePartnerASessionIdAndAssessmentTypeCodeManyToManyEdgeAssessmentCouplesByAssessmentTypeCodeArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentCoupleCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentCouplesOrderBy>>;
+};
+
+/** A connection to a list of `AssessmentType` values, with data from `AssessmentCouple`. */
+export type AssessmentSessionAssessmentTypesByAssessmentCouplePartnerBSessionIdAndAssessmentTypeCodeManyToManyConnection = {
+  __typename?: 'AssessmentSessionAssessmentTypesByAssessmentCouplePartnerBSessionIdAndAssessmentTypeCodeManyToManyConnection';
+  /** A list of edges which contains the `AssessmentType`, info from the `AssessmentCouple`, and the cursor to aid in pagination. */
+  edges: Array<AssessmentSessionAssessmentTypesByAssessmentCouplePartnerBSessionIdAndAssessmentTypeCodeManyToManyEdge>;
+  /** A list of `AssessmentType` objects. */
+  nodes: Array<AssessmentType>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `AssessmentType` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `AssessmentType` edge in the connection, with data from `AssessmentCouple`. */
+export type AssessmentSessionAssessmentTypesByAssessmentCouplePartnerBSessionIdAndAssessmentTypeCodeManyToManyEdge = {
+  __typename?: 'AssessmentSessionAssessmentTypesByAssessmentCouplePartnerBSessionIdAndAssessmentTypeCodeManyToManyEdge';
+  /** Reads and enables pagination through a set of `AssessmentCouple`. */
+  assessmentCouplesByAssessmentTypeCode: AssessmentCouplesConnection;
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `AssessmentType` at the end of the edge. */
+  node: AssessmentType;
+};
+
+
+/** A `AssessmentType` edge in the connection, with data from `AssessmentCouple`. */
+export type AssessmentSessionAssessmentTypesByAssessmentCouplePartnerBSessionIdAndAssessmentTypeCodeManyToManyEdgeAssessmentCouplesByAssessmentTypeCodeArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentCoupleCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentCouplesOrderBy>>;
 };
 
 /**
@@ -2433,6 +3541,8 @@ export type AssessmentSessionAssessmentSessionsPkeyConnect = {
 export type AssessmentSessionCondition = {
   /** Checks for equality with the object’s `assessmentTypeCode` field. */
   assessmentTypeCode?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `coupleId` field. */
+  coupleId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `expiresAt` field. */
   expiresAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `id` field. */
@@ -2443,6 +3553,20 @@ export type AssessmentSessionCondition = {
   status?: InputMaybe<AssessmentStatus>;
   /** Checks for equality with the object’s `userId` field. */
   userId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** The fields on `assessmentSession` to look up the row to update. */
+export type AssessmentSessionOnAssessmentCoupleForAssessmentCouplesPartnerASessionIdFkeyUsingAssessmentSessionsPkeyUpdate = {
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `assessmentSession` being updated. */
+  patch: UpdateAssessmentSessionOnAssessmentCoupleForAssessmentCouplesPartnerASessionIdFkeyPatch;
+};
+
+/** The fields on `assessmentSession` to look up the row to update. */
+export type AssessmentSessionOnAssessmentCoupleForAssessmentCouplesPartnerBSessionIdFkeyUsingAssessmentSessionsPkeyUpdate = {
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `assessmentSession` being updated. */
+  patch: UpdateAssessmentSessionOnAssessmentCoupleForAssessmentCouplesPartnerBSessionIdFkeyPatch;
 };
 
 /** The fields on `assessmentSession` to look up the row to update. */
@@ -2481,6 +3605,13 @@ export type AssessmentSessionOnAssessmentSessionForAssessmentSessionsUserIdFkeyU
 };
 
 /** The fields on `assessmentSession` to look up the row to update. */
+export type AssessmentSessionOnAssessmentSessionForFkSessionsCoupleIdUsingAssessmentSessionsPkeyUpdate = {
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `assessmentSession` being updated. */
+  patch: UpdateAssessmentSessionOnAssessmentSessionForFkSessionsCoupleIdPatch;
+};
+
+/** The fields on `assessmentSession` to look up the row to update. */
 export type AssessmentSessionOnAssessmentSessionQuestionForAssessmentSessionQuestionsSessionIdFkeyUsingAssessmentSessionsPkeyUpdate = {
   id: Scalars['UUID']['input'];
   /** An object where the defined keys will be set on the `assessmentSession` being updated. */
@@ -2489,12 +3620,17 @@ export type AssessmentSessionOnAssessmentSessionQuestionForAssessmentSessionQues
 
 /** Represents an update to a `AssessmentSession`. Fields that are set will be updated. */
 export type AssessmentSessionPatch = {
+  assessmentCoupleToCoupleId?: InputMaybe<FkSessionsCoupleIdInput>;
+  assessmentCouplesToPartnerASessionIdUsingId?: InputMaybe<AssessmentCouplesPartnerASessionIdFkeyInverseInput>;
+  assessmentCouplesToPartnerBSessionIdUsingId?: InputMaybe<AssessmentCouplesPartnerBSessionIdFkeyInverseInput>;
   assessmentResponsesUsingId?: InputMaybe<AssessmentResponsesSessionIdFkeyInverseInput>;
   assessmentResultUsingId?: InputMaybe<AssessmentResultsSessionIdFkeyInverseInput>;
   assessmentSessionQuestionsUsingId?: InputMaybe<AssessmentSessionQuestionsSessionIdFkeyInverseInput>;
   assessmentTypeCode?: InputMaybe<Scalars['String']['input']>;
   assessmentTypeToAssessmentTypeCode?: InputMaybe<AssessmentSessionsAssessmentTypeCodeFkeyInput>;
   completionTime?: InputMaybe<Scalars['Datetime']['input']>;
+  /** References assessment_couples.id for dyadic assessments. NULL for individual. */
+  coupleId?: InputMaybe<Scalars['UUID']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Current question number (1-50) for resume capability */
   currentQuestionNumber?: InputMaybe<Scalars['Int']['input']>;
@@ -2505,6 +3641,8 @@ export type AssessmentSessionPatch = {
   lastActivityTime?: InputMaybe<Scalars['Datetime']['input']>;
   /** The last question number that the user actually answered (separate from current_question_number which tracks navigation) */
   lastAnsweredQuestion?: InputMaybe<Scalars['Int']['input']>;
+  /** partner_a or partner_b for dyadic assessments. NULL for individual assessments. */
+  partnerRole?: InputMaybe<Scalars['String']['input']>;
   /** Reference to the payment made for this assessment. Nullable for internal users who can test without payment. Payment validation is enforced in start_assessment_session function. */
   paymentId?: InputMaybe<Scalars['UUID']['input']>;
   paymentToPaymentId?: InputMaybe<AssessmentSessionsPaymentIdFkeyInput>;
@@ -2514,6 +3652,78 @@ export type AssessmentSessionPatch = {
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
   userId?: InputMaybe<Scalars['UUID']['input']>;
   userToUserId?: InputMaybe<AssessmentSessionsUserIdFkeyInput>;
+};
+
+/** A connection to a list of `Payment` values, with data from `AssessmentCouple`. */
+export type AssessmentSessionPaymentsByAssessmentCouplePartnerASessionIdAndPaymentIdManyToManyConnection = {
+  __typename?: 'AssessmentSessionPaymentsByAssessmentCouplePartnerASessionIdAndPaymentIdManyToManyConnection';
+  /** A list of edges which contains the `Payment`, info from the `AssessmentCouple`, and the cursor to aid in pagination. */
+  edges: Array<AssessmentSessionPaymentsByAssessmentCouplePartnerASessionIdAndPaymentIdManyToManyEdge>;
+  /** A list of `Payment` objects. */
+  nodes: Array<Payment>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Payment` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `Payment` edge in the connection, with data from `AssessmentCouple`. */
+export type AssessmentSessionPaymentsByAssessmentCouplePartnerASessionIdAndPaymentIdManyToManyEdge = {
+  __typename?: 'AssessmentSessionPaymentsByAssessmentCouplePartnerASessionIdAndPaymentIdManyToManyEdge';
+  /** Reads and enables pagination through a set of `AssessmentCouple`. */
+  assessmentCouples: AssessmentCouplesConnection;
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `Payment` at the end of the edge. */
+  node: Payment;
+};
+
+
+/** A `Payment` edge in the connection, with data from `AssessmentCouple`. */
+export type AssessmentSessionPaymentsByAssessmentCouplePartnerASessionIdAndPaymentIdManyToManyEdgeAssessmentCouplesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentCoupleCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentCouplesOrderBy>>;
+};
+
+/** A connection to a list of `Payment` values, with data from `AssessmentCouple`. */
+export type AssessmentSessionPaymentsByAssessmentCouplePartnerBSessionIdAndPaymentIdManyToManyConnection = {
+  __typename?: 'AssessmentSessionPaymentsByAssessmentCouplePartnerBSessionIdAndPaymentIdManyToManyConnection';
+  /** A list of edges which contains the `Payment`, info from the `AssessmentCouple`, and the cursor to aid in pagination. */
+  edges: Array<AssessmentSessionPaymentsByAssessmentCouplePartnerBSessionIdAndPaymentIdManyToManyEdge>;
+  /** A list of `Payment` objects. */
+  nodes: Array<Payment>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Payment` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `Payment` edge in the connection, with data from `AssessmentCouple`. */
+export type AssessmentSessionPaymentsByAssessmentCouplePartnerBSessionIdAndPaymentIdManyToManyEdge = {
+  __typename?: 'AssessmentSessionPaymentsByAssessmentCouplePartnerBSessionIdAndPaymentIdManyToManyEdge';
+  /** Reads and enables pagination through a set of `AssessmentCouple`. */
+  assessmentCouples: AssessmentCouplesConnection;
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `Payment` at the end of the edge. */
+  node: Payment;
+};
+
+
+/** A `Payment` edge in the connection, with data from `AssessmentCouple`. */
+export type AssessmentSessionPaymentsByAssessmentCouplePartnerBSessionIdAndPaymentIdManyToManyEdgeAssessmentCouplesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentCoupleCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentCouplesOrderBy>>;
 };
 
 /** Tracks which questions are assigned to each session and their randomized order. Each session has exactly 50 questions (10 random from each of 5 sections), fully shuffled. */
@@ -2799,6 +4009,8 @@ export type AssessmentSessionsEdge = {
 export enum AssessmentSessionsOrderBy {
   AssessmentTypeCodeAsc = 'ASSESSMENT_TYPE_CODE_ASC',
   AssessmentTypeCodeDesc = 'ASSESSMENT_TYPE_CODE_DESC',
+  CoupleIdAsc = 'COUPLE_ID_ASC',
+  CoupleIdDesc = 'COUPLE_ID_DESC',
   ExpiresAtAsc = 'EXPIRES_AT_ASC',
   ExpiresAtDesc = 'EXPIRES_AT_DESC',
   IdAsc = 'ID_ASC',
@@ -3014,6 +4226,12 @@ export type AssessmentType = {
    * @deprecated Please use assessmentCohortStatByAssessmentTypeCode instead
    */
   assessmentCohortStatsByAssessmentTypeCode: AssessmentCohortStatsConnection;
+  /** Reads and enables pagination through a set of `AssessmentCouple`. */
+  assessmentCouplesByAssessmentResultAssessmentTypeCodeAndCoupleId: AssessmentTypeAssessmentCouplesByAssessmentResultAssessmentTypeCodeAndCoupleIdManyToManyConnection;
+  /** Reads and enables pagination through a set of `AssessmentCouple`. */
+  assessmentCouplesByAssessmentSessionAssessmentTypeCodeAndCoupleId: AssessmentTypeAssessmentCouplesByAssessmentSessionAssessmentTypeCodeAndCoupleIdManyToManyConnection;
+  /** Reads and enables pagination through a set of `AssessmentCouple`. */
+  assessmentCouplesByAssessmentTypeCode: AssessmentCouplesConnection;
   /** Reads and enables pagination through a set of `AssessmentInterpretationBand`. */
   assessmentInterpretationBandsByAssessmentResultAssessmentTypeCodeAndInterpretationBandId: AssessmentTypeAssessmentInterpretationBandsByAssessmentResultAssessmentTypeCodeAndInterpretationBandIdManyToManyConnection;
   /** Reads and enables pagination through a set of `AssessmentInterpretationBand`. */
@@ -3022,6 +4240,10 @@ export type AssessmentType = {
   assessmentResultsByAssessmentTypeCode: AssessmentResultsConnection;
   /** Reads and enables pagination through a set of `AssessmentSection`. */
   assessmentSectionsByAssessmentTypeCode: AssessmentSectionsConnection;
+  /** Reads and enables pagination through a set of `AssessmentSession`. */
+  assessmentSessionsByAssessmentCoupleAssessmentTypeCodeAndPartnerASessionId: AssessmentTypeAssessmentSessionsByAssessmentCoupleAssessmentTypeCodeAndPartnerASessionIdManyToManyConnection;
+  /** Reads and enables pagination through a set of `AssessmentSession`. */
+  assessmentSessionsByAssessmentCoupleAssessmentTypeCodeAndPartnerBSessionId: AssessmentTypeAssessmentSessionsByAssessmentCoupleAssessmentTypeCodeAndPartnerBSessionIdManyToManyConnection;
   /** Reads and enables pagination through a set of `AssessmentSession`. */
   assessmentSessionsByAssessmentTypeCode: AssessmentSessionsConnection;
   /** Reads and enables pagination through a set of `AssessmentTemplateContent`. */
@@ -3037,18 +4259,28 @@ export type AssessmentType = {
   displayOrder: Scalars['Int']['output'];
   id: Scalars['UUID']['output'];
   isActive: Scalars['Boolean']['output'];
+  /** When true, the assessment requires two partners (dyadic). Use start_couple_assessment + join_couple_assessment instead of start_assessment_session. */
+  isDyadic: Scalars['Boolean']['output'];
   maxScore: Scalars['Int']['output'];
   metadata: Scalars['JSON']['output'];
   minScore: Scalars['Int']['output'];
   name: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `Payment`. */
+  paymentsByAssessmentCoupleAssessmentTypeCodeAndPaymentId: AssessmentTypePaymentsByAssessmentCoupleAssessmentTypeCodeAndPaymentIdManyToManyConnection;
+  /** Reads and enables pagination through a set of `Payment`. */
   paymentsByAssessmentSessionAssessmentTypeCodeAndPaymentId: AssessmentTypePaymentsByAssessmentSessionAssessmentTypeCodeAndPaymentIdManyToManyConnection;
   /** Reads and enables pagination through a set of `Payment`. */
   paymentsByAssessmentTypeCode: PaymentsConnection;
   priceAmount: Scalars['Int']['output'];
+  /** Number of profile (unscored) questions shown at the start of the assessment. Does not affect total_questions generated column. */
+  profileQuestionsCount: Scalars['Int']['output'];
   questionsPerSection: Scalars['Int']['output'];
   /** Incremented when report display content changes; PDFs regen lazily on download when stale */
   reportContentVersion: Scalars['Int']['output'];
+  /** Maximum value on the response scale (default 10). Used to validate and normalise responses. */
+  responseScaleMax: Scalars['Int']['output'];
+  /** Minimum value on the response scale (default 1). Used to validate and normalise responses. */
+  responseScaleMin: Scalars['Int']['output'];
   /** Formula type: sum (add section scores) or average (mean of section scores scaled to min/max) */
   scoringFormula: Scalars['String']['output'];
   sectionCount: Scalars['Int']['output'];
@@ -3073,6 +4305,42 @@ export type AssessmentTypeAssessmentCohortStatsByAssessmentTypeCodeArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AssessmentCohortStatsOrderBy>>;
+};
+
+
+/** Defines available assessment types (SSRI, PRAI, etc.) with scoring and pricing configuration */
+export type AssessmentTypeAssessmentCouplesByAssessmentResultAssessmentTypeCodeAndCoupleIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentCoupleCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentCouplesOrderBy>>;
+};
+
+
+/** Defines available assessment types (SSRI, PRAI, etc.) with scoring and pricing configuration */
+export type AssessmentTypeAssessmentCouplesByAssessmentSessionAssessmentTypeCodeAndCoupleIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentCoupleCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentCouplesOrderBy>>;
+};
+
+
+/** Defines available assessment types (SSRI, PRAI, etc.) with scoring and pricing configuration */
+export type AssessmentTypeAssessmentCouplesByAssessmentTypeCodeArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentCoupleCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentCouplesOrderBy>>;
 };
 
 
@@ -3125,6 +4393,30 @@ export type AssessmentTypeAssessmentSectionsByAssessmentTypeCodeArgs = {
 
 
 /** Defines available assessment types (SSRI, PRAI, etc.) with scoring and pricing configuration */
+export type AssessmentTypeAssessmentSessionsByAssessmentCoupleAssessmentTypeCodeAndPartnerASessionIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentSessionCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentSessionsOrderBy>>;
+};
+
+
+/** Defines available assessment types (SSRI, PRAI, etc.) with scoring and pricing configuration */
+export type AssessmentTypeAssessmentSessionsByAssessmentCoupleAssessmentTypeCodeAndPartnerBSessionIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentSessionCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentSessionsOrderBy>>;
+};
+
+
+/** Defines available assessment types (SSRI, PRAI, etc.) with scoring and pricing configuration */
 export type AssessmentTypeAssessmentSessionsByAssessmentTypeCodeArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -3169,6 +4461,18 @@ export type AssessmentTypeCouponTablesByPaymentAssessmentTypeCodeAndCouponIdArgs
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CouponTablesOrderBy>>;
+};
+
+
+/** Defines available assessment types (SSRI, PRAI, etc.) with scoring and pricing configuration */
+export type AssessmentTypePaymentsByAssessmentCoupleAssessmentTypeCodeAndPaymentIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<PaymentCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PaymentsOrderBy>>;
 };
 
 
@@ -3231,6 +4535,78 @@ export type AssessmentTypeUsersByPaymentAssessmentTypeCodeAndUserIdArgs = {
   orderBy?: InputMaybe<Array<UsersOrderBy>>;
 };
 
+/** A connection to a list of `AssessmentCouple` values, with data from `AssessmentResult`. */
+export type AssessmentTypeAssessmentCouplesByAssessmentResultAssessmentTypeCodeAndCoupleIdManyToManyConnection = {
+  __typename?: 'AssessmentTypeAssessmentCouplesByAssessmentResultAssessmentTypeCodeAndCoupleIdManyToManyConnection';
+  /** A list of edges which contains the `AssessmentCouple`, info from the `AssessmentResult`, and the cursor to aid in pagination. */
+  edges: Array<AssessmentTypeAssessmentCouplesByAssessmentResultAssessmentTypeCodeAndCoupleIdManyToManyEdge>;
+  /** A list of `AssessmentCouple` objects. */
+  nodes: Array<AssessmentCouple>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `AssessmentCouple` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `AssessmentCouple` edge in the connection, with data from `AssessmentResult`. */
+export type AssessmentTypeAssessmentCouplesByAssessmentResultAssessmentTypeCodeAndCoupleIdManyToManyEdge = {
+  __typename?: 'AssessmentTypeAssessmentCouplesByAssessmentResultAssessmentTypeCodeAndCoupleIdManyToManyEdge';
+  /** Reads and enables pagination through a set of `AssessmentResult`. */
+  assessmentResultsByCoupleId: AssessmentResultsConnection;
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `AssessmentCouple` at the end of the edge. */
+  node: AssessmentCouple;
+};
+
+
+/** A `AssessmentCouple` edge in the connection, with data from `AssessmentResult`. */
+export type AssessmentTypeAssessmentCouplesByAssessmentResultAssessmentTypeCodeAndCoupleIdManyToManyEdgeAssessmentResultsByCoupleIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentResultCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentResultsOrderBy>>;
+};
+
+/** A connection to a list of `AssessmentCouple` values, with data from `AssessmentSession`. */
+export type AssessmentTypeAssessmentCouplesByAssessmentSessionAssessmentTypeCodeAndCoupleIdManyToManyConnection = {
+  __typename?: 'AssessmentTypeAssessmentCouplesByAssessmentSessionAssessmentTypeCodeAndCoupleIdManyToManyConnection';
+  /** A list of edges which contains the `AssessmentCouple`, info from the `AssessmentSession`, and the cursor to aid in pagination. */
+  edges: Array<AssessmentTypeAssessmentCouplesByAssessmentSessionAssessmentTypeCodeAndCoupleIdManyToManyEdge>;
+  /** A list of `AssessmentCouple` objects. */
+  nodes: Array<AssessmentCouple>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `AssessmentCouple` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `AssessmentCouple` edge in the connection, with data from `AssessmentSession`. */
+export type AssessmentTypeAssessmentCouplesByAssessmentSessionAssessmentTypeCodeAndCoupleIdManyToManyEdge = {
+  __typename?: 'AssessmentTypeAssessmentCouplesByAssessmentSessionAssessmentTypeCodeAndCoupleIdManyToManyEdge';
+  /** Reads and enables pagination through a set of `AssessmentSession`. */
+  assessmentSessionsByCoupleId: AssessmentSessionsConnection;
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `AssessmentCouple` at the end of the edge. */
+  node: AssessmentCouple;
+};
+
+
+/** A `AssessmentCouple` edge in the connection, with data from `AssessmentSession`. */
+export type AssessmentTypeAssessmentCouplesByAssessmentSessionAssessmentTypeCodeAndCoupleIdManyToManyEdgeAssessmentSessionsByCoupleIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentSessionCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentSessionsOrderBy>>;
+};
+
 /** A connection to a list of `AssessmentInterpretationBand` values, with data from `AssessmentResult`. */
 export type AssessmentTypeAssessmentInterpretationBandsByAssessmentResultAssessmentTypeCodeAndInterpretationBandIdManyToManyConnection = {
   __typename?: 'AssessmentTypeAssessmentInterpretationBandsByAssessmentResultAssessmentTypeCodeAndInterpretationBandIdManyToManyConnection';
@@ -3265,6 +4641,78 @@ export type AssessmentTypeAssessmentInterpretationBandsByAssessmentResultAssessm
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AssessmentResultsOrderBy>>;
+};
+
+/** A connection to a list of `AssessmentSession` values, with data from `AssessmentCouple`. */
+export type AssessmentTypeAssessmentSessionsByAssessmentCoupleAssessmentTypeCodeAndPartnerASessionIdManyToManyConnection = {
+  __typename?: 'AssessmentTypeAssessmentSessionsByAssessmentCoupleAssessmentTypeCodeAndPartnerASessionIdManyToManyConnection';
+  /** A list of edges which contains the `AssessmentSession`, info from the `AssessmentCouple`, and the cursor to aid in pagination. */
+  edges: Array<AssessmentTypeAssessmentSessionsByAssessmentCoupleAssessmentTypeCodeAndPartnerASessionIdManyToManyEdge>;
+  /** A list of `AssessmentSession` objects. */
+  nodes: Array<AssessmentSession>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `AssessmentSession` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `AssessmentSession` edge in the connection, with data from `AssessmentCouple`. */
+export type AssessmentTypeAssessmentSessionsByAssessmentCoupleAssessmentTypeCodeAndPartnerASessionIdManyToManyEdge = {
+  __typename?: 'AssessmentTypeAssessmentSessionsByAssessmentCoupleAssessmentTypeCodeAndPartnerASessionIdManyToManyEdge';
+  /** Reads and enables pagination through a set of `AssessmentCouple`. */
+  assessmentCouplesByPartnerASessionId: AssessmentCouplesConnection;
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `AssessmentSession` at the end of the edge. */
+  node: AssessmentSession;
+};
+
+
+/** A `AssessmentSession` edge in the connection, with data from `AssessmentCouple`. */
+export type AssessmentTypeAssessmentSessionsByAssessmentCoupleAssessmentTypeCodeAndPartnerASessionIdManyToManyEdgeAssessmentCouplesByPartnerASessionIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentCoupleCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentCouplesOrderBy>>;
+};
+
+/** A connection to a list of `AssessmentSession` values, with data from `AssessmentCouple`. */
+export type AssessmentTypeAssessmentSessionsByAssessmentCoupleAssessmentTypeCodeAndPartnerBSessionIdManyToManyConnection = {
+  __typename?: 'AssessmentTypeAssessmentSessionsByAssessmentCoupleAssessmentTypeCodeAndPartnerBSessionIdManyToManyConnection';
+  /** A list of edges which contains the `AssessmentSession`, info from the `AssessmentCouple`, and the cursor to aid in pagination. */
+  edges: Array<AssessmentTypeAssessmentSessionsByAssessmentCoupleAssessmentTypeCodeAndPartnerBSessionIdManyToManyEdge>;
+  /** A list of `AssessmentSession` objects. */
+  nodes: Array<AssessmentSession>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `AssessmentSession` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `AssessmentSession` edge in the connection, with data from `AssessmentCouple`. */
+export type AssessmentTypeAssessmentSessionsByAssessmentCoupleAssessmentTypeCodeAndPartnerBSessionIdManyToManyEdge = {
+  __typename?: 'AssessmentTypeAssessmentSessionsByAssessmentCoupleAssessmentTypeCodeAndPartnerBSessionIdManyToManyEdge';
+  /** Reads and enables pagination through a set of `AssessmentCouple`. */
+  assessmentCouplesByPartnerBSessionId: AssessmentCouplesConnection;
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `AssessmentSession` at the end of the edge. */
+  node: AssessmentSession;
+};
+
+
+/** A `AssessmentSession` edge in the connection, with data from `AssessmentCouple`. */
+export type AssessmentTypeAssessmentSessionsByAssessmentCoupleAssessmentTypeCodeAndPartnerBSessionIdManyToManyEdgeAssessmentCouplesByPartnerBSessionIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentCoupleCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentCouplesOrderBy>>;
 };
 
 /** The fields on `assessmentType` to look up the row to connect. */
@@ -3334,12 +4782,16 @@ export type AssessmentTypeInfo = {
   displayOrder: Scalars['Int']['output'];
   id: Scalars['UUID']['output'];
   isActive: Scalars['Boolean']['output'];
+  isDyadic: Scalars['Boolean']['output'];
   maxScore: Scalars['Int']['output'];
   metadata?: Maybe<Scalars['JSON']['output']>;
   minScore: Scalars['Int']['output'];
   name: Scalars['String']['output'];
   priceAmount: Scalars['Int']['output'];
+  profileQuestionsCount: Scalars['Int']['output'];
   questionsPerSection: Scalars['Int']['output'];
+  responseScaleMax: Scalars['Int']['output'];
+  responseScaleMin: Scalars['Int']['output'];
   scoringFormula: Scalars['String']['output'];
   sectionCount: Scalars['Int']['output'];
   templateVersion?: Maybe<Scalars['String']['output']>;
@@ -3359,6 +4811,21 @@ export type AssessmentTypeOnAssessmentCohortStatForAssessmentCohortStatsAssessme
   id: Scalars['UUID']['input'];
   /** An object where the defined keys will be set on the `assessmentType` being updated. */
   patch: UpdateAssessmentTypeOnAssessmentCohortStatForAssessmentCohortStatsAssessmentTypeCodeFkeyPatch;
+};
+
+/** The fields on `assessmentType` to look up the row to update. */
+export type AssessmentTypeOnAssessmentCoupleForAssessmentCouplesAssessmentTypeCodeFkeyUsingAssessmentTypesCodeKeyUpdate = {
+  /** Unique identifier for the assessment type (e.g., ssri, prai) */
+  code: Scalars['String']['input'];
+  /** An object where the defined keys will be set on the `assessmentType` being updated. */
+  patch: UpdateAssessmentTypeOnAssessmentCoupleForAssessmentCouplesAssessmentTypeCodeFkeyPatch;
+};
+
+/** The fields on `assessmentType` to look up the row to update. */
+export type AssessmentTypeOnAssessmentCoupleForAssessmentCouplesAssessmentTypeCodeFkeyUsingAssessmentTypesPkeyUpdate = {
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `assessmentType` being updated. */
+  patch: UpdateAssessmentTypeOnAssessmentCoupleForAssessmentCouplesAssessmentTypeCodeFkeyPatch;
 };
 
 /** The fields on `assessmentType` to look up the row to update. */
@@ -3471,6 +4938,42 @@ export type AssessmentTypePayload = {
   assessmentType?: Maybe<AssessmentTypeInfo>;
   message?: Maybe<Scalars['String']['output']>;
   success: Scalars['Boolean']['output'];
+};
+
+/** A connection to a list of `Payment` values, with data from `AssessmentCouple`. */
+export type AssessmentTypePaymentsByAssessmentCoupleAssessmentTypeCodeAndPaymentIdManyToManyConnection = {
+  __typename?: 'AssessmentTypePaymentsByAssessmentCoupleAssessmentTypeCodeAndPaymentIdManyToManyConnection';
+  /** A list of edges which contains the `Payment`, info from the `AssessmentCouple`, and the cursor to aid in pagination. */
+  edges: Array<AssessmentTypePaymentsByAssessmentCoupleAssessmentTypeCodeAndPaymentIdManyToManyEdge>;
+  /** A list of `Payment` objects. */
+  nodes: Array<Payment>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Payment` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `Payment` edge in the connection, with data from `AssessmentCouple`. */
+export type AssessmentTypePaymentsByAssessmentCoupleAssessmentTypeCodeAndPaymentIdManyToManyEdge = {
+  __typename?: 'AssessmentTypePaymentsByAssessmentCoupleAssessmentTypeCodeAndPaymentIdManyToManyEdge';
+  /** Reads and enables pagination through a set of `AssessmentCouple`. */
+  assessmentCouples: AssessmentCouplesConnection;
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `Payment` at the end of the edge. */
+  node: Payment;
+};
+
+
+/** A `Payment` edge in the connection, with data from `AssessmentCouple`. */
+export type AssessmentTypePaymentsByAssessmentCoupleAssessmentTypeCodeAndPaymentIdManyToManyEdgeAssessmentCouplesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentCoupleCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentCouplesOrderBy>>;
 };
 
 /** A connection to a list of `Payment` values, with data from `AssessmentSession`. */
@@ -3889,6 +5392,8 @@ export type BulkCreateQuestionsPayload = {
 };
 
 export type BulkQuestionInput = {
+  answerOptions?: InputMaybe<Scalars['JSON']['input']>;
+  questionCategory?: InputMaybe<Scalars['String']['input']>;
   questionText: Scalars['String']['input'];
 };
 
@@ -3928,10 +5433,34 @@ export type CompleteAssessmentInput = {
 
 export type CompleteAssessmentPayload = {
   __typename?: 'CompleteAssessmentPayload';
+  coupleComplete?: Maybe<Scalars['Boolean']['output']>;
   message?: Maybe<Scalars['String']['output']>;
   pdfPath?: Maybe<Scalars['String']['output']>;
   result?: Maybe<AssessmentResult>;
   success: Scalars['Boolean']['output'];
+  waitingForPartner?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type CoupleResultsPayload = {
+  __typename?: 'CoupleResultsPayload';
+  coupleId: Scalars['UUID']['output'];
+  coupleReadinessLabel?: Maybe<Scalars['String']['output']>;
+  coupleTotalScore?: Maybe<Scalars['Int']['output']>;
+  domainResults: Array<DomainResultItem>;
+  partnerA?: Maybe<Scalars['JSON']['output']>;
+  partnerB?: Maybe<Scalars['JSON']['output']>;
+  status: Scalars['String']['output'];
+};
+
+export type CoupleStatusPayload = {
+  __typename?: 'CoupleStatusPayload';
+  assessmentTypeCode: Scalars['String']['output'];
+  coupleId: Scalars['UUID']['output'];
+  inviteCode?: Maybe<Scalars['String']['output']>;
+  partnerA?: Maybe<Scalars['JSON']['output']>;
+  partnerB?: Maybe<Scalars['JSON']['output']>;
+  status: Scalars['String']['output'];
+  waitingForPartner: Scalars['Boolean']['output'];
 };
 
 export type Coupon = {
@@ -4898,6 +6427,8 @@ export type CreateAssessmentSectionInput = {
   displayOrder?: InputMaybe<Scalars['Int']['input']>;
   emoji?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
+  /** scored (default) = contributes to score. profile = all questions shown first, excluded from scoring. */
+  sectionCategory?: InputMaybe<Scalars['String']['input']>;
   subtitle?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<Scalars['String']['input']>;
 };
@@ -4955,11 +6486,15 @@ export type CreateAssessmentTypeInput = {
   code: Scalars['String']['input'];
   description?: InputMaybe<Scalars['String']['input']>;
   displayOrder?: InputMaybe<Scalars['Int']['input']>;
+  isDyadic?: InputMaybe<Scalars['Boolean']['input']>;
   maxScore?: InputMaybe<Scalars['Int']['input']>;
   minScore?: InputMaybe<Scalars['Int']['input']>;
   name: Scalars['String']['input'];
   priceAmount: Scalars['Int']['input'];
+  profileQuestionsCount?: InputMaybe<Scalars['Int']['input']>;
   questionsPerSection?: InputMaybe<Scalars['Int']['input']>;
+  responseScaleMax?: InputMaybe<Scalars['Int']['input']>;
+  responseScaleMin?: InputMaybe<Scalars['Int']['input']>;
   scoringFormula?: InputMaybe<Scalars['String']['input']>;
   sectionCount?: InputMaybe<Scalars['Int']['input']>;
   /** When true (default), creates the 5 standard dimension sections for this type. */
@@ -5134,6 +6669,9 @@ export type CreatePaymentOrderPayload = {
 };
 
 export type CreateQuestionInput = {
+  /** Optional labeled choices: [{value: Int, label: String}]. Null for numeric scale questions. */
+  answerOptions?: InputMaybe<Scalars['JSON']['input']>;
+  questionCategory?: InputMaybe<Scalars['String']['input']>;
   questionText: Scalars['String']['input'];
   sectionId: Scalars['UUID']['input'];
 };
@@ -5464,6 +7002,18 @@ export enum DiscountType {
   Percentage = 'PERCENTAGE'
 }
 
+export type DomainResultItem = {
+  __typename?: 'DomainResultItem';
+  alignmentGap: Scalars['Float']['output'];
+  coupleAverage: Scalars['Float']['output'];
+  domainKey: Scalars['String']['output'];
+  domainName: Scalars['String']['output'];
+  gapLabel: Scalars['String']['output'];
+  partnerAScore: Scalars['Float']['output'];
+  partnerBScore: Scalars['Float']['output'];
+  strengthLabel: Scalars['String']['output'];
+};
+
 export type EnhancedResponseDetail = {
   __typename?: 'EnhancedResponseDetail';
   createdAt: Scalars['Datetime']['output'];
@@ -5474,6 +7024,26 @@ export type EnhancedResponseDetail = {
   sessionId: Scalars['UUID']['output'];
   timeTakenSeconds?: Maybe<Scalars['Int']['output']>;
   updatedAt: Scalars['Datetime']['output'];
+};
+
+/** Input for the nested mutation of `assessmentCouple` in the `AssessmentSessionInput` mutation. */
+export type FkSessionsCoupleIdInput = {
+  /** The primary key(s) for `assessmentCouple` for the far side of the relationship. */
+  connectById?: InputMaybe<AssessmentCoupleAssessmentCouplesPkeyConnect>;
+  /** The primary key(s) for `assessmentCouple` for the far side of the relationship. */
+  connectByInviteCode?: InputMaybe<AssessmentCoupleAssessmentCouplesInviteCodeKeyConnect>;
+  /** The primary key(s) and patch data for `assessmentCouple` for the far side of the relationship. */
+  updateById?: InputMaybe<AssessmentCoupleOnAssessmentSessionForFkSessionsCoupleIdUsingAssessmentCouplesPkeyUpdate>;
+  /** The primary key(s) and patch data for `assessmentCouple` for the far side of the relationship. */
+  updateByInviteCode?: InputMaybe<AssessmentCoupleOnAssessmentSessionForFkSessionsCoupleIdUsingAssessmentCouplesInviteCodeKeyUpdate>;
+};
+
+/** Input for the nested mutation of `assessmentSession` in the `AssessmentCoupleInput` mutation. */
+export type FkSessionsCoupleIdInverseInput = {
+  /** The primary key(s) for `assessmentSession` for the far side of the relationship. */
+  connectById?: InputMaybe<Array<AssessmentSessionAssessmentSessionsPkeyConnect>>;
+  /** The primary key(s) and patch data for `assessmentSession` for the far side of the relationship. */
+  updateById?: InputMaybe<Array<AssessmentSessionOnAssessmentSessionForFkSessionsCoupleIdUsingAssessmentSessionsPkeyUpdate>>;
 };
 
 /** All input for the `forgotPassword` mutation. */
@@ -5590,6 +7160,18 @@ export type IncrementCouponUsagePayload = {
   clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
+};
+
+export type JoinCoupleAssessmentInput = {
+  inviteCode: Scalars['String']['input'];
+};
+
+export type JoinCoupleAssessmentPayload = {
+  __typename?: 'JoinCoupleAssessmentPayload';
+  assessmentType?: Maybe<AssessmentTypeInfo>;
+  coupleId: Scalars['UUID']['output'];
+  message?: Maybe<Scalars['String']['output']>;
+  session?: Maybe<AssessmentSession>;
 };
 
 export type LoginInput = {
@@ -5713,6 +7295,11 @@ export type Mutation = {
   grantInternalAccess?: Maybe<GrantInternalAccessPayload>;
   /** Increments coupon usage counter and records the usage for analytics. Called after successful payment. */
   incrementCouponUsage?: Maybe<IncrementCouponUsagePayload>;
+  /**
+   * Join a dyadic assessment as Partner B using the invite code from Partner A.
+   * No additional payment is required.
+   */
+  joinCoupleAssessment?: Maybe<JoinCoupleAssessmentPayload>;
   /** Use this mutation to log in to your account; this login uses sessions so you do not need to take further action. */
   login?: Maybe<LoginPayload>;
   /** Use this mutation to logout from your account. Don't forget to clear the client state! */
@@ -5746,6 +7333,11 @@ export type Mutation = {
    * - Internal users (admins and is_internal=true): Can start without payment and retake multiple times
    */
   startAssessment?: Maybe<StartAssessmentPayload>;
+  /**
+   * Start a dyadic (couples) assessment as Partner A.
+   * Returns session + invite code for Partner B to join.
+   */
+  startCoupleAssessment?: Maybe<StartCoupleAssessmentPayload>;
   /**
    * Submit or update a response for a question with enhanced state management.
    * Automatically handles both new submissions and updates to previous answers.
@@ -6045,6 +7637,12 @@ export type MutationIncrementCouponUsageArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationJoinCoupleAssessmentArgs = {
+  input: JoinCoupleAssessmentInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationLoginArgs = {
   input: LoginInput;
 };
@@ -6108,6 +7706,12 @@ export type MutationSeedAssessmentTypeSectionsArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationStartAssessmentArgs = {
   input: StartAssessmentInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationStartCoupleAssessmentArgs = {
+  input: StartCoupleAssessmentInput;
 };
 
 
@@ -6301,11 +7905,21 @@ export type PageInfo = {
 export type Payment = {
   __typename?: 'Payment';
   amountInr: Scalars['Int']['output'];
+  /** Reads and enables pagination through a set of `AssessmentCouple`. */
+  assessmentCouples: AssessmentCouplesConnection;
+  /** Reads and enables pagination through a set of `AssessmentCouple`. */
+  assessmentCouplesByAssessmentSessionPaymentIdAndCoupleId: PaymentAssessmentCouplesByAssessmentSessionPaymentIdAndCoupleIdManyToManyConnection;
   /** Reads and enables pagination through a set of `AssessmentSession`. */
   assessmentSessions: AssessmentSessionsConnection;
+  /** Reads and enables pagination through a set of `AssessmentSession`. */
+  assessmentSessionsByAssessmentCouplePaymentIdAndPartnerASessionId: PaymentAssessmentSessionsByAssessmentCouplePaymentIdAndPartnerASessionIdManyToManyConnection;
+  /** Reads and enables pagination through a set of `AssessmentSession`. */
+  assessmentSessionsByAssessmentCouplePaymentIdAndPartnerBSessionId: PaymentAssessmentSessionsByAssessmentCouplePaymentIdAndPartnerBSessionIdManyToManyConnection;
   /** Reads a single `AssessmentType` that is related to this `Payment`. */
   assessmentTypeByAssessmentTypeCode?: Maybe<AssessmentType>;
   assessmentTypeCode: Scalars['String']['output'];
+  /** Reads and enables pagination through a set of `AssessmentType`. */
+  assessmentTypesByAssessmentCouplePaymentIdAndAssessmentTypeCode: PaymentAssessmentTypesByAssessmentCouplePaymentIdAndAssessmentTypeCodeManyToManyConnection;
   /** Reads and enables pagination through a set of `AssessmentType`. */
   assessmentTypesByAssessmentSessionPaymentIdAndAssessmentTypeCode: PaymentAssessmentTypesByAssessmentSessionPaymentIdAndAssessmentTypeCodeManyToManyConnection;
   /** Reads a single `CouponTable` that is related to this `Payment`. */
@@ -6345,6 +7959,30 @@ export type Payment = {
 
 
 /** Payment records for audit trail and reconciliation. Amounts are in INR paise. Used for one-time test purchases. */
+export type PaymentAssessmentCouplesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentCoupleCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentCouplesOrderBy>>;
+};
+
+
+/** Payment records for audit trail and reconciliation. Amounts are in INR paise. Used for one-time test purchases. */
+export type PaymentAssessmentCouplesByAssessmentSessionPaymentIdAndCoupleIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentCoupleCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentCouplesOrderBy>>;
+};
+
+
+/** Payment records for audit trail and reconciliation. Amounts are in INR paise. Used for one-time test purchases. */
 export type PaymentAssessmentSessionsArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -6353,6 +7991,42 @@ export type PaymentAssessmentSessionsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AssessmentSessionsOrderBy>>;
+};
+
+
+/** Payment records for audit trail and reconciliation. Amounts are in INR paise. Used for one-time test purchases. */
+export type PaymentAssessmentSessionsByAssessmentCouplePaymentIdAndPartnerASessionIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentSessionCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentSessionsOrderBy>>;
+};
+
+
+/** Payment records for audit trail and reconciliation. Amounts are in INR paise. Used for one-time test purchases. */
+export type PaymentAssessmentSessionsByAssessmentCouplePaymentIdAndPartnerBSessionIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentSessionCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentSessionsOrderBy>>;
+};
+
+
+/** Payment records for audit trail and reconciliation. Amounts are in INR paise. Used for one-time test purchases. */
+export type PaymentAssessmentTypesByAssessmentCouplePaymentIdAndAssessmentTypeCodeArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentTypeCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentTypesOrderBy>>;
 };
 
 
@@ -6389,6 +8063,150 @@ export type PaymentUsersByAssessmentSessionPaymentIdAndUserIdArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<UsersOrderBy>>;
+};
+
+/** A connection to a list of `AssessmentCouple` values, with data from `AssessmentSession`. */
+export type PaymentAssessmentCouplesByAssessmentSessionPaymentIdAndCoupleIdManyToManyConnection = {
+  __typename?: 'PaymentAssessmentCouplesByAssessmentSessionPaymentIdAndCoupleIdManyToManyConnection';
+  /** A list of edges which contains the `AssessmentCouple`, info from the `AssessmentSession`, and the cursor to aid in pagination. */
+  edges: Array<PaymentAssessmentCouplesByAssessmentSessionPaymentIdAndCoupleIdManyToManyEdge>;
+  /** A list of `AssessmentCouple` objects. */
+  nodes: Array<AssessmentCouple>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `AssessmentCouple` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `AssessmentCouple` edge in the connection, with data from `AssessmentSession`. */
+export type PaymentAssessmentCouplesByAssessmentSessionPaymentIdAndCoupleIdManyToManyEdge = {
+  __typename?: 'PaymentAssessmentCouplesByAssessmentSessionPaymentIdAndCoupleIdManyToManyEdge';
+  /** Reads and enables pagination through a set of `AssessmentSession`. */
+  assessmentSessionsByCoupleId: AssessmentSessionsConnection;
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `AssessmentCouple` at the end of the edge. */
+  node: AssessmentCouple;
+};
+
+
+/** A `AssessmentCouple` edge in the connection, with data from `AssessmentSession`. */
+export type PaymentAssessmentCouplesByAssessmentSessionPaymentIdAndCoupleIdManyToManyEdgeAssessmentSessionsByCoupleIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentSessionCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentSessionsOrderBy>>;
+};
+
+/** A connection to a list of `AssessmentSession` values, with data from `AssessmentCouple`. */
+export type PaymentAssessmentSessionsByAssessmentCouplePaymentIdAndPartnerASessionIdManyToManyConnection = {
+  __typename?: 'PaymentAssessmentSessionsByAssessmentCouplePaymentIdAndPartnerASessionIdManyToManyConnection';
+  /** A list of edges which contains the `AssessmentSession`, info from the `AssessmentCouple`, and the cursor to aid in pagination. */
+  edges: Array<PaymentAssessmentSessionsByAssessmentCouplePaymentIdAndPartnerASessionIdManyToManyEdge>;
+  /** A list of `AssessmentSession` objects. */
+  nodes: Array<AssessmentSession>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `AssessmentSession` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `AssessmentSession` edge in the connection, with data from `AssessmentCouple`. */
+export type PaymentAssessmentSessionsByAssessmentCouplePaymentIdAndPartnerASessionIdManyToManyEdge = {
+  __typename?: 'PaymentAssessmentSessionsByAssessmentCouplePaymentIdAndPartnerASessionIdManyToManyEdge';
+  /** Reads and enables pagination through a set of `AssessmentCouple`. */
+  assessmentCouplesByPartnerASessionId: AssessmentCouplesConnection;
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `AssessmentSession` at the end of the edge. */
+  node: AssessmentSession;
+};
+
+
+/** A `AssessmentSession` edge in the connection, with data from `AssessmentCouple`. */
+export type PaymentAssessmentSessionsByAssessmentCouplePaymentIdAndPartnerASessionIdManyToManyEdgeAssessmentCouplesByPartnerASessionIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentCoupleCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentCouplesOrderBy>>;
+};
+
+/** A connection to a list of `AssessmentSession` values, with data from `AssessmentCouple`. */
+export type PaymentAssessmentSessionsByAssessmentCouplePaymentIdAndPartnerBSessionIdManyToManyConnection = {
+  __typename?: 'PaymentAssessmentSessionsByAssessmentCouplePaymentIdAndPartnerBSessionIdManyToManyConnection';
+  /** A list of edges which contains the `AssessmentSession`, info from the `AssessmentCouple`, and the cursor to aid in pagination. */
+  edges: Array<PaymentAssessmentSessionsByAssessmentCouplePaymentIdAndPartnerBSessionIdManyToManyEdge>;
+  /** A list of `AssessmentSession` objects. */
+  nodes: Array<AssessmentSession>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `AssessmentSession` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `AssessmentSession` edge in the connection, with data from `AssessmentCouple`. */
+export type PaymentAssessmentSessionsByAssessmentCouplePaymentIdAndPartnerBSessionIdManyToManyEdge = {
+  __typename?: 'PaymentAssessmentSessionsByAssessmentCouplePaymentIdAndPartnerBSessionIdManyToManyEdge';
+  /** Reads and enables pagination through a set of `AssessmentCouple`. */
+  assessmentCouplesByPartnerBSessionId: AssessmentCouplesConnection;
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `AssessmentSession` at the end of the edge. */
+  node: AssessmentSession;
+};
+
+
+/** A `AssessmentSession` edge in the connection, with data from `AssessmentCouple`. */
+export type PaymentAssessmentSessionsByAssessmentCouplePaymentIdAndPartnerBSessionIdManyToManyEdgeAssessmentCouplesByPartnerBSessionIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentCoupleCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentCouplesOrderBy>>;
+};
+
+/** A connection to a list of `AssessmentType` values, with data from `AssessmentCouple`. */
+export type PaymentAssessmentTypesByAssessmentCouplePaymentIdAndAssessmentTypeCodeManyToManyConnection = {
+  __typename?: 'PaymentAssessmentTypesByAssessmentCouplePaymentIdAndAssessmentTypeCodeManyToManyConnection';
+  /** A list of edges which contains the `AssessmentType`, info from the `AssessmentCouple`, and the cursor to aid in pagination. */
+  edges: Array<PaymentAssessmentTypesByAssessmentCouplePaymentIdAndAssessmentTypeCodeManyToManyEdge>;
+  /** A list of `AssessmentType` objects. */
+  nodes: Array<AssessmentType>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `AssessmentType` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `AssessmentType` edge in the connection, with data from `AssessmentCouple`. */
+export type PaymentAssessmentTypesByAssessmentCouplePaymentIdAndAssessmentTypeCodeManyToManyEdge = {
+  __typename?: 'PaymentAssessmentTypesByAssessmentCouplePaymentIdAndAssessmentTypeCodeManyToManyEdge';
+  /** Reads and enables pagination through a set of `AssessmentCouple`. */
+  assessmentCouplesByAssessmentTypeCode: AssessmentCouplesConnection;
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `AssessmentType` at the end of the edge. */
+  node: AssessmentType;
+};
+
+
+/** A `AssessmentType` edge in the connection, with data from `AssessmentCouple`. */
+export type PaymentAssessmentTypesByAssessmentCouplePaymentIdAndAssessmentTypeCodeManyToManyEdgeAssessmentCouplesByAssessmentTypeCodeArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentCoupleCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentCouplesOrderBy>>;
 };
 
 /** A connection to a list of `AssessmentType` values, with data from `AssessmentSession`. */
@@ -6452,6 +8270,27 @@ export type PaymentMethodStats = {
   method: Scalars['String']['output'];
   successCount: Scalars['Int']['output'];
   totalAmount: Scalars['Int']['output'];
+};
+
+/** The fields on `payment` to look up the row to update. */
+export type PaymentOnAssessmentCoupleForAssessmentCouplesPaymentIdFkeyUsingPaymentsPkeyUpdate = {
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `payment` being updated. */
+  patch: UpdatePaymentOnAssessmentCoupleForAssessmentCouplesPaymentIdFkeyPatch;
+};
+
+/** The fields on `payment` to look up the row to update. */
+export type PaymentOnAssessmentCoupleForAssessmentCouplesPaymentIdFkeyUsingPaymentsRazorpayOrderIdKeyUpdate = {
+  /** An object where the defined keys will be set on the `payment` being updated. */
+  patch: UpdatePaymentOnAssessmentCoupleForAssessmentCouplesPaymentIdFkeyPatch;
+  razorpayOrderId: Scalars['String']['input'];
+};
+
+/** The fields on `payment` to look up the row to update. */
+export type PaymentOnAssessmentCoupleForAssessmentCouplesPaymentIdFkeyUsingPaymentsRazorpayPaymentIdKeyUpdate = {
+  /** An object where the defined keys will be set on the `payment` being updated. */
+  patch: UpdatePaymentOnAssessmentCoupleForAssessmentCouplesPaymentIdFkeyPatch;
+  razorpayPaymentId: Scalars['String']['input'];
 };
 
 /** The fields on `payment` to look up the row to update. */
@@ -6800,6 +8639,14 @@ export type Query = {
   assessmentCohortStatByAssessmentTypeCode?: Maybe<AssessmentCohortStat>;
   /** Reads and enables pagination through a set of `AssessmentCohortStat`. */
   assessmentCohortStats?: Maybe<AssessmentCohortStatsConnection>;
+  assessmentCouple?: Maybe<AssessmentCouple>;
+  assessmentCoupleByInviteCode?: Maybe<AssessmentCouple>;
+  /** Reads and enables pagination through a set of `AssessmentCouple`. */
+  assessmentCouples?: Maybe<AssessmentCouplesConnection>;
+  assessmentDomainResult?: Maybe<AssessmentDomainResult>;
+  assessmentDomainResultByCoupleIdAndDomainKey?: Maybe<AssessmentDomainResult>;
+  /** Reads and enables pagination through a set of `AssessmentDomainResult`. */
+  assessmentDomainResults?: Maybe<AssessmentDomainResultsConnection>;
   assessmentInterpretationBand?: Maybe<AssessmentInterpretationBand>;
   /** Reads and enables pagination through a set of `AssessmentInterpretationBand`. */
   assessmentInterpretationBands?: Maybe<AssessmentInterpretationBandsConnection>;
@@ -6886,6 +8733,13 @@ export type Query = {
   getActiveCouponByCode?: Maybe<CouponTable>;
   /** Returns three INDEPENDENT cohort comparisons: age-based (age range, any gender), gender-based (same gender, any age), and overall (all users). When a cohort has fewer than 5 users, returns the user's own score as the cohortAverage (cohortSize = 0) so the UI always has meaningful data to display. */
   getCohortComparisonForResult?: Maybe<Scalars['JSON']['output']>;
+  /**
+   * Get the full results for a completed couples assessment.
+   * Both partners must have completed before results are available.
+   */
+  getCoupleResults?: Maybe<CoupleResultsPayload>;
+  /** Get the current status of a couples assessment (both partners' progress). */
+  getCoupleStatus?: Maybe<CoupleStatusPayload>;
   getDemographicCohortStats?: Maybe<GetDemographicCohortStatsConnection>;
   getInterpretationBand?: Maybe<AssessmentInterpretationBand>;
   /** Returns the interpretation band for a given score */
@@ -7005,6 +8859,55 @@ export type QueryAssessmentCohortStatsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AssessmentCohortStatsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAssessmentCoupleArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAssessmentCoupleByInviteCodeArgs = {
+  inviteCode: Scalars['String']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAssessmentCouplesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentCoupleCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentCouplesOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAssessmentDomainResultArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAssessmentDomainResultByCoupleIdAndDomainKeyArgs = {
+  coupleId: Scalars['UUID']['input'];
+  domainKey: Scalars['String']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAssessmentDomainResultsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentDomainResultCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentDomainResultsOrderBy>>;
 };
 
 
@@ -7359,6 +9262,18 @@ export type QueryGetCohortComparisonForResultArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryGetCoupleResultsArgs = {
+  coupleId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryGetCoupleStatusArgs = {
+  coupleId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryGetDemographicCohortStatsArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -7489,8 +9404,10 @@ export type QueryUsersWithAssessmentArgs = {
 
 export type QuestionSummaryItem = {
   __typename?: 'QuestionSummaryItem';
+  answerOptions?: Maybe<Scalars['JSON']['output']>;
   displayOrder: Scalars['Int']['output'];
   isAnswered: Scalars['Boolean']['output'];
+  questionCategory?: Maybe<Scalars['String']['output']>;
   questionId: Scalars['UUID']['output'];
   questionNumber: Scalars['Int']['output'];
   responseValue?: Maybe<Scalars['Int']['output']>;
@@ -7774,9 +9691,11 @@ export type SeedAssessmentTypeSectionsPayload = {
 
 export type SessionQuestionDetail = {
   __typename?: 'SessionQuestionDetail';
+  answerOptions?: Maybe<Scalars['JSON']['output']>;
   displayOrder: Scalars['Int']['output'];
   id: Scalars['UUID']['output'];
   isAnswered: Scalars['Boolean']['output'];
+  questionCategory: Scalars['String']['output'];
   questionId: Scalars['UUID']['output'];
   questionText: Scalars['String']['output'];
   sectionName: Scalars['String']['output'];
@@ -7809,6 +9728,20 @@ export type StartAssessmentInput = {
 export type StartAssessmentPayload = {
   __typename?: 'StartAssessmentPayload';
   assessmentType?: Maybe<AssessmentTypeInfo>;
+  message?: Maybe<Scalars['String']['output']>;
+  session?: Maybe<AssessmentSession>;
+};
+
+export type StartCoupleAssessmentInput = {
+  assessmentType: Scalars['String']['input'];
+  paymentId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+export type StartCoupleAssessmentPayload = {
+  __typename?: 'StartCoupleAssessmentPayload';
+  assessmentType?: Maybe<AssessmentTypeInfo>;
+  coupleId: Scalars['UUID']['output'];
+  inviteCode: Scalars['String']['output'];
   message?: Maybe<Scalars['String']['output']>;
   session?: Maybe<AssessmentSession>;
 };
@@ -7963,6 +9896,8 @@ export type UpdateAssessmentSessionPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `AssessmentCouple` that is related to this `AssessmentSession`. */
+  couple?: Maybe<AssessmentCouple>;
   /** Reads a single `Payment` that is related to this `AssessmentSession`. */
   payment?: Maybe<Payment>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
@@ -8047,11 +9982,15 @@ export type UpdateAssessmentTypeInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   displayOrder?: InputMaybe<Scalars['Int']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  isDyadic?: InputMaybe<Scalars['Boolean']['input']>;
   maxScore?: InputMaybe<Scalars['Int']['input']>;
   minScore?: InputMaybe<Scalars['Int']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   priceAmount?: InputMaybe<Scalars['Int']['input']>;
+  profileQuestionsCount?: InputMaybe<Scalars['Int']['input']>;
   questionsPerSection?: InputMaybe<Scalars['Int']['input']>;
+  responseScaleMax?: InputMaybe<Scalars['Int']['input']>;
+  responseScaleMin?: InputMaybe<Scalars['Int']['input']>;
   scoringFormula?: InputMaybe<Scalars['String']['input']>;
   sectionCount?: InputMaybe<Scalars['Int']['input']>;
 };
@@ -8253,9 +10192,11 @@ export type UpdateInterpretationBandPayload = {
 };
 
 export type UpdateQuestionInput = {
+  answerOptions?: InputMaybe<Scalars['JSON']['input']>;
   displayOrder?: InputMaybe<Scalars['Int']['input']>;
   id: Scalars['UUID']['input'];
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  questionCategory?: InputMaybe<Scalars['String']['input']>;
   questionText?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -8342,6 +10283,10 @@ export type UpdateUserPayloadUserEdgeArgs = {
 export type User = {
   __typename?: 'User';
   age: Scalars['Int']['output'];
+  /** Reads and enables pagination through a set of `AssessmentCouple`. */
+  assessmentCouplesByAssessmentResultUserIdAndCoupleId: UserAssessmentCouplesByAssessmentResultUserIdAndCoupleIdManyToManyConnection;
+  /** Reads and enables pagination through a set of `AssessmentCouple`. */
+  assessmentCouplesByAssessmentSessionUserIdAndCoupleId: UserAssessmentCouplesByAssessmentSessionUserIdAndCoupleIdManyToManyConnection;
   /** Reads and enables pagination through a set of `AssessmentInterpretationBand`. */
   assessmentInterpretationBandsByAssessmentResultUserIdAndInterpretationBandId: UserAssessmentInterpretationBandsByAssessmentResultUserIdAndInterpretationBandIdManyToManyConnection;
   /** Reads and enables pagination through a set of `AssessmentResult`. */
@@ -8383,6 +10328,28 @@ export type User = {
   reminderEmails: ReminderEmailsConnection;
   type: Scalars['String']['output'];
   updatedAt: Scalars['Datetime']['output'];
+};
+
+
+export type UserAssessmentCouplesByAssessmentResultUserIdAndCoupleIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentCoupleCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentCouplesOrderBy>>;
+};
+
+
+export type UserAssessmentCouplesByAssessmentSessionUserIdAndCoupleIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentCoupleCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentCouplesOrderBy>>;
 };
 
 
@@ -8526,6 +10493,78 @@ export type UserReminderEmailsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ReminderEmailsOrderBy>>;
+};
+
+/** A connection to a list of `AssessmentCouple` values, with data from `AssessmentResult`. */
+export type UserAssessmentCouplesByAssessmentResultUserIdAndCoupleIdManyToManyConnection = {
+  __typename?: 'UserAssessmentCouplesByAssessmentResultUserIdAndCoupleIdManyToManyConnection';
+  /** A list of edges which contains the `AssessmentCouple`, info from the `AssessmentResult`, and the cursor to aid in pagination. */
+  edges: Array<UserAssessmentCouplesByAssessmentResultUserIdAndCoupleIdManyToManyEdge>;
+  /** A list of `AssessmentCouple` objects. */
+  nodes: Array<AssessmentCouple>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `AssessmentCouple` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `AssessmentCouple` edge in the connection, with data from `AssessmentResult`. */
+export type UserAssessmentCouplesByAssessmentResultUserIdAndCoupleIdManyToManyEdge = {
+  __typename?: 'UserAssessmentCouplesByAssessmentResultUserIdAndCoupleIdManyToManyEdge';
+  /** Reads and enables pagination through a set of `AssessmentResult`. */
+  assessmentResultsByCoupleId: AssessmentResultsConnection;
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `AssessmentCouple` at the end of the edge. */
+  node: AssessmentCouple;
+};
+
+
+/** A `AssessmentCouple` edge in the connection, with data from `AssessmentResult`. */
+export type UserAssessmentCouplesByAssessmentResultUserIdAndCoupleIdManyToManyEdgeAssessmentResultsByCoupleIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentResultCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentResultsOrderBy>>;
+};
+
+/** A connection to a list of `AssessmentCouple` values, with data from `AssessmentSession`. */
+export type UserAssessmentCouplesByAssessmentSessionUserIdAndCoupleIdManyToManyConnection = {
+  __typename?: 'UserAssessmentCouplesByAssessmentSessionUserIdAndCoupleIdManyToManyConnection';
+  /** A list of edges which contains the `AssessmentCouple`, info from the `AssessmentSession`, and the cursor to aid in pagination. */
+  edges: Array<UserAssessmentCouplesByAssessmentSessionUserIdAndCoupleIdManyToManyEdge>;
+  /** A list of `AssessmentCouple` objects. */
+  nodes: Array<AssessmentCouple>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `AssessmentCouple` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `AssessmentCouple` edge in the connection, with data from `AssessmentSession`. */
+export type UserAssessmentCouplesByAssessmentSessionUserIdAndCoupleIdManyToManyEdge = {
+  __typename?: 'UserAssessmentCouplesByAssessmentSessionUserIdAndCoupleIdManyToManyEdge';
+  /** Reads and enables pagination through a set of `AssessmentSession`. */
+  assessmentSessionsByCoupleId: AssessmentSessionsConnection;
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `AssessmentCouple` at the end of the edge. */
+  node: AssessmentCouple;
+};
+
+
+/** A `AssessmentCouple` edge in the connection, with data from `AssessmentSession`. */
+export type UserAssessmentCouplesByAssessmentSessionUserIdAndCoupleIdManyToManyEdgeAssessmentSessionsByCoupleIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AssessmentSessionCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AssessmentSessionsOrderBy>>;
 };
 
 export type UserAssessmentInfo = {
@@ -9066,6 +11105,112 @@ export type UpdateAssessmentCohortStatOnAssessmentCohortStatForAssessmentCohortS
   totalAssessments?: InputMaybe<Scalars['Int']['input']>;
 };
 
+/** An object where the defined keys will be set on the `assessmentCouple` being updated. */
+export type UpdateAssessmentCoupleOnAssessmentCoupleForAssessmentCouplesAssessmentTypeCodeFkeyPatch = {
+  assessmentDomainResultsUsingId?: InputMaybe<AssessmentDomainResultsCoupleIdFkeyInverseInput>;
+  assessmentResultsUsingId?: InputMaybe<AssessmentResultsCoupleIdFkeyInverseInput>;
+  assessmentSessionToPartnerASessionId?: InputMaybe<AssessmentCouplesPartnerASessionIdFkeyInput>;
+  assessmentSessionToPartnerBSessionId?: InputMaybe<AssessmentCouplesPartnerBSessionIdFkeyInput>;
+  assessmentSessionsUsingId?: InputMaybe<FkSessionsCoupleIdInverseInput>;
+  assessmentTypeToAssessmentTypeCode?: InputMaybe<AssessmentCouplesAssessmentTypeCodeFkeyInput>;
+  partnerASessionId?: InputMaybe<Scalars['UUID']['input']>;
+  partnerBSessionId?: InputMaybe<Scalars['UUID']['input']>;
+  paymentId?: InputMaybe<Scalars['UUID']['input']>;
+  paymentToPaymentId?: InputMaybe<AssessmentCouplesPaymentIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `assessmentCouple` being updated. */
+export type UpdateAssessmentCoupleOnAssessmentCoupleForAssessmentCouplesPartnerASessionIdFkeyPatch = {
+  assessmentDomainResultsUsingId?: InputMaybe<AssessmentDomainResultsCoupleIdFkeyInverseInput>;
+  assessmentResultsUsingId?: InputMaybe<AssessmentResultsCoupleIdFkeyInverseInput>;
+  assessmentSessionToPartnerASessionId?: InputMaybe<AssessmentCouplesPartnerASessionIdFkeyInput>;
+  assessmentSessionToPartnerBSessionId?: InputMaybe<AssessmentCouplesPartnerBSessionIdFkeyInput>;
+  assessmentSessionsUsingId?: InputMaybe<FkSessionsCoupleIdInverseInput>;
+  assessmentTypeCode?: InputMaybe<Scalars['String']['input']>;
+  assessmentTypeToAssessmentTypeCode?: InputMaybe<AssessmentCouplesAssessmentTypeCodeFkeyInput>;
+  partnerBSessionId?: InputMaybe<Scalars['UUID']['input']>;
+  paymentId?: InputMaybe<Scalars['UUID']['input']>;
+  paymentToPaymentId?: InputMaybe<AssessmentCouplesPaymentIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `assessmentCouple` being updated. */
+export type UpdateAssessmentCoupleOnAssessmentCoupleForAssessmentCouplesPartnerBSessionIdFkeyPatch = {
+  assessmentDomainResultsUsingId?: InputMaybe<AssessmentDomainResultsCoupleIdFkeyInverseInput>;
+  assessmentResultsUsingId?: InputMaybe<AssessmentResultsCoupleIdFkeyInverseInput>;
+  assessmentSessionToPartnerASessionId?: InputMaybe<AssessmentCouplesPartnerASessionIdFkeyInput>;
+  assessmentSessionToPartnerBSessionId?: InputMaybe<AssessmentCouplesPartnerBSessionIdFkeyInput>;
+  assessmentSessionsUsingId?: InputMaybe<FkSessionsCoupleIdInverseInput>;
+  assessmentTypeCode?: InputMaybe<Scalars['String']['input']>;
+  assessmentTypeToAssessmentTypeCode?: InputMaybe<AssessmentCouplesAssessmentTypeCodeFkeyInput>;
+  partnerASessionId?: InputMaybe<Scalars['UUID']['input']>;
+  paymentId?: InputMaybe<Scalars['UUID']['input']>;
+  paymentToPaymentId?: InputMaybe<AssessmentCouplesPaymentIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `assessmentCouple` being updated. */
+export type UpdateAssessmentCoupleOnAssessmentCoupleForAssessmentCouplesPaymentIdFkeyPatch = {
+  assessmentDomainResultsUsingId?: InputMaybe<AssessmentDomainResultsCoupleIdFkeyInverseInput>;
+  assessmentResultsUsingId?: InputMaybe<AssessmentResultsCoupleIdFkeyInverseInput>;
+  assessmentSessionToPartnerASessionId?: InputMaybe<AssessmentCouplesPartnerASessionIdFkeyInput>;
+  assessmentSessionToPartnerBSessionId?: InputMaybe<AssessmentCouplesPartnerBSessionIdFkeyInput>;
+  assessmentSessionsUsingId?: InputMaybe<FkSessionsCoupleIdInverseInput>;
+  assessmentTypeCode?: InputMaybe<Scalars['String']['input']>;
+  assessmentTypeToAssessmentTypeCode?: InputMaybe<AssessmentCouplesAssessmentTypeCodeFkeyInput>;
+  partnerASessionId?: InputMaybe<Scalars['UUID']['input']>;
+  partnerBSessionId?: InputMaybe<Scalars['UUID']['input']>;
+  paymentToPaymentId?: InputMaybe<AssessmentCouplesPaymentIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `assessmentCouple` being updated. */
+export type UpdateAssessmentCoupleOnAssessmentDomainResultForAssessmentDomainResultsCoupleIdFkeyPatch = {
+  assessmentDomainResultsUsingId?: InputMaybe<AssessmentDomainResultsCoupleIdFkeyInverseInput>;
+  assessmentResultsUsingId?: InputMaybe<AssessmentResultsCoupleIdFkeyInverseInput>;
+  assessmentSessionToPartnerASessionId?: InputMaybe<AssessmentCouplesPartnerASessionIdFkeyInput>;
+  assessmentSessionToPartnerBSessionId?: InputMaybe<AssessmentCouplesPartnerBSessionIdFkeyInput>;
+  assessmentSessionsUsingId?: InputMaybe<FkSessionsCoupleIdInverseInput>;
+  assessmentTypeCode?: InputMaybe<Scalars['String']['input']>;
+  assessmentTypeToAssessmentTypeCode?: InputMaybe<AssessmentCouplesAssessmentTypeCodeFkeyInput>;
+  partnerASessionId?: InputMaybe<Scalars['UUID']['input']>;
+  partnerBSessionId?: InputMaybe<Scalars['UUID']['input']>;
+  paymentId?: InputMaybe<Scalars['UUID']['input']>;
+  paymentToPaymentId?: InputMaybe<AssessmentCouplesPaymentIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `assessmentCouple` being updated. */
+export type UpdateAssessmentCoupleOnAssessmentResultForAssessmentResultsCoupleIdFkeyPatch = {
+  assessmentDomainResultsUsingId?: InputMaybe<AssessmentDomainResultsCoupleIdFkeyInverseInput>;
+  assessmentResultsUsingId?: InputMaybe<AssessmentResultsCoupleIdFkeyInverseInput>;
+  assessmentSessionToPartnerASessionId?: InputMaybe<AssessmentCouplesPartnerASessionIdFkeyInput>;
+  assessmentSessionToPartnerBSessionId?: InputMaybe<AssessmentCouplesPartnerBSessionIdFkeyInput>;
+  assessmentSessionsUsingId?: InputMaybe<FkSessionsCoupleIdInverseInput>;
+  assessmentTypeCode?: InputMaybe<Scalars['String']['input']>;
+  assessmentTypeToAssessmentTypeCode?: InputMaybe<AssessmentCouplesAssessmentTypeCodeFkeyInput>;
+  partnerASessionId?: InputMaybe<Scalars['UUID']['input']>;
+  partnerBSessionId?: InputMaybe<Scalars['UUID']['input']>;
+  paymentId?: InputMaybe<Scalars['UUID']['input']>;
+  paymentToPaymentId?: InputMaybe<AssessmentCouplesPaymentIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `assessmentCouple` being updated. */
+export type UpdateAssessmentCoupleOnAssessmentSessionForFkSessionsCoupleIdPatch = {
+  assessmentDomainResultsUsingId?: InputMaybe<AssessmentDomainResultsCoupleIdFkeyInverseInput>;
+  assessmentResultsUsingId?: InputMaybe<AssessmentResultsCoupleIdFkeyInverseInput>;
+  assessmentSessionToPartnerASessionId?: InputMaybe<AssessmentCouplesPartnerASessionIdFkeyInput>;
+  assessmentSessionToPartnerBSessionId?: InputMaybe<AssessmentCouplesPartnerBSessionIdFkeyInput>;
+  assessmentSessionsUsingId?: InputMaybe<FkSessionsCoupleIdInverseInput>;
+  assessmentTypeCode?: InputMaybe<Scalars['String']['input']>;
+  assessmentTypeToAssessmentTypeCode?: InputMaybe<AssessmentCouplesAssessmentTypeCodeFkeyInput>;
+  partnerASessionId?: InputMaybe<Scalars['UUID']['input']>;
+  partnerBSessionId?: InputMaybe<Scalars['UUID']['input']>;
+  paymentId?: InputMaybe<Scalars['UUID']['input']>;
+  paymentToPaymentId?: InputMaybe<AssessmentCouplesPaymentIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `assessmentDomainResult` being updated. */
+export type UpdateAssessmentDomainResultOnAssessmentDomainResultForAssessmentDomainResultsCoupleIdFkeyPatch = {
+  assessmentCoupleToCoupleId?: InputMaybe<AssessmentDomainResultsCoupleIdFkeyInput>;
+};
+
 /** An object where the defined keys will be set on the `assessmentInterpretationBand` being updated. */
 export type UpdateAssessmentInterpretationBandOnAssessmentInterpretationBandForAssessmentInterpretationBandsAssessmentTypeCodeFkeyPatch = {
   assessmentRecommendedActionsUsingId?: InputMaybe<AssessmentRecommendedActionsInterpretationBandIdFkeyInverseInput>;
@@ -9191,6 +11336,8 @@ export type UpdateAssessmentInterpretationBandOnAssessmentSectionResultForAssess
 
 /** An object where the defined keys will be set on the `assessmentQuestion` being updated. */
 export type UpdateAssessmentQuestionOnAssessmentQuestionForAssessmentQuestionsSectionIdFkeyPatch = {
+  /** Optional labeled answer choices. NULL = numeric scale from assessment_type. Non-null = [{value: Int, label: String}, ...]. */
+  answerOptions?: InputMaybe<Scalars['JSON']['input']>;
   assessmentResponsesUsingId?: InputMaybe<AssessmentResponsesQuestionIdFkeyInverseInput>;
   assessmentSectionToSectionId?: InputMaybe<AssessmentQuestionsSectionIdFkeyInput>;
   assessmentSessionQuestionsUsingId?: InputMaybe<AssessmentSessionQuestionsQuestionIdFkeyInverseInput>;
@@ -9199,6 +11346,8 @@ export type UpdateAssessmentQuestionOnAssessmentQuestionForAssessmentQuestionsSe
   displayOrder?: InputMaybe<Scalars['Int']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  /** scored = counted in section score (default). profile = displayed/stored but excluded from scoring. */
+  questionCategory?: InputMaybe<Scalars['String']['input']>;
   /** The actual question text to be displayed to the user */
   questionText?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
@@ -9206,6 +11355,8 @@ export type UpdateAssessmentQuestionOnAssessmentQuestionForAssessmentQuestionsSe
 
 /** An object where the defined keys will be set on the `assessmentQuestion` being updated. */
 export type UpdateAssessmentQuestionOnAssessmentResponseForAssessmentResponsesQuestionIdFkeyPatch = {
+  /** Optional labeled answer choices. NULL = numeric scale from assessment_type. Non-null = [{value: Int, label: String}, ...]. */
+  answerOptions?: InputMaybe<Scalars['JSON']['input']>;
   assessmentResponsesUsingId?: InputMaybe<AssessmentResponsesQuestionIdFkeyInverseInput>;
   assessmentSectionToSectionId?: InputMaybe<AssessmentQuestionsSectionIdFkeyInput>;
   assessmentSessionQuestionsUsingId?: InputMaybe<AssessmentSessionQuestionsQuestionIdFkeyInverseInput>;
@@ -9214,6 +11365,8 @@ export type UpdateAssessmentQuestionOnAssessmentResponseForAssessmentResponsesQu
   displayOrder?: InputMaybe<Scalars['Int']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  /** scored = counted in section score (default). profile = displayed/stored but excluded from scoring. */
+  questionCategory?: InputMaybe<Scalars['String']['input']>;
   /** The actual question text to be displayed to the user */
   questionText?: InputMaybe<Scalars['String']['input']>;
   /** The section this question belongs to */
@@ -9223,6 +11376,8 @@ export type UpdateAssessmentQuestionOnAssessmentResponseForAssessmentResponsesQu
 
 /** An object where the defined keys will be set on the `assessmentQuestion` being updated. */
 export type UpdateAssessmentQuestionOnAssessmentSessionQuestionForAssessmentSessionQuestionsQuestionIdFkeyPatch = {
+  /** Optional labeled answer choices. NULL = numeric scale from assessment_type. Non-null = [{value: Int, label: String}, ...]. */
+  answerOptions?: InputMaybe<Scalars['JSON']['input']>;
   assessmentResponsesUsingId?: InputMaybe<AssessmentResponsesQuestionIdFkeyInverseInput>;
   assessmentSectionToSectionId?: InputMaybe<AssessmentQuestionsSectionIdFkeyInput>;
   assessmentSessionQuestionsUsingId?: InputMaybe<AssessmentSessionQuestionsQuestionIdFkeyInverseInput>;
@@ -9231,6 +11386,8 @@ export type UpdateAssessmentQuestionOnAssessmentSessionQuestionForAssessmentSess
   displayOrder?: InputMaybe<Scalars['Int']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  /** scored = counted in section score (default). profile = displayed/stored but excluded from scoring. */
+  questionCategory?: InputMaybe<Scalars['String']['input']>;
   /** The actual question text to be displayed to the user */
   questionText?: InputMaybe<Scalars['String']['input']>;
   /** The section this question belongs to */
@@ -9285,9 +11442,25 @@ export type UpdateAssessmentResponseOnAssessmentResponseForAssessmentResponsesSe
 
 /** An object where the defined keys will be set on the `assessmentResult` being updated. */
 export type UpdateAssessmentResultOnAssessmentResultForAssessmentResultsAssessmentTypeCodeFkeyPatch = {
+  assessmentCoupleToCoupleId?: InputMaybe<AssessmentResultsCoupleIdFkeyInput>;
   assessmentInterpretationBandToInterpretationBandId?: InputMaybe<AssessmentResultsInterpretationBandIdFkeyInput>;
   assessmentSectionResultsUsingId?: InputMaybe<AssessmentSectionResultsResultIdFkeyInverseInput>;
   assessmentSessionToSessionId?: InputMaybe<AssessmentResultsSessionIdFkeyInput>;
+  assessmentTypeToAssessmentTypeCode?: InputMaybe<AssessmentResultsAssessmentTypeCodeFkeyInput>;
+  coupleId?: InputMaybe<Scalars['UUID']['input']>;
+  interpretationBandId?: InputMaybe<Scalars['UUID']['input']>;
+  sessionId?: InputMaybe<Scalars['UUID']['input']>;
+  userId?: InputMaybe<Scalars['UUID']['input']>;
+  userToUserId?: InputMaybe<AssessmentResultsUserIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `assessmentResult` being updated. */
+export type UpdateAssessmentResultOnAssessmentResultForAssessmentResultsCoupleIdFkeyPatch = {
+  assessmentCoupleToCoupleId?: InputMaybe<AssessmentResultsCoupleIdFkeyInput>;
+  assessmentInterpretationBandToInterpretationBandId?: InputMaybe<AssessmentResultsInterpretationBandIdFkeyInput>;
+  assessmentSectionResultsUsingId?: InputMaybe<AssessmentSectionResultsResultIdFkeyInverseInput>;
+  assessmentSessionToSessionId?: InputMaybe<AssessmentResultsSessionIdFkeyInput>;
+  assessmentTypeCode?: InputMaybe<Scalars['String']['input']>;
   assessmentTypeToAssessmentTypeCode?: InputMaybe<AssessmentResultsAssessmentTypeCodeFkeyInput>;
   interpretationBandId?: InputMaybe<Scalars['UUID']['input']>;
   sessionId?: InputMaybe<Scalars['UUID']['input']>;
@@ -9297,11 +11470,13 @@ export type UpdateAssessmentResultOnAssessmentResultForAssessmentResultsAssessme
 
 /** An object where the defined keys will be set on the `assessmentResult` being updated. */
 export type UpdateAssessmentResultOnAssessmentResultForAssessmentResultsInterpretationBandIdFkeyPatch = {
+  assessmentCoupleToCoupleId?: InputMaybe<AssessmentResultsCoupleIdFkeyInput>;
   assessmentInterpretationBandToInterpretationBandId?: InputMaybe<AssessmentResultsInterpretationBandIdFkeyInput>;
   assessmentSectionResultsUsingId?: InputMaybe<AssessmentSectionResultsResultIdFkeyInverseInput>;
   assessmentSessionToSessionId?: InputMaybe<AssessmentResultsSessionIdFkeyInput>;
   assessmentTypeCode?: InputMaybe<Scalars['String']['input']>;
   assessmentTypeToAssessmentTypeCode?: InputMaybe<AssessmentResultsAssessmentTypeCodeFkeyInput>;
+  coupleId?: InputMaybe<Scalars['UUID']['input']>;
   sessionId?: InputMaybe<Scalars['UUID']['input']>;
   userId?: InputMaybe<Scalars['UUID']['input']>;
   userToUserId?: InputMaybe<AssessmentResultsUserIdFkeyInput>;
@@ -9309,11 +11484,13 @@ export type UpdateAssessmentResultOnAssessmentResultForAssessmentResultsInterpre
 
 /** An object where the defined keys will be set on the `assessmentResult` being updated. */
 export type UpdateAssessmentResultOnAssessmentResultForAssessmentResultsSessionIdFkeyPatch = {
+  assessmentCoupleToCoupleId?: InputMaybe<AssessmentResultsCoupleIdFkeyInput>;
   assessmentInterpretationBandToInterpretationBandId?: InputMaybe<AssessmentResultsInterpretationBandIdFkeyInput>;
   assessmentSectionResultsUsingId?: InputMaybe<AssessmentSectionResultsResultIdFkeyInverseInput>;
   assessmentSessionToSessionId?: InputMaybe<AssessmentResultsSessionIdFkeyInput>;
   assessmentTypeCode?: InputMaybe<Scalars['String']['input']>;
   assessmentTypeToAssessmentTypeCode?: InputMaybe<AssessmentResultsAssessmentTypeCodeFkeyInput>;
+  coupleId?: InputMaybe<Scalars['UUID']['input']>;
   interpretationBandId?: InputMaybe<Scalars['UUID']['input']>;
   userId?: InputMaybe<Scalars['UUID']['input']>;
   userToUserId?: InputMaybe<AssessmentResultsUserIdFkeyInput>;
@@ -9321,11 +11498,13 @@ export type UpdateAssessmentResultOnAssessmentResultForAssessmentResultsSessionI
 
 /** An object where the defined keys will be set on the `assessmentResult` being updated. */
 export type UpdateAssessmentResultOnAssessmentResultForAssessmentResultsUserIdFkeyPatch = {
+  assessmentCoupleToCoupleId?: InputMaybe<AssessmentResultsCoupleIdFkeyInput>;
   assessmentInterpretationBandToInterpretationBandId?: InputMaybe<AssessmentResultsInterpretationBandIdFkeyInput>;
   assessmentSectionResultsUsingId?: InputMaybe<AssessmentSectionResultsResultIdFkeyInverseInput>;
   assessmentSessionToSessionId?: InputMaybe<AssessmentResultsSessionIdFkeyInput>;
   assessmentTypeCode?: InputMaybe<Scalars['String']['input']>;
   assessmentTypeToAssessmentTypeCode?: InputMaybe<AssessmentResultsAssessmentTypeCodeFkeyInput>;
+  coupleId?: InputMaybe<Scalars['UUID']['input']>;
   interpretationBandId?: InputMaybe<Scalars['UUID']['input']>;
   sessionId?: InputMaybe<Scalars['UUID']['input']>;
   userToUserId?: InputMaybe<AssessmentResultsUserIdFkeyInput>;
@@ -9333,11 +11512,13 @@ export type UpdateAssessmentResultOnAssessmentResultForAssessmentResultsUserIdFk
 
 /** An object where the defined keys will be set on the `assessmentResult` being updated. */
 export type UpdateAssessmentResultOnAssessmentSectionResultForAssessmentSectionResultsResultIdFkeyPatch = {
+  assessmentCoupleToCoupleId?: InputMaybe<AssessmentResultsCoupleIdFkeyInput>;
   assessmentInterpretationBandToInterpretationBandId?: InputMaybe<AssessmentResultsInterpretationBandIdFkeyInput>;
   assessmentSectionResultsUsingId?: InputMaybe<AssessmentSectionResultsResultIdFkeyInverseInput>;
   assessmentSessionToSessionId?: InputMaybe<AssessmentResultsSessionIdFkeyInput>;
   assessmentTypeCode?: InputMaybe<Scalars['String']['input']>;
   assessmentTypeToAssessmentTypeCode?: InputMaybe<AssessmentResultsAssessmentTypeCodeFkeyInput>;
+  coupleId?: InputMaybe<Scalars['UUID']['input']>;
   interpretationBandId?: InputMaybe<Scalars['UUID']['input']>;
   sessionId?: InputMaybe<Scalars['UUID']['input']>;
   userId?: InputMaybe<Scalars['UUID']['input']>;
@@ -9365,6 +11546,8 @@ export type UpdateAssessmentSectionOnAssessmentQuestionForAssessmentQuestionsSec
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   /** Display name of the section */
   name?: InputMaybe<Scalars['String']['input']>;
+  /** scored = contributes to assessment score (default). profile = all questions always included, never randomly sampled. */
+  sectionCategory?: InputMaybe<Scalars['String']['input']>;
   /** Italic tagline on PDF dimension intro pages (e.g. Who am I without work?) */
   subtitle?: InputMaybe<Scalars['String']['input']>;
   /** Type of the assessment section (unique) */
@@ -9392,6 +11575,8 @@ export type UpdateAssessmentSectionOnAssessmentSectionForAssessmentSectionsAsses
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   /** Display name of the section */
   name?: InputMaybe<Scalars['String']['input']>;
+  /** scored = contributes to assessment score (default). profile = all questions always included, never randomly sampled. */
+  sectionCategory?: InputMaybe<Scalars['String']['input']>;
   /** Italic tagline on PDF dimension intro pages (e.g. Who am I without work?) */
   subtitle?: InputMaybe<Scalars['String']['input']>;
   /** Type of the assessment section (unique) */
@@ -9420,6 +11605,8 @@ export type UpdateAssessmentSectionOnAssessmentSectionResultForAssessmentSection
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   /** Display name of the section */
   name?: InputMaybe<Scalars['String']['input']>;
+  /** scored = contributes to assessment score (default). profile = all questions always included, never randomly sampled. */
+  sectionCategory?: InputMaybe<Scalars['String']['input']>;
   /** Italic tagline on PDF dimension intro pages (e.g. Who am I without work?) */
   subtitle?: InputMaybe<Scalars['String']['input']>;
   /** Type of the assessment section (unique) */
@@ -9455,13 +11642,18 @@ export type UpdateAssessmentSectionResultOnAssessmentSectionResultForAssessmentS
 };
 
 /** An object where the defined keys will be set on the `assessmentSession` being updated. */
-export type UpdateAssessmentSessionOnAssessmentResponseForAssessmentResponsesSessionIdFkeyPatch = {
+export type UpdateAssessmentSessionOnAssessmentCoupleForAssessmentCouplesPartnerASessionIdFkeyPatch = {
+  assessmentCoupleToCoupleId?: InputMaybe<FkSessionsCoupleIdInput>;
+  assessmentCouplesToPartnerASessionIdUsingId?: InputMaybe<AssessmentCouplesPartnerASessionIdFkeyInverseInput>;
+  assessmentCouplesToPartnerBSessionIdUsingId?: InputMaybe<AssessmentCouplesPartnerBSessionIdFkeyInverseInput>;
   assessmentResponsesUsingId?: InputMaybe<AssessmentResponsesSessionIdFkeyInverseInput>;
   assessmentResultUsingId?: InputMaybe<AssessmentResultsSessionIdFkeyInverseInput>;
   assessmentSessionQuestionsUsingId?: InputMaybe<AssessmentSessionQuestionsSessionIdFkeyInverseInput>;
   assessmentTypeCode?: InputMaybe<Scalars['String']['input']>;
   assessmentTypeToAssessmentTypeCode?: InputMaybe<AssessmentSessionsAssessmentTypeCodeFkeyInput>;
   completionTime?: InputMaybe<Scalars['Datetime']['input']>;
+  /** References assessment_couples.id for dyadic assessments. NULL for individual. */
+  coupleId?: InputMaybe<Scalars['UUID']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Current question number (1-50) for resume capability */
   currentQuestionNumber?: InputMaybe<Scalars['Int']['input']>;
@@ -9472,6 +11664,80 @@ export type UpdateAssessmentSessionOnAssessmentResponseForAssessmentResponsesSes
   lastActivityTime?: InputMaybe<Scalars['Datetime']['input']>;
   /** The last question number that the user actually answered (separate from current_question_number which tracks navigation) */
   lastAnsweredQuestion?: InputMaybe<Scalars['Int']['input']>;
+  /** partner_a or partner_b for dyadic assessments. NULL for individual assessments. */
+  partnerRole?: InputMaybe<Scalars['String']['input']>;
+  /** Reference to the payment made for this assessment. Nullable for internal users who can test without payment. Payment validation is enforced in start_assessment_session function. */
+  paymentId?: InputMaybe<Scalars['UUID']['input']>;
+  paymentToPaymentId?: InputMaybe<AssessmentSessionsPaymentIdFkeyInput>;
+  startTime?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Current status of the assessment session */
+  status?: InputMaybe<AssessmentStatus>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  userId?: InputMaybe<Scalars['UUID']['input']>;
+  userToUserId?: InputMaybe<AssessmentSessionsUserIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `assessmentSession` being updated. */
+export type UpdateAssessmentSessionOnAssessmentCoupleForAssessmentCouplesPartnerBSessionIdFkeyPatch = {
+  assessmentCoupleToCoupleId?: InputMaybe<FkSessionsCoupleIdInput>;
+  assessmentCouplesToPartnerASessionIdUsingId?: InputMaybe<AssessmentCouplesPartnerASessionIdFkeyInverseInput>;
+  assessmentCouplesToPartnerBSessionIdUsingId?: InputMaybe<AssessmentCouplesPartnerBSessionIdFkeyInverseInput>;
+  assessmentResponsesUsingId?: InputMaybe<AssessmentResponsesSessionIdFkeyInverseInput>;
+  assessmentResultUsingId?: InputMaybe<AssessmentResultsSessionIdFkeyInverseInput>;
+  assessmentSessionQuestionsUsingId?: InputMaybe<AssessmentSessionQuestionsSessionIdFkeyInverseInput>;
+  assessmentTypeCode?: InputMaybe<Scalars['String']['input']>;
+  assessmentTypeToAssessmentTypeCode?: InputMaybe<AssessmentSessionsAssessmentTypeCodeFkeyInput>;
+  completionTime?: InputMaybe<Scalars['Datetime']['input']>;
+  /** References assessment_couples.id for dyadic assessments. NULL for individual. */
+  coupleId?: InputMaybe<Scalars['UUID']['input']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Current question number (1-50) for resume capability */
+  currentQuestionNumber?: InputMaybe<Scalars['Int']['input']>;
+  /** When this session expires (30 days from start) */
+  expiresAt?: InputMaybe<Scalars['Datetime']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  /** Last time the user interacted with this session (for timeout tracking) */
+  lastActivityTime?: InputMaybe<Scalars['Datetime']['input']>;
+  /** The last question number that the user actually answered (separate from current_question_number which tracks navigation) */
+  lastAnsweredQuestion?: InputMaybe<Scalars['Int']['input']>;
+  /** partner_a or partner_b for dyadic assessments. NULL for individual assessments. */
+  partnerRole?: InputMaybe<Scalars['String']['input']>;
+  /** Reference to the payment made for this assessment. Nullable for internal users who can test without payment. Payment validation is enforced in start_assessment_session function. */
+  paymentId?: InputMaybe<Scalars['UUID']['input']>;
+  paymentToPaymentId?: InputMaybe<AssessmentSessionsPaymentIdFkeyInput>;
+  startTime?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Current status of the assessment session */
+  status?: InputMaybe<AssessmentStatus>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  userId?: InputMaybe<Scalars['UUID']['input']>;
+  userToUserId?: InputMaybe<AssessmentSessionsUserIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `assessmentSession` being updated. */
+export type UpdateAssessmentSessionOnAssessmentResponseForAssessmentResponsesSessionIdFkeyPatch = {
+  assessmentCoupleToCoupleId?: InputMaybe<FkSessionsCoupleIdInput>;
+  assessmentCouplesToPartnerASessionIdUsingId?: InputMaybe<AssessmentCouplesPartnerASessionIdFkeyInverseInput>;
+  assessmentCouplesToPartnerBSessionIdUsingId?: InputMaybe<AssessmentCouplesPartnerBSessionIdFkeyInverseInput>;
+  assessmentResponsesUsingId?: InputMaybe<AssessmentResponsesSessionIdFkeyInverseInput>;
+  assessmentResultUsingId?: InputMaybe<AssessmentResultsSessionIdFkeyInverseInput>;
+  assessmentSessionQuestionsUsingId?: InputMaybe<AssessmentSessionQuestionsSessionIdFkeyInverseInput>;
+  assessmentTypeCode?: InputMaybe<Scalars['String']['input']>;
+  assessmentTypeToAssessmentTypeCode?: InputMaybe<AssessmentSessionsAssessmentTypeCodeFkeyInput>;
+  completionTime?: InputMaybe<Scalars['Datetime']['input']>;
+  /** References assessment_couples.id for dyadic assessments. NULL for individual. */
+  coupleId?: InputMaybe<Scalars['UUID']['input']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Current question number (1-50) for resume capability */
+  currentQuestionNumber?: InputMaybe<Scalars['Int']['input']>;
+  /** When this session expires (30 days from start) */
+  expiresAt?: InputMaybe<Scalars['Datetime']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  /** Last time the user interacted with this session (for timeout tracking) */
+  lastActivityTime?: InputMaybe<Scalars['Datetime']['input']>;
+  /** The last question number that the user actually answered (separate from current_question_number which tracks navigation) */
+  lastAnsweredQuestion?: InputMaybe<Scalars['Int']['input']>;
+  /** partner_a or partner_b for dyadic assessments. NULL for individual assessments. */
+  partnerRole?: InputMaybe<Scalars['String']['input']>;
   /** Reference to the payment made for this assessment. Nullable for internal users who can test without payment. Payment validation is enforced in start_assessment_session function. */
   paymentId?: InputMaybe<Scalars['UUID']['input']>;
   paymentToPaymentId?: InputMaybe<AssessmentSessionsPaymentIdFkeyInput>;
@@ -9485,12 +11751,17 @@ export type UpdateAssessmentSessionOnAssessmentResponseForAssessmentResponsesSes
 
 /** An object where the defined keys will be set on the `assessmentSession` being updated. */
 export type UpdateAssessmentSessionOnAssessmentResultForAssessmentResultsSessionIdFkeyPatch = {
+  assessmentCoupleToCoupleId?: InputMaybe<FkSessionsCoupleIdInput>;
+  assessmentCouplesToPartnerASessionIdUsingId?: InputMaybe<AssessmentCouplesPartnerASessionIdFkeyInverseInput>;
+  assessmentCouplesToPartnerBSessionIdUsingId?: InputMaybe<AssessmentCouplesPartnerBSessionIdFkeyInverseInput>;
   assessmentResponsesUsingId?: InputMaybe<AssessmentResponsesSessionIdFkeyInverseInput>;
   assessmentResultUsingId?: InputMaybe<AssessmentResultsSessionIdFkeyInverseInput>;
   assessmentSessionQuestionsUsingId?: InputMaybe<AssessmentSessionQuestionsSessionIdFkeyInverseInput>;
   assessmentTypeCode?: InputMaybe<Scalars['String']['input']>;
   assessmentTypeToAssessmentTypeCode?: InputMaybe<AssessmentSessionsAssessmentTypeCodeFkeyInput>;
   completionTime?: InputMaybe<Scalars['Datetime']['input']>;
+  /** References assessment_couples.id for dyadic assessments. NULL for individual. */
+  coupleId?: InputMaybe<Scalars['UUID']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Current question number (1-50) for resume capability */
   currentQuestionNumber?: InputMaybe<Scalars['Int']['input']>;
@@ -9501,6 +11772,8 @@ export type UpdateAssessmentSessionOnAssessmentResultForAssessmentResultsSession
   lastActivityTime?: InputMaybe<Scalars['Datetime']['input']>;
   /** The last question number that the user actually answered (separate from current_question_number which tracks navigation) */
   lastAnsweredQuestion?: InputMaybe<Scalars['Int']['input']>;
+  /** partner_a or partner_b for dyadic assessments. NULL for individual assessments. */
+  partnerRole?: InputMaybe<Scalars['String']['input']>;
   /** Reference to the payment made for this assessment. Nullable for internal users who can test without payment. Payment validation is enforced in start_assessment_session function. */
   paymentId?: InputMaybe<Scalars['UUID']['input']>;
   paymentToPaymentId?: InputMaybe<AssessmentSessionsPaymentIdFkeyInput>;
@@ -9514,11 +11787,16 @@ export type UpdateAssessmentSessionOnAssessmentResultForAssessmentResultsSession
 
 /** An object where the defined keys will be set on the `assessmentSession` being updated. */
 export type UpdateAssessmentSessionOnAssessmentSessionForAssessmentSessionsAssessmentTypeCodeFkeyPatch = {
+  assessmentCoupleToCoupleId?: InputMaybe<FkSessionsCoupleIdInput>;
+  assessmentCouplesToPartnerASessionIdUsingId?: InputMaybe<AssessmentCouplesPartnerASessionIdFkeyInverseInput>;
+  assessmentCouplesToPartnerBSessionIdUsingId?: InputMaybe<AssessmentCouplesPartnerBSessionIdFkeyInverseInput>;
   assessmentResponsesUsingId?: InputMaybe<AssessmentResponsesSessionIdFkeyInverseInput>;
   assessmentResultUsingId?: InputMaybe<AssessmentResultsSessionIdFkeyInverseInput>;
   assessmentSessionQuestionsUsingId?: InputMaybe<AssessmentSessionQuestionsSessionIdFkeyInverseInput>;
   assessmentTypeToAssessmentTypeCode?: InputMaybe<AssessmentSessionsAssessmentTypeCodeFkeyInput>;
   completionTime?: InputMaybe<Scalars['Datetime']['input']>;
+  /** References assessment_couples.id for dyadic assessments. NULL for individual. */
+  coupleId?: InputMaybe<Scalars['UUID']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Current question number (1-50) for resume capability */
   currentQuestionNumber?: InputMaybe<Scalars['Int']['input']>;
@@ -9529,6 +11807,8 @@ export type UpdateAssessmentSessionOnAssessmentSessionForAssessmentSessionsAsses
   lastActivityTime?: InputMaybe<Scalars['Datetime']['input']>;
   /** The last question number that the user actually answered (separate from current_question_number which tracks navigation) */
   lastAnsweredQuestion?: InputMaybe<Scalars['Int']['input']>;
+  /** partner_a or partner_b for dyadic assessments. NULL for individual assessments. */
+  partnerRole?: InputMaybe<Scalars['String']['input']>;
   /** Reference to the payment made for this assessment. Nullable for internal users who can test without payment. Payment validation is enforced in start_assessment_session function. */
   paymentId?: InputMaybe<Scalars['UUID']['input']>;
   paymentToPaymentId?: InputMaybe<AssessmentSessionsPaymentIdFkeyInput>;
@@ -9542,12 +11822,17 @@ export type UpdateAssessmentSessionOnAssessmentSessionForAssessmentSessionsAsses
 
 /** An object where the defined keys will be set on the `assessmentSession` being updated. */
 export type UpdateAssessmentSessionOnAssessmentSessionForAssessmentSessionsPaymentIdFkeyPatch = {
+  assessmentCoupleToCoupleId?: InputMaybe<FkSessionsCoupleIdInput>;
+  assessmentCouplesToPartnerASessionIdUsingId?: InputMaybe<AssessmentCouplesPartnerASessionIdFkeyInverseInput>;
+  assessmentCouplesToPartnerBSessionIdUsingId?: InputMaybe<AssessmentCouplesPartnerBSessionIdFkeyInverseInput>;
   assessmentResponsesUsingId?: InputMaybe<AssessmentResponsesSessionIdFkeyInverseInput>;
   assessmentResultUsingId?: InputMaybe<AssessmentResultsSessionIdFkeyInverseInput>;
   assessmentSessionQuestionsUsingId?: InputMaybe<AssessmentSessionQuestionsSessionIdFkeyInverseInput>;
   assessmentTypeCode?: InputMaybe<Scalars['String']['input']>;
   assessmentTypeToAssessmentTypeCode?: InputMaybe<AssessmentSessionsAssessmentTypeCodeFkeyInput>;
   completionTime?: InputMaybe<Scalars['Datetime']['input']>;
+  /** References assessment_couples.id for dyadic assessments. NULL for individual. */
+  coupleId?: InputMaybe<Scalars['UUID']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Current question number (1-50) for resume capability */
   currentQuestionNumber?: InputMaybe<Scalars['Int']['input']>;
@@ -9558,6 +11843,8 @@ export type UpdateAssessmentSessionOnAssessmentSessionForAssessmentSessionsPayme
   lastActivityTime?: InputMaybe<Scalars['Datetime']['input']>;
   /** The last question number that the user actually answered (separate from current_question_number which tracks navigation) */
   lastAnsweredQuestion?: InputMaybe<Scalars['Int']['input']>;
+  /** partner_a or partner_b for dyadic assessments. NULL for individual assessments. */
+  partnerRole?: InputMaybe<Scalars['String']['input']>;
   paymentToPaymentId?: InputMaybe<AssessmentSessionsPaymentIdFkeyInput>;
   startTime?: InputMaybe<Scalars['Datetime']['input']>;
   /** Current status of the assessment session */
@@ -9569,12 +11856,17 @@ export type UpdateAssessmentSessionOnAssessmentSessionForAssessmentSessionsPayme
 
 /** An object where the defined keys will be set on the `assessmentSession` being updated. */
 export type UpdateAssessmentSessionOnAssessmentSessionForAssessmentSessionsUserIdFkeyPatch = {
+  assessmentCoupleToCoupleId?: InputMaybe<FkSessionsCoupleIdInput>;
+  assessmentCouplesToPartnerASessionIdUsingId?: InputMaybe<AssessmentCouplesPartnerASessionIdFkeyInverseInput>;
+  assessmentCouplesToPartnerBSessionIdUsingId?: InputMaybe<AssessmentCouplesPartnerBSessionIdFkeyInverseInput>;
   assessmentResponsesUsingId?: InputMaybe<AssessmentResponsesSessionIdFkeyInverseInput>;
   assessmentResultUsingId?: InputMaybe<AssessmentResultsSessionIdFkeyInverseInput>;
   assessmentSessionQuestionsUsingId?: InputMaybe<AssessmentSessionQuestionsSessionIdFkeyInverseInput>;
   assessmentTypeCode?: InputMaybe<Scalars['String']['input']>;
   assessmentTypeToAssessmentTypeCode?: InputMaybe<AssessmentSessionsAssessmentTypeCodeFkeyInput>;
   completionTime?: InputMaybe<Scalars['Datetime']['input']>;
+  /** References assessment_couples.id for dyadic assessments. NULL for individual. */
+  coupleId?: InputMaybe<Scalars['UUID']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Current question number (1-50) for resume capability */
   currentQuestionNumber?: InputMaybe<Scalars['Int']['input']>;
@@ -9585,6 +11877,8 @@ export type UpdateAssessmentSessionOnAssessmentSessionForAssessmentSessionsUserI
   lastActivityTime?: InputMaybe<Scalars['Datetime']['input']>;
   /** The last question number that the user actually answered (separate from current_question_number which tracks navigation) */
   lastAnsweredQuestion?: InputMaybe<Scalars['Int']['input']>;
+  /** partner_a or partner_b for dyadic assessments. NULL for individual assessments. */
+  partnerRole?: InputMaybe<Scalars['String']['input']>;
   /** Reference to the payment made for this assessment. Nullable for internal users who can test without payment. Payment validation is enforced in start_assessment_session function. */
   paymentId?: InputMaybe<Scalars['UUID']['input']>;
   paymentToPaymentId?: InputMaybe<AssessmentSessionsPaymentIdFkeyInput>;
@@ -9596,7 +11890,10 @@ export type UpdateAssessmentSessionOnAssessmentSessionForAssessmentSessionsUserI
 };
 
 /** An object where the defined keys will be set on the `assessmentSession` being updated. */
-export type UpdateAssessmentSessionOnAssessmentSessionQuestionForAssessmentSessionQuestionsSessionIdFkeyPatch = {
+export type UpdateAssessmentSessionOnAssessmentSessionForFkSessionsCoupleIdPatch = {
+  assessmentCoupleToCoupleId?: InputMaybe<FkSessionsCoupleIdInput>;
+  assessmentCouplesToPartnerASessionIdUsingId?: InputMaybe<AssessmentCouplesPartnerASessionIdFkeyInverseInput>;
+  assessmentCouplesToPartnerBSessionIdUsingId?: InputMaybe<AssessmentCouplesPartnerBSessionIdFkeyInverseInput>;
   assessmentResponsesUsingId?: InputMaybe<AssessmentResponsesSessionIdFkeyInverseInput>;
   assessmentResultUsingId?: InputMaybe<AssessmentResultsSessionIdFkeyInverseInput>;
   assessmentSessionQuestionsUsingId?: InputMaybe<AssessmentSessionQuestionsSessionIdFkeyInverseInput>;
@@ -9613,6 +11910,44 @@ export type UpdateAssessmentSessionOnAssessmentSessionQuestionForAssessmentSessi
   lastActivityTime?: InputMaybe<Scalars['Datetime']['input']>;
   /** The last question number that the user actually answered (separate from current_question_number which tracks navigation) */
   lastAnsweredQuestion?: InputMaybe<Scalars['Int']['input']>;
+  /** partner_a or partner_b for dyadic assessments. NULL for individual assessments. */
+  partnerRole?: InputMaybe<Scalars['String']['input']>;
+  /** Reference to the payment made for this assessment. Nullable for internal users who can test without payment. Payment validation is enforced in start_assessment_session function. */
+  paymentId?: InputMaybe<Scalars['UUID']['input']>;
+  paymentToPaymentId?: InputMaybe<AssessmentSessionsPaymentIdFkeyInput>;
+  startTime?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Current status of the assessment session */
+  status?: InputMaybe<AssessmentStatus>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  userId?: InputMaybe<Scalars['UUID']['input']>;
+  userToUserId?: InputMaybe<AssessmentSessionsUserIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `assessmentSession` being updated. */
+export type UpdateAssessmentSessionOnAssessmentSessionQuestionForAssessmentSessionQuestionsSessionIdFkeyPatch = {
+  assessmentCoupleToCoupleId?: InputMaybe<FkSessionsCoupleIdInput>;
+  assessmentCouplesToPartnerASessionIdUsingId?: InputMaybe<AssessmentCouplesPartnerASessionIdFkeyInverseInput>;
+  assessmentCouplesToPartnerBSessionIdUsingId?: InputMaybe<AssessmentCouplesPartnerBSessionIdFkeyInverseInput>;
+  assessmentResponsesUsingId?: InputMaybe<AssessmentResponsesSessionIdFkeyInverseInput>;
+  assessmentResultUsingId?: InputMaybe<AssessmentResultsSessionIdFkeyInverseInput>;
+  assessmentSessionQuestionsUsingId?: InputMaybe<AssessmentSessionQuestionsSessionIdFkeyInverseInput>;
+  assessmentTypeCode?: InputMaybe<Scalars['String']['input']>;
+  assessmentTypeToAssessmentTypeCode?: InputMaybe<AssessmentSessionsAssessmentTypeCodeFkeyInput>;
+  completionTime?: InputMaybe<Scalars['Datetime']['input']>;
+  /** References assessment_couples.id for dyadic assessments. NULL for individual. */
+  coupleId?: InputMaybe<Scalars['UUID']['input']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Current question number (1-50) for resume capability */
+  currentQuestionNumber?: InputMaybe<Scalars['Int']['input']>;
+  /** When this session expires (30 days from start) */
+  expiresAt?: InputMaybe<Scalars['Datetime']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  /** Last time the user interacted with this session (for timeout tracking) */
+  lastActivityTime?: InputMaybe<Scalars['Datetime']['input']>;
+  /** The last question number that the user actually answered (separate from current_question_number which tracks navigation) */
+  lastAnsweredQuestion?: InputMaybe<Scalars['Int']['input']>;
+  /** partner_a or partner_b for dyadic assessments. NULL for individual assessments. */
+  partnerRole?: InputMaybe<Scalars['String']['input']>;
   /** Reference to the payment made for this assessment. Nullable for internal users who can test without payment. Payment validation is enforced in start_assessment_session function. */
   paymentId?: InputMaybe<Scalars['UUID']['input']>;
   paymentToPaymentId?: InputMaybe<AssessmentSessionsPaymentIdFkeyInput>;
@@ -9663,6 +11998,7 @@ export type UpdateAssessmentTemplateContentOnAssessmentTemplateContentForAssessm
 /** An object where the defined keys will be set on the `assessmentType` being updated. */
 export type UpdateAssessmentTypeOnAssessmentCohortStatForAssessmentCohortStatsAssessmentTypeCodeFkeyPatch = {
   assessmentCohortStatUsingCode?: InputMaybe<AssessmentCohortStatsAssessmentTypeCodeFkeyInverseInput>;
+  assessmentCouplesUsingCode?: InputMaybe<AssessmentCouplesAssessmentTypeCodeFkeyInverseInput>;
   assessmentInterpretationBandsUsingCode?: InputMaybe<AssessmentInterpretationBandsAssessmentTypeCodeFkeyInverseInput>;
   assessmentResultsUsingCode?: InputMaybe<AssessmentResultsAssessmentTypeCodeFkeyInverseInput>;
   assessmentSectionsUsingCode?: InputMaybe<AssessmentSectionsAssessmentTypeCodeFkeyInverseInput>;
@@ -9676,15 +12012,65 @@ export type UpdateAssessmentTypeOnAssessmentCohortStatForAssessmentCohortStatsAs
   displayOrder?: InputMaybe<Scalars['Int']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  /** When true, the assessment requires two partners (dyadic). Use start_couple_assessment + join_couple_assessment instead of start_assessment_session. */
+  isDyadic?: InputMaybe<Scalars['Boolean']['input']>;
   maxScore?: InputMaybe<Scalars['Int']['input']>;
   metadata?: InputMaybe<Scalars['JSON']['input']>;
   minScore?: InputMaybe<Scalars['Int']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   paymentsUsingCode?: InputMaybe<PaymentsAssessmentTypeCodeFkeyInverseInput>;
   priceAmount?: InputMaybe<Scalars['Int']['input']>;
+  /** Number of profile (unscored) questions shown at the start of the assessment. Does not affect total_questions generated column. */
+  profileQuestionsCount?: InputMaybe<Scalars['Int']['input']>;
   questionsPerSection?: InputMaybe<Scalars['Int']['input']>;
   /** Incremented when report display content changes; PDFs regen lazily on download when stale */
   reportContentVersion?: InputMaybe<Scalars['Int']['input']>;
+  /** Maximum value on the response scale (default 10). Used to validate and normalise responses. */
+  responseScaleMax?: InputMaybe<Scalars['Int']['input']>;
+  /** Minimum value on the response scale (default 1). Used to validate and normalise responses. */
+  responseScaleMin?: InputMaybe<Scalars['Int']['input']>;
+  /** Formula type: sum (add section scores) or average (mean of section scores scaled to min/max) */
+  scoringFormula?: InputMaybe<Scalars['String']['input']>;
+  sectionCount?: InputMaybe<Scalars['Int']['input']>;
+  templateVersion?: InputMaybe<Scalars['String']['input']>;
+  totalQuestions?: InputMaybe<Scalars['Int']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** An object where the defined keys will be set on the `assessmentType` being updated. */
+export type UpdateAssessmentTypeOnAssessmentCoupleForAssessmentCouplesAssessmentTypeCodeFkeyPatch = {
+  assessmentCohortStatUsingCode?: InputMaybe<AssessmentCohortStatsAssessmentTypeCodeFkeyInverseInput>;
+  assessmentCouplesUsingCode?: InputMaybe<AssessmentCouplesAssessmentTypeCodeFkeyInverseInput>;
+  assessmentInterpretationBandsUsingCode?: InputMaybe<AssessmentInterpretationBandsAssessmentTypeCodeFkeyInverseInput>;
+  assessmentResultsUsingCode?: InputMaybe<AssessmentResultsAssessmentTypeCodeFkeyInverseInput>;
+  assessmentSectionsUsingCode?: InputMaybe<AssessmentSectionsAssessmentTypeCodeFkeyInverseInput>;
+  assessmentSessionsUsingCode?: InputMaybe<AssessmentSessionsAssessmentTypeCodeFkeyInverseInput>;
+  assessmentTemplateContentsUsingCode?: InputMaybe<AssessmentTemplateContentAssessmentTypeCodeFkeyInverseInput>;
+  assessmentTypeStageTablesUsingCode?: InputMaybe<AssessmentTypeStagesAssessmentTypeCodeFkeyInverseInput>;
+  /** Unique identifier for the assessment type (e.g., ssri, prai) */
+  code?: InputMaybe<Scalars['String']['input']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  displayOrder?: InputMaybe<Scalars['Int']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  /** When true, the assessment requires two partners (dyadic). Use start_couple_assessment + join_couple_assessment instead of start_assessment_session. */
+  isDyadic?: InputMaybe<Scalars['Boolean']['input']>;
+  maxScore?: InputMaybe<Scalars['Int']['input']>;
+  metadata?: InputMaybe<Scalars['JSON']['input']>;
+  minScore?: InputMaybe<Scalars['Int']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  paymentsUsingCode?: InputMaybe<PaymentsAssessmentTypeCodeFkeyInverseInput>;
+  priceAmount?: InputMaybe<Scalars['Int']['input']>;
+  /** Number of profile (unscored) questions shown at the start of the assessment. Does not affect total_questions generated column. */
+  profileQuestionsCount?: InputMaybe<Scalars['Int']['input']>;
+  questionsPerSection?: InputMaybe<Scalars['Int']['input']>;
+  /** Incremented when report display content changes; PDFs regen lazily on download when stale */
+  reportContentVersion?: InputMaybe<Scalars['Int']['input']>;
+  /** Maximum value on the response scale (default 10). Used to validate and normalise responses. */
+  responseScaleMax?: InputMaybe<Scalars['Int']['input']>;
+  /** Minimum value on the response scale (default 1). Used to validate and normalise responses. */
+  responseScaleMin?: InputMaybe<Scalars['Int']['input']>;
   /** Formula type: sum (add section scores) or average (mean of section scores scaled to min/max) */
   scoringFormula?: InputMaybe<Scalars['String']['input']>;
   sectionCount?: InputMaybe<Scalars['Int']['input']>;
@@ -9696,6 +12082,7 @@ export type UpdateAssessmentTypeOnAssessmentCohortStatForAssessmentCohortStatsAs
 /** An object where the defined keys will be set on the `assessmentType` being updated. */
 export type UpdateAssessmentTypeOnAssessmentInterpretationBandForAssessmentInterpretationBandsAssessmentTypeCodeFkeyPatch = {
   assessmentCohortStatUsingCode?: InputMaybe<AssessmentCohortStatsAssessmentTypeCodeFkeyInverseInput>;
+  assessmentCouplesUsingCode?: InputMaybe<AssessmentCouplesAssessmentTypeCodeFkeyInverseInput>;
   assessmentInterpretationBandsUsingCode?: InputMaybe<AssessmentInterpretationBandsAssessmentTypeCodeFkeyInverseInput>;
   assessmentResultsUsingCode?: InputMaybe<AssessmentResultsAssessmentTypeCodeFkeyInverseInput>;
   assessmentSectionsUsingCode?: InputMaybe<AssessmentSectionsAssessmentTypeCodeFkeyInverseInput>;
@@ -9709,15 +12096,23 @@ export type UpdateAssessmentTypeOnAssessmentInterpretationBandForAssessmentInter
   displayOrder?: InputMaybe<Scalars['Int']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  /** When true, the assessment requires two partners (dyadic). Use start_couple_assessment + join_couple_assessment instead of start_assessment_session. */
+  isDyadic?: InputMaybe<Scalars['Boolean']['input']>;
   maxScore?: InputMaybe<Scalars['Int']['input']>;
   metadata?: InputMaybe<Scalars['JSON']['input']>;
   minScore?: InputMaybe<Scalars['Int']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   paymentsUsingCode?: InputMaybe<PaymentsAssessmentTypeCodeFkeyInverseInput>;
   priceAmount?: InputMaybe<Scalars['Int']['input']>;
+  /** Number of profile (unscored) questions shown at the start of the assessment. Does not affect total_questions generated column. */
+  profileQuestionsCount?: InputMaybe<Scalars['Int']['input']>;
   questionsPerSection?: InputMaybe<Scalars['Int']['input']>;
   /** Incremented when report display content changes; PDFs regen lazily on download when stale */
   reportContentVersion?: InputMaybe<Scalars['Int']['input']>;
+  /** Maximum value on the response scale (default 10). Used to validate and normalise responses. */
+  responseScaleMax?: InputMaybe<Scalars['Int']['input']>;
+  /** Minimum value on the response scale (default 1). Used to validate and normalise responses. */
+  responseScaleMin?: InputMaybe<Scalars['Int']['input']>;
   /** Formula type: sum (add section scores) or average (mean of section scores scaled to min/max) */
   scoringFormula?: InputMaybe<Scalars['String']['input']>;
   sectionCount?: InputMaybe<Scalars['Int']['input']>;
@@ -9729,6 +12124,7 @@ export type UpdateAssessmentTypeOnAssessmentInterpretationBandForAssessmentInter
 /** An object where the defined keys will be set on the `assessmentType` being updated. */
 export type UpdateAssessmentTypeOnAssessmentResultForAssessmentResultsAssessmentTypeCodeFkeyPatch = {
   assessmentCohortStatUsingCode?: InputMaybe<AssessmentCohortStatsAssessmentTypeCodeFkeyInverseInput>;
+  assessmentCouplesUsingCode?: InputMaybe<AssessmentCouplesAssessmentTypeCodeFkeyInverseInput>;
   assessmentInterpretationBandsUsingCode?: InputMaybe<AssessmentInterpretationBandsAssessmentTypeCodeFkeyInverseInput>;
   assessmentResultsUsingCode?: InputMaybe<AssessmentResultsAssessmentTypeCodeFkeyInverseInput>;
   assessmentSectionsUsingCode?: InputMaybe<AssessmentSectionsAssessmentTypeCodeFkeyInverseInput>;
@@ -9742,15 +12138,23 @@ export type UpdateAssessmentTypeOnAssessmentResultForAssessmentResultsAssessment
   displayOrder?: InputMaybe<Scalars['Int']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  /** When true, the assessment requires two partners (dyadic). Use start_couple_assessment + join_couple_assessment instead of start_assessment_session. */
+  isDyadic?: InputMaybe<Scalars['Boolean']['input']>;
   maxScore?: InputMaybe<Scalars['Int']['input']>;
   metadata?: InputMaybe<Scalars['JSON']['input']>;
   minScore?: InputMaybe<Scalars['Int']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   paymentsUsingCode?: InputMaybe<PaymentsAssessmentTypeCodeFkeyInverseInput>;
   priceAmount?: InputMaybe<Scalars['Int']['input']>;
+  /** Number of profile (unscored) questions shown at the start of the assessment. Does not affect total_questions generated column. */
+  profileQuestionsCount?: InputMaybe<Scalars['Int']['input']>;
   questionsPerSection?: InputMaybe<Scalars['Int']['input']>;
   /** Incremented when report display content changes; PDFs regen lazily on download when stale */
   reportContentVersion?: InputMaybe<Scalars['Int']['input']>;
+  /** Maximum value on the response scale (default 10). Used to validate and normalise responses. */
+  responseScaleMax?: InputMaybe<Scalars['Int']['input']>;
+  /** Minimum value on the response scale (default 1). Used to validate and normalise responses. */
+  responseScaleMin?: InputMaybe<Scalars['Int']['input']>;
   /** Formula type: sum (add section scores) or average (mean of section scores scaled to min/max) */
   scoringFormula?: InputMaybe<Scalars['String']['input']>;
   sectionCount?: InputMaybe<Scalars['Int']['input']>;
@@ -9762,6 +12166,7 @@ export type UpdateAssessmentTypeOnAssessmentResultForAssessmentResultsAssessment
 /** An object where the defined keys will be set on the `assessmentType` being updated. */
 export type UpdateAssessmentTypeOnAssessmentSectionForAssessmentSectionsAssessmentTypeCodeFkeyPatch = {
   assessmentCohortStatUsingCode?: InputMaybe<AssessmentCohortStatsAssessmentTypeCodeFkeyInverseInput>;
+  assessmentCouplesUsingCode?: InputMaybe<AssessmentCouplesAssessmentTypeCodeFkeyInverseInput>;
   assessmentInterpretationBandsUsingCode?: InputMaybe<AssessmentInterpretationBandsAssessmentTypeCodeFkeyInverseInput>;
   assessmentResultsUsingCode?: InputMaybe<AssessmentResultsAssessmentTypeCodeFkeyInverseInput>;
   assessmentSectionsUsingCode?: InputMaybe<AssessmentSectionsAssessmentTypeCodeFkeyInverseInput>;
@@ -9775,15 +12180,23 @@ export type UpdateAssessmentTypeOnAssessmentSectionForAssessmentSectionsAssessme
   displayOrder?: InputMaybe<Scalars['Int']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  /** When true, the assessment requires two partners (dyadic). Use start_couple_assessment + join_couple_assessment instead of start_assessment_session. */
+  isDyadic?: InputMaybe<Scalars['Boolean']['input']>;
   maxScore?: InputMaybe<Scalars['Int']['input']>;
   metadata?: InputMaybe<Scalars['JSON']['input']>;
   minScore?: InputMaybe<Scalars['Int']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   paymentsUsingCode?: InputMaybe<PaymentsAssessmentTypeCodeFkeyInverseInput>;
   priceAmount?: InputMaybe<Scalars['Int']['input']>;
+  /** Number of profile (unscored) questions shown at the start of the assessment. Does not affect total_questions generated column. */
+  profileQuestionsCount?: InputMaybe<Scalars['Int']['input']>;
   questionsPerSection?: InputMaybe<Scalars['Int']['input']>;
   /** Incremented when report display content changes; PDFs regen lazily on download when stale */
   reportContentVersion?: InputMaybe<Scalars['Int']['input']>;
+  /** Maximum value on the response scale (default 10). Used to validate and normalise responses. */
+  responseScaleMax?: InputMaybe<Scalars['Int']['input']>;
+  /** Minimum value on the response scale (default 1). Used to validate and normalise responses. */
+  responseScaleMin?: InputMaybe<Scalars['Int']['input']>;
   /** Formula type: sum (add section scores) or average (mean of section scores scaled to min/max) */
   scoringFormula?: InputMaybe<Scalars['String']['input']>;
   sectionCount?: InputMaybe<Scalars['Int']['input']>;
@@ -9795,6 +12208,7 @@ export type UpdateAssessmentTypeOnAssessmentSectionForAssessmentSectionsAssessme
 /** An object where the defined keys will be set on the `assessmentType` being updated. */
 export type UpdateAssessmentTypeOnAssessmentSessionForAssessmentSessionsAssessmentTypeCodeFkeyPatch = {
   assessmentCohortStatUsingCode?: InputMaybe<AssessmentCohortStatsAssessmentTypeCodeFkeyInverseInput>;
+  assessmentCouplesUsingCode?: InputMaybe<AssessmentCouplesAssessmentTypeCodeFkeyInverseInput>;
   assessmentInterpretationBandsUsingCode?: InputMaybe<AssessmentInterpretationBandsAssessmentTypeCodeFkeyInverseInput>;
   assessmentResultsUsingCode?: InputMaybe<AssessmentResultsAssessmentTypeCodeFkeyInverseInput>;
   assessmentSectionsUsingCode?: InputMaybe<AssessmentSectionsAssessmentTypeCodeFkeyInverseInput>;
@@ -9808,15 +12222,23 @@ export type UpdateAssessmentTypeOnAssessmentSessionForAssessmentSessionsAssessme
   displayOrder?: InputMaybe<Scalars['Int']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  /** When true, the assessment requires two partners (dyadic). Use start_couple_assessment + join_couple_assessment instead of start_assessment_session. */
+  isDyadic?: InputMaybe<Scalars['Boolean']['input']>;
   maxScore?: InputMaybe<Scalars['Int']['input']>;
   metadata?: InputMaybe<Scalars['JSON']['input']>;
   minScore?: InputMaybe<Scalars['Int']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   paymentsUsingCode?: InputMaybe<PaymentsAssessmentTypeCodeFkeyInverseInput>;
   priceAmount?: InputMaybe<Scalars['Int']['input']>;
+  /** Number of profile (unscored) questions shown at the start of the assessment. Does not affect total_questions generated column. */
+  profileQuestionsCount?: InputMaybe<Scalars['Int']['input']>;
   questionsPerSection?: InputMaybe<Scalars['Int']['input']>;
   /** Incremented when report display content changes; PDFs regen lazily on download when stale */
   reportContentVersion?: InputMaybe<Scalars['Int']['input']>;
+  /** Maximum value on the response scale (default 10). Used to validate and normalise responses. */
+  responseScaleMax?: InputMaybe<Scalars['Int']['input']>;
+  /** Minimum value on the response scale (default 1). Used to validate and normalise responses. */
+  responseScaleMin?: InputMaybe<Scalars['Int']['input']>;
   /** Formula type: sum (add section scores) or average (mean of section scores scaled to min/max) */
   scoringFormula?: InputMaybe<Scalars['String']['input']>;
   sectionCount?: InputMaybe<Scalars['Int']['input']>;
@@ -9828,6 +12250,7 @@ export type UpdateAssessmentTypeOnAssessmentSessionForAssessmentSessionsAssessme
 /** An object where the defined keys will be set on the `assessmentType` being updated. */
 export type UpdateAssessmentTypeOnAssessmentTemplateContentForAssessmentTemplateContentAssessmentTypeCodeFkeyPatch = {
   assessmentCohortStatUsingCode?: InputMaybe<AssessmentCohortStatsAssessmentTypeCodeFkeyInverseInput>;
+  assessmentCouplesUsingCode?: InputMaybe<AssessmentCouplesAssessmentTypeCodeFkeyInverseInput>;
   assessmentInterpretationBandsUsingCode?: InputMaybe<AssessmentInterpretationBandsAssessmentTypeCodeFkeyInverseInput>;
   assessmentResultsUsingCode?: InputMaybe<AssessmentResultsAssessmentTypeCodeFkeyInverseInput>;
   assessmentSectionsUsingCode?: InputMaybe<AssessmentSectionsAssessmentTypeCodeFkeyInverseInput>;
@@ -9841,15 +12264,23 @@ export type UpdateAssessmentTypeOnAssessmentTemplateContentForAssessmentTemplate
   displayOrder?: InputMaybe<Scalars['Int']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  /** When true, the assessment requires two partners (dyadic). Use start_couple_assessment + join_couple_assessment instead of start_assessment_session. */
+  isDyadic?: InputMaybe<Scalars['Boolean']['input']>;
   maxScore?: InputMaybe<Scalars['Int']['input']>;
   metadata?: InputMaybe<Scalars['JSON']['input']>;
   minScore?: InputMaybe<Scalars['Int']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   paymentsUsingCode?: InputMaybe<PaymentsAssessmentTypeCodeFkeyInverseInput>;
   priceAmount?: InputMaybe<Scalars['Int']['input']>;
+  /** Number of profile (unscored) questions shown at the start of the assessment. Does not affect total_questions generated column. */
+  profileQuestionsCount?: InputMaybe<Scalars['Int']['input']>;
   questionsPerSection?: InputMaybe<Scalars['Int']['input']>;
   /** Incremented when report display content changes; PDFs regen lazily on download when stale */
   reportContentVersion?: InputMaybe<Scalars['Int']['input']>;
+  /** Maximum value on the response scale (default 10). Used to validate and normalise responses. */
+  responseScaleMax?: InputMaybe<Scalars['Int']['input']>;
+  /** Minimum value on the response scale (default 1). Used to validate and normalise responses. */
+  responseScaleMin?: InputMaybe<Scalars['Int']['input']>;
   /** Formula type: sum (add section scores) or average (mean of section scores scaled to min/max) */
   scoringFormula?: InputMaybe<Scalars['String']['input']>;
   sectionCount?: InputMaybe<Scalars['Int']['input']>;
@@ -9861,6 +12292,7 @@ export type UpdateAssessmentTypeOnAssessmentTemplateContentForAssessmentTemplate
 /** An object where the defined keys will be set on the `assessmentType` being updated. */
 export type UpdateAssessmentTypeOnAssessmentTypeStageTableForAssessmentTypeStagesAssessmentTypeCodeFkeyPatch = {
   assessmentCohortStatUsingCode?: InputMaybe<AssessmentCohortStatsAssessmentTypeCodeFkeyInverseInput>;
+  assessmentCouplesUsingCode?: InputMaybe<AssessmentCouplesAssessmentTypeCodeFkeyInverseInput>;
   assessmentInterpretationBandsUsingCode?: InputMaybe<AssessmentInterpretationBandsAssessmentTypeCodeFkeyInverseInput>;
   assessmentResultsUsingCode?: InputMaybe<AssessmentResultsAssessmentTypeCodeFkeyInverseInput>;
   assessmentSectionsUsingCode?: InputMaybe<AssessmentSectionsAssessmentTypeCodeFkeyInverseInput>;
@@ -9874,15 +12306,23 @@ export type UpdateAssessmentTypeOnAssessmentTypeStageTableForAssessmentTypeStage
   displayOrder?: InputMaybe<Scalars['Int']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  /** When true, the assessment requires two partners (dyadic). Use start_couple_assessment + join_couple_assessment instead of start_assessment_session. */
+  isDyadic?: InputMaybe<Scalars['Boolean']['input']>;
   maxScore?: InputMaybe<Scalars['Int']['input']>;
   metadata?: InputMaybe<Scalars['JSON']['input']>;
   minScore?: InputMaybe<Scalars['Int']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   paymentsUsingCode?: InputMaybe<PaymentsAssessmentTypeCodeFkeyInverseInput>;
   priceAmount?: InputMaybe<Scalars['Int']['input']>;
+  /** Number of profile (unscored) questions shown at the start of the assessment. Does not affect total_questions generated column. */
+  profileQuestionsCount?: InputMaybe<Scalars['Int']['input']>;
   questionsPerSection?: InputMaybe<Scalars['Int']['input']>;
   /** Incremented when report display content changes; PDFs regen lazily on download when stale */
   reportContentVersion?: InputMaybe<Scalars['Int']['input']>;
+  /** Maximum value on the response scale (default 10). Used to validate and normalise responses. */
+  responseScaleMax?: InputMaybe<Scalars['Int']['input']>;
+  /** Minimum value on the response scale (default 1). Used to validate and normalise responses. */
+  responseScaleMin?: InputMaybe<Scalars['Int']['input']>;
   /** Formula type: sum (add section scores) or average (mean of section scores scaled to min/max) */
   scoringFormula?: InputMaybe<Scalars['String']['input']>;
   sectionCount?: InputMaybe<Scalars['Int']['input']>;
@@ -9894,6 +12334,7 @@ export type UpdateAssessmentTypeOnAssessmentTypeStageTableForAssessmentTypeStage
 /** An object where the defined keys will be set on the `assessmentType` being updated. */
 export type UpdateAssessmentTypeOnPaymentForPaymentsAssessmentTypeCodeFkeyPatch = {
   assessmentCohortStatUsingCode?: InputMaybe<AssessmentCohortStatsAssessmentTypeCodeFkeyInverseInput>;
+  assessmentCouplesUsingCode?: InputMaybe<AssessmentCouplesAssessmentTypeCodeFkeyInverseInput>;
   assessmentInterpretationBandsUsingCode?: InputMaybe<AssessmentInterpretationBandsAssessmentTypeCodeFkeyInverseInput>;
   assessmentResultsUsingCode?: InputMaybe<AssessmentResultsAssessmentTypeCodeFkeyInverseInput>;
   assessmentSectionsUsingCode?: InputMaybe<AssessmentSectionsAssessmentTypeCodeFkeyInverseInput>;
@@ -9907,15 +12348,23 @@ export type UpdateAssessmentTypeOnPaymentForPaymentsAssessmentTypeCodeFkeyPatch 
   displayOrder?: InputMaybe<Scalars['Int']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  /** When true, the assessment requires two partners (dyadic). Use start_couple_assessment + join_couple_assessment instead of start_assessment_session. */
+  isDyadic?: InputMaybe<Scalars['Boolean']['input']>;
   maxScore?: InputMaybe<Scalars['Int']['input']>;
   metadata?: InputMaybe<Scalars['JSON']['input']>;
   minScore?: InputMaybe<Scalars['Int']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   paymentsUsingCode?: InputMaybe<PaymentsAssessmentTypeCodeFkeyInverseInput>;
   priceAmount?: InputMaybe<Scalars['Int']['input']>;
+  /** Number of profile (unscored) questions shown at the start of the assessment. Does not affect total_questions generated column. */
+  profileQuestionsCount?: InputMaybe<Scalars['Int']['input']>;
   questionsPerSection?: InputMaybe<Scalars['Int']['input']>;
   /** Incremented when report display content changes; PDFs regen lazily on download when stale */
   reportContentVersion?: InputMaybe<Scalars['Int']['input']>;
+  /** Maximum value on the response scale (default 10). Used to validate and normalise responses. */
+  responseScaleMax?: InputMaybe<Scalars['Int']['input']>;
+  /** Minimum value on the response scale (default 1). Used to validate and normalise responses. */
+  responseScaleMin?: InputMaybe<Scalars['Int']['input']>;
   /** Formula type: sum (add section scores) or average (mean of section scores scaled to min/max) */
   scoringFormula?: InputMaybe<Scalars['String']['input']>;
   sectionCount?: InputMaybe<Scalars['Int']['input']>;
@@ -10060,7 +12509,21 @@ export type UpdateCouponUsageTableOnCouponUsageTableForCouponUsageUserIdFkeyPatc
 };
 
 /** An object where the defined keys will be set on the `payment` being updated. */
+export type UpdatePaymentOnAssessmentCoupleForAssessmentCouplesPaymentIdFkeyPatch = {
+  assessmentCouplesUsingId?: InputMaybe<AssessmentCouplesPaymentIdFkeyInverseInput>;
+  assessmentSessionsUsingId?: InputMaybe<AssessmentSessionsPaymentIdFkeyInverseInput>;
+  assessmentTypeCode?: InputMaybe<Scalars['String']['input']>;
+  assessmentTypeToAssessmentTypeCode?: InputMaybe<PaymentsAssessmentTypeCodeFkeyInput>;
+  couponId?: InputMaybe<Scalars['UUID']['input']>;
+  couponTableToCouponId?: InputMaybe<PaymentsCouponIdFkeyInput>;
+  couponUsageTableUsingId?: InputMaybe<CouponUsagePaymentIdFkeyInverseInput>;
+  userId?: InputMaybe<Scalars['UUID']['input']>;
+  userToUserId?: InputMaybe<PaymentsUserIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `payment` being updated. */
 export type UpdatePaymentOnAssessmentSessionForAssessmentSessionsPaymentIdFkeyPatch = {
+  assessmentCouplesUsingId?: InputMaybe<AssessmentCouplesPaymentIdFkeyInverseInput>;
   assessmentSessionsUsingId?: InputMaybe<AssessmentSessionsPaymentIdFkeyInverseInput>;
   assessmentTypeCode?: InputMaybe<Scalars['String']['input']>;
   assessmentTypeToAssessmentTypeCode?: InputMaybe<PaymentsAssessmentTypeCodeFkeyInput>;
@@ -10073,6 +12536,7 @@ export type UpdatePaymentOnAssessmentSessionForAssessmentSessionsPaymentIdFkeyPa
 
 /** An object where the defined keys will be set on the `payment` being updated. */
 export type UpdatePaymentOnCouponUsageTableForCouponUsagePaymentIdFkeyPatch = {
+  assessmentCouplesUsingId?: InputMaybe<AssessmentCouplesPaymentIdFkeyInverseInput>;
   assessmentSessionsUsingId?: InputMaybe<AssessmentSessionsPaymentIdFkeyInverseInput>;
   assessmentTypeCode?: InputMaybe<Scalars['String']['input']>;
   assessmentTypeToAssessmentTypeCode?: InputMaybe<PaymentsAssessmentTypeCodeFkeyInput>;
@@ -10085,6 +12549,7 @@ export type UpdatePaymentOnCouponUsageTableForCouponUsagePaymentIdFkeyPatch = {
 
 /** An object where the defined keys will be set on the `payment` being updated. */
 export type UpdatePaymentOnPaymentForPaymentsAssessmentTypeCodeFkeyPatch = {
+  assessmentCouplesUsingId?: InputMaybe<AssessmentCouplesPaymentIdFkeyInverseInput>;
   assessmentSessionsUsingId?: InputMaybe<AssessmentSessionsPaymentIdFkeyInverseInput>;
   assessmentTypeToAssessmentTypeCode?: InputMaybe<PaymentsAssessmentTypeCodeFkeyInput>;
   couponId?: InputMaybe<Scalars['UUID']['input']>;
@@ -10096,6 +12561,7 @@ export type UpdatePaymentOnPaymentForPaymentsAssessmentTypeCodeFkeyPatch = {
 
 /** An object where the defined keys will be set on the `payment` being updated. */
 export type UpdatePaymentOnPaymentForPaymentsCouponIdFkeyPatch = {
+  assessmentCouplesUsingId?: InputMaybe<AssessmentCouplesPaymentIdFkeyInverseInput>;
   assessmentSessionsUsingId?: InputMaybe<AssessmentSessionsPaymentIdFkeyInverseInput>;
   assessmentTypeCode?: InputMaybe<Scalars['String']['input']>;
   assessmentTypeToAssessmentTypeCode?: InputMaybe<PaymentsAssessmentTypeCodeFkeyInput>;
@@ -10107,6 +12573,7 @@ export type UpdatePaymentOnPaymentForPaymentsCouponIdFkeyPatch = {
 
 /** An object where the defined keys will be set on the `payment` being updated. */
 export type UpdatePaymentOnPaymentForPaymentsUserIdFkeyPatch = {
+  assessmentCouplesUsingId?: InputMaybe<AssessmentCouplesPaymentIdFkeyInverseInput>;
   assessmentSessionsUsingId?: InputMaybe<AssessmentSessionsPaymentIdFkeyInverseInput>;
   assessmentTypeCode?: InputMaybe<Scalars['String']['input']>;
   assessmentTypeToAssessmentTypeCode?: InputMaybe<PaymentsAssessmentTypeCodeFkeyInput>;
@@ -10294,7 +12761,7 @@ export type AdminActivateCouponMutation = { __typename?: 'Mutation', adminActiva
 export type AdminAssessmentTypesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AdminAssessmentTypesQuery = { __typename?: 'Query', adminAssessmentTypes: Array<{ __typename?: 'AssessmentTypeInfo', id: any, code: string, name: string, description?: string | null, priceAmount: number, isActive: boolean, totalQuestions: number, sectionCount: number, questionsPerSection: number, minScore: number, maxScore: number, scoringFormula: string, displayOrder: number }> };
+export type AdminAssessmentTypesQuery = { __typename?: 'Query', adminAssessmentTypes: Array<{ __typename?: 'AssessmentTypeInfo', id: any, code: string, name: string, description?: string | null, priceAmount: number, isActive: boolean, totalQuestions: number, sectionCount: number, questionsPerSection: number, minScore: number, maxScore: number, scoringFormula: string, displayOrder: number, isDyadic: boolean, responseScaleMin: number, responseScaleMax: number, profileQuestionsCount: number }> };
 
 export type AdminCouponAnalyticsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -10642,7 +13109,7 @@ export type AssessmentStatusQueryVariables = Exact<{
 }>;
 
 
-export type AssessmentStatusQuery = { __typename?: 'Query', assessmentStatus?: { __typename?: 'AssessmentStatusPayload', hasCompletedAssessment: boolean, hasActiveSession: boolean, completedAt?: any | null, resultId?: any | null, totalReadinessIndex?: number | null, completedAssessments: Array<string>, availableAssessments: Array<{ __typename?: 'AssessmentTypeInfo', code: string, name: string, priceAmount: number, totalQuestions: number }> } | null };
+export type AssessmentStatusQuery = { __typename?: 'Query', assessmentStatus?: { __typename?: 'AssessmentStatusPayload', hasCompletedAssessment: boolean, hasActiveSession: boolean, completedAt?: any | null, resultId?: any | null, totalReadinessIndex?: number | null, completedAssessments: Array<string>, availableAssessments: Array<{ __typename?: 'AssessmentTypeInfo', code: string, name: string, priceAmount: number, totalQuestions: number, maxScore: number, isDyadic: boolean }> } | null };
 
 export type AssessmentTypeByCodeQueryVariables = Exact<{
   code: Scalars['String']['input'];
@@ -10668,7 +13135,7 @@ export type CompleteAssessmentMutationVariables = Exact<{
 }>;
 
 
-export type CompleteAssessmentMutation = { __typename?: 'Mutation', completeAssessment?: { __typename?: 'CompleteAssessmentPayload', success: boolean, message?: string | null, pdfPath?: string | null, result?: { __typename?: 'AssessmentResult', id: any, sessionId: any, userId: any, totalReadinessIndex: number, pdfPath?: string | null, isEmailed: boolean, emailedAt?: any | null, createdAt: any } | null } | null };
+export type CompleteAssessmentMutation = { __typename?: 'Mutation', completeAssessment?: { __typename?: 'CompleteAssessmentPayload', success: boolean, message?: string | null, pdfPath?: string | null, coupleComplete?: boolean | null, waitingForPartner?: boolean | null, result?: { __typename?: 'AssessmentResult', id: any, sessionId: any, userId: any, totalReadinessIndex: number, pdfPath?: string | null, isEmailed: boolean, emailedAt?: any | null, createdAt: any } | null } | null };
 
 export type CreateAssessmentQuestionMutationVariables = Exact<{
   input: CreateQuestionInput;
@@ -10703,14 +13170,14 @@ export type GetSectionQuestionsQueryVariables = Exact<{
 }>;
 
 
-export type GetSectionQuestionsQuery = { __typename?: 'Query', assessmentQuestions?: { __typename?: 'AssessmentQuestionsConnection', totalCount: number, nodes: Array<{ __typename?: 'AssessmentQuestion', id: any, sectionId: any, questionText: string, displayOrder: number, isActive: boolean, createdAt: any, updatedAt: any }> } | null };
+export type GetSectionQuestionsQuery = { __typename?: 'Query', assessmentQuestions?: { __typename?: 'AssessmentQuestionsConnection', totalCount: number, nodes: Array<{ __typename?: 'AssessmentQuestion', id: any, sectionId: any, questionText: string, displayOrder: number, isActive: boolean, questionCategory: string, answerOptions?: any | null, createdAt: any, updatedAt: any }> } | null };
 
 export type GetAllSectionsQueryVariables = Exact<{
   assessmentType?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type GetAllSectionsQuery = { __typename?: 'Query', assessmentSections?: { __typename?: 'AssessmentSectionsConnection', nodes: Array<{ __typename?: 'AssessmentSection', id: any, type: string, name: string, description?: string | null, aboutDescription?: string | null, subtitle?: string | null, emoji?: string | null, displayColor?: string | null, displayOrder: number, isActive: boolean, assessmentTypeCode: string }> } | null };
+export type GetAllSectionsQuery = { __typename?: 'Query', assessmentSections?: { __typename?: 'AssessmentSectionsConnection', nodes: Array<{ __typename?: 'AssessmentSection', id: any, type: string, name: string, description?: string | null, aboutDescription?: string | null, subtitle?: string | null, emoji?: string | null, displayColor?: string | null, displayOrder: number, isActive: boolean, sectionCategory: string, assessmentTypeCode: string }> } | null };
 
 export type GetSessionQuestionQueryVariables = Exact<{
   sessionId: Scalars['UUID']['input'];
@@ -10718,7 +13185,14 @@ export type GetSessionQuestionQueryVariables = Exact<{
 }>;
 
 
-export type GetSessionQuestionQuery = { __typename?: 'Query', getSessionQuestion?: { __typename?: 'SessionQuestionPayload', question: { __typename?: 'SessionQuestionDetail', id: any, sessionId: any, questionId: any, displayOrder: number, questionText: string, sectionName: string, sectionType: string, isAnswered: boolean }, currentResponse?: { __typename?: 'CurrentResponseDetail', id: any, responseValue: number, timeTakenSeconds?: number | null, isUpdate: boolean, updatedAt: any } | null, navigation: { __typename?: 'NavigationMetadata', currentNumber: number, totalQuestions: number, hasPrevious: boolean, hasNext: boolean, previousNumber?: number | null, nextNumber?: number | null }, progress: { __typename?: 'ProgressMetadata', answeredCount: number, totalCount: number, percentComplete: number } } | null };
+export type GetSessionQuestionQuery = { __typename?: 'Query', getSessionQuestion?: { __typename?: 'SessionQuestionPayload', question: { __typename?: 'SessionQuestionDetail', id: any, sessionId: any, questionId: any, displayOrder: number, questionText: string, sectionName: string, sectionType: string, isAnswered: boolean, questionCategory: string, answerOptions?: any | null }, currentResponse?: { __typename?: 'CurrentResponseDetail', id: any, responseValue: number, timeTakenSeconds?: number | null, isUpdate: boolean, updatedAt: any } | null, navigation: { __typename?: 'NavigationMetadata', currentNumber: number, totalQuestions: number, hasPrevious: boolean, hasNext: boolean, previousNumber?: number | null, nextNumber?: number | null }, progress: { __typename?: 'ProgressMetadata', answeredCount: number, totalCount: number, percentComplete: number } } | null };
+
+export type JoinCoupleAssessmentMutationVariables = Exact<{
+  input: JoinCoupleAssessmentInput;
+}>;
+
+
+export type JoinCoupleAssessmentMutation = { __typename?: 'Mutation', joinCoupleAssessment?: { __typename?: 'JoinCoupleAssessmentPayload', coupleId: any, message?: string | null, session?: { __typename?: 'AssessmentSession', id: any, userId: any, paymentId?: any | null, status: AssessmentStatus, currentQuestionNumber: number, assessmentTypeCode: string, partnerRole?: string | null, coupleId?: any | null, startTime: any, expiresAt: any } | null, assessmentType?: { __typename?: 'AssessmentTypeInfo', code: string, name: string, totalQuestions: number } | null } | null };
 
 export type ResendReportMutationVariables = Exact<{
   resultId: Scalars['UUID']['input'];
@@ -10740,6 +13214,13 @@ export type StartAssessmentMutationVariables = Exact<{
 
 
 export type StartAssessmentMutation = { __typename?: 'Mutation', startAssessment?: { __typename?: 'StartAssessmentPayload', message?: string | null, session?: { __typename?: 'AssessmentSession', id: any, userId: any, paymentId?: any | null, status: AssessmentStatus, currentQuestionNumber: number, assessmentTypeCode: string, startTime: any, expiresAt: any } | null, assessmentType?: { __typename?: 'AssessmentTypeInfo', code: string, name: string, totalQuestions: number } | null } | null };
+
+export type StartCoupleAssessmentMutationVariables = Exact<{
+  input: StartCoupleAssessmentInput;
+}>;
+
+
+export type StartCoupleAssessmentMutation = { __typename?: 'Mutation', startCoupleAssessment?: { __typename?: 'StartCoupleAssessmentPayload', inviteCode: string, coupleId: any, message?: string | null, session?: { __typename?: 'AssessmentSession', id: any, userId: any, paymentId?: any | null, status: AssessmentStatus, currentQuestionNumber: number, assessmentTypeCode: string, partnerRole?: string | null, coupleId?: any | null, startTime: any, expiresAt: any } | null, assessmentType?: { __typename?: 'AssessmentTypeInfo', code: string, name: string, totalQuestions: number } | null } | null };
 
 export type SubmitOrUpdateResponseMutationVariables = Exact<{
   input: SubmitOrUpdateResponseInput;
@@ -10862,7 +13343,7 @@ export type VerifyPaymentMutation = { __typename?: 'Mutation', verifyPayment?: {
 export const Lite_UserFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Lite_User"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"age"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"gender"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"isAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"isInternal"}}]}}]} as unknown as DocumentNode<Lite_UserFragment, unknown>;
 export const ActivateAssessmentTypeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"ActivateAssessmentType"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"code"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"activateAssessmentType"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"code"},"value":{"kind":"Variable","name":{"kind":"Name","value":"code"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"assessmentType"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}}]}}]}}]}}]} as unknown as DocumentNode<ActivateAssessmentTypeMutation, ActivateAssessmentTypeMutationVariables>;
 export const AdminActivateCouponDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"AdminActivateCoupon"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ActivateCouponInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminActivateCoupon"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<AdminActivateCouponMutation, AdminActivateCouponMutationVariables>;
-export const AdminAssessmentTypesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AdminAssessmentTypes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminAssessmentTypes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"priceAmount"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"totalQuestions"}},{"kind":"Field","name":{"kind":"Name","value":"sectionCount"}},{"kind":"Field","name":{"kind":"Name","value":"questionsPerSection"}},{"kind":"Field","name":{"kind":"Name","value":"minScore"}},{"kind":"Field","name":{"kind":"Name","value":"maxScore"}},{"kind":"Field","name":{"kind":"Name","value":"scoringFormula"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}}]}}]}}]} as unknown as DocumentNode<AdminAssessmentTypesQuery, AdminAssessmentTypesQueryVariables>;
+export const AdminAssessmentTypesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AdminAssessmentTypes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminAssessmentTypes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"priceAmount"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"totalQuestions"}},{"kind":"Field","name":{"kind":"Name","value":"sectionCount"}},{"kind":"Field","name":{"kind":"Name","value":"questionsPerSection"}},{"kind":"Field","name":{"kind":"Name","value":"minScore"}},{"kind":"Field","name":{"kind":"Name","value":"maxScore"}},{"kind":"Field","name":{"kind":"Name","value":"scoringFormula"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}},{"kind":"Field","name":{"kind":"Name","value":"isDyadic"}},{"kind":"Field","name":{"kind":"Name","value":"responseScaleMin"}},{"kind":"Field","name":{"kind":"Name","value":"responseScaleMax"}},{"kind":"Field","name":{"kind":"Name","value":"profileQuestionsCount"}}]}}]}}]} as unknown as DocumentNode<AdminAssessmentTypesQuery, AdminAssessmentTypesQueryVariables>;
 export const AdminCouponAnalyticsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AdminCouponAnalytics"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminCouponAnalytics"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCoupons"}},{"kind":"Field","name":{"kind":"Name","value":"activeCoupons"}},{"kind":"Field","name":{"kind":"Name","value":"totalRedemptions"}},{"kind":"Field","name":{"kind":"Name","value":"totalDiscountGiven"}}]}}]}}]} as unknown as DocumentNode<AdminCouponAnalyticsQuery, AdminCouponAnalyticsQueryVariables>;
 export const AdminCouponByIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AdminCouponById"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminCouponById"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"discountType"}},{"kind":"Field","name":{"kind":"Name","value":"discountValue"}},{"kind":"Field","name":{"kind":"Name","value":"maxDiscountAmount"}},{"kind":"Field","name":{"kind":"Name","value":"validFrom"}},{"kind":"Field","name":{"kind":"Name","value":"validUntil"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"maxTotalUses"}},{"kind":"Field","name":{"kind":"Name","value":"currentUses"}},{"kind":"Field","name":{"kind":"Name","value":"createdBy"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]} as unknown as DocumentNode<AdminCouponByIdQuery, AdminCouponByIdQueryVariables>;
 export const AdminCouponUsageDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AdminCouponUsage"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"couponId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminCouponUsage"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"couponId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"couponId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"usageRecords"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userName"}},{"kind":"Field","name":{"kind":"Name","value":"userEmail"}},{"kind":"Field","name":{"kind":"Name","value":"discountAmount"}},{"kind":"Field","name":{"kind":"Name","value":"usedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}}]}}]}}]} as unknown as DocumentNode<AdminCouponUsageQuery, AdminCouponUsageQueryVariables>;
@@ -10913,21 +13394,23 @@ export const AdminAssessmentStatsDocument = {"kind":"Document","definitions":[{"
 export const AssessmentProgressDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AssessmentProgress"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"assessmentType"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"defaultValue":{"kind":"StringValue","value":"ssri","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assessmentProgress"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"assessmentType"},"value":{"kind":"Variable","name":{"kind":"Name","value":"assessmentType"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"session"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"currentQuestionNumber"}},{"kind":"Field","name":{"kind":"Name","value":"assessmentTypeCode"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalQuestions"}},{"kind":"Field","name":{"kind":"Name","value":"answeredQuestions"}},{"kind":"Field","name":{"kind":"Name","value":"progressPercentage"}}]}}]}}]} as unknown as DocumentNode<AssessmentProgressQuery, AssessmentProgressQueryVariables>;
 export const AssessmentQuestionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AssessmentQuestions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assessmentQuestions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"questionText"}},{"kind":"Field","name":{"kind":"Name","value":"sectionId"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}}]}}]}}]}}]} as unknown as DocumentNode<AssessmentQuestionsQuery, AssessmentQuestionsQueryVariables>;
 export const GetAssessmentResultDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAssessmentResult"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assessmentResult"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"assessmentTypeCode"}},{"kind":"Field","name":{"kind":"Name","value":"assessmentTypeByAssessmentTypeCode"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"minScore"}},{"kind":"Field","name":{"kind":"Name","value":"maxScore"}},{"kind":"Field","name":{"kind":"Name","value":"scoringFormula"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalReadinessIndex"}},{"kind":"Field","name":{"kind":"Name","value":"interpretationLabel"}},{"kind":"Field","name":{"kind":"Name","value":"interpretationNarrative"}},{"kind":"Field","name":{"kind":"Name","value":"interpretationKeyMindset"}},{"kind":"Field","name":{"kind":"Name","value":"recommendedActions"}},{"kind":"Field","name":{"kind":"Name","value":"pdfPath"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"assessmentSectionResultsByResultId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sectionType"}},{"kind":"Field","name":{"kind":"Name","value":"sectionName"}},{"kind":"Field","name":{"kind":"Name","value":"sectionEmoji"}},{"kind":"Field","name":{"kind":"Name","value":"sectionDisplayColor"}},{"kind":"Field","name":{"kind":"Name","value":"score"}},{"kind":"Field","name":{"kind":"Name","value":"interpretationLabel"}},{"kind":"Field","name":{"kind":"Name","value":"interpretationNarrative"}},{"kind":"Field","name":{"kind":"Name","value":"interpretationBandId"}},{"kind":"Field","name":{"kind":"Name","value":"section"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"emoji"}},{"kind":"Field","name":{"kind":"Name","value":"displayColor"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"cohortComparison"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userAge"}},{"kind":"Field","name":{"kind":"Name","value":"userGender"}},{"kind":"Field","name":{"kind":"Name","value":"ageCohort"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ageRange"}},{"kind":"Field","name":{"kind":"Name","value":"cohortSize"}},{"kind":"Field","name":{"kind":"Name","value":"totalScore"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userScore"}},{"kind":"Field","name":{"kind":"Name","value":"cohortAverage"}}]}},{"kind":"Field","name":{"kind":"Name","value":"sectionScores"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sectionType"}},{"kind":"Field","name":{"kind":"Name","value":"sectionName"}},{"kind":"Field","name":{"kind":"Name","value":"userScore"}},{"kind":"Field","name":{"kind":"Name","value":"cohortAverage"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"genderCohort"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gender"}},{"kind":"Field","name":{"kind":"Name","value":"cohortSize"}},{"kind":"Field","name":{"kind":"Name","value":"totalScore"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userScore"}},{"kind":"Field","name":{"kind":"Name","value":"cohortAverage"}}]}},{"kind":"Field","name":{"kind":"Name","value":"sectionScores"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sectionType"}},{"kind":"Field","name":{"kind":"Name","value":"sectionName"}},{"kind":"Field","name":{"kind":"Name","value":"userScore"}},{"kind":"Field","name":{"kind":"Name","value":"cohortAverage"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"overallCohort"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cohortSize"}},{"kind":"Field","name":{"kind":"Name","value":"totalScore"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userScore"}},{"kind":"Field","name":{"kind":"Name","value":"cohortAverage"}}]}},{"kind":"Field","name":{"kind":"Name","value":"sectionScores"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sectionType"}},{"kind":"Field","name":{"kind":"Name","value":"sectionName"}},{"kind":"Field","name":{"kind":"Name","value":"userScore"}},{"kind":"Field","name":{"kind":"Name","value":"cohortAverage"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetAssessmentResultQuery, GetAssessmentResultQueryVariables>;
-export const AssessmentStatusDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AssessmentStatus"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"assessmentType"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"defaultValue":{"kind":"StringValue","value":"ssri","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assessmentStatus"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"assessmentType"},"value":{"kind":"Variable","name":{"kind":"Name","value":"assessmentType"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasCompletedAssessment"}},{"kind":"Field","name":{"kind":"Name","value":"hasActiveSession"}},{"kind":"Field","name":{"kind":"Name","value":"completedAt"}},{"kind":"Field","name":{"kind":"Name","value":"resultId"}},{"kind":"Field","name":{"kind":"Name","value":"totalReadinessIndex"}},{"kind":"Field","name":{"kind":"Name","value":"completedAssessments"}},{"kind":"Field","name":{"kind":"Name","value":"availableAssessments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"priceAmount"}},{"kind":"Field","name":{"kind":"Name","value":"totalQuestions"}}]}}]}}]}}]} as unknown as DocumentNode<AssessmentStatusQuery, AssessmentStatusQueryVariables>;
+export const AssessmentStatusDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AssessmentStatus"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"assessmentType"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"defaultValue":{"kind":"StringValue","value":"ssri","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assessmentStatus"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"assessmentType"},"value":{"kind":"Variable","name":{"kind":"Name","value":"assessmentType"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasCompletedAssessment"}},{"kind":"Field","name":{"kind":"Name","value":"hasActiveSession"}},{"kind":"Field","name":{"kind":"Name","value":"completedAt"}},{"kind":"Field","name":{"kind":"Name","value":"resultId"}},{"kind":"Field","name":{"kind":"Name","value":"totalReadinessIndex"}},{"kind":"Field","name":{"kind":"Name","value":"completedAssessments"}},{"kind":"Field","name":{"kind":"Name","value":"availableAssessments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"priceAmount"}},{"kind":"Field","name":{"kind":"Name","value":"totalQuestions"}},{"kind":"Field","name":{"kind":"Name","value":"maxScore"}},{"kind":"Field","name":{"kind":"Name","value":"isDyadic"}}]}}]}}]}}]} as unknown as DocumentNode<AssessmentStatusQuery, AssessmentStatusQueryVariables>;
 export const AssessmentTypeByCodeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AssessmentTypeByCode"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"code"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assessmentTypeByCode"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"code"},"value":{"kind":"Variable","name":{"kind":"Name","value":"code"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"priceAmount"}},{"kind":"Field","name":{"kind":"Name","value":"totalQuestions"}},{"kind":"Field","name":{"kind":"Name","value":"minScore"}},{"kind":"Field","name":{"kind":"Name","value":"maxScore"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}}]}}]}}]} as unknown as DocumentNode<AssessmentTypeByCodeQuery, AssessmentTypeByCodeQueryVariables>;
 export const AvailableAssessmentsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AvailableAssessments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"availableAssessments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"priceAmount"}},{"kind":"Field","name":{"kind":"Name","value":"totalQuestions"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}}]}}]}}]} as unknown as DocumentNode<AvailableAssessmentsQuery, AvailableAssessmentsQueryVariables>;
 export const BulkCreateAssessmentQuestionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"BulkCreateAssessmentQuestions"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BulkCreateQuestionsInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"bulkCreateAssessmentQuestions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"questions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"questionText"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}}]}},{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<BulkCreateAssessmentQuestionsMutation, BulkCreateAssessmentQuestionsMutationVariables>;
-export const CompleteAssessmentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CompleteAssessment"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sessionId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"completeAssessment"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"sessionId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sessionId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"result"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"sessionId"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"totalReadinessIndex"}},{"kind":"Field","name":{"kind":"Name","value":"pdfPath"}},{"kind":"Field","name":{"kind":"Name","value":"isEmailed"}},{"kind":"Field","name":{"kind":"Name","value":"emailedAt"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"pdfPath"}}]}}]}}]} as unknown as DocumentNode<CompleteAssessmentMutation, CompleteAssessmentMutationVariables>;
+export const CompleteAssessmentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CompleteAssessment"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sessionId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"completeAssessment"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"sessionId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sessionId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"result"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"sessionId"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"totalReadinessIndex"}},{"kind":"Field","name":{"kind":"Name","value":"pdfPath"}},{"kind":"Field","name":{"kind":"Name","value":"isEmailed"}},{"kind":"Field","name":{"kind":"Name","value":"emailedAt"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"pdfPath"}},{"kind":"Field","name":{"kind":"Name","value":"coupleComplete"}},{"kind":"Field","name":{"kind":"Name","value":"waitingForPartner"}}]}}]}}]} as unknown as DocumentNode<CompleteAssessmentMutation, CompleteAssessmentMutationVariables>;
 export const CreateAssessmentQuestionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateAssessmentQuestion"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateQuestionInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createAssessmentQuestion"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"question"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"sectionId"}},{"kind":"Field","name":{"kind":"Name","value":"questionText"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<CreateAssessmentQuestionMutation, CreateAssessmentQuestionMutationVariables>;
 export const CurrentAssessmentSessionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"CurrentAssessmentSession"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"assessmentType"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"defaultValue":{"kind":"StringValue","value":"ssri","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentAssessmentSession"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"assessmentType"},"value":{"kind":"Variable","name":{"kind":"Name","value":"assessmentType"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"paymentId"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"currentQuestionNumber"}},{"kind":"Field","name":{"kind":"Name","value":"assessmentTypeCode"}},{"kind":"Field","name":{"kind":"Name","value":"startTime"}},{"kind":"Field","name":{"kind":"Name","value":"lastActivityTime"}},{"kind":"Field","name":{"kind":"Name","value":"expiresAt"}}]}}]}}]} as unknown as DocumentNode<CurrentAssessmentSessionQuery, CurrentAssessmentSessionQueryVariables>;
 export const DeleteMyAssessmentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteMyAssessment"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"assessmentType"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteMyAssessment"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"confirmation"},"value":{"kind":"BooleanValue","value":true}},{"kind":"ObjectField","name":{"kind":"Name","value":"assessmentType"},"value":{"kind":"Variable","name":{"kind":"Name","value":"assessmentType"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"deletedCount"}}]}}]}}]} as unknown as DocumentNode<DeleteMyAssessmentMutation, DeleteMyAssessmentMutationVariables>;
 export const DeleteAssessmentQuestionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteAssessmentQuestion"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DeleteQuestionInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteAssessmentQuestion"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<DeleteAssessmentQuestionMutation, DeleteAssessmentQuestionMutationVariables>;
-export const GetSectionQuestionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSectionQuestions"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sectionId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assessmentQuestions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"condition"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"sectionId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sectionId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"sectionId"}},{"kind":"Field","name":{"kind":"Name","value":"questionText"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}}]}}]}}]} as unknown as DocumentNode<GetSectionQuestionsQuery, GetSectionQuestionsQueryVariables>;
-export const GetAllSectionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAllSections"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"assessmentType"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"defaultValue":{"kind":"StringValue","value":"ssri","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assessmentSections"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"condition"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"assessmentTypeCode"},"value":{"kind":"Variable","name":{"kind":"Name","value":"assessmentType"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"DISPLAY_ORDER_ASC"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"aboutDescription"}},{"kind":"Field","name":{"kind":"Name","value":"subtitle"}},{"kind":"Field","name":{"kind":"Name","value":"emoji"}},{"kind":"Field","name":{"kind":"Name","value":"displayColor"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"assessmentTypeCode"}}]}}]}}]}}]} as unknown as DocumentNode<GetAllSectionsQuery, GetAllSectionsQueryVariables>;
-export const GetSessionQuestionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSessionQuestion"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sessionId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"questionNumber"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getSessionQuestion"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"sessionId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sessionId"}}},{"kind":"Argument","name":{"kind":"Name","value":"questionNumber"},"value":{"kind":"Variable","name":{"kind":"Name","value":"questionNumber"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"question"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"sessionId"}},{"kind":"Field","name":{"kind":"Name","value":"questionId"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}},{"kind":"Field","name":{"kind":"Name","value":"questionText"}},{"kind":"Field","name":{"kind":"Name","value":"sectionName"}},{"kind":"Field","name":{"kind":"Name","value":"sectionType"}},{"kind":"Field","name":{"kind":"Name","value":"isAnswered"}}]}},{"kind":"Field","name":{"kind":"Name","value":"currentResponse"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"responseValue"}},{"kind":"Field","name":{"kind":"Name","value":"timeTakenSeconds"}},{"kind":"Field","name":{"kind":"Name","value":"isUpdate"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"navigation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentNumber"}},{"kind":"Field","name":{"kind":"Name","value":"totalQuestions"}},{"kind":"Field","name":{"kind":"Name","value":"hasPrevious"}},{"kind":"Field","name":{"kind":"Name","value":"hasNext"}},{"kind":"Field","name":{"kind":"Name","value":"previousNumber"}},{"kind":"Field","name":{"kind":"Name","value":"nextNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"progress"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"answeredCount"}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"percentComplete"}}]}}]}}]}}]} as unknown as DocumentNode<GetSessionQuestionQuery, GetSessionQuestionQueryVariables>;
+export const GetSectionQuestionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSectionQuestions"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sectionId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assessmentQuestions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"condition"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"sectionId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sectionId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"sectionId"}},{"kind":"Field","name":{"kind":"Name","value":"questionText"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"questionCategory"}},{"kind":"Field","name":{"kind":"Name","value":"answerOptions"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}}]}}]}}]} as unknown as DocumentNode<GetSectionQuestionsQuery, GetSectionQuestionsQueryVariables>;
+export const GetAllSectionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAllSections"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"assessmentType"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"defaultValue":{"kind":"StringValue","value":"ssri","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assessmentSections"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"condition"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"assessmentTypeCode"},"value":{"kind":"Variable","name":{"kind":"Name","value":"assessmentType"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"DISPLAY_ORDER_ASC"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"aboutDescription"}},{"kind":"Field","name":{"kind":"Name","value":"subtitle"}},{"kind":"Field","name":{"kind":"Name","value":"emoji"}},{"kind":"Field","name":{"kind":"Name","value":"displayColor"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"sectionCategory"}},{"kind":"Field","name":{"kind":"Name","value":"assessmentTypeCode"}}]}}]}}]}}]} as unknown as DocumentNode<GetAllSectionsQuery, GetAllSectionsQueryVariables>;
+export const GetSessionQuestionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSessionQuestion"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sessionId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"questionNumber"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getSessionQuestion"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"sessionId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sessionId"}}},{"kind":"Argument","name":{"kind":"Name","value":"questionNumber"},"value":{"kind":"Variable","name":{"kind":"Name","value":"questionNumber"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"question"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"sessionId"}},{"kind":"Field","name":{"kind":"Name","value":"questionId"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}},{"kind":"Field","name":{"kind":"Name","value":"questionText"}},{"kind":"Field","name":{"kind":"Name","value":"sectionName"}},{"kind":"Field","name":{"kind":"Name","value":"sectionType"}},{"kind":"Field","name":{"kind":"Name","value":"isAnswered"}},{"kind":"Field","name":{"kind":"Name","value":"questionCategory"}},{"kind":"Field","name":{"kind":"Name","value":"answerOptions"}}]}},{"kind":"Field","name":{"kind":"Name","value":"currentResponse"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"responseValue"}},{"kind":"Field","name":{"kind":"Name","value":"timeTakenSeconds"}},{"kind":"Field","name":{"kind":"Name","value":"isUpdate"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"navigation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentNumber"}},{"kind":"Field","name":{"kind":"Name","value":"totalQuestions"}},{"kind":"Field","name":{"kind":"Name","value":"hasPrevious"}},{"kind":"Field","name":{"kind":"Name","value":"hasNext"}},{"kind":"Field","name":{"kind":"Name","value":"previousNumber"}},{"kind":"Field","name":{"kind":"Name","value":"nextNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"progress"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"answeredCount"}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"percentComplete"}}]}}]}}]}}]} as unknown as DocumentNode<GetSessionQuestionQuery, GetSessionQuestionQueryVariables>;
+export const JoinCoupleAssessmentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"JoinCoupleAssessment"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"JoinCoupleAssessmentInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"joinCoupleAssessment"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"session"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"paymentId"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"currentQuestionNumber"}},{"kind":"Field","name":{"kind":"Name","value":"assessmentTypeCode"}},{"kind":"Field","name":{"kind":"Name","value":"partnerRole"}},{"kind":"Field","name":{"kind":"Name","value":"coupleId"}},{"kind":"Field","name":{"kind":"Name","value":"startTime"}},{"kind":"Field","name":{"kind":"Name","value":"expiresAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"coupleId"}},{"kind":"Field","name":{"kind":"Name","value":"assessmentType"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"totalQuestions"}}]}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<JoinCoupleAssessmentMutation, JoinCoupleAssessmentMutationVariables>;
 export const ResendReportDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"ResendReport"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"resultId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"resendAssessmentReport"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"resultId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"resultId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<ResendReportMutation, ResendReportMutationVariables>;
 export const SessionQuestionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"SessionQuestions"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sessionId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assessmentSession"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sessionId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"currentQuestionNumber"}},{"kind":"Field","name":{"kind":"Name","value":"startTime"}},{"kind":"Field","name":{"kind":"Name","value":"lastActivityTime"}},{"kind":"Field","name":{"kind":"Name","value":"expiresAt"}},{"kind":"Field","name":{"kind":"Name","value":"assessmentSessionQuestionsBySessionId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"sessionId"}},{"kind":"Field","name":{"kind":"Name","value":"questionId"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}},{"kind":"Field","name":{"kind":"Name","value":"isAnswered"}},{"kind":"Field","name":{"kind":"Name","value":"question"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"questionText"}},{"kind":"Field","name":{"kind":"Name","value":"sectionId"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"assessmentResponsesBySessionId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"questionId"}},{"kind":"Field","name":{"kind":"Name","value":"responseValue"}},{"kind":"Field","name":{"kind":"Name","value":"timeTakenSeconds"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]}}]}}]} as unknown as DocumentNode<SessionQuestionsQuery, SessionQuestionsQueryVariables>;
 export const StartAssessmentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StartAssessment"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"StartAssessmentInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"startAssessment"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"session"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"paymentId"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"currentQuestionNumber"}},{"kind":"Field","name":{"kind":"Name","value":"assessmentTypeCode"}},{"kind":"Field","name":{"kind":"Name","value":"startTime"}},{"kind":"Field","name":{"kind":"Name","value":"expiresAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"assessmentType"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"totalQuestions"}}]}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<StartAssessmentMutation, StartAssessmentMutationVariables>;
+export const StartCoupleAssessmentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StartCoupleAssessment"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"StartCoupleAssessmentInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"startCoupleAssessment"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"session"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"paymentId"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"currentQuestionNumber"}},{"kind":"Field","name":{"kind":"Name","value":"assessmentTypeCode"}},{"kind":"Field","name":{"kind":"Name","value":"partnerRole"}},{"kind":"Field","name":{"kind":"Name","value":"coupleId"}},{"kind":"Field","name":{"kind":"Name","value":"startTime"}},{"kind":"Field","name":{"kind":"Name","value":"expiresAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"inviteCode"}},{"kind":"Field","name":{"kind":"Name","value":"coupleId"}},{"kind":"Field","name":{"kind":"Name","value":"assessmentType"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"totalQuestions"}}]}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<StartCoupleAssessmentMutation, StartCoupleAssessmentMutationVariables>;
 export const SubmitOrUpdateResponseDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SubmitOrUpdateResponse"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SubmitOrUpdateResponseInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submitOrUpdateResponse"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"response"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"sessionId"}},{"kind":"Field","name":{"kind":"Name","value":"questionId"}},{"kind":"Field","name":{"kind":"Name","value":"responseValue"}},{"kind":"Field","name":{"kind":"Name","value":"timeTakenSeconds"}},{"kind":"Field","name":{"kind":"Name","value":"isUpdate"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"session"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"currentQuestionNumber"}},{"kind":"Field","name":{"kind":"Name","value":"lastAnsweredQuestion"}},{"kind":"Field","name":{"kind":"Name","value":"lastActivityTime"}},{"kind":"Field","name":{"kind":"Name","value":"expiresAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"progress"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"answeredCount"}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"percentComplete"}}]}},{"kind":"Field","name":{"kind":"Name","value":"nextQuestion"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"questionNumber"}},{"kind":"Field","name":{"kind":"Name","value":"hasNext"}}]}},{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<SubmitOrUpdateResponseMutation, SubmitOrUpdateResponseMutationVariables>;
 export const UpdateAssessmentQuestionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateAssessmentQuestion"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateQuestionInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateAssessmentQuestion"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"question"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"questionText"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<UpdateAssessmentQuestionMutation, UpdateAssessmentQuestionMutationVariables>;
 export const UpdateAssessmentSectionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateAssessmentSection"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateSectionInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateAssessmentSection"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"section"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"aboutDescription"}},{"kind":"Field","name":{"kind":"Name","value":"subtitle"}},{"kind":"Field","name":{"kind":"Name","value":"emoji"}},{"kind":"Field","name":{"kind":"Name","value":"displayColor"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<UpdateAssessmentSectionMutation, UpdateAssessmentSectionMutationVariables>;

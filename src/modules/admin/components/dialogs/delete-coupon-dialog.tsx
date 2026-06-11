@@ -39,18 +39,18 @@ export const DeleteCouponDialog = ({
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-2">
             <AlertTriangle className="h-5 w-5 text-destructive" />
-            Delete Coupon "{couponCode}"?
+            Delete Coupon &quot;{couponCode}&quot;?
           </AlertDialogTitle>
           <AlertDialogDescription className="space-y-4">
             {hasBeenUsed ? (
               <Alert variant="destructive" className="border-red-600 bg-red-50 dark:bg-red-950">
                 <AlertTriangle className="h-4 w-4" />
                 <AlertDescription className="text-red-900 dark:text-red-100">
-                  <strong>Warning:</strong> This coupon has been used {currentUses} time(s). 
-                  Deletion may fail if it's referenced by payments.
+                  <strong>Warning:</strong> This coupon has been used {currentUses} time(s).
+                  Deletion may fail if it&apos;s referenced by payments.
                   <div className="mt-2">
-                    <strong>Recommended:</strong> Use <em>Deactivate</em> instead to preserve 
-                    usage history and maintain data integrity.
+                    <strong>Recommended:</strong> Use <em>Deactivate</em> instead to preserve usage
+                    history and maintain data integrity.
                   </div>
                 </AlertDescription>
               </Alert>
@@ -58,7 +58,7 @@ export const DeleteCouponDialog = ({
               <Alert className="border-blue-200 bg-blue-50 dark:border-blue-900 dark:bg-blue-950">
                 <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                 <AlertDescription className="text-blue-900 dark:text-blue-100">
-                  This coupon has not been used yet. It's safe to delete.
+                  This coupon has not been used yet. It&apos;s safe to delete.
                 </AlertDescription>
               </Alert>
             )}

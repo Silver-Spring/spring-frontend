@@ -17,6 +17,7 @@ const GetAllSectionsDoc = graphql(`
         displayColor
         displayOrder
         isActive
+        sectionCategory
         assessmentTypeCode
       }
     }

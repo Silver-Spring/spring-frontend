@@ -7,8 +7,11 @@ export const useGetSectionQuestions = (sectionId: string | null) => {
     skip: !sectionId,
   });
 
+  const nodes = data?.assessmentQuestions?.nodes || [];
+  const sorted = [...nodes].sort((a, b) => a.displayOrder - b.displayOrder);
+
   return {
-    questions: data?.assessmentQuestions?.nodes || [],
+    questions: sorted,
     totalCount: data?.assessmentQuestions?.totalCount || 0,
     loading,
     error,

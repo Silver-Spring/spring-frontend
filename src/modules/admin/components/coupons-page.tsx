@@ -7,7 +7,7 @@ import { formatAmount } from '@/lib/payment-utils';
 import { Activity, CheckCircle, Plus, Ticket, TrendingDown } from 'lucide-react';
 import { useState } from 'react';
 import { useAdminCouponAnalytics, useAdminListCoupons } from '../hooks';
-import { CouponsDataTable } from './coupons/coupons-data-table';
+import { CouponsDataTable, type Coupon } from './coupons/coupons-data-table';
 import { CreateCouponDialog } from './dialogs/create-coupon-dialog';
 
 export const CouponsPage = () => {
@@ -125,7 +125,7 @@ export const CouponsPage = () => {
           <CardTitle>All Coupons ({totalCount})</CardTitle>
         </CardHeader>
         <CardContent>
-          <CouponsDataTable coupons={coupons as any} onRefetch={handleRefetch} />
+          <CouponsDataTable coupons={coupons as Coupon[]} onRefetch={handleRefetch} />
         </CardContent>
       </Card>
 

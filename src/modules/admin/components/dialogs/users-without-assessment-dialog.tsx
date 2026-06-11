@@ -187,7 +187,7 @@ export const UsersWithoutAssessmentDialog = ({
             ) : (
               <DataTable
                 columns={columns}
-                data={users as any}
+                data={users as UserWithoutAssessment[]}
                 filterColumn="name"
                 filterPlaceholder="Search by name..."
                 emptyMessage="No users found."

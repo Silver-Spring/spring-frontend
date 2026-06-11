@@ -17,6 +17,10 @@ type AssessmentTypeCardProps = {
   minScore: number;
   maxScore: number;
   isActive: boolean;
+  isDyadic?: boolean;
+  responseScaleMin?: number;
+  responseScaleMax?: number;
+  profileQuestionsCount?: number;
 };
 
 const AssessmentTypeCard = ({
@@ -30,6 +34,10 @@ const AssessmentTypeCard = ({
   minScore,
   maxScore,
   isActive,
+  isDyadic = false,
+  responseScaleMin = 1,
+  responseScaleMax = 10,
+  profileQuestionsCount = 0,
 }: AssessmentTypeCardProps) => (
   <Card className="flex flex-col h-full">
     <CardHeader className="pb-3">
@@ -38,6 +46,9 @@ const AssessmentTypeCard = ({
           <div className="flex flex-wrap items-center gap-2">
             <h3 className="font-semibold leading-tight">{name}</h3>
             <Badge variant="outline">{code.toUpperCase()}</Badge>
+            {isDyadic && (
+              <Badge variant="secondary" className="text-[10px]">Couples</Badge>
+            )}
           </div>
           {description ? (
             <p className="text-sm text-muted-foreground line-clamp-2">{description}</p>
@@ -62,6 +73,9 @@ const AssessmentTypeCard = ({
           <dt className="text-muted-foreground text-xs">Structure</dt>
           <dd className="font-medium">
             {sectionCount} sections × {questionsPerSection} each
+            {profileQuestionsCount > 0 && (
+              <span className="text-muted-foreground font-normal"> + {profileQuestionsCount} profile</span>
+            )}
           </dd>
         </div>
         <div>
@@ -70,6 +84,12 @@ const AssessmentTypeCard = ({
             {minScore}–{maxScore}
           </dd>
         </div>
+        {(responseScaleMin !== 1 || responseScaleMax !== 10) && (
+          <div>
+            <dt className="text-muted-foreground text-xs">Answer scale</dt>
+            <dd className="font-medium">{responseScaleMin}–{responseScaleMax}</dd>
+          </div>
+        )}
       </dl>
       <AssessmentTypeReadinessSummary assessmentType={code} isActive={isActive} />
     </CardContent>

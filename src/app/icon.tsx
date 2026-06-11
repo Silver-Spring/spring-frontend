@@ -15,50 +15,47 @@ export default async function Icon() {
     const logoSrc = `data:image/png;base64,${logoData}`;
 
     return new ImageResponse(
-      (
-        <div
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'white',
+        }}
+      >
+        <img
+          src={logoSrc}
+          alt=""
           style={{
             width: '100%',
             height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'white',
+            objectFit: 'cover',
           }}
-        >
-          <img
-            src={logoSrc}
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-            }}
-          />
-        </div>
-      ),
+        />
+      </div>,
       {
         ...size,
       }
     );
-  } catch (error) {
+  } catch {
     return new ImageResponse(
-      (
-        <div
-          style={{
-            fontSize: 24,
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'white',
-            fontWeight: 'bold',
-          }}
-        >
-          SS
-        </div>
-      ),
+      <div
+        style={{
+          fontSize: 24,
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'white',
+          fontWeight: 'bold',
+        }}
+      >
+        SS
+      </div>,
       {
         ...size,
       }

@@ -32,17 +32,75 @@ const AnswerButton = memo(({ num, isSelected, onSelect, disabled }: AnswerButton
 });
 AnswerButton.displayName = 'AnswerButton';
 
+export interface LabeledOption {
+  value: number;
+  label: string;
+}
+
+interface LabeledOptionButtonProps {
+  option: LabeledOption;
+  isSelected: boolean;
+  onSelect: (value: number) => void;
+  disabled: boolean;
+}
+
+const LabeledOptionButton = memo(({ option, isSelected, onSelect, disabled }: LabeledOptionButtonProps) => {
+  const handleClick = useCallback(() => onSelect(option.value), [option.value, onSelect]);
+
+  return (
+    <Button
+      type="button"
+      variant={isSelected ? 'default' : 'outline'}
+      onClick={handleClick}
+      disabled={disabled}
+      aria-label={option.label}
+      aria-pressed={isSelected}
+      className={`w-full h-auto py-3 px-4 text-sm font-medium text-left justify-start transition-all duration-150 ${
+        isSelected
+          ? 'bg-primary hover:bg-primary/90 border-primary text-primary-foreground shadow-md ring-2 ring-primary ring-offset-2'
+          : 'border-primary/20 text-foreground hover:bg-primary/5 hover:border-primary/40'
+      }`}
+    >
+      <span className={`mr-3 inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-semibold shrink-0 ${
+        isSelected ? 'bg-primary-foreground/20 text-primary-foreground' : 'bg-primary/10 text-primary'
+      }`}>
+        {option.value}
+      </span>
+      {option.label}
+    </Button>
+  );
+});
+LabeledOptionButton.displayName = 'LabeledOptionButton';
+
 interface AnswerOptionsProps {
   selectedValue: number | null;
   onSelect: (value: number) => void;
   disabled?: boolean;
+  labeledOptions?: LabeledOption[] | null;
 }
 
 export const AnswerOptions = memo(({
   selectedValue,
   onSelect,
   disabled = false,
+  labeledOptions,
 }: AnswerOptionsProps) => {
+  if (labeledOptions && labeledOptions.length > 0) {
+    return (
+      <div className="space-y-2">
+        {labeledOptions.map((option) => (
+          <LabeledOptionButton
+            key={option.value}
+            option={option}
+            isSelected={selectedValue === option.value}
+            onSelect={onSelect}
+            disabled={disabled}
+          />
+        ))}
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-5 sm:grid-cols-10 gap-2">

@@ -15,9 +15,10 @@ const AssessmentTypesCatalog = () => {
 
   const sortedTypes = useMemo(
     () =>
-      [...assessmentTypes].sort(
-        (a, b) => a.displayOrder - b.displayOrder || a.name.localeCompare(b.name)
-      ),
+      [...assessmentTypes].sort((a, b) => {
+        if (a.isActive !== b.isActive) return a.isActive ? -1 : 1;
+        return a.name.localeCompare(b.name);
+      }),
     [assessmentTypes]
   );
 
@@ -82,6 +83,10 @@ const AssessmentTypesCatalog = () => {
               minScore={type.minScore}
               maxScore={type.maxScore}
               isActive={type.isActive}
+              isDyadic={type.isDyadic}
+              responseScaleMin={type.responseScaleMin}
+              responseScaleMax={type.responseScaleMax}
+              profileQuestionsCount={type.profileQuestionsCount}
             />
           ))}
         </div>

@@ -69,6 +69,7 @@ export const BandEditForm = ({
       '';
 
     if (editingBand) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setForm({
         sectionType: resolvedSectionType,
         rangeStart: String(editingBand.rangeStart),

@@ -1,4 +1,4 @@
-import { useMutation, useApolloClient } from '@apollo/client/react';
+import { useMutation } from '@apollo/client/react';
 import { useUserStore } from '@/stores';
 import { toast } from 'sonner';
 import { UpdatePhoneNumberDoc, LiteUserDoc } from '../graphql';
@@ -6,12 +6,11 @@ import { useFragment } from '@/gql';
 import posthog from 'posthog-js';
 
 export const useUpdatePhoneNumber = () => {
-  const client = useApolloClient();
   const setUser = useUserStore((state) => state.setUser);
   const currentUser = useUserStore((state) => state.user);
 
   const [updatePhoneNumber, { data, loading, error }] = useMutation(UpdatePhoneNumberDoc, {
-    onCompleted: (data) => {
+    onCompleted: () => {
       posthog.capture('phone_number_updated', {
         user_id: currentUser?.id,
         has_phone_number: true,

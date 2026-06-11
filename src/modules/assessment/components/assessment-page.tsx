@@ -31,7 +31,7 @@ export const AssessmentPage = ({ sessionId }: AssessmentPageProps) => {
   const { currentSession, loading: sessionLoading } = useCurrentSession();
 
   const [questionNumber, setQuestionNumber] = useState<number>(1);
-  const [questionStartTime, setQuestionStartTime] = useState(Date.now());
+  const [questionStartTime, setQuestionStartTime] = useState(() => Date.now());
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [showCompletionMessage, setShowCompletionMessage] = useState(false);
@@ -64,11 +64,13 @@ export const AssessmentPage = ({ sessionId }: AssessmentPageProps) => {
 
   useEffect(() => {
     if (currentSession?.currentQuestionNumber && questionNumber === 1) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setQuestionNumber(currentSession.currentQuestionNumber);
     }
   }, [currentSession, questionNumber]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setQuestionStartTime(Date.now());
     setOptimisticValue(null);
   }, [questionNumber]);
@@ -158,9 +160,10 @@ export const AssessmentPage = ({ sessionId }: AssessmentPageProps) => {
       setOptimisticValue(value);
       setIsTransitioning(true);
 
+      const totalQuestions = progress.totalCount || TOTAL_QUESTIONS;
       const currentPercent = progress.percentComplete ?? 0;
       const wasAlreadyAnswered = currentResponse?.responseValue !== undefined;
-      const incrementPercent = 100 / TOTAL_QUESTIONS;
+      const incrementPercent = 100 / totalQuestions;
       const optimisticPercent = wasAlreadyAnswered
         ? currentPercent
         : Math.min(currentPercent + incrementPercent, 100);
@@ -184,9 +187,9 @@ export const AssessmentPage = ({ sessionId }: AssessmentPageProps) => {
 
         await new Promise((resolve) => setTimeout(resolve, 300));
 
-        if (questionNumber >= TOTAL_QUESTIONS) {
+        if (questionNumber >= totalQuestions || !result.nextQuestion.hasNext) {
           await handleComplete();
-        } else if (result.nextQuestion.hasNext) {
+        } else {
           setQuestionNumber((prev) => prev + 1);
 
           setTimeout(() => setIsFadingOut(false), 50);
@@ -205,7 +208,8 @@ export const AssessmentPage = ({ sessionId }: AssessmentPageProps) => {
       completing,
       question,
       questionStartTime,
-      progress.answeredCount,
+      progress.percentComplete,
+      progress.totalCount,
       currentResponse?.responseValue,
       submitOrUpdateResponse,
       sessionId,
@@ -313,6 +317,8 @@ export const AssessmentPage = ({ sessionId }: AssessmentPageProps) => {
                   selectedValue={selectedValue}
                   isFadingOut={isFadingOut}
                   isDisabled={isDisabled}
+                  questionCategory={question.questionCategory}
+                  answerOptions={question.answerOptions}
                   onSelect={handleAnswerSelect}
                 />
               </div>

@@ -14,6 +14,8 @@ const AssessmentStatusDoc = graphql(`
         name
         priceAmount
         totalQuestions
+        maxScore
+        isDyadic
       }
     }
   }

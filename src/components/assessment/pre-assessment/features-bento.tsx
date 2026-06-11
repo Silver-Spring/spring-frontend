@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useCallback, useMemo, memo } from 'react';
+import { useState, useCallback, memo } from 'react';
 import Image from 'next/image';
-import { BarChart3, FileText, Lightbulb, Users, TrendingUp } from 'lucide-react';
+import { BarChart3, Lightbulb, Users, TrendingUp } from 'lucide-react';
 
 interface DimensionItem {
   name: string;
@@ -18,13 +18,6 @@ const DIMENSION_DATA: DimensionItem[] = [
 ];
 
 const RATING_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
-
-const REPORT_FEATURES = [
-  'Detailed breakdown of all 5 dimensions',
-  'Personalized insights based on your responses',
-  'Actionable steps for improvement',
-  'Share with your financial advisor',
-] as const;
 
 const DimensionBar = memo(({ item, index }: { item: DimensionItem; index: number }) => (
   <div className="flex items-center gap-3">

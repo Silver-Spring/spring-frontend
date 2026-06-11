@@ -3,6 +3,7 @@
 import { Card } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
 import { AssessmentContentStats } from '@/modules/admin/components/assessment/overview/assessment-content-stats';
+import { AssessmentRecloneCard } from '@/modules/admin/components/assessment/overview/assessment-reclone-card';
 import { AssessmentTypeReadinessPanel } from '@/modules/admin/components/assessment-type-readiness-panel';
 import { AssessmentTypeStatusStrip } from '@/modules/admin/components/assessment/overview/assessment-type-status-strip';
 import { AssessmentWorkspaceGuide } from '@/modules/admin/components/assessment/overview/assessment-workspace-guide';
@@ -41,15 +42,21 @@ const AssessmentTypeOverview = ({ assessmentType }: AssessmentTypeOverviewProps)
         minScore={type.minScore}
         maxScore={type.maxScore}
         isActive={type.isActive}
+        isDyadic={type.isDyadic}
+        responseScaleMin={type.responseScaleMin}
+        responseScaleMax={type.responseScaleMax}
+        profileQuestionsCount={type.profileQuestionsCount}
       />
 
       <AssessmentContentStats assessmentType={assessmentType} />
 
       <AssessmentTypeReadinessPanel assessmentType={assessmentType} />
 
-      {!type.isActive ? (
+      <AssessmentRecloneCard assessmentType={assessmentType} />
+
+      {!type.isActive && (
         <AssessmentWorkspaceGuide assessmentType={assessmentType} />
-      ) : null}
+      )}
     </div>
   );
 };

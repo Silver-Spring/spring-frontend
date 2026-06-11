@@ -23,7 +23,7 @@ interface UserState {
 
 export const useUserStore = create<UserState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       user: null,
       setUser: (user: User | null) => set({ user }),
       clearUser: () => set({ user: null }),
@@ -39,5 +39,5 @@ export const useUserStore = create<UserState>()(
         }
       },
     },
-  ) as any,
+  ),
 );

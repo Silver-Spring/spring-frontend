@@ -16,6 +16,10 @@ const AdminAssessmentTypesDoc = graphql(`
       maxScore
       scoringFormula
       displayOrder
+      isDyadic
+      responseScaleMin
+      responseScaleMax
+      profileQuestionsCount
     }
   }
 `);

@@ -12,6 +12,8 @@ const GetSessionQuestionDoc = graphql(`
         sectionName
         sectionType
         isAnswered
+        questionCategory
+        answerOptions
       }
 
       currentResponse {

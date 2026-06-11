@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { type ColumnDef } from '@tanstack/react-table';
 import {
   ArrowUpDown,
@@ -81,10 +81,10 @@ export const UsersPage = () => {
   const [selectedUser, setSelectedUser] = useState<SelectedUser | null>(null);
   const [showUsersWithoutAssessmentDialog, setShowUsersWithoutAssessmentDialog] = useState(false);
 
-  const handleOpenConfirmDialog = (type: ConfirmDialogType, user: SelectedUser) => {
+  const handleOpenConfirmDialog = useCallback((type: ConfirmDialogType, user: SelectedUser) => {
     setSelectedUser(user);
     setConfirmDialog(type);
-  };
+  }, []);
 
   const handleCloseConfirmDialog = () => {
     setConfirmDialog(null);

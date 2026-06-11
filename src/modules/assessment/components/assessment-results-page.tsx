@@ -49,7 +49,7 @@ export const AssessmentResultsPage = ({ resultId }: AssessmentResultsPageProps) 
       total_readiness_index: result.totalReadinessIndex,
     });
     await downloadReport({ resultId: result.id });
-  }, [result?.id, result?.totalReadinessIndex, downloadReport]);
+  }, [result, downloadReport]);
 
   const sectionResults = useMemo((): EnrichedSectionResult[] => {
     const nodes = result?.assessmentSectionResultsByResultId?.nodes ?? [];

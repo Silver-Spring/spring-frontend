@@ -12,7 +12,8 @@ export const CompletionOverlay = () => {
             Crafting Your Personalized Results
           </h2>
           <p className="text-muted-foreground max-w-md mx-auto">
-            We're analyzing your responses to create meaningful insights tailored just for you...
+            We&apos;re analyzing your responses to create meaningful insights tailored just for
+            you...
           </p>
         </div>
       </div>

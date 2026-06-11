@@ -72,6 +72,7 @@ export const StageEditor = ({
   const [drafts, setDrafts] = useState<StageDraft[]>([]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setDrafts(stages.map(toStageDraft));
   }, [stages]);
 

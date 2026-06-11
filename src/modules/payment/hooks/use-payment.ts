@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { AssessmentTypeCode, DEFAULT_ASSESSMENT_TYPE } from '@/modules/assessment/constants';
 import type { RazorpayErrorResponse } from '../types';
 import { useCreatePaymentOrder } from './use-create-payment-order';
 
@@ -9,7 +10,8 @@ export const usePayment = () => {
   const initiatePayment = async (
     onSuccess?: (paymentId: string | null) => void,
     onFailure?: (error: RazorpayErrorResponse | Error) => void,
-    couponCode?: string
+    couponCode?: string,
+    assessmentType: AssessmentTypeCode = DEFAULT_ASSESSMENT_TYPE
   ) => {
     setIsPaymentInProgress(true);
 
@@ -26,7 +28,8 @@ export const usePayment = () => {
           onFailure(error);
         }
       },
-      couponCode
+      couponCode,
+      assessmentType
     );
   };
 

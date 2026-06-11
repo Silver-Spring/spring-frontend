@@ -9,19 +9,19 @@ export const useAllUsers = () => {
     fetchPolicy: 'network-only',
   });
 
-  const users = data?.allUsers?.users ?? [];
+  const users = useMemo(() => data?.allUsers?.users ?? [], [data]);
   const totalCount = data?.allUsers?.totalCount ?? 0;
   const adminCount = data?.allUsers?.adminCount ?? 0;
   const usersWithoutAssessmentCount = data?.allUsers?.usersWithoutAssessmentCount ?? 0;
 
   // Calculate internal user count (excluding admins as they are always internal)
   const internalUserCount = useMemo(() => {
-    return users.filter((user: any) => user.isInternal && !user.isAdmin).length;
+    return users.filter((user) => user.isInternal && !user.isAdmin).length;
   }, [users]);
 
   // Calculate regular user count (not admin and not internal)
   const regularUserCount = useMemo(() => {
-    return users.filter((user: any) => !user.isAdmin && !user.isInternal).length;
+    return users.filter((user) => !user.isAdmin && !user.isInternal).length;
   }, [users]);
 
   return {

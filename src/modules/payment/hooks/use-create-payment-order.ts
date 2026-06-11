@@ -5,14 +5,14 @@ import posthog from 'posthog-js';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { CreatePaymentOrderDoc } from '../graphql';
-import type { RazorpayErrorResponse, RazorpaySuccessResponse } from '../types';
+import type { RazorpayErrorResponse, RazorpayInstance, RazorpaySuccessResponse } from '../types';
 import { cleanupRazorpay, closeRazorpayInstance, initializeRazorpay, openRazorpayCheckout } from '../utils';
 import { useVerifyPayment } from './use-verify-payment';
 
 export const useCreatePaymentOrder = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const { verifyPayment } = useVerifyPayment();
-  const razorpayInstanceRef = useRef<any>(null);
+  const razorpayInstanceRef = useRef<RazorpayInstance | null>(null);
 
   useEffect(() => {
     return () => {

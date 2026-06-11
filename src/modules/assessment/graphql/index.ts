@@ -1,4 +1,6 @@
 export { StartAssessmentDoc } from './start-assessment.graphql';
+export { StartCoupleAssessmentDoc } from './start-couple-assessment.graphql';
+export { JoinCoupleAssessmentDoc } from './join-couple-assessment.graphql';
 export { CompleteAssessmentDoc } from './complete-assessment.graphql';
 export { CurrentSessionDoc } from './current-session.graphql';
 export { SessionQuestionsDoc } from './session-questions.graphql';

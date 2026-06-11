@@ -15,21 +15,14 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
+  SidebarSeparator,
   SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { Spinner } from '@/components/ui/spinner';
 import { getInitials } from '@/lib/utils';
 import { AdminAssessmentSidebarNav } from '@/modules/admin/components/admin-assessment-sidebar-nav';
 import { useLogout } from '@/modules/auth/hooks';
-import {
-  BarChart3,
-  CreditCard,
-  Home,
-  LayoutDashboard,
-  LogOut,
-  Ticket,
-  Users,
-} from 'lucide-react';
+import { BarChart3, CreditCard, Home, LayoutDashboard, LogOut, Ticket, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Suspense, type ReactNode } from 'react';
@@ -39,32 +32,12 @@ interface AdminSidebarLayoutProps {
   children: ReactNode | ((props: LayoutChildProps) => ReactNode);
 }
 
-const menuItems = [
-  {
-    title: 'Overview',
-    url: '/admin',
-    icon: LayoutDashboard,
-  },
-  {
-    title: 'Users',
-    url: '/admin/users',
-    icon: Users,
-  },
-  {
-    title: 'Analytics',
-    url: '/admin/analytics',
-    icon: BarChart3,
-  },
-  {
-    title: 'Payments',
-    url: '/admin/payments',
-    icon: CreditCard,
-  },
-  {
-    title: 'Coupons',
-    url: '/admin/coupons',
-    icon: Ticket,
-  },
+const platformItems = [
+  { title: 'Dashboard', url: '/admin', icon: LayoutDashboard, exact: true },
+  { title: 'Users', url: '/admin/users', icon: Users, exact: false },
+  { title: 'Analytics', url: '/admin/analytics', icon: BarChart3, exact: false },
+  { title: 'Payments', url: '/admin/payments', icon: CreditCard, exact: false },
+  { title: 'Coupons', url: '/admin/coupons', icon: Ticket, exact: false },
 ];
 
 export const AdminSidebarLayout = ({ children }: AdminSidebarLayoutProps) => {
@@ -76,45 +49,31 @@ export const AdminSidebarLayout = ({ children }: AdminSidebarLayoutProps) => {
       {(props) => (
         <SidebarProvider>
           <Sidebar>
-            <SidebarHeader className="border-b h-16 justify-center ">
+            <SidebarHeader className="border-b h-14 justify-center">
               <div className="flex items-center gap-3">
-                <Avatar className="h-10 w-10">
-                  <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
+                <Avatar className="h-9 w-9">
+                  <AvatarFallback className="bg-primary text-primary-foreground font-semibold text-sm">
                     {getInitials(props.currentUser?.name)}
                   </AvatarFallback>
                 </Avatar>
-                <div>
-                  <h2 className="text-lg font-semibold">
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold truncate">
                     {props.currentUser?.name || props.currentUser?.email}
-                  </h2>
+                  </p>
                 </div>
               </div>
             </SidebarHeader>
+
             <SidebarContent>
+              {/* Platform section */}
               <SidebarGroup>
-                <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+                <SidebarGroupLabel>Platform</SidebarGroupLabel>
                 <SidebarGroupContent>
                   <SidebarMenu>
-                    {menuItems.slice(0, 1).map((item) => {
-                      const isActive = pathname === item.url;
-                      return (
-                        <SidebarMenuItem key={item.title}>
-                          <SidebarMenuButton asChild isActive={isActive}>
-                            <Link href={item.url}>
-                              <item.icon />
-                              <span>{item.title}</span>
-                            </Link>
-                          </SidebarMenuButton>
-                        </SidebarMenuItem>
-                      );
-                    })}
-
-                    <Suspense fallback={null}>
-                      <AdminAssessmentSidebarNav />
-                    </Suspense>
-
-                    {menuItems.slice(1).map((item) => {
-                      const isActive = pathname === item.url;
+                    {platformItems.map((item) => {
+                      const isActive = item.exact
+                        ? pathname === item.url
+                        : pathname.startsWith(item.url);
                       return (
                         <SidebarMenuItem key={item.title}>
                           <SidebarMenuButton asChild isActive={isActive}>
@@ -129,47 +88,64 @@ export const AdminSidebarLayout = ({ children }: AdminSidebarLayoutProps) => {
                   </SidebarMenu>
                 </SidebarGroupContent>
               </SidebarGroup>
+
+              <SidebarSeparator />
+
+              {/* Assessments section */}
+              <SidebarGroup>
+                <SidebarGroupLabel>Assessments</SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    <Suspense fallback={null}>
+                      <AdminAssessmentSidebarNav />
+                    </Suspense>
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
             </SidebarContent>
-            <SidebarFooter className="border-t p-4">
+
+            <SidebarFooter className="border-t p-3 space-y-1.5">
               <Button
-                variant="outline"
-                className="w-full justify-start mb-2"
+                variant="ghost"
+                size="sm"
+                className="w-full justify-start text-muted-foreground hover:text-foreground"
                 asChild
                 aria-label="Go to Homepage"
-                tabIndex={0}
               >
                 <Link href="/">
-                  <Home className="mr-2" />
+                  <Home className="mr-2 size-4" />
                   Homepage
                 </Link>
               </Button>
               <Button
-                variant="outline"
-                className="w-full justify-start"
+                variant="ghost"
+                size="sm"
+                className="w-full justify-start text-muted-foreground hover:text-foreground"
                 onClick={logout}
                 disabled={loggingOut}
                 aria-label="Logout"
-                tabIndex={0}
               >
                 {loggingOut ? (
                   <>
-                    <Spinner className="mr-2" />
+                    <Spinner className="mr-2 size-4" />
                     Logging out...
                   </>
                 ) : (
                   <>
-                    <LogOut className="mr-2" />
+                    <LogOut className="mr-2 size-4" />
                     Logout
                   </>
                 )}
               </Button>
             </SidebarFooter>
           </Sidebar>
+
           <SidebarInset>
-            <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-4 border-b bg-background px-6">
+            <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center gap-4 border-b bg-background/95 backdrop-blur px-6">
               <SidebarTrigger />
+              <div className="h-4 w-px bg-border" />
               <div className="flex-1">
-                <p className="text-sm text-muted-foreground">
+                <p className="text-xs text-muted-foreground">
                   {new Date().toLocaleDateString('en-US', {
                     weekday: 'long',
                     year: 'numeric',

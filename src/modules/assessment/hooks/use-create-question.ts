@@ -27,7 +27,8 @@ export const useCreateQuestion = () => {
   const createQuestion = async (input: {
     sectionId: string;
     questionText: string;
-    // displayOrder removed - now auto-assigned by backend
+    questionCategory?: string;
+    answerOptions?: Array<{ value: number; label: string }> | null;
   }) => {
     const result = await createQuestionMutation({
       variables: { input },

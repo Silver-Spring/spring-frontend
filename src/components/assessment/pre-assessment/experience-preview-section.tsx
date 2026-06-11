@@ -33,7 +33,7 @@ const carouselImages = [
 ];
 
 export function ExperiencePreviewSection() {
-  const plugin = React.useRef(
+  const [plugin] = React.useState(() =>
     Autoplay({ delay: 3000, stopOnInteraction: true, stopOnMouseEnter: true })
   );
 
@@ -44,16 +44,16 @@ export function ExperiencePreviewSection() {
           Experience Preview
         </h2>
         <p className="mx-auto max-w-2xl text-pretty text-muted-foreground px-4">
-          See what the assessment looks like and what kind of report you'll receive.
+          See what the assessment looks like and what kind of report you&apos;ll receive.
         </p>
       </div>
 
       <div className="mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8">
         <Carousel
-          plugins={[plugin.current]}
+          plugins={[plugin]}
           className="w-full"
-          onMouseEnter={plugin.current.stop}
-          onMouseLeave={plugin.current.reset}
+          onMouseEnter={plugin.stop}
+          onMouseLeave={plugin.reset}
           opts={{
             align: 'center',
             loop: true,

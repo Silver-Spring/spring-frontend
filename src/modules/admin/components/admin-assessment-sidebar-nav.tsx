@@ -23,7 +23,7 @@ import {
   useAdminAssessmentWorkspace,
   type AssessmentWorkspaceView,
 } from '@/modules/admin/hooks/use-admin-assessment-workspace';
-import { ChevronRight, ClipboardList } from 'lucide-react';
+import { ChevronRight, FolderOpen, Plus, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { memo, useMemo } from 'react';
@@ -56,14 +56,16 @@ const AssessmentTypeNavItem = memo(function AssessmentTypeNavItem({
   isViewActive,
   buildHref,
 }: AssessmentTypeNavItemProps) {
+  const isDraft = !type.isActive;
+
   return (
     <Collapsible defaultOpen={defaultOpen} className="group/collapsible">
       <SidebarMenuSubItem>
         <CollapsibleTrigger asChild>
           <SidebarMenuSubButton isActive={isTypeActive}>
             <span className="min-w-0 flex-1 truncate">{type.name}</span>
-            {!type.isActive && (
-              <span className="shrink-0 rounded-md bg-sidebar-accent px-1.5 py-0.5 text-[10px] font-medium leading-none text-muted-foreground">
+            {isDraft && (
+              <span className="shrink-0 rounded-md bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 px-1.5 py-0.5 text-[10px] font-medium leading-none">
                 Draft
               </span>
             )}
@@ -72,20 +74,32 @@ const AssessmentTypeNavItem = memo(function AssessmentTypeNavItem({
         </CollapsibleTrigger>
         <CollapsibleContent>
           <SidebarMenuSub>
-            {TYPE_PANEL_LINKS.map(({ view, label, icon: Icon }) => (
-              <SidebarMenuSubItem key={`${type.code}-${view}`}>
-                <SidebarMenuSubButton
-                  asChild
-                  isActive={isViewActive(view, type.code)}
-                  size="sm"
-                >
-                  <Link href={buildHref(view, type.code)} prefetch={false}>
-                    <Icon className="size-4 shrink-0" aria-hidden="true" />
-                    <span className="truncate">{label}</span>
-                  </Link>
-                </SidebarMenuSubButton>
-              </SidebarMenuSubItem>
-            ))}
+            {TYPE_PANEL_LINKS.map(({ view, label, icon: Icon }, index) => {
+              const isActive = isViewActive(view, type.code);
+              return (
+                <SidebarMenuSubItem key={`${type.code}-${view}`}>
+                  <SidebarMenuSubButton asChild isActive={isActive} size="sm">
+                    <Link href={buildHref(view, type.code)} prefetch={false}>
+                      {isDraft ? (
+                        <span
+                          className={cn(
+                            'inline-flex items-center justify-center w-4 h-4 rounded-full text-[10px] font-semibold shrink-0',
+                            isActive
+                              ? 'bg-primary-foreground/20 text-primary-foreground'
+                              : 'bg-muted text-muted-foreground'
+                          )}
+                        >
+                          {index + 1}
+                        </span>
+                      ) : (
+                        <Icon className="size-3.5 shrink-0" aria-hidden="true" />
+                      )}
+                      <span className="truncate">{label}</span>
+                    </Link>
+                  </SidebarMenuSubButton>
+                </SidebarMenuSubItem>
+              );
+            })}
           </SidebarMenuSub>
         </CollapsibleContent>
       </SidebarMenuSubItem>
@@ -100,64 +114,88 @@ export const AdminAssessmentSidebarNav = () => {
 
   const sortedTypes = useMemo(
     () =>
-      [...assessmentTypes].sort(
-        (a, b) => a.displayOrder - b.displayOrder || a.name.localeCompare(b.name)
-      ),
+      [...assessmentTypes].sort((a, b) => {
+        if (a.isActive !== b.isActive) return a.isActive ? -1 : 1;
+        return a.name.localeCompare(b.name);
+      }),
     [assessmentTypes]
   );
 
   const isAssessmentRoute = pathname === '/admin/assessment';
 
-  return (
-    <Collapsible defaultOpen={isAssessmentRoute} className="group/collapsible">
-      <SidebarMenuItem>
-        <CollapsibleTrigger asChild>
-          <SidebarMenuButton tooltip="Assessments">
-            <ClipboardList />
-            <span>Assessments</span>
-            <SidebarMenuChevron />
-          </SidebarMenuButton>
-        </CollapsibleTrigger>
-        <CollapsibleContent>
-          <SidebarMenuSub>
-            {loading && assessmentTypes.length === 0 ? (
-              <SidebarMenuSubItem>
-                <div className="flex items-center gap-2 px-2 py-1.5 text-xs text-muted-foreground">
-                  <Spinner className="size-3" />
-                  Loading...
-                </div>
-              </SidebarMenuSubItem>
-            ) : (
-              sortedTypes.map((type) => (
-                <AssessmentTypeNavItem
-                  key={type.code}
-                  type={type}
-                  defaultOpen={isAssessmentRoute && selectedType === type.code}
-                  isTypeActive={
-                    isAssessmentRoute &&
-                    selectedType === type.code &&
-                    !isViewActive('catalog') &&
-                    !isViewActive('users')
-                  }
-                  isViewActive={isViewActive}
-                  buildHref={buildHref}
-                />
-              ))
-            )}
+  const catalogItem = GLOBAL_WORKSPACE_NAV.find((n) => n.view === 'catalog');
+  const usersItem = GLOBAL_WORKSPACE_NAV.find((n) => n.view === 'users');
 
-            {GLOBAL_WORKSPACE_NAV.map(({ view, label, icon: Icon }) => (
-              <SidebarMenuSubItem key={view}>
-                <SidebarMenuSubButton asChild isActive={isViewActive(view)}>
-                  <Link href={buildHref(view)} prefetch={false}>
-                    <Icon className="size-4 shrink-0" aria-hidden="true" />
-                    <span>{label}</span>
-                  </Link>
-                </SidebarMenuSubButton>
-              </SidebarMenuSubItem>
+  return (
+    <>
+      {/* All types — primary entry point, always visible at top */}
+      {catalogItem && (
+        <SidebarMenuItem>
+          <SidebarMenuButton asChild isActive={isViewActive('catalog')}>
+            <Link href={buildHref('catalog')} prefetch={false}>
+              <FolderOpen className="size-4 shrink-0" aria-hidden="true" />
+              <span>All types</span>
+            </Link>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      )}
+
+      {/* Per-type collapsibles */}
+      {loading && assessmentTypes.length === 0 ? (
+        <SidebarMenuItem>
+          <div className="flex items-center gap-2 px-2 py-1.5 text-xs text-muted-foreground">
+            <Spinner className="size-3" />
+            Loading...
+          </div>
+        </SidebarMenuItem>
+      ) : sortedTypes.length > 0 ? (
+        <SidebarMenuItem>
+          <SidebarMenuSub>
+            {sortedTypes.map((type) => (
+              <AssessmentTypeNavItem
+                key={type.code}
+                type={type}
+                defaultOpen={isAssessmentRoute && selectedType === type.code}
+                isTypeActive={
+                  isAssessmentRoute &&
+                  selectedType === type.code &&
+                  !isViewActive('catalog') &&
+                  !isViewActive('users')
+                }
+                isViewActive={isViewActive}
+                buildHref={buildHref}
+              />
             ))}
           </SidebarMenuSub>
-        </CollapsibleContent>
+        </SidebarMenuItem>
+      ) : null}
+
+      {/* User sessions — monitoring, secondary */}
+      {usersItem && (
+        <SidebarMenuItem>
+          <SidebarMenuButton asChild isActive={isViewActive('users')}>
+            <Link href={buildHref('users')} prefetch={false}>
+              <Users className="size-4 shrink-0" aria-hidden="true" />
+              <span>User sessions</span>
+            </Link>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      )}
+
+      {/* Separator */}
+      <SidebarMenuItem aria-hidden="true">
+        <div className="mx-2 my-0.5 h-px bg-sidebar-border" />
       </SidebarMenuItem>
-    </Collapsible>
+
+      {/* Create new type */}
+      <SidebarMenuItem>
+        <SidebarMenuButton asChild>
+          <Link href="/admin/assessment/create" prefetch={false}>
+            <Plus className="size-4 shrink-0" aria-hidden="true" />
+            <span className="text-muted-foreground">New type</span>
+          </Link>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    </>
   );
 };

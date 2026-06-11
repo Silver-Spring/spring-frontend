@@ -28,8 +28,8 @@ export const PaymentDetailsDialog = ({
 }: PaymentDetailsDialogProps) => {
   const { getPaymentDetails, loading, error } = useAdminPaymentDetails();
   const [details, setDetails] = useState<{
-    razorpayData: any;
-    dbData: any;
+    razorpayData: Record<string, unknown>;
+    dbData: Record<string, unknown>;
   } | null>(null);
 
   useEffect(() => {
@@ -40,6 +40,7 @@ export const PaymentDetailsDialog = ({
         }
       });
     } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setDetails(null);
     }
   }, [open, paymentId, getPaymentDetails]);

@@ -20,11 +20,7 @@ interface CouponInputProps {
   originalAmount: number;
 }
 
-export const CouponInput = ({
-  onCouponApplied,
-  onCouponRemoved,
-  originalAmount,
-}: CouponInputProps) => {
+export const CouponInput = ({ onCouponApplied, onCouponRemoved }: CouponInputProps) => {
   const [couponCode, setCouponCode] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [appliedCoupon, setAppliedCoupon] = useState<{
@@ -66,7 +62,7 @@ export const CouponInput = ({
         setError(result?.message || 'Invalid coupon code');
         setAppliedCoupon(null);
       }
-    } catch (err) {
+    } catch {
       setError('Failed to validate coupon. Please try again.');
       setAppliedCoupon(null);
     }

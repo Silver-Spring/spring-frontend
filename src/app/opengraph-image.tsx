@@ -16,100 +16,97 @@ export default async function Image() {
     const logoSrc = `data:image/png;base64,${logoData}`;
 
     return new ImageResponse(
-      (
+      <div
+        style={{
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '60px',
+        }}
+      >
         <div
           style={{
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            width: '100%',
-            height: '100%',
             display: 'flex',
-            flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '60px',
+            marginBottom: '40px',
           }}
         >
-          <div
+          <img
+            src={logoSrc}
+            alt=""
+            height={180}
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginBottom: '40px',
+              borderRadius: '20px',
+              boxShadow: '0 10px 40px rgba(0,0,0,0.3)',
             }}
-          >
-            <img
-              src={logoSrc}
-              height={180}
-              style={{
-                borderRadius: '20px',
-                boxShadow: '0 10px 40px rgba(0,0,0,0.3)',
-              }}
-            />
-          </div>
-          <div
-            style={{
-              fontSize: 72,
-              fontWeight: 'bold',
-              color: 'white',
-              textAlign: 'center',
-              textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
-            }}
-          >
-            Silver Spring
-          </div>
-          <div
-            style={{
-              fontSize: 36,
-              color: 'rgba(255,255,255,0.9)',
-              textAlign: 'center',
-              marginTop: '20px',
-            }}
-          >
-            Assessment Platform
-          </div>
+          />
         </div>
-      ),
+        <div
+          style={{
+            fontSize: 72,
+            fontWeight: 'bold',
+            color: 'white',
+            textAlign: 'center',
+            textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
+          }}
+        >
+          Silver Spring
+        </div>
+        <div
+          style={{
+            fontSize: 36,
+            color: 'rgba(255,255,255,0.9)',
+            textAlign: 'center',
+            marginTop: '20px',
+          }}
+        >
+          Assessment Platform
+        </div>
+      </div>,
       {
         ...size,
       }
     );
-  } catch (error) {
+  } catch {
     return new ImageResponse(
-      (
+      <div
+        style={{
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
         <div
           style={{
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
+            fontSize: 72,
+            fontWeight: 'bold',
+            color: 'white',
+            textAlign: 'center',
+            textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
           }}
         >
-          <div
-            style={{
-              fontSize: 72,
-              fontWeight: 'bold',
-              color: 'white',
-              textAlign: 'center',
-              textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
-            }}
-          >
-            Silver Spring
-          </div>
-          <div
-            style={{
-              fontSize: 36,
-              color: 'rgba(255,255,255,0.9)',
-              textAlign: 'center',
-              marginTop: '20px',
-            }}
-          >
-            Assessment Platform
-          </div>
+          Silver Spring
         </div>
-      ),
+        <div
+          style={{
+            fontSize: 36,
+            color: 'rgba(255,255,255,0.9)',
+            textAlign: 'center',
+            marginTop: '20px',
+          }}
+        >
+          Assessment Platform
+        </div>
+      </div>,
       {
         ...size,
       }

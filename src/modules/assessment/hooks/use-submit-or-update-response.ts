@@ -16,7 +16,7 @@ interface SubmitOrUpdateInput {
 
 export const useSubmitOrUpdateResponse = () => {
   const apolloClient = useApolloClient();
-  
+
   const [submitOrUpdateMutation, { loading, error }] = useMutation(
     SubmitOrUpdateResponseDoc,
     {
@@ -74,7 +74,7 @@ export const useSubmitOrUpdateResponse = () => {
               },
             });
           }
-        } catch (error) {
+        } catch {
           console.log('Cache update skipped for next question');
         }
       }

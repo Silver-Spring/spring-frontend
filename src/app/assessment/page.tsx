@@ -12,6 +12,7 @@ export default function AssessmentPage() {
 
   useEffect(() => {
     if (currentUser && !currentUser.phoneNumber) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setShowPhoneDialog(true);
     }
   }, [currentUser]);

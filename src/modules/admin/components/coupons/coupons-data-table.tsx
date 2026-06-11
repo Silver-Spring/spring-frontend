@@ -7,7 +7,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
@@ -21,7 +20,7 @@ import {
 import { type ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
 import { ArrowUpDown, CheckCircle, Edit, Eye, MoreHorizontal, Trash2, XCircle } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
   useAdminActivateCoupon,
   useAdminDeactivateCoupon,
@@ -31,7 +30,7 @@ import { CouponUsageDialog } from '../dialogs/coupon-usage-dialog';
 import { EditCouponDialog } from '../dialogs/edit-coupon-dialog';
 import { DeleteCouponDialog } from '../dialogs/delete-coupon-dialog';
 
-interface Coupon {
+export interface Coupon {
   id: string;
   code: string;
   description: string | null;
@@ -59,26 +58,33 @@ export const CouponsDataTable = ({ coupons, onRefetch }: CouponsDataTableProps) 
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
 
-  const { deactivateCoupon, loading: deactivating } = useAdminDeactivateCoupon();
-  const { activateCoupon, loading: activating } = useAdminActivateCoupon();
+  const { deactivateCoupon } = useAdminDeactivateCoupon();
+  const { activateCoupon } = useAdminActivateCoupon();
   const { deleteCoupon, loading: deleting } = useAdminDeleteCoupon();
 
-  const handleActivate = async (id: string) => {
-    try {
-      await activateCoupon(id);
-      onRefetch();
-    } catch (error) {
-      console.error('Failed to activate coupon:', error);
-    }
-  };
-  const handleDeactivate = async (id: string) => {
-    try {
-      await deactivateCoupon(id);
-      onRefetch();
-    } catch (error) {
-      console.error('Failed to deactivate coupon:', error);
-    }
-  };
+  const handleActivate = useCallback(
+    async (id: string) => {
+      try {
+        await activateCoupon(id);
+        onRefetch();
+      } catch (error) {
+        console.error('Failed to activate coupon:', error);
+      }
+    },
+    [activateCoupon, onRefetch]
+  );
+
+  const handleDeactivate = useCallback(
+    async (id: string) => {
+      try {
+        await deactivateCoupon(id);
+        onRefetch();
+      } catch (error) {
+        console.error('Failed to deactivate coupon:', error);
+      }
+    },
+    [deactivateCoupon, onRefetch]
+  );
 
   const handleEdit = (couponId: string) => {
     setSelectedCouponId(couponId);
@@ -272,7 +278,7 @@ export const CouponsDataTable = ({ coupons, onRefetch }: CouponsDataTableProps) 
         },
       },
     ],
-    [deactivating, activating, deleting]
+    [handleActivate, handleDeactivate]
   );
 
   return (

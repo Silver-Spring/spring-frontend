@@ -47,6 +47,9 @@ export const useQuestionFlow = ({
     enablePrefetch,
   });
 
+  // Derive total from live progress data; fall back to 50 until first question loads
+  const resolvedTotal = progress.totalCount ?? 50;
+
   const {
     question: prevQuestion,
     currentResponse: prevResponse,
@@ -67,7 +70,7 @@ export const useQuestionFlow = ({
     sessionId,
     questionNumber: questionNumber + 1,
     enablePrefetch: false,
-    skip: questionNumber >= 50,
+    skip: questionNumber >= resolvedTotal,
   });
 
   return {

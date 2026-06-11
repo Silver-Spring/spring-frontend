@@ -51,7 +51,7 @@ export const TYPE_WORKSPACE_NAV: WorkspaceNavItem[] = [
     view: 'settings',
     label: 'Type details',
     title: 'Type details',
-    description: 'Name, price, structure, and display order.',
+    description: 'Name, price, and structure configuration.',
     icon: Settings2,
   },
 ];

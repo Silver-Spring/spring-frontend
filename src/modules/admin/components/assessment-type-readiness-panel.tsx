@@ -14,15 +14,6 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
 import {
@@ -31,18 +22,16 @@ import {
   useAdminAssessmentTypes,
   useAssessmentTypeReadiness,
   useDeactivateAssessmentType,
-  useSeedAssessmentTypeContent,
   type AssessmentTypeReadinessCheckKey,
 } from '@/modules/admin/hooks';
 import {
-  getDefaultTemplateCode,
   getReadinessFixViewLabel,
   isProtectedAssessmentType,
   READINESS_CHECK_FIX_VIEWS,
 } from '@/modules/admin/lib/assessment-type-lifecycle';
 import { CheckCircle2, CircleAlert, RefreshCw, XCircle } from 'lucide-react';
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const getCheckFixHref = (checkKey: string, assessmentType: string) => {
   const view = READINESS_CHECK_FIX_VIEWS[checkKey as AssessmentTypeReadinessCheckKey];
@@ -76,9 +65,7 @@ const DraftReadinessSummary = ({ assessmentType }: { assessmentType: string }) =
   }
 
   if (checks.length === 0) {
-    return (
-      <p className="text-xs text-muted-foreground mt-3">No readiness checks available</p>
-    );
+    return <p className="text-xs text-muted-foreground mt-3">No readiness checks available</p>;
   }
 
   const passedCount = checks.filter((check) => check.passed).length;
@@ -98,9 +85,7 @@ const DraftReadinessSummary = ({ assessmentType }: { assessmentType: string }) =
       <p className="text-xs text-muted-foreground">
         Readiness: {passedCount}/{checks.length} checks passed
       </p>
-      {firstFailed && (
-        <p className="text-xs text-destructive line-clamp-2">{firstFailed.detail}</p>
-      )}
+      {firstFailed && <p className="text-xs text-destructive line-clamp-2">{firstFailed.detail}</p>}
     </div>
   );
 };
@@ -129,46 +114,22 @@ export const AssessmentTypeReadinessPanel = ({
   assessmentType,
 }: AssessmentTypeReadinessPanelProps) => {
   const { assessmentTypes } = useAdminAssessmentTypes();
-  const {
-    ready,
-    checks,
-    sectionCount,
-    requiredSectionBands,
-    stagesPerSection,
-    loading,
-    error,
-    refetch,
-  } = useAssessmentTypeReadiness(assessmentType);
+  const { ready, checks, sectionCount, requiredSectionBands, loading, error, refetch } =
+    useAssessmentTypeReadiness(assessmentType);
   const { activateAssessmentType, loading: activating } = useActivateAssessmentType();
   const { deactivateAssessmentType, loading: deactivating } = useDeactivateAssessmentType();
-  const { seedAssessmentTypeContent, loading: seeding } = useSeedAssessmentTypeContent();
 
   const type = assessmentTypes.find((t) => t.code === assessmentType);
   const isProtected = isProtectedAssessmentType(assessmentType);
 
-  const [templateCode, setTemplateCode] = useState('');
-  const [cloneBands, setCloneBands] = useState(true);
   const [publishError, setPublishError] = useState<string | null>(null);
   const [publishDialogOpen, setPublishDialogOpen] = useState(false);
   const [deactivateDialogOpen, setDeactivateDialogOpen] = useState(false);
 
-  const templateOptions = useMemo(
-    () => assessmentTypes.filter((t) => t.code !== assessmentType),
-    [assessmentTypes, assessmentType]
-  );
-
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setPublishError(null);
   }, [assessmentType]);
-
-  useEffect(() => {
-    if (templateOptions.length === 0) return;
-    setTemplateCode((current) => {
-      const isCurrentValid = templateOptions.some((option) => option.code === current);
-      if (isCurrentValid) return current;
-      return getDefaultTemplateCode(templateOptions);
-    });
-  }, [templateOptions]);
 
   const handleRefreshReadiness = async () => {
     setPublishError(null);
@@ -191,16 +152,6 @@ export const AssessmentTypeReadinessPanel = ({
   const handleConfirmDeactivate = async () => {
     await deactivateAssessmentType(assessmentType);
     setDeactivateDialogOpen(false);
-  };
-
-  const handleReclone = async () => {
-    if (!templateCode) return;
-    await seedAssessmentTypeContent({
-      assessmentTypeCode: assessmentType,
-      templateCode,
-      cloneBands,
-      cloneTemplateContent: false,
-    });
   };
 
   const failedChecks = checks.filter((check) => !check.passed);
@@ -350,68 +301,17 @@ export const AssessmentTypeReadinessPanel = ({
             {assessmentType.toUpperCase()} is a protected baseline type and cannot be deactivated.
           </p>
         )}
-
-        <div className="border-t pt-6 space-y-4">
-          <div>
-            <h4 className="font-medium">Re-clone from template</h4>
-            <p className="text-sm text-muted-foreground mt-1">
-              Copy missing interpretation bands from another type. Existing bands with the same
-              label and dimension are skipped.
-            </p>
-          </div>
-
-          {templateOptions.length === 0 ? (
-            <p className="text-sm text-muted-foreground">
-              No other assessment types are available to use as a template. Create another type
-              first, or use the create wizard to clone from SSRI on initial setup.
-            </p>
-          ) : (
-            <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="reclone-template">Template type</Label>
-                  <Select value={templateCode} onValueChange={setTemplateCode}>
-                    <SelectTrigger id="reclone-template" className="mt-2">
-                      <SelectValue placeholder="Select template" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {templateOptions.map((option) => (
-                        <SelectItem key={option.code} value={option.code}>
-                          {option.name} ({option.code.toUpperCase()})
-                          {!option.isActive ? ' — draft' : ''}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <label className="flex items-center gap-2 text-sm">
-                <Checkbox
-                  checked={cloneBands}
-                  onCheckedChange={(checked) => setCloneBands(checked === true)}
-                  aria-label="Clone interpretation bands"
-                />
-                Clone interpretation bands
-              </label>
-              <Button
-                variant="secondary"
-                onClick={handleReclone}
-                disabled={seeding || !templateCode || !cloneBands}
-              >
-                {seeding ? 'Cloning...' : 'Re-clone from template'}
-              </Button>
-            </>
-          )}
-        </div>
       </Card>
 
       <AlertDialog open={publishDialogOpen} onOpenChange={setPublishDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Publish {type?.name ?? assessmentType.toUpperCase()}?</AlertDialogTitle>
+            <AlertDialogTitle>
+              Publish {type?.name ?? assessmentType.toUpperCase()}?
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              This makes the assessment type visible in availableAssessments. Users can purchase
-              and start it immediately. You can deactivate it later to hide it from new users.
+              This makes the assessment type visible in availableAssessments. Users can purchase and
+              start it immediately. You can deactivate it later to hide it from new users.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -432,7 +332,9 @@ export const AssessmentTypeReadinessPanel = ({
       <AlertDialog open={deactivateDialogOpen} onOpenChange={setDeactivateDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Deactivate {type?.name ?? assessmentType.toUpperCase()}?</AlertDialogTitle>
+            <AlertDialogTitle>
+              Deactivate {type?.name ?? assessmentType.toUpperCase()}?
+            </AlertDialogTitle>
             <AlertDialogDescription>
               This hides the assessment type from users. New purchases and starts will not be
               available until you publish again. Existing completed results are preserved.

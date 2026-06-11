@@ -10,6 +10,7 @@ import {
   useReactTable,
   type ColumnDef,
   type ColumnFiltersState,
+  type Row,
   type SortingState,
   type VisibilityState,
 } from '@tanstack/react-table';
@@ -38,7 +39,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
   filterColumn?: string;
   filterPlaceholder?: string;
-  filterFn?: (row: any, columnId: string, filterValue: any) => boolean;
+  filterFn?: (row: Row<TData>, columnId: string, filterValue: string) => boolean;
   pageSize?: number;
   showSearch?: boolean;
   showColumnVisibility?: boolean;

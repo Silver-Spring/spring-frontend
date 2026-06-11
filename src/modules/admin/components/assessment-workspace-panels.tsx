@@ -41,14 +41,17 @@ export const AssessmentTypeSettingsPanel = ({ assessmentType }: AssessmentTypePa
     name: '',
     description: '',
     priceAmount: '',
-    displayOrder: '',
     sectionCount: '',
+    responseScaleMin: '',
+    responseScaleMax: '',
+    profileQuestionsCount: '',
   });
   const [isEditing, setIsEditing] = useState(false);
   const [showRecomputePrompt, setShowRecomputePrompt] = useState(false);
   const { recomputeAutoStageRanges, loading: recomputingRanges } = useRecomputeAutoStageRanges();
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsEditing(false);
     setShowRecomputePrompt(false);
   }, [assessmentType]);
@@ -58,9 +61,11 @@ export const AssessmentTypeSettingsPanel = ({ assessmentType }: AssessmentTypePa
     setEditForm({
       name: type.name,
       description: type.description || '',
-      priceAmount: String(type.priceAmount),
-      displayOrder: String(type.displayOrder),
+      priceAmount: String(type.priceAmount / 100),
       sectionCount: String(type.sectionCount),
+      responseScaleMin: String(type.responseScaleMin ?? 1),
+      responseScaleMax: String(type.responseScaleMax ?? 10),
+      profileQuestionsCount: String(type.profileQuestionsCount ?? 0),
     });
     setIsEditing(true);
   };
@@ -86,15 +91,21 @@ export const AssessmentTypeSettingsPanel = ({ assessmentType }: AssessmentTypePa
 
     const previousSectionCount = type.sectionCount;
 
+    const parsedScaleMin = parseInt(editForm.responseScaleMin, 10);
+    const parsedScaleMax = parseInt(editForm.responseScaleMax, 10);
+    const parsedProfileCount = parseInt(editForm.profileQuestionsCount, 10);
+
     const result = await updateAssessmentType({
       code: type.code,
       name: editForm.name.trim(),
       description: editForm.description.trim() || undefined,
-      priceAmount: parseInt(editForm.priceAmount, 10),
-      displayOrder: parseInt(editForm.displayOrder, 10),
+      priceAmount: Math.round(parseFloat(editForm.priceAmount) * 100),
       ...(!type.isActive && Number.isFinite(nextSectionCount)
         ? { sectionCount: nextSectionCount }
         : {}),
+      ...(Number.isFinite(parsedScaleMin) ? { responseScaleMin: parsedScaleMin } : {}),
+      ...(Number.isFinite(parsedScaleMax) ? { responseScaleMax: parsedScaleMax } : {}),
+      ...(Number.isFinite(parsedProfileCount) ? { profileQuestionsCount: parsedProfileCount } : {}),
     });
 
     if (result?.success) {
@@ -204,9 +215,7 @@ export const AssessmentTypeSettingsPanel = ({ assessmentType }: AssessmentTypePa
                   {activeSectionCount - parsedSectionCount === 1 ? '' : 's'}.
                 </p>
                 <Button variant="link" className="h-auto p-0" asChild>
-                  <Link href={buildAssessmentHref('content', assessmentType)}>
-                    Manage sections
-                  </Link>
+                  <Link href={buildAssessmentHref('content', assessmentType)}>Manage sections</Link>
                 </Button>
               </AlertDescription>
             </Alert>
@@ -223,10 +232,12 @@ export const AssessmentTypeSettingsPanel = ({ assessmentType }: AssessmentTypePa
               />
             </div>
             <div>
-              <Label htmlFor="settings-price">Price (paise)</Label>
+              <Label htmlFor="settings-price">Price (₹)</Label>
               <Input
                 id="settings-price"
                 type="number"
+                min={1}
+                step="0.01"
                 value={editForm.priceAmount}
                 onChange={(e) => setEditForm({ ...editForm, priceAmount: e.target.value })}
                 className="mt-2"
@@ -238,16 +249,6 @@ export const AssessmentTypeSettingsPanel = ({ assessmentType }: AssessmentTypePa
                 id="settings-desc"
                 value={editForm.description}
                 onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
-                className="mt-2"
-              />
-            </div>
-            <div>
-              <Label htmlFor="settings-order">Display Order</Label>
-              <Input
-                id="settings-order"
-                type="number"
-                value={editForm.displayOrder}
-                onChange={(e) => setEditForm({ ...editForm, displayOrder: e.target.value })}
                 className="mt-2"
               />
             </div>
@@ -271,6 +272,50 @@ export const AssessmentTypeSettingsPanel = ({ assessmentType }: AssessmentTypePa
               </div>
             )}
           </div>
+
+          {!type.isActive && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <Label htmlFor="settings-scale-min">Answer scale min</Label>
+                <Input
+                  id="settings-scale-min"
+                  type="number"
+                  min={1}
+                  value={editForm.responseScaleMin}
+                  onChange={(e) => setEditForm({ ...editForm, responseScaleMin: e.target.value })}
+                  className="mt-2"
+                />
+                <p className="text-xs text-muted-foreground mt-1">Default: 1</p>
+              </div>
+              <div>
+                <Label htmlFor="settings-scale-max">Answer scale max</Label>
+                <Input
+                  id="settings-scale-max"
+                  type="number"
+                  min={2}
+                  value={editForm.responseScaleMax}
+                  onChange={(e) => setEditForm({ ...editForm, responseScaleMax: e.target.value })}
+                  className="mt-2"
+                />
+                <p className="text-xs text-muted-foreground mt-1">Default: 10</p>
+              </div>
+              <div>
+                <Label htmlFor="settings-profile-count">Profile questions</Label>
+                <Input
+                  id="settings-profile-count"
+                  type="number"
+                  min={0}
+                  value={editForm.profileQuestionsCount}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, profileQuestionsCount: e.target.value })
+                  }
+                  className="mt-2"
+                />
+                <p className="text-xs text-muted-foreground mt-1">Unscored questions shown first</p>
+              </div>
+            </div>
+          )}
+
           <div className="flex gap-2">
             <Button type="submit" disabled={updating}>
               Save Changes
@@ -288,10 +333,11 @@ export const AssessmentTypeSettingsPanel = ({ assessmentType }: AssessmentTypePa
           </div>
           <div>
             <dt className="text-muted-foreground">Status</dt>
-            <dd className="mt-0.5">
+            <dd className="mt-0.5 flex flex-wrap gap-1">
               <Badge variant={type.isActive ? 'default' : 'secondary'}>
                 {type.isActive ? 'Live' : 'Draft'}
               </Badge>
+              {type.isDyadic && <Badge variant="secondary">Couples</Badge>}
             </dd>
           </div>
           <div>
@@ -302,12 +348,26 @@ export const AssessmentTypeSettingsPanel = ({ assessmentType }: AssessmentTypePa
             <dt className="text-muted-foreground">Structure</dt>
             <dd className="font-medium mt-0.5">
               {type.sectionCount} sections × {type.questionsPerSection} questions
+              {(type.profileQuestionsCount ?? 0) > 0 && (
+                <span className="text-muted-foreground font-normal">
+                  {' '}
+                  + {type.profileQuestionsCount} profile
+                </span>
+              )}
             </dd>
           </div>
           <div>
             <dt className="text-muted-foreground">Scoring</dt>
             <dd className="font-medium mt-0.5">
-              {type.scoringFormula} ({type.minScore}–{type.maxScore})
+              {type.isDyadic
+                ? 'Dyadic (domain averages + couple total)'
+                : `${type.scoringFormula} (${type.minScore}–${type.maxScore})`}
+            </dd>
+          </div>
+          <div>
+            <dt className="text-muted-foreground">Answer scale</dt>
+            <dd className="font-medium mt-0.5">
+              {type.responseScaleMin ?? 1}–{type.responseScaleMax ?? 10}
             </dd>
           </div>
           {type.description && (

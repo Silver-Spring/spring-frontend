@@ -11,6 +11,8 @@ export const GetSectionQuestionsDoc = graphql(`
         questionText
         displayOrder
         isActive
+        questionCategory
+        answerOptions
         createdAt
         updatedAt
       }

@@ -28,7 +28,7 @@ const useReportPreviewRefresh = (): ReportPreviewRefreshContextValue => {
 
   if (!context) {
     return {
-      refreshKey: Date.now(),
+      refreshKey: 0,
       bumpPreview: () => {},
     };
   }

@@ -27,7 +27,7 @@ export const onRequestError = async (
   }
 
   if (process.env.NEXT_RUNTIME === 'nodejs') {
-    const { getPostHogServer } = require('./src/lib/posthog-server');
+    const { getPostHogServer } = await import('./src/lib/posthog-server');
     const posthog = getPostHogServer();
 
     let distinctId: string | null = null;
@@ -38,7 +38,7 @@ export const onRequestError = async (
         : request.headers.cookie;
 
       const postHogCookieMatch = cookieString.match(/ph_phc_.*?_posthog=([^;]+)/);
-      
+
       if (postHogCookieMatch && postHogCookieMatch[1]) {
         try {
           const decodedCookie = decodeURIComponent(postHogCookieMatch[1]);
@@ -50,8 +50,7 @@ export const onRequestError = async (
       }
     }
 
-    await posthog.captureException(err, {
-      distinct_id: distinctId || undefined,
+    posthog.captureException(err, distinctId || undefined, {
       $set: {
         server_error: true,
         router_kind: context.routerKind,

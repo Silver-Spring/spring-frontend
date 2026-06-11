@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
 import { Spinner } from '@/components/ui/spinner';
 import { Textarea } from '@/components/ui/textarea';
 
@@ -31,6 +32,7 @@ export type AddSectionFormState = {
   aboutDescription: string;
   subtitle: string;
   description: string;
+  sectionCategory: 'scored' | 'profile';
 };
 
 export type SectionPresetOption = {
@@ -213,6 +215,24 @@ const AddSectionDialog = ({
                     onCustomSectionFormChange({ ...customSectionForm, displayColor })
                   }
                   placeholder="#6366f1"
+                />
+              </div>
+              <div className="flex items-center justify-between rounded-lg border p-3">
+                <div className="space-y-0.5">
+                  <Label htmlFor="custom-section-category" className="text-sm font-medium">Profile section</Label>
+                  <p className="text-xs text-muted-foreground">
+                    Profile sections are shown first and do not count toward the score
+                  </p>
+                </div>
+                <Switch
+                  id="custom-section-category"
+                  checked={customSectionForm.sectionCategory === 'profile'}
+                  onCheckedChange={(checked) =>
+                    onCustomSectionFormChange({
+                      ...customSectionForm,
+                      sectionCategory: checked ? 'profile' : 'scored',
+                    })
+                  }
                 />
               </div>
             </div>

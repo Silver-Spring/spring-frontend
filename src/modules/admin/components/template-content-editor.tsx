@@ -206,6 +206,7 @@ export const TemplateContentEditor = ({ assessmentType }: TemplateContentEditorP
     const next = Object.fromEntries(
       TEMPLATE_CONTENT_KEYS.map((key) => [key, toEditorValue(key, contentByKey[key])])
     ) as Record<TemplateContentKey, string>;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setDrafts(next);
   }, [contentByKey]);
 

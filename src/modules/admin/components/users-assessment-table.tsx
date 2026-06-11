@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { type ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, Copy, Eye, Mail, MoreHorizontal } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
@@ -42,23 +42,26 @@ export const UsersAssessmentTable = () => {
   const { resendReport, loading: resending } = useResendReport();
   const [resendingId, setResendingId] = useState<string | null>(null);
 
-  const handleResendReport = async (resultId: string, userEmail: string) => {
-    setResendingId(resultId);
-    try {
-      await resendReport(resultId);
-      toast.success(`Report resent to ${userEmail}`);
-    } catch (error) {
-      toast.error('Failed to resend report');
-    } finally {
-      setResendingId(null);
-    }
-  };
+  const handleResendReport = useCallback(
+    async (resultId: string, userEmail: string) => {
+      setResendingId(resultId);
+      try {
+        await resendReport(resultId);
+        toast.success(`Report resent to ${userEmail}`);
+      } catch {
+        toast.error('Failed to resend report');
+      } finally {
+        setResendingId(null);
+      }
+    },
+    [resendReport]
+  );
 
   const handleRefresh = async () => {
     try {
       await refetch();
       toast.success('Data refreshed');
-    } catch (error) {
+    } catch {
       toast.error('Failed to refresh data');
     }
   };

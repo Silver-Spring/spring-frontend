@@ -15,52 +15,49 @@ export default async function AppleIcon() {
     const logoSrc = `data:image/png;base64,${logoData}`;
 
     return new ImageResponse(
-      (
-        <div
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'white',
+          borderRadius: '20px',
+        }}
+      >
+        <img
+          src={logoSrc}
           style={{
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'white',
-            borderRadius: '20px',
+            width: '90%',
+            height: '90%',
+            objectFit: 'contain',
           }}
-        >
-          <img
-            src={logoSrc}
-            style={{
-              width: '90%',
-              height: '90%',
-              objectFit: 'contain',
-            }}
-          />
-        </div>
-      ),
+          alt="Silver Spring Logo"
+        />
+      </div>,
       {
         ...size,
       }
     );
-  } catch (error) {
+  } catch {
     return new ImageResponse(
-      (
-        <div
-          style={{
-            fontSize: 96,
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'white',
-            fontWeight: 'bold',
-            borderRadius: '20px',
-          }}
-        >
-          SS
-        </div>
-      ),
+      <div
+        style={{
+          fontSize: 96,
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'white',
+          fontWeight: 'bold',
+          borderRadius: '20px',
+        }}
+      >
+        SS
+      </div>,
       {
         ...size,
       }
