@@ -323,7 +323,7 @@ export const AssessmentPage = ({ sessionId }: AssessmentPageProps) => {
                 />
               </div>
 
-              {nextQuestion?.questionText && questionNumber < TOTAL_QUESTIONS && (
+              {nextQuestion?.questionText && questionNumber < (progress.totalCount || TOTAL_QUESTIONS) && (
                 <QuestionCard
                   key={`question-${questionNumber + 1}`}
                   questionNumber={questionNumber + 1}
