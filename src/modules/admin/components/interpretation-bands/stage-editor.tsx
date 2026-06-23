@@ -141,9 +141,34 @@ export const StageEditor = ({
 
   if (stages.length === 0) {
     return (
-      <p className="text-sm text-muted-foreground py-2">
-        No stage configuration found for this type.
-      </p>
+      <Card className="p-4 mb-6">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h4 className="font-medium">Stages</h4>
+            <p className="text-sm text-muted-foreground mt-1">
+              No stage configuration yet. Initialize to create the five default stages
+              (Vulnerable → Thriving) with score ranges auto-computed from this type&apos;s
+              scale. You can edit ranges and labels afterwards.
+            </p>
+          </div>
+          <Button
+            type="button"
+            size="sm"
+            onClick={handleRecompute}
+            disabled={recomputing}
+            className="shrink-0"
+          >
+            {recomputing ? (
+              <>
+                <Spinner className="size-3.5 mr-2" />
+                Initializing…
+              </>
+            ) : (
+              'Initialize stages'
+            )}
+          </Button>
+        </div>
+      </Card>
     );
   }
 
@@ -167,7 +192,10 @@ export const StageEditor = ({
               <AlertDialogHeader>
                 <AlertDialogTitle>Reset stage ranges?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This overwrites custom section and overall ranges with defaults for this type.
+                  This resets section and overall ranges to equal-distribution defaults computed
+                  from the type&apos;s score bounds. Use it to initialise a fresh type or recover
+                  from a broken range. For assessment types with spec-defined cutpoints (e.g.
+                  CORI), manually review and restore the correct values afterwards.
                   Definitions, band narratives, and recommended actions are not changed.
                 </AlertDialogDescription>
               </AlertDialogHeader>

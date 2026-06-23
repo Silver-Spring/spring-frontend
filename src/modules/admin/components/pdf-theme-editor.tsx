@@ -66,7 +66,7 @@ export const PdfThemeEditor = ({ assessmentType }: PdfThemeEditorProps) => {
     const next = Object.fromEntries(
       PDF_THEME_KEYS.map((key) => {
         const raw = contentByKey[key];
-        return [key, typeof raw === 'string' ? raw : ''];
+        return [key, typeof raw === 'string' && raw.trim() ? raw.trim() : PDF_THEME_DEFAULTS[key]];
       })
     ) as Record<PdfThemeKey, string>;
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -87,7 +87,7 @@ export const PdfThemeEditor = ({ assessmentType }: PdfThemeEditorProps) => {
 
   const handleReset = async (key: PdfThemeKey) => {
     setResettingKey(key);
-    await resetTemplateContent(assessmentType, key);
+    await resetTemplateContent(assessmentType, key, `${PDF_THEME_LABELS[key]} reset to default`);
     setResettingKey(null);
     await refetch();
     bumpPreview();

@@ -102,11 +102,6 @@ export const SectionListPanel = ({
                         <p className="text-xs text-muted-foreground">{section.type}</p>
                       </div>
                     </div>
-                    {section.sectionCategory === 'profile' && (
-                      <Badge variant="outline" className="text-[10px] shrink-0 border-blue-300 text-blue-700 dark:text-blue-400">
-                        Profile
-                      </Badge>
-                    )}
                     {!section.isActive && (
                       <Badge variant="secondary" className="text-[10px] shrink-0">
                         Inactive

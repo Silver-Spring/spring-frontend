@@ -17,7 +17,6 @@ import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Select,
@@ -47,7 +46,6 @@ import {
 } from '@dnd-kit/sortable';
 import { GripVertical } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import { AnswerOptionsEditor, type AnswerOption } from './answer-options-editor';
 import { SortableRow } from './sortable-row';
 
 type QuestionItem = {
@@ -55,8 +53,6 @@ type QuestionItem = {
   questionText: string;
   displayOrder: number;
   isActive: boolean;
-  questionCategory?: string;
-  answerOptions?: AnswerOption[] | null;
 };
 
 type SectionInfo = {
@@ -76,15 +72,13 @@ type QuestionsPanelProps = {
   updatingQuestion: boolean;
   deleting: boolean;
   deletingSection: boolean;
-  onCreateQuestion: (questionText: string, questionCategory: 'scored' | 'profile') => Promise<void>;
+  onCreateQuestion: (questionText: string) => Promise<void>;
   onBulkImport: (lines: string[]) => Promise<void>;
   onUpdateQuestion: (values: {
     id: string;
     questionText: string;
     displayOrder: number;
     isActive: boolean;
-    questionCategory: string;
-    answerOptions: AnswerOption[] | null;
   }) => Promise<void>;
   onReorderQuestions: (updates: Array<{ id: string; displayOrder: number }>) => Promise<void>;
   onDeleteQuestion: (id: string) => Promise<void>;
@@ -112,7 +106,6 @@ export const QuestionsPanel = ({
   onDeleteSection,
 }: QuestionsPanelProps) => {
   const [newQuestionText, setNewQuestionText] = useState('');
-  const [newQuestionCategory, setNewQuestionCategory] = useState<'scored' | 'profile'>('scored');
   const [bulkText, setBulkText] = useState('');
   const [showBulkImport, setShowBulkImport] = useState(false);
   const [editingQuestionId, setEditingQuestionId] = useState<string | null>(null);
@@ -121,8 +114,6 @@ export const QuestionsPanel = ({
     questionText: '',
     displayOrder: 1,
     isActive: true,
-    questionCategory: 'scored' as 'scored' | 'profile',
-    answerOptions: null as AnswerOption[] | null,
   });
 
   // Local copy for optimistic drag reordering.
@@ -145,7 +136,7 @@ export const QuestionsPanel = ({
 
   const handleCreateQuestion = async (e: React.FormEvent) => {
     e.preventDefault();
-    await onCreateQuestion(newQuestionText, newQuestionCategory);
+    await onCreateQuestion(newQuestionText);
     setNewQuestionText('');
   };
 
@@ -163,8 +154,6 @@ export const QuestionsPanel = ({
       questionText: questionForm.questionText,
       displayOrder: questionForm.displayOrder,
       isActive: questionForm.isActive,
-      questionCategory: questionForm.questionCategory,
-      answerOptions: questionForm.answerOptions,
     });
     setEditingQuestionId(null);
   };
@@ -275,24 +264,6 @@ export const QuestionsPanel = ({
                       Add
                     </Button>
                   </form>
-                  <RadioGroup
-                    value={newQuestionCategory}
-                    onValueChange={(v) => setNewQuestionCategory(v as 'scored' | 'profile')}
-                    className="flex items-center gap-4"
-                  >
-                    <div className="flex items-center gap-1.5">
-                      <RadioGroupItem value="scored" id="new-q-scored" />
-                      <Label htmlFor="new-q-scored" className="text-xs font-normal cursor-pointer">
-                        Scored
-                      </Label>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <RadioGroupItem value="profile" id="new-q-profile" />
-                      <Label htmlFor="new-q-profile" className="text-xs font-normal cursor-pointer">
-                        Profile (unscored)
-                      </Label>
-                    </div>
-                  </RadioGroup>
                 </div>
 
                 {showBulkImport && (
@@ -364,36 +335,7 @@ export const QuestionsPanel = ({
                                       />
                                       Active
                                     </label>
-                                    <div className="flex items-center gap-2">
-                                      <Label className="text-xs">Category</Label>
-                                      <Select
-                                        value={questionForm.questionCategory}
-                                        onValueChange={(v) =>
-                                          setQuestionForm({
-                                            ...questionForm,
-                                            questionCategory: v as 'scored' | 'profile',
-                                          })
-                                        }
-                                      >
-                                        <SelectTrigger className="h-8 w-36 text-xs">
-                                          <SelectValue />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                          <SelectItem value="scored">Scored</SelectItem>
-                                          <SelectItem value="profile">
-                                            Profile (unscored)
-                                          </SelectItem>
-                                        </SelectContent>
-                                      </Select>
-                                    </div>
                                   </div>
-
-                                  <AnswerOptionsEditor
-                                    options={questionForm.answerOptions}
-                                    onChange={(opts) =>
-                                      setQuestionForm({ ...questionForm, answerOptions: opts })
-                                    }
-                                  />
 
                                   <div className="flex gap-2">
                                     <Button type="submit" size="sm" disabled={updatingQuestion}>
@@ -428,23 +370,6 @@ export const QuestionsPanel = ({
                                       <div>
                                         <p>{question.questionText}</p>
                                         <div className="flex flex-wrap gap-1 mt-1">
-                                          {question.questionCategory === 'profile' && (
-                                            <Badge
-                                              variant="outline"
-                                              className="text-[10px] border-blue-300 text-blue-700 dark:text-blue-400"
-                                            >
-                                              Profile
-                                            </Badge>
-                                          )}
-                                          {question.answerOptions &&
-                                            question.answerOptions.length > 0 && (
-                                              <Badge
-                                                variant="outline"
-                                                className="text-[10px] border-violet-300 text-violet-700 dark:text-violet-400"
-                                              >
-                                                {question.answerOptions.length} options
-                                              </Badge>
-                                            )}
                                           {!question.isActive && (
                                             <Badge variant="secondary" className="text-[10px]">
                                               Inactive
@@ -465,11 +390,6 @@ export const QuestionsPanel = ({
                                             questionText: question.questionText,
                                             displayOrder: question.displayOrder,
                                             isActive: question.isActive,
-                                            questionCategory:
-                                              (question.questionCategory ?? 'scored') as
-                                                | 'scored'
-                                                | 'profile',
-                                            answerOptions: question.answerOptions ?? null,
                                           });
                                         }}
                                       >

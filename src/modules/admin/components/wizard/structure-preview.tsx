@@ -11,7 +11,6 @@ export const StructurePreview = () => {
   const scoringFormula = useWatch({ control: form.control, name: 'scoringFormula' }) ?? 'sum';
   const scaleMin = useWatch({ control: form.control, name: 'responseScaleMin' }) ?? 1;
   const scaleMax = useWatch({ control: form.control, name: 'responseScaleMax' }) ?? 10;
-  const profileCount = useWatch({ control: form.control, name: 'profileQuestionsCount' }) ?? 0;
   const isDyadic = useWatch({ control: form.control, name: 'isDyadic' }) ?? false;
 
   const total = sectionCount * questionsPerSection;
@@ -28,7 +27,6 @@ export const StructurePreview = () => {
           {sectionCount} section{sectionCount !== 1 ? 's' : ''} × {questionsPerSection} questions ={' '}
           <strong className="text-foreground">{total} scored</strong>
         </span>
-        {profileCount > 0 && <span>+ {profileCount} profile questions</span>}
         {isDyadic ? (
           <span className="text-primary font-medium">
             Dyadic scoring — domain averages + couple total

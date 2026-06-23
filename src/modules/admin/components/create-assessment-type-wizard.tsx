@@ -136,7 +136,6 @@ export const CreateAssessmentTypeWizard = () => {
       isDyadic: values.isDyadic,
       responseScaleMin: values.responseScaleMin,
       responseScaleMax: values.responseScaleMax,
-      profileQuestionsCount: values.profileQuestionsCount,
     });
 
     if (!result?.success || !result.assessmentType) return;

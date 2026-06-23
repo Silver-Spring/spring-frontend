@@ -41,19 +41,29 @@ export const OverallBandPanel = ({
     setSheetOpen(true);
   };
 
-  const handleCreate = (stage?: TypeStageRow) => {
+  const missingStages = stages.filter(
+    (s) => !overallBands.some((b) => b.displayOrder === s.displayOrder)
+  );
+
+  const openForStage = (stage: TypeStageRow) => {
     setSelectedBand(null);
-    setPreset(
-      stage
-        ? {
-            label: stage.label,
-            rangeStart: String(stage.overallRangeStart),
-            rangeEnd: String(stage.overallRangeEnd),
-            displayOrder: String(stage.displayOrder),
-            narrative: '',
-          }
-        : undefined
-    );
+    setPreset({
+      label: stage.label,
+      rangeStart: String(stage.overallRangeStart),
+      rangeEnd: String(stage.overallRangeEnd),
+      displayOrder: String(stage.displayOrder),
+      narrative: '',
+    });
+    setSheetOpen(true);
+  };
+
+  const handleCreate = (stage?: TypeStageRow) => {
+    if (stage) { openForStage(stage); return; }
+    // Auto-pick the first missing stage so rangeStart/rangeEnd are never blank.
+    if (missingStages.length > 0) { openForStage(missingStages[0]); return; }
+    // All stages covered — open blank form (admin adding a custom extra band).
+    setSelectedBand(null);
+    setPreset(undefined);
     setSheetOpen(true);
   };
 
@@ -72,10 +82,21 @@ export const OverallBandPanel = ({
           {overallBands.length} overall bands (expected 5). Score ranges sync from the stage
           editor above.
         </p>
-        <Button variant="outline" onClick={() => handleCreate()}>
-          <Plus className="size-4 mr-2" />
-          Add Band
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          {missingStages.length > 0 ? (
+            missingStages.map((stage) => (
+              <Button key={stage.displayOrder} variant="outline" onClick={() => openForStage(stage)}>
+                <Plus className="size-4 mr-2" />
+                Add {stage.label}
+              </Button>
+            ))
+          ) : (
+            <Button variant="outline" onClick={() => handleCreate()}>
+              <Plus className="size-4 mr-2" />
+              Add Band
+            </Button>
+          )}
+        </div>
       </div>
 
       {overallBands.length === 0 ? (

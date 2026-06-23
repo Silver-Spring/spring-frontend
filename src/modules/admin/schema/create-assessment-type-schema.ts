@@ -15,6 +15,7 @@ export const CREATE_ASSESSMENT_TYPE_BASICS_FIELDS = [
   'responseScaleMax',
 ] as const;
 
+
 export const CREATE_ASSESSMENT_TYPE_CLONE_FIELDS = [
   'seedSections',
   'cloneFromTemplate',
@@ -57,10 +58,6 @@ export const createAssessmentTypeBasicsObjectSchema = z.object({
       .number()
       .int()
       .min(2, 'Scale max must be at least 2'),
-    profileQuestionsCount: z
-      .number()
-      .int()
-      .min(0, 'Profile questions count cannot be negative'),
   });
 
 export const createAssessmentTypeBasicsSchema = createAssessmentTypeBasicsObjectSchema;
@@ -91,7 +88,6 @@ export const CREATE_ASSESSMENT_TYPE_WIZARD_DEFAULTS: CreateAssessmentTypeWizardV
   isDyadic: false,
   responseScaleMin: 1,
   responseScaleMax: 10,
-  profileQuestionsCount: 0,
 };
 
 export const SKIP_CLONE_TEMPLATE_VALUE = '__none__';

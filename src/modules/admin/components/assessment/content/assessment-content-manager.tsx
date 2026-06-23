@@ -205,12 +205,9 @@ export const AssessmentContentManager = ({ assessmentType }: AssessmentContentMa
     setEditingSection(section);
   };
 
-  const handleCreateQuestion = async (
-    questionText: string,
-    questionCategory: 'scored' | 'profile'
-  ) => {
+  const handleCreateQuestion = async (questionText: string) => {
     if (!selectedSectionId) return;
-    await createQuestion({ sectionId: selectedSectionId, questionText, questionCategory });
+    await createQuestion({ sectionId: selectedSectionId, questionText });
     refetchQuestions();
   };
 
@@ -228,8 +225,6 @@ export const AssessmentContentManager = ({ assessmentType }: AssessmentContentMa
     questionText: string;
     displayOrder: number;
     isActive: boolean;
-    questionCategory: string;
-    answerOptions: Array<{ value: number; label: string }> | null;
   }) => {
     await updateQuestion(values);
     refetchQuestions();

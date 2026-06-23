@@ -27,8 +27,6 @@ export const useUpdateQuestion = () => {
     questionText?: string;
     displayOrder?: number;
     isActive?: boolean;
-    questionCategory?: string;
-    answerOptions?: Array<{ value: number; label: string }> | null;
   }) => {
     const result = await updateQuestionMutation({
       variables: { input },

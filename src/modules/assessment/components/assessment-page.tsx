@@ -317,8 +317,6 @@ export const AssessmentPage = ({ sessionId }: AssessmentPageProps) => {
                   selectedValue={selectedValue}
                   isFadingOut={isFadingOut}
                   isDisabled={isDisabled}
-                  questionCategory={question.questionCategory}
-                  answerOptions={question.answerOptions}
                   onSelect={handleAnswerSelect}
                 />
               </div>

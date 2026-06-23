@@ -27,8 +27,6 @@ export const useCreateQuestion = () => {
   const createQuestion = async (input: {
     sectionId: string;
     questionText: string;
-    questionCategory?: string;
-    answerOptions?: Array<{ value: number; label: string }> | null;
   }) => {
     const result = await createQuestionMutation({
       variables: { input },
