@@ -122,6 +122,13 @@ export type AdminStatsPayload = {
   totalSections: Scalars['Int']['output'];
 };
 
+export type AdminWorkbookStatsPayload = {
+  __typename?: 'AdminWorkbookStatsPayload';
+  recentPurchases: Scalars['Int']['output'];
+  totalPurchases: Scalars['Int']['output'];
+  totalRevenue: Scalars['Int']['output'];
+};
+
 /** Age cohort comparison (same age range, any gender) */
 export type AgeCohort = {
   __typename?: 'AgeCohort';
@@ -4684,6 +4691,23 @@ export type CreateUserPayloadUserEdgeArgs = {
   orderBy?: Array<UsersOrderBy>;
 };
 
+export type CreateWorkbookOrderInput = {
+  couponCode?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type CreateWorkbookOrderPayload = {
+  __typename?: 'CreateWorkbookOrderPayload';
+  amount: Scalars['Int']['output'];
+  couponApplied: Scalars['Boolean']['output'];
+  couponMessage?: Maybe<Scalars['String']['output']>;
+  currency: Scalars['String']['output'];
+  discountAmount?: Maybe<Scalars['Int']['output']>;
+  isFree: Scalars['Boolean']['output'];
+  orderId?: Maybe<Scalars['String']['output']>;
+  originalAmount?: Maybe<Scalars['Int']['output']>;
+  razorpayKeyId?: Maybe<Scalars['String']['output']>;
+};
+
 export type CurrentResponseDetail = {
   __typename?: 'CurrentResponseDetail';
   id: Scalars['UUID']['output'];
@@ -5174,6 +5198,7 @@ export type Mutation = {
   createRecommendedAction?: Maybe<CreateRecommendedActionPayload>;
   /** Creates a single `User`. */
   createUser?: Maybe<CreateUserPayload>;
+  createWorkbookOrder?: Maybe<CreateWorkbookOrderPayload>;
   /** Soft-deactivate a section on a draft assessment type (admin only). */
   deactivateAssessmentSection?: Maybe<DeactivateAssessmentSectionPayload>;
   deactivateAssessmentType?: Maybe<AssessmentTypePayload>;
@@ -5325,6 +5350,7 @@ export type Mutation = {
   updateUser?: Maybe<UpdateUserPayload>;
   validateCoupon?: Maybe<ValidateCouponPayload>;
   verifyPayment?: Maybe<VerifyPaymentPayload>;
+  verifyWorkbookPayment?: Maybe<VerifyWorkbookPaymentPayload>;
 };
 
 
@@ -5457,6 +5483,12 @@ export type MutationCreateRecommendedActionArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateUserArgs = {
   input: CreateUserInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateWorkbookOrderArgs = {
+  input: CreateWorkbookOrderInput;
 };
 
 
@@ -5794,6 +5826,12 @@ export type MutationValidateCouponArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationVerifyPaymentArgs = {
   input: VerifyPaymentInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationVerifyWorkbookPaymentArgs = {
+  input: VerifyWorkbookPaymentInput;
 };
 
 export type NavigationMetadata = {
@@ -6318,6 +6356,8 @@ export type Query = {
    * Requires admin privileges.
    */
   adminSettlementsList?: Maybe<AdminSettlementsListPayload>;
+  /** Admin only: workbook purchase totals for the dashboard. */
+  adminWorkbookStats?: Maybe<AdminWorkbookStatsPayload>;
   /**
    * Get list of all users in the system (admin only)
    * Includes user details and admin status for role management
@@ -6435,7 +6475,7 @@ export type Query = {
   couponUsageTable?: Maybe<CouponUsageTable>;
   /** Get a single `CouponUsageTable`. */
   couponUsageTableByPaymentId?: Maybe<CouponUsageTable>;
-  /** Get the current in-progress assessment session for the logged-in user */
+  /** Returns the current in-progress assessment session for the logged-in user and assessment type */
   currentAssessmentSession?: Maybe<AssessmentSession>;
   currentSessionId?: Maybe<Scalars['UUID']['output']>;
   currentUser?: Maybe<User>;
@@ -6449,6 +6489,11 @@ export type Query = {
    * Internal users (admins and is_internal=true) don't need payment.
    */
   currentUserPaymentStatus?: Maybe<UserPaymentStatusPayload>;
+  /**
+   * Check if the current user has a captured workbook purchase.
+   * Internal users always get hasPurchased: true.
+   */
+  currentUserWorkbookStatus?: Maybe<UserWorkbookStatusPayload>;
   /** Retrieves an active, valid, and available coupon by code. Returns NULL if not found or invalid. */
   getActiveCouponByCode?: Maybe<CouponTable>;
   /** Returns three INDEPENDENT cohort comparisons: age-based (age range, any gender), gender-based (same gender, any age), and overall (all users). Each cohort is calculated separately and returns null only if that specific cohort has < 5 users. Excludes current user from all calculations. */
@@ -8673,6 +8718,13 @@ export enum UserReminderStatsOrderBy {
   UserIdDesc = 'USER_ID_DESC'
 }
 
+export type UserWorkbookStatusPayload = {
+  __typename?: 'UserWorkbookStatusPayload';
+  hasPurchased: Scalars['Boolean']['output'];
+  purchaseId?: Maybe<Scalars['UUID']['output']>;
+  purchasedAt?: Maybe<Scalars['String']['output']>;
+};
+
 /** A connection to a list of `User` values. */
 export type UsersConnection = {
   __typename?: 'UsersConnection';
@@ -8748,6 +8800,19 @@ export type VerifyPaymentPayload = {
   __typename?: 'VerifyPaymentPayload';
   message?: Maybe<Scalars['String']['output']>;
   paymentId?: Maybe<Scalars['UUID']['output']>;
+  success: Scalars['Boolean']['output'];
+};
+
+export type VerifyWorkbookPaymentInput = {
+  orderId: Scalars['String']['input'];
+  paymentId: Scalars['String']['input'];
+  signature: Scalars['String']['input'];
+};
+
+export type VerifyWorkbookPaymentPayload = {
+  __typename?: 'VerifyWorkbookPaymentPayload';
+  message?: Maybe<Scalars['String']['output']>;
+  purchaseId?: Maybe<Scalars['UUID']['output']>;
   success: Scalars['Boolean']['output'];
 };
 
@@ -9333,6 +9398,25 @@ export type VerifyPaymentMutationVariables = Exact<{
 
 export type VerifyPaymentMutation = { __typename?: 'Mutation', verifyPayment?: { __typename?: 'VerifyPaymentPayload', success: boolean, paymentId?: any | null, message?: string | null } | null };
 
+export type CreateWorkbookOrderMutationVariables = Exact<{
+  input: CreateWorkbookOrderInput;
+}>;
+
+
+export type CreateWorkbookOrderMutation = { __typename?: 'Mutation', createWorkbookOrder?: { __typename?: 'CreateWorkbookOrderPayload', orderId?: string | null, amount: number, originalAmount?: number | null, discountAmount?: number | null, currency: string, razorpayKeyId?: string | null, couponApplied: boolean, couponMessage?: string | null, isFree: boolean } | null };
+
+export type VerifyWorkbookPaymentMutationVariables = Exact<{
+  input: VerifyWorkbookPaymentInput;
+}>;
+
+
+export type VerifyWorkbookPaymentMutation = { __typename?: 'Mutation', verifyWorkbookPayment?: { __typename?: 'VerifyWorkbookPaymentPayload', success: boolean, purchaseId?: any | null, message?: string | null } | null };
+
+export type WorkbookStatusQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type WorkbookStatusQuery = { __typename?: 'Query', currentUserWorkbookStatus?: { __typename?: 'UserWorkbookStatusPayload', hasPurchased: boolean, purchasedAt?: string | null, purchaseId?: any | null } | null };
+
 export const Lite_UserFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Lite_User"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"age"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"gender"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"isAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"isInternal"}}]}}]} as unknown as DocumentNode<Lite_UserFragment, unknown>;
 export const ActivateAssessmentTypeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"ActivateAssessmentType"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"code"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"activateAssessmentType"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"code"},"value":{"kind":"Variable","name":{"kind":"Name","value":"code"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"assessmentType"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}}]}}]}}]}}]} as unknown as DocumentNode<ActivateAssessmentTypeMutation, ActivateAssessmentTypeMutationVariables>;
 export const AdminActivateCouponDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"AdminActivateCoupon"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ActivateCouponInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminActivateCoupon"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<AdminActivateCouponMutation, AdminActivateCouponMutationVariables>;
@@ -9417,3 +9501,6 @@ export const CheckPaymentStatusDocument = {"kind":"Document","definitions":[{"ki
 export const CreatePaymentOrderDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreatePaymentOrder"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreatePaymentOrderInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createPaymentOrder"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"orderId"}},{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"originalAmount"}},{"kind":"Field","name":{"kind":"Name","value":"discountAmount"}},{"kind":"Field","name":{"kind":"Name","value":"currency"}},{"kind":"Field","name":{"kind":"Name","value":"razorpayKeyId"}},{"kind":"Field","name":{"kind":"Name","value":"couponApplied"}},{"kind":"Field","name":{"kind":"Name","value":"couponMessage"}},{"kind":"Field","name":{"kind":"Name","value":"isFree"}}]}}]}}]} as unknown as DocumentNode<CreatePaymentOrderMutation, CreatePaymentOrderMutationVariables>;
 export const ValidateCouponDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"ValidateCoupon"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ValidateCouponInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"validateCoupon"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"valid"}},{"kind":"Field","name":{"kind":"Name","value":"coupon"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"discountType"}},{"kind":"Field","name":{"kind":"Name","value":"discountValue"}}]}},{"kind":"Field","name":{"kind":"Name","value":"discountAmount"}},{"kind":"Field","name":{"kind":"Name","value":"originalAmount"}},{"kind":"Field","name":{"kind":"Name","value":"finalAmount"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<ValidateCouponMutation, ValidateCouponMutationVariables>;
 export const VerifyPaymentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"VerifyPayment"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"paymentId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"signature"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"verifyPayment"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orderId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderId"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"paymentId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"paymentId"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"signature"},"value":{"kind":"Variable","name":{"kind":"Name","value":"signature"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"paymentId"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<VerifyPaymentMutation, VerifyPaymentMutationVariables>;
+export const CreateWorkbookOrderDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateWorkbookOrder"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateWorkbookOrderInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createWorkbookOrder"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"orderId"}},{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"originalAmount"}},{"kind":"Field","name":{"kind":"Name","value":"discountAmount"}},{"kind":"Field","name":{"kind":"Name","value":"currency"}},{"kind":"Field","name":{"kind":"Name","value":"razorpayKeyId"}},{"kind":"Field","name":{"kind":"Name","value":"couponApplied"}},{"kind":"Field","name":{"kind":"Name","value":"couponMessage"}},{"kind":"Field","name":{"kind":"Name","value":"isFree"}}]}}]}}]} as unknown as DocumentNode<CreateWorkbookOrderMutation, CreateWorkbookOrderMutationVariables>;
+export const VerifyWorkbookPaymentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"VerifyWorkbookPayment"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"VerifyWorkbookPaymentInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"verifyWorkbookPayment"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"purchaseId"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<VerifyWorkbookPaymentMutation, VerifyWorkbookPaymentMutationVariables>;
+export const WorkbookStatusDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"WorkbookStatus"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentUserWorkbookStatus"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasPurchased"}},{"kind":"Field","name":{"kind":"Name","value":"purchasedAt"}},{"kind":"Field","name":{"kind":"Name","value":"purchaseId"}}]}}]}}]} as unknown as DocumentNode<WorkbookStatusQuery, WorkbookStatusQueryVariables>;

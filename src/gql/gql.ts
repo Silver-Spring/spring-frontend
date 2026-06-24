@@ -98,6 +98,9 @@ type Documents = {
     "\n  mutation CreatePaymentOrder($input: CreatePaymentOrderInput!) {\n    createPaymentOrder(input: $input) {\n      orderId\n      amount\n      originalAmount\n      discountAmount\n      currency\n      razorpayKeyId\n      couponApplied\n      couponMessage\n      isFree\n    }\n  }\n": typeof types.CreatePaymentOrderDocument,
     "\n  mutation ValidateCoupon($input: ValidateCouponInput!) {\n    validateCoupon(input: $input) {\n      valid\n      coupon {\n        code\n        description\n        discountType\n        discountValue\n      }\n      discountAmount\n      originalAmount\n      finalAmount\n      message\n    }\n  }\n": typeof types.ValidateCouponDocument,
     "\n  mutation VerifyPayment(\n    $orderId: String!\n    $paymentId: String!\n    $signature: String!\n  ) {\n    verifyPayment(\n      input: {\n        orderId: $orderId\n        paymentId: $paymentId\n        signature: $signature\n      }\n    ) {\n      success\n      paymentId\n      message\n    }\n  }\n": typeof types.VerifyPaymentDocument,
+    "\n  mutation CreateWorkbookOrder($input: CreateWorkbookOrderInput!) {\n    createWorkbookOrder(input: $input) {\n      orderId\n      amount\n      originalAmount\n      discountAmount\n      currency\n      razorpayKeyId\n      couponApplied\n      couponMessage\n      isFree\n    }\n  }\n": typeof types.CreateWorkbookOrderDocument,
+    "\n  mutation VerifyWorkbookPayment($input: VerifyWorkbookPaymentInput!) {\n    verifyWorkbookPayment(input: $input) {\n      success\n      purchaseId\n      message\n    }\n  }\n": typeof types.VerifyWorkbookPaymentDocument,
+    "\n  query WorkbookStatus {\n    currentUserWorkbookStatus {\n      hasPurchased\n      purchasedAt\n      purchaseId\n    }\n  }\n": typeof types.WorkbookStatusDocument,
 };
 const documents: Documents = {
     "\n  mutation ActivateAssessmentType($code: String!) {\n    activateAssessmentType(code: $code) {\n      success\n      message\n      assessmentType {\n        code\n        isActive\n      }\n    }\n  }\n": types.ActivateAssessmentTypeDocument,
@@ -184,6 +187,9 @@ const documents: Documents = {
     "\n  mutation CreatePaymentOrder($input: CreatePaymentOrderInput!) {\n    createPaymentOrder(input: $input) {\n      orderId\n      amount\n      originalAmount\n      discountAmount\n      currency\n      razorpayKeyId\n      couponApplied\n      couponMessage\n      isFree\n    }\n  }\n": types.CreatePaymentOrderDocument,
     "\n  mutation ValidateCoupon($input: ValidateCouponInput!) {\n    validateCoupon(input: $input) {\n      valid\n      coupon {\n        code\n        description\n        discountType\n        discountValue\n      }\n      discountAmount\n      originalAmount\n      finalAmount\n      message\n    }\n  }\n": types.ValidateCouponDocument,
     "\n  mutation VerifyPayment(\n    $orderId: String!\n    $paymentId: String!\n    $signature: String!\n  ) {\n    verifyPayment(\n      input: {\n        orderId: $orderId\n        paymentId: $paymentId\n        signature: $signature\n      }\n    ) {\n      success\n      paymentId\n      message\n    }\n  }\n": types.VerifyPaymentDocument,
+    "\n  mutation CreateWorkbookOrder($input: CreateWorkbookOrderInput!) {\n    createWorkbookOrder(input: $input) {\n      orderId\n      amount\n      originalAmount\n      discountAmount\n      currency\n      razorpayKeyId\n      couponApplied\n      couponMessage\n      isFree\n    }\n  }\n": types.CreateWorkbookOrderDocument,
+    "\n  mutation VerifyWorkbookPayment($input: VerifyWorkbookPaymentInput!) {\n    verifyWorkbookPayment(input: $input) {\n      success\n      purchaseId\n      message\n    }\n  }\n": types.VerifyWorkbookPaymentDocument,
+    "\n  query WorkbookStatus {\n    currentUserWorkbookStatus {\n      hasPurchased\n      purchasedAt\n      purchaseId\n    }\n  }\n": types.WorkbookStatusDocument,
 };
 
 /**
@@ -536,6 +542,18 @@ export function graphql(source: "\n  mutation ValidateCoupon($input: ValidateCou
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation VerifyPayment(\n    $orderId: String!\n    $paymentId: String!\n    $signature: String!\n  ) {\n    verifyPayment(\n      input: {\n        orderId: $orderId\n        paymentId: $paymentId\n        signature: $signature\n      }\n    ) {\n      success\n      paymentId\n      message\n    }\n  }\n"): (typeof documents)["\n  mutation VerifyPayment(\n    $orderId: String!\n    $paymentId: String!\n    $signature: String!\n  ) {\n    verifyPayment(\n      input: {\n        orderId: $orderId\n        paymentId: $paymentId\n        signature: $signature\n      }\n    ) {\n      success\n      paymentId\n      message\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation CreateWorkbookOrder($input: CreateWorkbookOrderInput!) {\n    createWorkbookOrder(input: $input) {\n      orderId\n      amount\n      originalAmount\n      discountAmount\n      currency\n      razorpayKeyId\n      couponApplied\n      couponMessage\n      isFree\n    }\n  }\n"): (typeof documents)["\n  mutation CreateWorkbookOrder($input: CreateWorkbookOrderInput!) {\n    createWorkbookOrder(input: $input) {\n      orderId\n      amount\n      originalAmount\n      discountAmount\n      currency\n      razorpayKeyId\n      couponApplied\n      couponMessage\n      isFree\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation VerifyWorkbookPayment($input: VerifyWorkbookPaymentInput!) {\n    verifyWorkbookPayment(input: $input) {\n      success\n      purchaseId\n      message\n    }\n  }\n"): (typeof documents)["\n  mutation VerifyWorkbookPayment($input: VerifyWorkbookPaymentInput!) {\n    verifyWorkbookPayment(input: $input) {\n      success\n      purchaseId\n      message\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query WorkbookStatus {\n    currentUserWorkbookStatus {\n      hasPurchased\n      purchasedAt\n      purchaseId\n    }\n  }\n"): (typeof documents)["\n  query WorkbookStatus {\n    currentUserWorkbookStatus {\n      hasPurchased\n      purchasedAt\n      purchaseId\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};
