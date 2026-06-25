@@ -1,5 +1,7 @@
 'use client';
 import { ApolloLink, HttpLink } from '@apollo/client';
+import { ErrorLink } from '@apollo/client/link/error';
+import { CombinedGraphQLErrors } from '@apollo/client/errors';
 import React from 'react';
 import { loadErrorMessages, loadDevMessages } from '@apollo/client/dev';
 import {
@@ -9,8 +11,27 @@ import {
 } from '@apollo/client-integration-nextjs';
 import Cookies from 'js-cookie';
 import { TOKEN_NAME } from '@/modules/auth/hooks';
+import { useUserStore } from '@/stores/use-user-store';
 
 const httpLink = new HttpLink({ uri: process.env.NEXT_PUBLIC_GRAPHQL_URL });
+
+// Catches UNAUTHENTICATED GraphQL errors and HTTP 401s globally.
+// Clears the session and redirects to login without requiring each
+// query to handle auth errors individually.
+const errorLink = new ErrorLink(({ error }) => {
+  const isUnauthenticated =
+    (CombinedGraphQLErrors.is(error) &&
+      error.errors.some((e) => e.extensions?.code === 'UNAUTHENTICATED')) ||
+    ('statusCode' in error && (error as unknown as { statusCode: number }).statusCode === 401);
+
+  if (isUnauthenticated && typeof window !== 'undefined') {
+    Cookies.remove(TOKEN_NAME, { path: '/' });
+    useUserStore.getState().clearUser();
+    if (!window.location.pathname.startsWith('/auth')) {
+      window.location.href = '/auth/login';
+    }
+  }
+});
 
 interface Props {
   children?: React.ReactNode;
@@ -42,7 +63,7 @@ const WithApollo: React.FC<Props> = ({ children }) => {
     });
 
     return new ApolloClient({
-      link: authMiddleware.concat(httpLink),
+      link: errorLink.concat(authMiddleware.concat(httpLink)),
       cache: new InMemoryCache({
         typePolicies: {
           Query: {

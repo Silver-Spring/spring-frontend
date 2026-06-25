@@ -11,13 +11,10 @@ export function useCurrentUser() {
   const clearUser = useUserStore((state) => state.clearUser);
   const hasHydrated = useUserStore((state) => state._hasHydrated);
 
-  const { data, loading, error } = useQuery(CurrentUserDoc, {
+  const { data, loading, error, refetch } = useQuery(CurrentUserDoc, {
     errorPolicy: 'all',
-    // Use cache-first for optimal performance - only fetch if cache is empty
     fetchPolicy: 'cache-first',
-    // After the first fetch, continue using cache-first
     nextFetchPolicy: 'cache-first',
-    // Skip query until hydration is complete to avoid premature clearing
     skip: !hasHydrated,
   });
 
@@ -51,6 +48,38 @@ export function useCurrentUser() {
       clearUser();
     }
   }, [currentUser, loading, hasHydrated, setUser, clearUser]);
+
+  // Re-validate session when the tab regains focus — catches expired tokens
+  // and backend-side logouts while the tab was in the background.
+  useEffect(() => {
+    if (!hasHydrated) return;
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') refetch();
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => document.removeEventListener('visibilitychange', handleVisibility);
+  }, [hasHydrated, refetch]);
+
+  // Cross-tab logout: when another tab calls clearUser(), localStorage
+  // fires a storage event. Mirror that into this tab immediately.
+  useEffect(() => {
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key !== 'user-storage') return;
+      try {
+        const next = e.newValue ? JSON.parse(e.newValue) : null;
+        if (!next?.state?.user) {
+          clearUser();
+          if (!window.location.pathname.startsWith('/auth')) {
+            window.location.href = '/auth/login';
+          }
+        }
+      } catch {
+        // malformed storage value — ignore
+      }
+    };
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, [clearUser]);
 
   return {
     currentUser,

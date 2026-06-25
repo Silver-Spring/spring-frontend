@@ -33,9 +33,17 @@ export const useUserStore = create<UserState>()(
     {
       name: 'user-storage',
       storage: createJSONStorage(() => localStorage),
+      // Only persist `user` — _hasHydrated is always derived at runtime
+      partialize: (state) => ({ user: state.user }),
       onRehydrateStorage: () => (state) => {
+        // Safety timeout: if rehydration fails silently (e.g. storage quota error),
+        // force hydrated after 3s to prevent a permanent loading spinner.
+        const timer = setTimeout(() => {
+          useUserStore.getState().setHasHydrated(true);
+        }, 3000);
         if (state) {
-          (state as UserState).setHasHydrated(true);
+          state.setHasHydrated(true);
+          clearTimeout(timer);
         }
       },
     },

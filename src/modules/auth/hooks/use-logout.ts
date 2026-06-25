@@ -17,9 +17,9 @@ export const useLogout = () => {
       deleteCookie(TOKEN_NAME, { path: '/' });
       deleteCookie('currentUserId', { path: '/' });
 
-      // Clear the Apollo cache for currentUser
-      client.cache.evict({ fieldName: 'currentUser' });
-      client.cache.gc(); // Garbage collect to clean up orphaned references
+      // Wipe the entire Apollo cache — prevents cached data from leaking
+      // to the next user on a shared device.
+      client.clearStore();
 
       // Clear Zustand user store
       clearUser();

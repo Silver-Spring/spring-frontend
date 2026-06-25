@@ -171,7 +171,7 @@ export const WorkbookPage = () => {
             <span className="text-sm text-muted-foreground">one-time purchase</span>
           </div>
           <Button size="lg" className="w-full gap-2 text-base font-semibold" asChild>
-            <Link href="/auth/login">
+            <Link href="/auth/login?redirect=/workbook">
               <LogIn className="h-4 w-4" />
               Sign in to purchase
             </Link>

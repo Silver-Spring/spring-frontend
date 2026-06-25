@@ -9,7 +9,16 @@ import type { ReactNode } from 'react';
  */
 export function GuestOnlyLayout({ children }: { children: ReactNode }) {
   return (
-    <AuthLayout forbidWhen={AuthRestrict.LOGGED_IN} redirectTo="/assessment">
+    <AuthLayout
+      forbidWhen={AuthRestrict.LOGGED_IN}
+      redirectTo={() => {
+        const redirect = new URLSearchParams(window.location.search).get('redirect');
+        // Only allow relative paths — reject absolute URLs and protocol-relative URLs
+        return redirect && redirect.startsWith('/') && !redirect.startsWith('//')
+          ? redirect
+          : '/assessment';
+      }}
+    >
       {children}
     </AuthLayout>
   );
