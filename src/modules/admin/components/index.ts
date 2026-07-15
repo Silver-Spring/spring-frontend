@@ -6,6 +6,7 @@ export * from './admin-stats-card';
 export * from './users-assessment-table';
 export * from './payment-observability-page';
 export * from './coupons-page';
+export * from './reminders-page';
 export * from './assessment-type-selector';
 export * from './assessment/catalog/assessment-types-catalog';
 export * from './assessment/content/assessment-content-manager';

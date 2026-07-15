@@ -22,7 +22,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { getInitials } from '@/lib/utils';
 import { AdminAssessmentSidebarNav } from '@/modules/admin/components/admin-assessment-sidebar-nav';
 import { useLogout } from '@/modules/auth/hooks';
-import { BarChart3, CreditCard, Home, LayoutDashboard, LogOut, Ticket, Users } from 'lucide-react';
+import { BarChart3, CreditCard, Home, LayoutDashboard, LogOut, Mail, Ticket, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Suspense, type ReactNode } from 'react';
@@ -38,6 +38,7 @@ const platformItems = [
   { title: 'Analytics', url: '/admin/analytics', icon: BarChart3, exact: false },
   { title: 'Payments', url: '/admin/payments', icon: CreditCard, exact: false },
   { title: 'Coupons', url: '/admin/coupons', icon: Ticket, exact: false },
+  { title: 'Reminders', url: '/admin/reminders', icon: Mail, exact: false },
 ];
 
 export const AdminSidebarLayout = ({ children }: AdminSidebarLayoutProps) => {

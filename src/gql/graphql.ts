@@ -5160,6 +5160,7 @@ export type Mutation = {
    * This action cannot be undone. Only administrators can delete users.
    */
   adminDeleteUser?: Maybe<AdminDeleteUserPayload>;
+  adminSendReminderEmails?: Maybe<SendReminderEmailsPayload>;
   adminUpdateCoupon?: Maybe<UpdateCouponPayload>;
   /**
    * Bulk create multiple questions for a section (admin only)
@@ -5387,6 +5388,12 @@ export type MutationAdminDeleteCouponArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationAdminDeleteUserArgs = {
   input: AdminDeleteUserInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationAdminSendReminderEmailsArgs = {
+  input: SendReminderEmailsInput;
 };
 
 
@@ -6351,6 +6358,7 @@ export type Query = {
    * Requires admin privileges.
    */
   adminRefundsList?: Maybe<AdminRefundsListPayload>;
+  adminReminderCandidates?: Maybe<ReminderCandidatesPayload>;
   /**
    * Admin only: Fetch all settlements from Razorpay.
    * Requires admin privileges.
@@ -6558,6 +6566,10 @@ export type Query = {
    * Includes registered users who haven't taken the assessment yet
    */
   usersWithoutAssessment?: Maybe<UsersWithoutAssessmentPayload>;
+  /** Get a single `WorkbookPurchase`. */
+  workbookPurchase?: Maybe<WorkbookPurchase>;
+  /** Reads and enables pagination through a set of `WorkbookPurchase`. */
+  workbookPurchases?: Maybe<WorkbookPurchasesConnection>;
 };
 
 
@@ -6600,6 +6612,12 @@ export type QueryAdminPaymentsListArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryAdminRefundsListArgs = {
   input?: InputMaybe<AdminPaymentsFilterInput>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAdminReminderCandidatesArgs = {
+  reminderType: Scalars['String']['input'];
 };
 
 
@@ -7174,6 +7192,24 @@ export type QueryUsersWithAssessmentArgs = {
   assessmentType?: InputMaybe<Scalars['String']['input']>;
 };
 
+
+/** The root query type which gives access points into the data universe. */
+export type QueryWorkbookPurchaseArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryWorkbookPurchasesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<WorkbookPurchaseCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<WorkbookPurchasesOrderBy>>;
+};
+
 export type QuestionSummaryItem = {
   __typename?: 'QuestionSummaryItem';
   answerOptions?: Maybe<Scalars['JSON']['output']>;
@@ -7262,6 +7298,22 @@ export type RegisterPayload = {
   __typename?: 'RegisterPayload';
   token: Scalars['String']['output'];
   user: User;
+};
+
+export type ReminderCandidateUser = {
+  __typename?: 'ReminderCandidateUser';
+  daysSinceSignup: Scalars['Float']['output'];
+  email: Scalars['String']['output'];
+  lastReminder?: Maybe<Scalars['Datetime']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  reminderCount: Scalars['Int']['output'];
+  userId: Scalars['UUID']['output'];
+};
+
+export type ReminderCandidatesPayload = {
+  __typename?: 'ReminderCandidatesPayload';
+  totalCount: Scalars['Int']['output'];
+  users: Array<ReminderCandidateUser>;
 };
 
 /** Tracks reminder emails sent to users who haven't completed payment or assessment */
@@ -7432,6 +7484,19 @@ export type SeedAssessmentTypeSectionsPayload = {
   __typename?: 'SeedAssessmentTypeSectionsPayload';
   message?: Maybe<Scalars['String']['output']>;
   sectionsCreated: Scalars['Int']['output'];
+  success: Scalars['Boolean']['output'];
+};
+
+export type SendReminderEmailsInput = {
+  customMessage?: InputMaybe<Scalars['String']['input']>;
+  reminderType: Scalars['String']['input'];
+  userIds: Array<Scalars['UUID']['input']>;
+};
+
+export type SendReminderEmailsPayload = {
+  __typename?: 'SendReminderEmailsPayload';
+  message?: Maybe<Scalars['String']['output']>;
+  queuedCount: Scalars['Int']['output'];
   success: Scalars['Boolean']['output'];
 };
 
@@ -8051,6 +8116,8 @@ export type User = {
   couponTablesByCreatedBy: CouponTablesConnection;
   /** Reads and enables pagination through a set of `CouponTable`. */
   couponTablesByPaymentUserIdAndCouponId: UserCouponTablesByPaymentUserIdAndCouponIdManyToManyConnection;
+  /** Reads and enables pagination through a set of `CouponTable`. */
+  couponTablesByWorkbookPurchaseUserIdAndCouponId: UserCouponTablesByWorkbookPurchaseUserIdAndCouponIdManyToManyConnection;
   /** Reads and enables pagination through a set of `CouponUsageTable`. */
   couponUsageTables: CouponUsageTablesConnection;
   createdAt: Scalars['Datetime']['output'];
@@ -8074,6 +8141,8 @@ export type User = {
   reminderEmails: ReminderEmailsConnection;
   type: Scalars['String']['output'];
   updatedAt: Scalars['Datetime']['output'];
+  /** Reads and enables pagination through a set of `WorkbookPurchase`. */
+  workbookPurchases: WorkbookPurchasesConnection;
 };
 
 
@@ -8198,6 +8267,17 @@ export type UserCouponTablesByPaymentUserIdAndCouponIdArgs = {
 };
 
 
+export type UserCouponTablesByWorkbookPurchaseUserIdAndCouponIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CouponTableCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CouponTablesOrderBy>>;
+};
+
+
 export type UserCouponUsageTablesArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -8239,6 +8319,17 @@ export type UserReminderEmailsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ReminderEmailsOrderBy>>;
+};
+
+
+export type UserWorkbookPurchasesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<WorkbookPurchaseCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<WorkbookPurchasesOrderBy>>;
 };
 
 /** A connection to a list of `AssessmentCouple` values, with data from `AssessmentResult`. */
@@ -8557,6 +8648,42 @@ export type UserCouponTablesByPaymentUserIdAndCouponIdManyToManyEdgePaymentsByCo
   orderBy?: InputMaybe<Array<PaymentsOrderBy>>;
 };
 
+/** A connection to a list of `CouponTable` values, with data from `WorkbookPurchase`. */
+export type UserCouponTablesByWorkbookPurchaseUserIdAndCouponIdManyToManyConnection = {
+  __typename?: 'UserCouponTablesByWorkbookPurchaseUserIdAndCouponIdManyToManyConnection';
+  /** A list of edges which contains the `CouponTable`, info from the `WorkbookPurchase`, and the cursor to aid in pagination. */
+  edges: Array<UserCouponTablesByWorkbookPurchaseUserIdAndCouponIdManyToManyEdge>;
+  /** A list of `CouponTable` objects. */
+  nodes: Array<CouponTable>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `CouponTable` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `CouponTable` edge in the connection, with data from `WorkbookPurchase`. */
+export type UserCouponTablesByWorkbookPurchaseUserIdAndCouponIdManyToManyEdge = {
+  __typename?: 'UserCouponTablesByWorkbookPurchaseUserIdAndCouponIdManyToManyEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `CouponTable` at the end of the edge. */
+  node: CouponTable;
+  /** Reads and enables pagination through a set of `WorkbookPurchase`. */
+  workbookPurchasesByCouponId: WorkbookPurchasesConnection;
+};
+
+
+/** A `CouponTable` edge in the connection, with data from `WorkbookPurchase`. */
+export type UserCouponTablesByWorkbookPurchaseUserIdAndCouponIdManyToManyEdgeWorkbookPurchasesByCouponIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<WorkbookPurchaseCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<WorkbookPurchasesOrderBy>>;
+};
+
 export type UserInfo = {
   __typename?: 'UserInfo';
   createdAt: Scalars['Datetime']['output'];
@@ -8816,6 +8943,83 @@ export type VerifyWorkbookPaymentPayload = {
   success: Scalars['Boolean']['output'];
 };
 
+/** Tracks one-time workbook purchases. A captured row grants permanent download access. */
+export type WorkbookPurchase = {
+  __typename?: 'WorkbookPurchase';
+  amountInr: Scalars['Int']['output'];
+  /** Reads a single `CouponTable` that is related to this `WorkbookPurchase`. */
+  coupon?: Maybe<CouponTable>;
+  couponId?: Maybe<Scalars['UUID']['output']>;
+  createdAt: Scalars['Datetime']['output'];
+  discountAmountInr: Scalars['Int']['output'];
+  errorCode?: Maybe<Scalars['String']['output']>;
+  errorDescription?: Maybe<Scalars['String']['output']>;
+  id: Scalars['UUID']['output'];
+  metadata: Scalars['JSON']['output'];
+  originalAmountInr?: Maybe<Scalars['Int']['output']>;
+  paymentMethod?: Maybe<Scalars['String']['output']>;
+  razorpayOrderId?: Maybe<Scalars['String']['output']>;
+  razorpayPaymentId?: Maybe<Scalars['String']['output']>;
+  razorpaySignature?: Maybe<Scalars['String']['output']>;
+  status: Scalars['String']['output'];
+  updatedAt: Scalars['Datetime']['output'];
+  /** Reads a single `User` that is related to this `WorkbookPurchase`. */
+  user?: Maybe<User>;
+  userId: Scalars['UUID']['output'];
+};
+
+/**
+ * A condition to be used against `WorkbookPurchase` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type WorkbookPurchaseCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `razorpayOrderId` field. */
+  razorpayOrderId?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `status` field. */
+  status?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `WorkbookPurchase` values. */
+export type WorkbookPurchasesConnection = {
+  __typename?: 'WorkbookPurchasesConnection';
+  /** A list of edges which contains the `WorkbookPurchase` and cursor to aid in pagination. */
+  edges: Array<WorkbookPurchasesEdge>;
+  /** A list of `WorkbookPurchase` objects. */
+  nodes: Array<WorkbookPurchase>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `WorkbookPurchase` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `WorkbookPurchase` edge in the connection. */
+export type WorkbookPurchasesEdge = {
+  __typename?: 'WorkbookPurchasesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `WorkbookPurchase` at the end of the edge. */
+  node: WorkbookPurchase;
+};
+
+/** Methods to use when ordering `WorkbookPurchase`. */
+export enum WorkbookPurchasesOrderBy {
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RazorpayOrderIdAsc = 'RAZORPAY_ORDER_ID_ASC',
+  RazorpayOrderIdDesc = 'RAZORPAY_ORDER_ID_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC'
+}
+
 export type ActivateAssessmentTypeMutationVariables = Exact<{
   code: Scalars['String']['input'];
 }>;
@@ -9074,6 +9278,13 @@ export type RecomputeAutoStageRangesMutationVariables = Exact<{
 
 export type RecomputeAutoStageRangesMutation = { __typename?: 'Mutation', recomputeAutoStageRanges?: { __typename?: 'RecomputeStageRangesPayload', success: boolean, message?: string | null, stages: Array<{ __typename?: 'AssessmentTypeStage', displayOrder: number, label: string, sectionRangeStart: number, sectionRangeEnd: number, overallRangeStart: number, overallRangeEnd: number }> } | null };
 
+export type ReminderCandidatesQueryVariables = Exact<{
+  reminderType: Scalars['String']['input'];
+}>;
+
+
+export type ReminderCandidatesQuery = { __typename?: 'Query', adminReminderCandidates?: { __typename?: 'ReminderCandidatesPayload', totalCount: number, users: Array<{ __typename?: 'ReminderCandidateUser', userId: any, email: string, name?: string | null, daysSinceSignup: number, reminderCount: number, lastReminder?: any | null }> } | null };
+
 export type ResetTemplateContentMutationVariables = Exact<{
   assessmentType: Scalars['String']['input'];
   contentKey: Scalars['String']['input'];
@@ -9116,6 +9327,13 @@ export type SeedAssessmentTypeSectionsMutationVariables = Exact<{
 
 
 export type SeedAssessmentTypeSectionsMutation = { __typename?: 'Mutation', seedAssessmentTypeSections?: { __typename?: 'SeedAssessmentTypeSectionsPayload', success: boolean, message?: string | null, sectionsCreated: number } | null };
+
+export type SendReminderEmailsMutationVariables = Exact<{
+  input: SendReminderEmailsInput;
+}>;
+
+
+export type SendReminderEmailsMutation = { __typename?: 'Mutation', adminSendReminderEmails?: { __typename?: 'SendReminderEmailsPayload', success: boolean, queuedCount: number, message?: string | null } | null };
 
 export type UpdateAssessmentTypeStagesMutationVariables = Exact<{
   input: UpdateAssessmentTypeStagesInput;
@@ -9456,12 +9674,14 @@ export const CreateRecommendedActionDocument = {"kind":"Document","definitions":
 export const UpdateRecommendedActionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateRecommendedAction"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateRecommendedActionInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateRecommendedAction"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"action"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"actionText"}},{"kind":"Field","name":{"kind":"Name","value":"priority"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateRecommendedActionMutation, UpdateRecommendedActionMutationVariables>;
 export const DeleteRecommendedActionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteRecommendedAction"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DeleteRecommendedActionInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteRecommendedAction"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<DeleteRecommendedActionMutation, DeleteRecommendedActionMutationVariables>;
 export const RecomputeAutoStageRangesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"RecomputeAutoStageRanges"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"assessmentTypeCode"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"recomputeAutoStageRanges"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"assessmentTypeCode"},"value":{"kind":"Variable","name":{"kind":"Name","value":"assessmentTypeCode"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"stages"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}},{"kind":"Field","name":{"kind":"Name","value":"label"}},{"kind":"Field","name":{"kind":"Name","value":"sectionRangeStart"}},{"kind":"Field","name":{"kind":"Name","value":"sectionRangeEnd"}},{"kind":"Field","name":{"kind":"Name","value":"overallRangeStart"}},{"kind":"Field","name":{"kind":"Name","value":"overallRangeEnd"}}]}}]}}]}}]} as unknown as DocumentNode<RecomputeAutoStageRangesMutation, RecomputeAutoStageRangesMutationVariables>;
+export const ReminderCandidatesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ReminderCandidates"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"reminderType"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminReminderCandidates"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"reminderType"},"value":{"kind":"Variable","name":{"kind":"Name","value":"reminderType"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"daysSinceSignup"}},{"kind":"Field","name":{"kind":"Name","value":"reminderCount"}},{"kind":"Field","name":{"kind":"Name","value":"lastReminder"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}}]}}]}}]} as unknown as DocumentNode<ReminderCandidatesQuery, ReminderCandidatesQueryVariables>;
 export const ResetTemplateContentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"ResetTemplateContent"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"assessmentType"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"contentKey"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"resetTemplateContent"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"assessmentType"},"value":{"kind":"Variable","name":{"kind":"Name","value":"assessmentType"}}},{"kind":"Argument","name":{"kind":"Name","value":"contentKey"},"value":{"kind":"Variable","name":{"kind":"Name","value":"contentKey"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<ResetTemplateContentMutation, ResetTemplateContentMutationVariables>;
 export const RevokeAdminDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"RevokeAdmin"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"revokeAdminAccess"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"userId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"isAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"isInternal"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<RevokeAdminMutation, RevokeAdminMutationVariables>;
 export const RevokeInternalAccessDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"RevokeInternalAccess"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"revokeInternalAccess"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"userId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"isAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"isInternal"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<RevokeInternalAccessMutation, RevokeInternalAccessMutationVariables>;
 export const GetScoreDistributionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetScoreDistribution"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"assessmentType"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"defaultValue":{"kind":"StringValue","value":"ssri","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"scoreDistribution"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"assessmentType"},"value":{"kind":"Variable","name":{"kind":"Name","value":"assessmentType"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"distribution"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"range"}},{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"percentage"}},{"kind":"Field","name":{"kind":"Name","value":"label"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalAssessments"}},{"kind":"Field","name":{"kind":"Name","value":"averageScore"}}]}}]}}]} as unknown as DocumentNode<GetScoreDistributionQuery, GetScoreDistributionQueryVariables>;
 export const SeedAssessmentTypeContentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SeedAssessmentTypeContent"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SeedAssessmentTypeContentInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"seedAssessmentTypeContent"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"assessmentType"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}}]}}]}}]}}]} as unknown as DocumentNode<SeedAssessmentTypeContentMutation, SeedAssessmentTypeContentMutationVariables>;
 export const SeedAssessmentTypeSectionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SeedAssessmentTypeSections"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SeedAssessmentTypeSectionsInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"seedAssessmentTypeSections"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"sectionsCreated"}}]}}]}}]} as unknown as DocumentNode<SeedAssessmentTypeSectionsMutation, SeedAssessmentTypeSectionsMutationVariables>;
+export const SendReminderEmailsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SendReminderEmails"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SendReminderEmailsInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminSendReminderEmails"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"queuedCount"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<SendReminderEmailsMutation, SendReminderEmailsMutationVariables>;
 export const UpdateAssessmentTypeStagesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateAssessmentTypeStages"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateAssessmentTypeStagesInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateAssessmentTypeStages"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"stages"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}},{"kind":"Field","name":{"kind":"Name","value":"label"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"sectionRangeStart"}},{"kind":"Field","name":{"kind":"Name","value":"sectionRangeEnd"}},{"kind":"Field","name":{"kind":"Name","value":"overallRangeStart"}},{"kind":"Field","name":{"kind":"Name","value":"overallRangeEnd"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateAssessmentTypeStagesMutation, UpdateAssessmentTypeStagesMutationVariables>;
 export const UpdateAssessmentTypeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateAssessmentType"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateAssessmentTypeInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateAssessmentType"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assessmentType"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<UpdateAssessmentTypeMutation, UpdateAssessmentTypeMutationVariables>;
 export const UpdateInterpretationBandDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateInterpretationBand"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateInterpretationBandInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateInterpretationBand"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"band"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"sectionType"}},{"kind":"Field","name":{"kind":"Name","value":"label"}},{"kind":"Field","name":{"kind":"Name","value":"rangeStart"}},{"kind":"Field","name":{"kind":"Name","value":"rangeEnd"}},{"kind":"Field","name":{"kind":"Name","value":"displayRangeLabel"}},{"kind":"Field","name":{"kind":"Name","value":"narrative"}},{"kind":"Field","name":{"kind":"Name","value":"keyMindset"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateInterpretationBandMutation, UpdateInterpretationBandMutationVariables>;

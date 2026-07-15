@@ -11,6 +11,7 @@ import {
   type ColumnDef,
   type ColumnFiltersState,
   type Row,
+  type RowSelectionState,
   type SortingState,
   type VisibilityState,
 } from '@tanstack/react-table';
@@ -46,6 +47,10 @@ interface DataTableProps<TData, TValue> {
   showPagination?: boolean;
   emptyMessage?: string;
   rowsPerPageId?: string;
+  /** Controlled row selection — pass together with onRowSelectionChange to read/drive selection from the parent. Falls back to internal state when omitted. */
+  rowSelection?: RowSelectionState;
+  onRowSelectionChange?: (selection: RowSelectionState) => void;
+  enableRowSelection?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -60,15 +65,21 @@ export function DataTable<TData, TValue>({
   showPagination = true,
   emptyMessage = 'No results found.',
   rowsPerPageId = 'rows-per-page',
+  rowSelection: controlledRowSelection,
+  onRowSelectionChange,
+  enableRowSelection = false,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = useState({});
+  const [internalRowSelection, setInternalRowSelection] = useState<RowSelectionState>({});
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: pageSize,
   });
+
+  const rowSelection = controlledRowSelection ?? internalRowSelection;
+  const setRowSelection = onRowSelectionChange ?? setInternalRowSelection;
 
   const table = useReactTable({
     data,
@@ -80,7 +91,11 @@ export function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
+    enableRowSelection,
+    onRowSelectionChange: (updater) => {
+      const next = typeof updater === 'function' ? updater(rowSelection) : updater;
+      setRowSelection(next);
+    },
     onPaginationChange: setPagination,
     state: {
       sorting,
