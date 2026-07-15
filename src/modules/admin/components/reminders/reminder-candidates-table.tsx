@@ -10,6 +10,12 @@ type ReminderCandidateUser = NonNullable<
   ReminderCandidatesQuery['adminReminderCandidates']
 >['users'][number];
 
+function formatDaysSinceSignup(days: number): string {
+  const hours = Math.round(days * 24);
+  if (hours < 24) return `${hours}h`;
+  return `${Math.round(days)}d`;
+}
+
 interface ReminderCandidatesTableProps {
   data: ReminderCandidateUser[];
   rowSelection: RowSelectionState;
@@ -59,10 +65,10 @@ export const ReminderCandidatesTable = ({
       },
       {
         accessorKey: 'daysSinceSignup',
-        header: 'Days Since Signup',
+        header: 'Since Signup',
         cell: ({ row }) => {
           const days = row.getValue('daysSinceSignup') as number;
-          return <div className="text-sm">{days.toFixed(1)}d</div>;
+          return <div className="text-sm">{formatDaysSinceSignup(days)}</div>;
         },
       },
       {
