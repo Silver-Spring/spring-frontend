@@ -84,7 +84,7 @@ export const useLogin = () => {
     onError: (error) => {
       console.error('Login error:', error);
 
-      captureAuthError({ ...error }, 'login');
+      captureAuthError(error, 'login');
 
       // Only show technical details in development
       const isDev = process.env.NODE_ENV === 'development';

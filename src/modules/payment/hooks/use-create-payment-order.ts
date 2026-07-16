@@ -144,6 +144,8 @@ export const useCreatePaymentOrder = () => {
               posthog.capture('payment_completed', {
                 order_id: response.razorpay_order_id,
                 payment_id: verificationResult.paymentId,
+                amount: orderData.amount,
+                currency: orderData.currency,
               });
               // Step 5: Notify success (no subscription to refetch)
               onSuccess(verificationResult.paymentId);

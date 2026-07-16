@@ -1,4 +1,5 @@
 import posthog from 'posthog-js';
+import { CombinedGraphQLErrors } from '@apollo/client/errors';
 
 export interface ErrorContext {
   userId?: string;
@@ -44,7 +45,27 @@ export const captureError = (
   }
 };
 
+// Postgres errcodes the backend deliberately surfaces verbatim to the client
+// (see safeErrorCodes in packages/server/src/auth/{login,register}.ts) — these
+// are expected user-facing validation outcomes (wrong password, duplicate
+// email, etc.), not application bugs, so they shouldn't count as exceptions.
+const EXPECTED_AUTH_ERROR_CODES = new Set([
+  'CREDS', // invalid email/password
+  'ISEXI', // email already registered
+  'NODAT', // required field missing
+  'WEAKP', // password too short
+  'LOCKD', // account locked
+  'EMTKN', // invalid/expired email token
+  'INVAL', // invalid reset token
+]);
+
+const isExpectedAuthError = (error: unknown): boolean =>
+  CombinedGraphQLErrors.is(error) &&
+  error.errors.every((e) => EXPECTED_AUTH_ERROR_CODES.has(e.extensions?.code as string));
+
 export const captureAuthError = (error: Error | unknown, action: string): void => {
+  if (isExpectedAuthError(error)) return;
+
   captureError(error, {
     component: 'Authentication',
     action,
