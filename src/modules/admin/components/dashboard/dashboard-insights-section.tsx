@@ -6,6 +6,9 @@ type DashboardInsightsSectionProps = {
   draftTypeCount: number;
   totalQuestions: number;
   activeQuestions: number;
+  failedPayments?: number;
+  failedWorkbookPurchases?: number;
+  pendingWorkbookPurchases?: number;
   loading?: boolean;
 };
 
@@ -14,6 +17,9 @@ const DashboardInsightsSection = ({
   draftTypeCount,
   totalQuestions,
   activeQuestions,
+  failedPayments = 0,
+  failedWorkbookPurchases = 0,
+  pendingWorkbookPurchases = 0,
   loading = false,
 }: DashboardInsightsSectionProps) => {
   if (loading) {
@@ -21,6 +27,18 @@ const DashboardInsightsSection = ({
   }
 
   const items: string[] = [];
+
+  if (failedPayments > 0) {
+    items.push(`${failedPayments} failed assessment payment${failedPayments === 1 ? '' : 's'} — check Payments`);
+  }
+
+  if (failedWorkbookPurchases > 0) {
+    items.push(`${failedWorkbookPurchases} failed workbook purchase${failedWorkbookPurchases === 1 ? '' : 's'} — check Workbooks`);
+  }
+
+  if (pendingWorkbookPurchases > 0) {
+    items.push(`${pendingWorkbookPurchases} workbook order${pendingWorkbookPurchases === 1 ? '' : 's'} started but not paid`);
+  }
 
   if (inProgressCount > 0) {
     items.push(`${inProgressCount} session${inProgressCount === 1 ? '' : 's'} in progress`);

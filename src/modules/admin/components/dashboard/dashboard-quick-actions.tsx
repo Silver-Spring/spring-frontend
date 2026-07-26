@@ -1,5 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowRight, BarChart3, CreditCard, FileText, Tag, Users } from 'lucide-react';
+import {
+  ArrowRight,
+  BarChart3,
+  BookOpen,
+  CreditCard,
+  FileText,
+  Mail,
+  Tag,
+  Users,
+} from 'lucide-react';
 import Link from 'next/link';
 
 type QuickAction = {
@@ -14,12 +23,14 @@ type DashboardQuickActionsProps = {
   totalUsers: number;
   liveTypeCount: number;
   draftTypeCount: number;
+  workbookPurchases: number;
 };
 
 const DashboardQuickActions = ({
   totalUsers,
   liveTypeCount,
   draftTypeCount,
+  workbookPurchases,
 }: DashboardQuickActionsProps) => {
   const actions: QuickAction[] = [
     {
@@ -61,18 +72,32 @@ const DashboardQuickActions = ({
       iconClassName: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400',
     },
     {
+      href: '/admin/workbooks',
+      title: 'Workbooks',
+      description: `${workbookPurchases} ${workbookPurchases === 1 ? 'copy' : 'copies'} sold · buyer details`,
+      icon: BookOpen,
+      iconClassName: 'bg-teal-100 text-teal-700 dark:bg-teal-900/20 dark:text-teal-400',
+    },
+    {
       href: '/admin/coupons',
       title: 'Coupons',
       description: 'Discount codes',
       icon: Tag,
       iconClassName: 'bg-amber-100 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400',
     },
+    {
+      href: '/admin/reminders',
+      title: 'Reminders',
+      description: 'Nudge incomplete users',
+      icon: Mail,
+      iconClassName: 'bg-rose-100 text-rose-700 dark:bg-rose-900/20 dark:text-rose-400',
+    },
   ];
 
   return (
     <section className="space-y-3">
       <h2 className="text-lg font-semibold">Quick links</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
         {actions.map((action) => (
           <Link key={action.href} href={action.href} className="group block h-full">
             <Card className="h-full transition-all hover:shadow-md hover:border-primary/40">

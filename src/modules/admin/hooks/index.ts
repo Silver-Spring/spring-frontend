@@ -50,3 +50,5 @@ export * from './use-delete-recommended-action';
 export * from './use-report-preview';
 export * from './use-reminder-candidates';
 export * from './use-send-reminder-emails';
+export * from './use-admin-workbook-stats';
+export * from './use-admin-workbook-purchases';

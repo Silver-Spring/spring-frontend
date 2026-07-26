@@ -5,4 +5,5 @@ export * from './grant-internal-access-dialog';
 export * from './revoke-internal-access-dialog';
 export * from './payment-details-dialog';
 export * from './payment-details-drawer';
+export * from './workbook-purchase-details-drawer';
 export * from './users-without-assessment-dialog';

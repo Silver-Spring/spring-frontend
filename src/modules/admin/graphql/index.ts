@@ -29,3 +29,5 @@ export { AssessmentTrendsDoc } from './assessment-trends.graphql';
 export { ScoreDistributionDoc } from './score-distribution.graphql';
 export { UsersWithoutAssessmentDoc } from './users-without-assessment.graphql';
 export { AllUsersDoc } from './all-users.graphql';
+export { AdminWorkbookStatsDoc } from './admin-workbook-stats.graphql';
+export { AdminWorkbookPurchasesDoc } from './admin-workbook-purchases.graphql';

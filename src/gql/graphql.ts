@@ -122,11 +122,61 @@ export type AdminStatsPayload = {
   totalSections: Scalars['Int']['output'];
 };
 
+export type AdminWorkbookPurchaseItem = {
+  __typename?: 'AdminWorkbookPurchaseItem';
+  amountInr: Scalars['Int']['output'];
+  couponCode?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['String']['output'];
+  discountAmountInr: Scalars['Int']['output'];
+  errorCode?: Maybe<Scalars['String']['output']>;
+  errorDescription?: Maybe<Scalars['String']['output']>;
+  id: Scalars['UUID']['output'];
+  isFree: Scalars['Boolean']['output'];
+  originalAmountInr?: Maybe<Scalars['Int']['output']>;
+  paymentMethod?: Maybe<Scalars['String']['output']>;
+  razorpayOrderId?: Maybe<Scalars['String']['output']>;
+  razorpayPaymentId?: Maybe<Scalars['String']['output']>;
+  status: Scalars['String']['output'];
+  updatedAt: Scalars['String']['output'];
+  userEmail: Scalars['String']['output'];
+  userId: Scalars['UUID']['output'];
+  userName?: Maybe<Scalars['String']['output']>;
+  userPhone?: Maybe<Scalars['String']['output']>;
+};
+
+export type AdminWorkbookPurchasesFilterInput = {
+  count?: InputMaybe<Scalars['Int']['input']>;
+  /** Unix timestamp (seconds). Only purchases created at or after this moment. */
+  from?: InputMaybe<Scalars['Int']['input']>;
+  /** Matches buyer name, email, Razorpay order id or payment id. */
+  search?: InputMaybe<Scalars['String']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  /** Filter by purchase status: created, captured or failed. */
+  status?: InputMaybe<Scalars['String']['input']>;
+  /** Unix timestamp (seconds). Only purchases created at or before this moment. */
+  to?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type AdminWorkbookPurchasesPayload = {
+  __typename?: 'AdminWorkbookPurchasesPayload';
+  items: Array<AdminWorkbookPurchaseItem>;
+  totalCount: Scalars['Int']['output'];
+};
+
 export type AdminWorkbookStatsPayload = {
   __typename?: 'AdminWorkbookStatsPayload';
+  averageOrderValue: Scalars['Int']['output'];
+  couponPurchases: Scalars['Int']['output'];
+  failedPurchases: Scalars['Int']['output'];
+  freePurchases: Scalars['Int']['output'];
+  last7DaysPurchases: Scalars['Int']['output'];
+  last7DaysRevenue: Scalars['Int']['output'];
+  pendingPurchases: Scalars['Int']['output'];
   recentPurchases: Scalars['Int']['output'];
+  totalDiscountGiven: Scalars['Int']['output'];
   totalPurchases: Scalars['Int']['output'];
   totalRevenue: Scalars['Int']['output'];
+  uniqueBuyers: Scalars['Int']['output'];
 };
 
 /** Age cohort comparison (same age range, any gender) */
@@ -6364,6 +6414,11 @@ export type Query = {
    * Requires admin privileges.
    */
   adminSettlementsList?: Maybe<AdminSettlementsListPayload>;
+  /**
+   * Admin only: workbook purchases with buyer details, newest first.
+   * Supports status, free-text search and date range filters.
+   */
+  adminWorkbookPurchases?: Maybe<AdminWorkbookPurchasesPayload>;
   /** Admin only: workbook purchase totals for the dashboard. */
   adminWorkbookStats?: Maybe<AdminWorkbookStatsPayload>;
   /**
@@ -6624,6 +6679,12 @@ export type QueryAdminReminderCandidatesArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryAdminSettlementsListArgs = {
   input?: InputMaybe<AdminPaymentsFilterInput>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAdminWorkbookPurchasesArgs = {
+  input?: InputMaybe<AdminWorkbookPurchasesFilterInput>;
 };
 
 
@@ -9126,6 +9187,18 @@ export type AdminUpdateCouponMutationVariables = Exact<{
 
 export type AdminUpdateCouponMutation = { __typename?: 'Mutation', adminUpdateCoupon?: { __typename?: 'UpdateCouponPayload', success: boolean, message?: string | null, coupon?: { __typename?: 'Coupon', id: any, code: string, description?: string | null, discountType: DiscountType, discountValue: number, maxDiscountAmount?: number | null, validFrom: any, validUntil?: any | null, isActive: boolean, maxTotalUses?: number | null, currentUses: number, updatedAt: any } | null } | null };
 
+export type AdminWorkbookPurchasesQueryVariables = Exact<{
+  input?: InputMaybe<AdminWorkbookPurchasesFilterInput>;
+}>;
+
+
+export type AdminWorkbookPurchasesQuery = { __typename?: 'Query', adminWorkbookPurchases?: { __typename?: 'AdminWorkbookPurchasesPayload', totalCount: number, items: Array<{ __typename?: 'AdminWorkbookPurchaseItem', id: any, userId: any, userName?: string | null, userEmail: string, userPhone?: string | null, amountInr: number, originalAmountInr?: number | null, discountAmountInr: number, status: string, paymentMethod?: string | null, razorpayOrderId?: string | null, razorpayPaymentId?: string | null, couponCode?: string | null, errorCode?: string | null, errorDescription?: string | null, isFree: boolean, createdAt: string, updatedAt: string }> } | null };
+
+export type AdminWorkbookStatsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AdminWorkbookStatsQuery = { __typename?: 'Query', adminWorkbookStats?: { __typename?: 'AdminWorkbookStatsPayload', totalPurchases: number, totalRevenue: number, recentPurchases: number, pendingPurchases: number, failedPurchases: number, couponPurchases: number, freePurchases: number, uniqueBuyers: number, averageOrderValue: number, totalDiscountGiven: number, last7DaysPurchases: number, last7DaysRevenue: number } | null };
+
 export type GetAllUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -9652,6 +9725,8 @@ export const AdminPaymentsListDocument = {"kind":"Document","definitions":[{"kin
 export const AdminRefundsListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AdminRefundsList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"AdminPaymentsFilterInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminRefundsList"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"entity"}},{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"entity"}},{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currency"}},{"kind":"Field","name":{"kind":"Name","value":"paymentId"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"speedRequested"}},{"kind":"Field","name":{"kind":"Name","value":"speedProcessed"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]}}]} as unknown as DocumentNode<AdminRefundsListQuery, AdminRefundsListQueryVariables>;
 export const AdminSettlementsListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AdminSettlementsList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"AdminPaymentsFilterInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminSettlementsList"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"entity"}},{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"entity"}},{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"fees"}},{"kind":"Field","name":{"kind":"Name","value":"tax"}},{"kind":"Field","name":{"kind":"Name","value":"utr"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]}}]} as unknown as DocumentNode<AdminSettlementsListQuery, AdminSettlementsListQueryVariables>;
 export const AdminUpdateCouponDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"AdminUpdateCoupon"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateCouponInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminUpdateCoupon"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"coupon"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"discountType"}},{"kind":"Field","name":{"kind":"Name","value":"discountValue"}},{"kind":"Field","name":{"kind":"Name","value":"maxDiscountAmount"}},{"kind":"Field","name":{"kind":"Name","value":"validFrom"}},{"kind":"Field","name":{"kind":"Name","value":"validUntil"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"maxTotalUses"}},{"kind":"Field","name":{"kind":"Name","value":"currentUses"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]}}]} as unknown as DocumentNode<AdminUpdateCouponMutation, AdminUpdateCouponMutationVariables>;
+export const AdminWorkbookPurchasesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AdminWorkbookPurchases"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"AdminWorkbookPurchasesFilterInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminWorkbookPurchases"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"userName"}},{"kind":"Field","name":{"kind":"Name","value":"userEmail"}},{"kind":"Field","name":{"kind":"Name","value":"userPhone"}},{"kind":"Field","name":{"kind":"Name","value":"amountInr"}},{"kind":"Field","name":{"kind":"Name","value":"originalAmountInr"}},{"kind":"Field","name":{"kind":"Name","value":"discountAmountInr"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"paymentMethod"}},{"kind":"Field","name":{"kind":"Name","value":"razorpayOrderId"}},{"kind":"Field","name":{"kind":"Name","value":"razorpayPaymentId"}},{"kind":"Field","name":{"kind":"Name","value":"couponCode"}},{"kind":"Field","name":{"kind":"Name","value":"errorCode"}},{"kind":"Field","name":{"kind":"Name","value":"errorDescription"}},{"kind":"Field","name":{"kind":"Name","value":"isFree"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]}}]} as unknown as DocumentNode<AdminWorkbookPurchasesQuery, AdminWorkbookPurchasesQueryVariables>;
+export const AdminWorkbookStatsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AdminWorkbookStats"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminWorkbookStats"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalPurchases"}},{"kind":"Field","name":{"kind":"Name","value":"totalRevenue"}},{"kind":"Field","name":{"kind":"Name","value":"recentPurchases"}},{"kind":"Field","name":{"kind":"Name","value":"pendingPurchases"}},{"kind":"Field","name":{"kind":"Name","value":"failedPurchases"}},{"kind":"Field","name":{"kind":"Name","value":"couponPurchases"}},{"kind":"Field","name":{"kind":"Name","value":"freePurchases"}},{"kind":"Field","name":{"kind":"Name","value":"uniqueBuyers"}},{"kind":"Field","name":{"kind":"Name","value":"averageOrderValue"}},{"kind":"Field","name":{"kind":"Name","value":"totalDiscountGiven"}},{"kind":"Field","name":{"kind":"Name","value":"last7DaysPurchases"}},{"kind":"Field","name":{"kind":"Name","value":"last7DaysRevenue"}}]}}]}}]} as unknown as DocumentNode<AdminWorkbookStatsQuery, AdminWorkbookStatsQueryVariables>;
 export const GetAllUsersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAllUsers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"allUsers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"isAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"isInternal"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"adminCount"}},{"kind":"Field","name":{"kind":"Name","value":"usersWithoutAssessmentCount"}}]}}]}}]} as unknown as DocumentNode<GetAllUsersQuery, GetAllUsersQueryVariables>;
 export const AssessmentSectionPresetsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AssessmentSectionPresets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assessmentSectionPresets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"emoji"}},{"kind":"Field","name":{"kind":"Name","value":"displayColor"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}}]}}]}}]} as unknown as DocumentNode<AssessmentSectionPresetsQuery, AssessmentSectionPresetsQueryVariables>;
 export const AssessmentTemplateContentsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AssessmentTemplateContents"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"assessmentTypeCode"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assessmentTemplateContents"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"condition"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"assessmentTypeCode"},"value":{"kind":"Variable","name":{"kind":"Name","value":"assessmentTypeCode"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"assessmentTypeCode"}},{"kind":"Field","name":{"kind":"Name","value":"contentKey"}},{"kind":"Field","name":{"kind":"Name","value":"contentValue"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]}}]} as unknown as DocumentNode<AssessmentTemplateContentsQuery, AssessmentTemplateContentsQueryVariables>;

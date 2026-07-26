@@ -22,7 +22,17 @@ import { Spinner } from '@/components/ui/spinner';
 import { getInitials } from '@/lib/utils';
 import { AdminAssessmentSidebarNav } from '@/modules/admin/components/admin-assessment-sidebar-nav';
 import { useLogout } from '@/modules/auth/hooks';
-import { BarChart3, CreditCard, Home, LayoutDashboard, LogOut, Mail, Ticket, Users } from 'lucide-react';
+import {
+  BarChart3,
+  BookOpen,
+  CreditCard,
+  Home,
+  LayoutDashboard,
+  LogOut,
+  Mail,
+  Ticket,
+  Users,
+} from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Suspense, type ReactNode } from 'react';
@@ -32,13 +42,29 @@ interface AdminSidebarLayoutProps {
   children: ReactNode | ((props: LayoutChildProps) => ReactNode);
 }
 
-const platformItems = [
-  { title: 'Dashboard', url: '/admin', icon: LayoutDashboard, exact: true },
-  { title: 'Users', url: '/admin/users', icon: Users, exact: false },
-  { title: 'Analytics', url: '/admin/analytics', icon: BarChart3, exact: false },
-  { title: 'Payments', url: '/admin/payments', icon: CreditCard, exact: false },
-  { title: 'Coupons', url: '/admin/coupons', icon: Ticket, exact: false },
-  { title: 'Reminders', url: '/admin/reminders', icon: Mail, exact: false },
+const navGroups = [
+  {
+    label: 'Overview',
+    items: [
+      { title: 'Dashboard', url: '/admin', icon: LayoutDashboard, exact: true },
+      { title: 'Analytics', url: '/admin/analytics', icon: BarChart3, exact: false },
+    ],
+  },
+  {
+    label: 'Revenue',
+    items: [
+      { title: 'Payments', url: '/admin/payments', icon: CreditCard, exact: false },
+      { title: 'Workbooks', url: '/admin/workbooks', icon: BookOpen, exact: false },
+      { title: 'Coupons', url: '/admin/coupons', icon: Ticket, exact: false },
+    ],
+  },
+  {
+    label: 'People',
+    items: [
+      { title: 'Users', url: '/admin/users', icon: Users, exact: false },
+      { title: 'Reminders', url: '/admin/reminders', icon: Mail, exact: false },
+    ],
+  },
 ];
 
 export const AdminSidebarLayout = ({ children }: AdminSidebarLayoutProps) => {
@@ -66,29 +92,30 @@ export const AdminSidebarLayout = ({ children }: AdminSidebarLayoutProps) => {
             </SidebarHeader>
 
             <SidebarContent>
-              {/* Platform section */}
-              <SidebarGroup>
-                <SidebarGroupLabel>Platform</SidebarGroupLabel>
-                <SidebarGroupContent>
-                  <SidebarMenu>
-                    {platformItems.map((item) => {
-                      const isActive = item.exact
-                        ? pathname === item.url
-                        : pathname.startsWith(item.url);
-                      return (
-                        <SidebarMenuItem key={item.title}>
-                          <SidebarMenuButton asChild isActive={isActive}>
-                            <Link href={item.url}>
-                              <item.icon />
-                              <span>{item.title}</span>
-                            </Link>
-                          </SidebarMenuButton>
-                        </SidebarMenuItem>
-                      );
-                    })}
-                  </SidebarMenu>
-                </SidebarGroupContent>
-              </SidebarGroup>
+              {navGroups.map((group) => (
+                <SidebarGroup key={group.label}>
+                  <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
+                  <SidebarGroupContent>
+                    <SidebarMenu>
+                      {group.items.map((item) => {
+                        const isActive = item.exact
+                          ? pathname === item.url
+                          : pathname.startsWith(item.url);
+                        return (
+                          <SidebarMenuItem key={item.title}>
+                            <SidebarMenuButton asChild isActive={isActive}>
+                              <Link href={item.url}>
+                                <item.icon />
+                                <span>{item.title}</span>
+                              </Link>
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
+                        );
+                      })}
+                    </SidebarMenu>
+                  </SidebarGroupContent>
+                </SidebarGroup>
+              ))}
 
               <SidebarSeparator />
 
