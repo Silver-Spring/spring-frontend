@@ -6,6 +6,7 @@ import { NavbarWrapper } from '@/components/navbar-wrapper';
 import { FooterWrapper } from '@/components/footer-wrapper';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { LinkedInInsightTag } from '@/components/analytics/linkedin-insight-tag';
 
 const dmSans = DM_Sans({ subsets: ['latin'], variable: '--font-dm-sans' });
 const dmMono = DM_Mono({ weight: ['400'], subsets: ['latin'], variable: '--font-dm-mono' });
@@ -72,6 +73,7 @@ export default function RootLayout({
         </Providers>
         <Analytics />
         <SpeedInsights />
+        <LinkedInInsightTag />
       </body>
     </html>
   );

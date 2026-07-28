@@ -1,4 +1,4 @@
-import { capturePaymentError } from '@/lib/analytics';
+import { capturePaymentError, trackLinkedInWorkbookPurchase } from '@/lib/analytics';
 import { useMutation } from '@apollo/client/react';
 import posthog from 'posthog-js';
 import { useEffect, useRef, useState } from 'react';
@@ -109,6 +109,7 @@ export const useCreateWorkbookOrder = () => {
                 order_id: response.razorpay_order_id,
                 purchase_id: verification.purchaseId,
               });
+              trackLinkedInWorkbookPurchase();
               toast.success('Payment successful! Your workbook is ready.');
               onSuccess();
             } else {
