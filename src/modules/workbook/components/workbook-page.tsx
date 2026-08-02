@@ -239,7 +239,11 @@ export const WorkbookPage = () => {
   };
 
   // Sticky bar CTA label
-  const stickyLabel = hasPurchased || justPurchased ? 'Download Workbook' : 'Buy Now';
+  const stickyLabel = !user
+    ? 'Sign in to purchase'
+    : hasPurchased || justPurchased
+      ? 'Download Workbook'
+      : 'Buy Now';
   const stickyAction = hasPurchased || justPurchased ? handleDownload : handleBuy;
 
   return (
@@ -417,15 +421,24 @@ export const WorkbookPage = () => {
             <p className="text-sm font-semibold text-foreground">Designing Your Next Phase</p>
             <p className="text-xs text-muted-foreground">By Rajat Mathur · 49-page PDF</p>
           </div>
-          <Button
-            size="default"
-            className="gap-2 font-semibold sm:ml-auto"
-            onClick={stickyAction}
-            disabled={isProcessing || isDownloading}
-          >
-            <Download className="h-4 w-4" />
-            {stickyLabel}
-          </Button>
+          {!user ? (
+            <Button size="default" className="gap-2 font-semibold sm:ml-auto" asChild>
+              <Link href="/auth/login?redirect=/workbook">
+                <LogIn className="h-4 w-4" />
+                {stickyLabel}
+              </Link>
+            </Button>
+          ) : (
+            <Button
+              size="default"
+              className="gap-2 font-semibold sm:ml-auto"
+              onClick={stickyAction}
+              disabled={isProcessing || isDownloading}
+            >
+              <Download className="h-4 w-4" />
+              {stickyLabel}
+            </Button>
+          )}
         </div>
       </div>
     </div>
