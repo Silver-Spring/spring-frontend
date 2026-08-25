@@ -30,22 +30,16 @@ export const TotalScoreCard = ({
   return (
     <Card className="bg-linear-to-br from-primary/8 via-primary/5 to-background border-primary/20 shadow-none">
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl mb-2 text-green-900 dark:text-green-100">
-          {title}
-        </CardTitle>
+        <CardTitle className="text-2xl mb-2 text-green-900 dark:text-green-100">{title}</CardTitle>
         <div className="text-6xl font-bold my-4" style={{ color: 'var(--chart-1)' }}>
           {totalScore}
           {showBounds && (
-            <span className="text-2xl text-muted-foreground font-normal ml-2">
-              / {maxScore}
-            </span>
+            <span className="text-2xl text-muted-foreground font-normal ml-2">/ {maxScore}</span>
           )}
         </div>
         {interpretationLabel && (
           <>
-            <div className="text-xl font-semibold mb-4 text-primary">
-              {interpretationLabel}
-            </div>
+            <div className="text-xl font-semibold mb-4 text-primary">{interpretationLabel}</div>
             {interpretationNarrative && (
               <RichText
                 content={interpretationNarrative}
