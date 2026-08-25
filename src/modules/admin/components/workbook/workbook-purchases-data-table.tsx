@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import { type ColumnDef } from '@tanstack/react-table';
+import { type ColumnDef, type Row, type StockFeatures } from '@tanstack/react-table';
 import { ArrowUpDown, Copy, Eye, MoreHorizontal } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { formatAmount, getPaymentStatusColor } from '@/lib/payment-utils';
-import type { AdminWorkbookPurchaseItem } from '@/gql/graphql';
+import type { AdminWorkbookPurchaseItem } from '@/gql/schema-types';
 
 interface WorkbookPurchasesDataTableProps {
   data: AdminWorkbookPurchaseItem[];
@@ -31,7 +31,7 @@ export const WorkbookPurchasesDataTable = ({
   data,
   onViewDetails,
 }: WorkbookPurchasesDataTableProps) => {
-  const columns: ColumnDef<AdminWorkbookPurchaseItem>[] = useMemo(
+  const columns: ColumnDef<StockFeatures, AdminWorkbookPurchaseItem>[] = useMemo(
     () => [
       {
         id: 'buyer',
@@ -161,7 +161,7 @@ export const WorkbookPurchasesDataTable = ({
             {new Date(row.original.createdAt).toLocaleString()}
           </div>
         ),
-        sortingFn: (rowA, rowB) =>
+        sortingFn: (rowA: Row<StockFeatures, AdminWorkbookPurchaseItem>, rowB: Row<StockFeatures, AdminWorkbookPurchaseItem>) =>
           Date.parse(rowA.original.createdAt) - Date.parse(rowB.original.createdAt),
       },
       {

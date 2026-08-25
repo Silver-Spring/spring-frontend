@@ -1,7 +1,11 @@
 'use client';
 
 import { useMemo } from 'react';
-import { type ColumnDef, type RowSelectionState } from '@tanstack/react-table';
+import {
+  type ColumnDef,
+  type RowSelectionState,
+  type StockFeatures,
+} from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DataTable } from '@/components/ui/data-table';
 import type { ReminderCandidatesQuery } from '@/gql/graphql';
@@ -27,7 +31,7 @@ export const ReminderCandidatesTable = ({
   rowSelection,
   onRowSelectionChange,
 }: ReminderCandidatesTableProps) => {
-  const columns: ColumnDef<ReminderCandidateUser>[] = useMemo(
+  const columns: ColumnDef<StockFeatures, ReminderCandidateUser>[] = useMemo(
     () => [
       {
         id: 'select',

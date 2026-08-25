@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dialog';
 import { Spinner } from '@/components/ui/spinner';
 import { formatAmount } from '@/lib/payment-utils';
-import { type ColumnDef } from '@tanstack/react-table';
+import { type ColumnDef, type StockFeatures } from '@tanstack/react-table';
 import { format } from 'date-fns';
 import { useMemo } from 'react';
 import { useAdminCouponUsage } from '../../hooks';
@@ -32,7 +32,7 @@ interface UsageRecord {
 export const CouponUsageDialog = ({ open, onOpenChange, couponId }: CouponUsageDialogProps) => {
   const { usageRecords, totalCount, loading } = useAdminCouponUsage(couponId);
 
-  const columns: ColumnDef<UsageRecord>[] = useMemo(
+  const columns: ColumnDef<StockFeatures, UsageRecord>[] = useMemo(
     () => [
       {
         accessorKey: 'userName',

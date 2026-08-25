@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useMemo, useState } from 'react';
-import { type ColumnDef } from '@tanstack/react-table';
+import { type ColumnDef, type Row, type StockFeatures } from '@tanstack/react-table';
 import {
   ArrowUpDown,
   ClipboardX,
@@ -31,7 +31,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { DataTable } from '@/components/ui/data-table';
 import { getInitials } from '@/lib/utils';
 import { useUserStore } from '@/stores';
-import type { UserInfo } from '@/gql/graphql';
+import type { UserInfo } from '@/gql/schema-types';
 import {
   DeleteUserDialog,
   GrantAdminDialog,
@@ -126,7 +126,7 @@ export const UsersPage = () => {
 
   const isProcessing = granting || revoking || grantingInternal || revokingInternal || deleting;
 
-  const columns: ColumnDef<UserInfo>[] = useMemo(
+  const columns: ColumnDef<StockFeatures, UserInfo>[] = useMemo(
     () => [
       {
         accessorKey: 'name',
@@ -242,7 +242,7 @@ export const UsersPage = () => {
             {formatDistanceToNow(new Date(row.getValue('createdAt')), { addSuffix: true })}
           </span>
         ),
-        sortingFn: (rowA, rowB) => {
+        sortingFn: (rowA: Row<StockFeatures, UserInfo>, rowB: Row<StockFeatures, UserInfo>) => {
           return (
             new Date(rowA.getValue('createdAt')).getTime() -
             new Date(rowB.getValue('createdAt')).getTime()

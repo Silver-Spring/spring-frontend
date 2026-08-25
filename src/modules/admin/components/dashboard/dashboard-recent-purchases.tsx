@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Spinner } from '@/components/ui/spinner';
 import { formatAmount, getPaymentStatusColor } from '@/lib/payment-utils';
 import { getInitials } from '@/lib/utils';
-import type { AdminWorkbookPurchaseItem } from '@/gql/graphql';
+import type { AdminWorkbookPurchaseItem } from '@/gql/schema-types';
 import { formatDistanceToNow } from 'date-fns';
 import { ArrowRight, BookOpen } from 'lucide-react';
 import Link from 'next/link';

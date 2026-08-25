@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import { type ColumnDef } from '@tanstack/react-table';
+import { type ColumnDef, type Row, type StockFeatures } from '@tanstack/react-table';
 import { ArrowUpDown, Copy, Eye, MoreHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { DataTable } from '@/components/ui/data-table';
 import { formatAmount, getPaymentStatusColor } from '@/lib/payment-utils';
-import type { RazorpayPaymentItem } from '@/gql/graphql';
+import type { RazorpayPaymentItem } from '@/gql/schema-types';
 
 interface PaymentsDataTableProps {
   data: RazorpayPaymentItem[];
@@ -22,7 +22,7 @@ interface PaymentsDataTableProps {
 }
 
 export const PaymentsDataTable = ({ data, onViewDetails }: PaymentsDataTableProps) => {
-  const columns: ColumnDef<RazorpayPaymentItem>[] = useMemo(
+  const columns: ColumnDef<StockFeatures, RazorpayPaymentItem>[] = useMemo(
     () => [
       {
         accessorKey: 'id',
@@ -107,7 +107,7 @@ export const PaymentsDataTable = ({ data, onViewDetails }: PaymentsDataTableProp
             </div>
           );
         },
-        sortingFn: (rowA, rowB) => {
+        sortingFn: (rowA: Row<StockFeatures, RazorpayPaymentItem>, rowB: Row<StockFeatures, RazorpayPaymentItem>) => {
           const a = rowA.getValue('createdAt') as number;
           const b = rowB.getValue('createdAt') as number;
           return a - b;

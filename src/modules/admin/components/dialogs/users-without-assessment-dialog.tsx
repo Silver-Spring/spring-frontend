@@ -12,7 +12,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { getInitials } from '@/lib/utils';
-import { type ColumnDef } from '@tanstack/react-table';
+import { type ColumnDef, type Row, type StockFeatures } from '@tanstack/react-table';
 import { formatDistanceToNow } from 'date-fns';
 import { useMemo } from 'react';
 import { ArrowUpDown, Key, ShieldCheck, UserCheck } from 'lucide-react';
@@ -41,7 +41,7 @@ export const UsersWithoutAssessmentDialog = ({
 }: UsersWithoutAssessmentDialogProps) => {
   const { users, totalCount, loading } = useUsersWithoutAssessment();
 
-  const columns: ColumnDef<UserWithoutAssessment>[] = useMemo(
+  const columns: ColumnDef<StockFeatures, UserWithoutAssessment>[] = useMemo(
     () => [
       {
         accessorKey: 'name',
@@ -151,7 +151,7 @@ export const UsersWithoutAssessmentDialog = ({
             {formatDistanceToNow(new Date(row.getValue('createdAt')), { addSuffix: true })}
           </span>
         ),
-        sortingFn: (rowA, rowB) => {
+        sortingFn: (rowA: Row<StockFeatures, UserWithoutAssessment>, rowB: Row<StockFeatures, UserWithoutAssessment>) => {
           return (
             new Date(rowA.getValue('createdAt')).getTime() -
             new Date(rowB.getValue('createdAt')).getTime()

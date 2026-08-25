@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useMemo, useState } from 'react';
-import { type ColumnDef } from '@tanstack/react-table';
+import { type ColumnDef, type Row, type StockFeatures } from '@tanstack/react-table';
 import { ArrowUpDown, Copy, Eye, Mail, MoreHorizontal } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { toast } from 'sonner';
@@ -22,7 +22,7 @@ import {
 import { DataTable } from '@/components/ui/data-table';
 import { ALL_ASSESSMENT_TYPES_FILTER, AssessmentTypeFilter } from '@/modules/assessment/constants';
 import { useResendReport, useUsersWithAssessment } from '../../assessment/hooks';
-import type { UserAssessmentInfo } from '@/gql/graphql';
+import type { UserAssessmentInfo } from '@/gql/schema-types';
 import { RefreshCw } from 'lucide-react';
 import { AssessmentTypeSelector } from './assessment-type-selector';
 
@@ -66,7 +66,7 @@ export const UsersAssessmentTable = () => {
     }
   };
 
-  const columns: ColumnDef<UserAssessmentInfo>[] = useMemo(
+  const columns: ColumnDef<StockFeatures, UserAssessmentInfo>[] = useMemo(
     () => [
       {
         accessorKey: 'userName',
@@ -104,7 +104,7 @@ export const UsersAssessmentTable = () => {
               cell: ({ row }) => (
                 <Badge variant="secondary">{row.original.assessmentTypeCode.toUpperCase()}</Badge>
               ),
-            } satisfies ColumnDef<UserAssessmentInfo>,
+            } satisfies ColumnDef<StockFeatures, UserAssessmentInfo>,
           ]
         : []),
       {
@@ -137,7 +137,7 @@ export const UsersAssessmentTable = () => {
             {formatDistanceToNow(new Date(row.getValue('startedAt')), { addSuffix: true })}
           </span>
         ),
-        sortingFn: (rowA, rowB) => {
+        sortingFn: (rowA: Row<StockFeatures, UserAssessmentInfo>, rowB: Row<StockFeatures, UserAssessmentInfo>) => {
           return (
             new Date(rowA.getValue('startedAt')).getTime() -
             new Date(rowB.getValue('startedAt')).getTime()
@@ -167,7 +167,7 @@ export const UsersAssessmentTable = () => {
             <span className="text-sm text-muted-foreground">-</span>
           );
         },
-        sortingFn: (rowA, rowB) => {
+        sortingFn: (rowA: Row<StockFeatures, UserAssessmentInfo>, rowB: Row<StockFeatures, UserAssessmentInfo>) => {
           const a = rowA.getValue('completedAt') as string | null;
           const b = rowB.getValue('completedAt') as string | null;
           if (!a && !b) return 0;

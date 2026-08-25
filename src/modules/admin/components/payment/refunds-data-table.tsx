@@ -1,13 +1,13 @@
 'use client';
 
 import { useMemo } from 'react';
-import { type ColumnDef } from '@tanstack/react-table';
+import { type ColumnDef, type Row, type StockFeatures } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { DataTable } from '@/components/ui/data-table';
 import { formatAmount, getPaymentStatusColor } from '@/lib/payment-utils';
-import type { RazorpayRefundItem } from '@/gql/graphql';
+import type { RazorpayRefundItem } from '@/gql/schema-types';
 
 interface RefundsDataTableProps {
   data: RazorpayRefundItem[];
@@ -15,7 +15,7 @@ interface RefundsDataTableProps {
 }
 
 export const RefundsDataTable = ({ data, onViewPaymentDetails }: RefundsDataTableProps) => {
-  const columns: ColumnDef<RazorpayRefundItem>[] = useMemo(
+  const columns: ColumnDef<StockFeatures, RazorpayRefundItem>[] = useMemo(
     () => [
       {
         accessorKey: 'id',
@@ -98,7 +98,7 @@ export const RefundsDataTable = ({ data, onViewPaymentDetails }: RefundsDataTabl
             </div>
           );
         },
-        sortingFn: (rowA, rowB) => {
+        sortingFn: (rowA: Row<StockFeatures, RazorpayRefundItem>, rowB: Row<StockFeatures, RazorpayRefundItem>) => {
           const a = rowA.getValue('createdAt') as number;
           const b = rowB.getValue('createdAt') as number;
           return a - b;

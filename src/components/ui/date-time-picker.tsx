@@ -94,7 +94,7 @@ export const DateTimePicker = ({
           mode="single"
           selected={selectedDate}
           onSelect={handleDateSelect}
-          initialFocus
+          autoFocus
         />
         <div className="border-t border-border p-3">
           <div className="flex items-center gap-2">

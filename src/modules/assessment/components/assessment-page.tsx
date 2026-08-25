@@ -153,7 +153,7 @@ export const AssessmentPage = ({ sessionId }: AssessmentPageProps) => {
 
   const handleAnswerSelect = useCallback(
     async (value: number) => {
-      if (isTransitioning || completing || !question) return;
+      if (isTransitioning || completing || !question?.questionId) return;
 
       const timeTaken = Math.floor((Date.now() - questionStartTime) / 1000);
 

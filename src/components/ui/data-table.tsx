@@ -3,17 +3,16 @@
 import { useState } from 'react';
 import {
   flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
+  stockFeatures,
+  useTable,
   type ColumnDef,
   type ColumnFiltersState,
+  type ColumnVisibilityState,
   type Row,
+  type RowData,
   type RowSelectionState,
   type SortingState,
-  type VisibilityState,
+  type StockFeatures,
 } from '@tanstack/react-table';
 import {
   ChevronDown,
@@ -35,12 +34,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Label } from './label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './table';
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
+interface DataTableProps<TData extends RowData, TValue> {
+  columns: ColumnDef<StockFeatures, TData, TValue>[];
   data: TData[];
   filterColumn?: string;
   filterPlaceholder?: string;
-  filterFn?: (row: Row<TData>, columnId: string, filterValue: string) => boolean;
+  filterFn?: (row: Row<StockFeatures, TData>, columnId: string, filterValue: string) => boolean;
   pageSize?: number;
   showSearch?: boolean;
   showColumnVisibility?: boolean;
@@ -53,7 +52,7 @@ interface DataTableProps<TData, TValue> {
   enableRowSelection?: boolean;
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends RowData, TValue>({
   columns,
   data,
   filterColumn,
@@ -71,7 +70,7 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [columnVisibility, setColumnVisibility] = useState<ColumnVisibilityState>({});
   const [internalRowSelection, setInternalRowSelection] = useState<RowSelectionState>({});
   const [pagination, setPagination] = useState({
     pageIndex: 0,
@@ -81,15 +80,12 @@ export function DataTable<TData, TValue>({
   const rowSelection = controlledRowSelection ?? internalRowSelection;
   const setRowSelection = onRowSelectionChange ?? setInternalRowSelection;
 
-  const table = useReactTable({
+  const table = useTable({
+    features: stockFeatures,
     data,
-    columns,
+    columns: columns as ColumnDef<StockFeatures, TData, unknown>[],
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     enableRowSelection,
     onRowSelectionChange: (updater) => {
@@ -206,13 +202,13 @@ export function DataTable<TData, TValue>({
                 Rows per page
               </Label>
               <Select
-                value={`${table.getState().pagination.pageSize}`}
+                value={`${table.store.state.pagination.pageSize}`}
                 onValueChange={(value) => {
                   table.setPageSize(Number(value));
                 }}
               >
                 <SelectTrigger size="sm" className="w-20" id={rowsPerPageId}>
-                  <SelectValue placeholder={table.getState().pagination.pageSize} />
+                  <SelectValue placeholder={table.store.state.pagination.pageSize} />
                 </SelectTrigger>
                 <SelectContent side="top">
                   {[10, 20, 30, 40, 50].map((pageSize) => (
@@ -224,7 +220,7 @@ export function DataTable<TData, TValue>({
               </Select>
             </div>
             <div className="flex w-full items-center justify-center text-sm font-medium md:w-fit">
-              Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+              Page {table.store.state.pagination.pageIndex + 1} of {table.getPageCount()}
             </div>
             <div className="flex items-center gap-2 justify-center md:justify-start">
               <Button

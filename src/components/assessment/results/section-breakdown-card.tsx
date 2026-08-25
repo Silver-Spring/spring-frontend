@@ -278,9 +278,8 @@ export const SectionBreakdownCard = ({ sectionResults }: SectionBreakdownCardPro
                 />
               </Pie>
               <ChartLegend
-                content={<ChartLegendContent nameKey="section" />}
+                content={<ChartLegendContent nameKey="section" className="lg:hidden flex-wrap" />}
                 wrapperStyle={{ paddingTop: '20px', maxWidth: '100%' }}
-                className="lg:hidden flex-wrap"
               />
             </RechartsPieChart>
           </ChartContainer>

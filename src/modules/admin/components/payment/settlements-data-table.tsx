@@ -1,20 +1,20 @@
 'use client';
 
 import { useMemo } from 'react';
-import { type ColumnDef } from '@tanstack/react-table';
+import { type ColumnDef, type Row, type StockFeatures } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { DataTable } from '@/components/ui/data-table';
 import { formatAmount, getPaymentStatusColor } from '@/lib/payment-utils';
-import type { RazorpaySettlementItem } from '@/gql/graphql';
+import type { RazorpaySettlementItem } from '@/gql/schema-types';
 
 interface SettlementsDataTableProps {
   data: RazorpaySettlementItem[];
 }
 
 export const SettlementsDataTable = ({ data }: SettlementsDataTableProps) => {
-  const columns: ColumnDef<RazorpaySettlementItem>[] = useMemo(
+  const columns: ColumnDef<StockFeatures, RazorpaySettlementItem>[] = useMemo(
     () => [
       {
         accessorKey: 'id',
@@ -69,7 +69,7 @@ export const SettlementsDataTable = ({ data }: SettlementsDataTableProps) => {
             settlement.amount - (settlement.fees || 0) - (settlement.tax || 0);
           return <div className="font-medium text-green-600">{formatAmount(netAmount)}</div>;
         },
-        sortingFn: (rowA, rowB) => {
+        sortingFn: (rowA: Row<StockFeatures, RazorpaySettlementItem>, rowB: Row<StockFeatures, RazorpaySettlementItem>) => {
           const netA =
             rowA.original.amount - (rowA.original.fees || 0) - (rowA.original.tax || 0);
           const netB =
@@ -115,7 +115,7 @@ export const SettlementsDataTable = ({ data }: SettlementsDataTableProps) => {
             </div>
           );
         },
-        sortingFn: (rowA, rowB) => {
+        sortingFn: (rowA: Row<StockFeatures, RazorpaySettlementItem>, rowB: Row<StockFeatures, RazorpaySettlementItem>) => {
           const a = rowA.getValue('createdAt') as number;
           const b = rowB.getValue('createdAt') as number;
           return a - b;

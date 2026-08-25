@@ -23,7 +23,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { useIsMobile } from '@/hooks';
 import { formatAmount, getPaymentStatusColor } from '@/lib/payment-utils';
-import type { AdminWorkbookPurchaseItem } from '@/gql/graphql';
+import type { AdminWorkbookPurchaseItem } from '@/gql/schema-types';
 import { AlertCircle } from 'lucide-react';
 import type { ReactNode } from 'react';
 

@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
 import { getDateRangeTimestamps } from '@/lib/payment-utils';
-import type { AdminWorkbookPurchaseItem } from '@/gql/graphql';
+import type { AdminWorkbookPurchaseItem } from '@/gql/schema-types';
 import { useAdminWorkbookPurchases, useAdminWorkbookStats } from '../hooks';
 import { AdminPageHeader } from './shared/admin-page-header';
 import { WorkbookPurchaseDetailsDrawer } from './dialogs/workbook-purchase-details-drawer';

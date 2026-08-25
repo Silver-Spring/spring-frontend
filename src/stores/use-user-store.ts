@@ -3,14 +3,14 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 
 interface User {
   id: string;
-  name?: string | null;
+  name: string | null;
   email: string;
   age: number;
   gender: string;
   type: string;
   isAdmin: boolean;
   isInternal: boolean;
-  phoneNumber?: string | null;
+  phoneNumber: string | null;
 }
 
 interface UserState {

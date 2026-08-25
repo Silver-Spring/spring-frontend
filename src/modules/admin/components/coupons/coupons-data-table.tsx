@@ -17,7 +17,7 @@ import {
   formatDiscountValue,
   getCouponStatus,
 } from '@/lib/coupon-utils';
-import { type ColumnDef } from '@tanstack/react-table';
+import { type ColumnDef, type StockFeatures } from '@tanstack/react-table';
 import { format } from 'date-fns';
 import { ArrowUpDown, CheckCircle, Edit, Eye, MoreHorizontal, Trash2, XCircle } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
@@ -126,7 +126,7 @@ export const CouponsDataTable = ({ coupons, onRefetch }: CouponsDataTableProps) 
     setSelectedCoupon(null);
   };
 
-  const columns: ColumnDef<Coupon>[] = useMemo(
+  const columns: ColumnDef<StockFeatures, Coupon>[] = useMemo(
     () => [
       {
         accessorKey: 'code',
