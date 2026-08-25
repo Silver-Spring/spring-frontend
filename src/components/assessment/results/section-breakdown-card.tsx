@@ -1,6 +1,7 @@
 'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { RichText } from '@/components/ui/rich-text';
 import {
   ChartConfig,
   ChartContainer,
@@ -188,7 +189,7 @@ export const SectionBreakdownCard = ({ sectionResults }: SectionBreakdownCardPro
             </div>
             {section?.interpretationNarrative && (
               <p className="text-xs text-muted-foreground mt-3 pt-3 border-t italic">
-                {section.interpretationNarrative}
+                <RichText content={section.interpretationNarrative} />
               </p>
             )}
           </div>
@@ -214,7 +215,7 @@ export const SectionBreakdownCard = ({ sectionResults }: SectionBreakdownCardPro
         </div>
       </CardHeader>
       <CardContent>
-        <div className="h-[400px] md:h-[500px] will-change-transform">
+        <div className="h-100 md:h-125 will-change-transform">
           <ChartContainer config={chartConfig} className="w-full h-full">
             <RechartsPieChart>
               <ChartTooltip content={renderTooltipContent} />
@@ -232,7 +233,7 @@ export const SectionBreakdownCard = ({ sectionResults }: SectionBreakdownCardPro
                   return renderCustomLabel(props);
                 }}
                 labelLine={false}
-                activeShape={renderActiveShape}
+                shape={renderActiveShape}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
                 isAnimationActive={false}

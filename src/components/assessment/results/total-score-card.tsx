@@ -1,6 +1,7 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { RichText } from '@/components/ui/rich-text';
 
 interface TotalScoreCardProps {
   totalScore: number;
@@ -46,13 +47,14 @@ export const TotalScoreCard = ({
               {interpretationLabel}
             </div>
             {interpretationNarrative && (
-              <p className="text-sm text-green-800 dark:text-green-200 leading-relaxed max-w-2xl mx-auto whitespace-pre-wrap">
-                {interpretationNarrative}
-              </p>
+              <RichText
+                content={interpretationNarrative}
+                className="block text-sm text-green-800 dark:text-green-200 leading-relaxed max-w-2xl mx-auto whitespace-pre-wrap"
+              />
             )}
             {interpretationKeyMindset && (
               <blockquote className="mt-4 text-sm italic text-muted-foreground max-w-xl mx-auto border-l-2 border-primary/30 pl-4">
-                {interpretationKeyMindset}
+                <RichText content={interpretationKeyMindset} />
               </blockquote>
             )}
           </>
