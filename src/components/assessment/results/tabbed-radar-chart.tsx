@@ -146,7 +146,7 @@ export const TabbedRadarChart = ({
 
           {tabs.map((tab) => (
             <TabsContent key={tab.value} value={tab.value}>
-              <div className="w-full h-[450px]">
+              <div className="w-full h-112.5">
                 <ChartContainer config={CHART_CONFIG} className="w-full h-full">
                   <RadarChart data={tab.radarData} cx="50%" cy="50%" outerRadius="80%">
                     <PolarGrid gridType="polygon" stroke="var(--border)" />

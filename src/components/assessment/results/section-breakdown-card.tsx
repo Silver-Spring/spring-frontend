@@ -12,8 +12,8 @@ import {
 import { useIsMobile } from '@/hooks';
 import { TrendingUp } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
-import { Cell, Label, Pie, PieChart as RechartsPieChart, Sector } from 'recharts';
-import type { TooltipContentProps } from 'recharts';
+import { Label, Pie, PieChart as RechartsPieChart, Sector } from 'recharts';
+import type { PieSectorShapeProps, TooltipContentProps } from 'recharts';
 
 type PieLabelProps = {
   cx: number;
@@ -23,16 +23,6 @@ type PieLabelProps = {
   innerRadius: number;
   value: number | string;
   payload?: { label: string; scoreLabel: string };
-};
-
-type ActiveShapeProps = {
-  cx: number;
-  cy: number;
-  innerRadius: number;
-  outerRadius: number;
-  startAngle: number;
-  endAngle: number;
-  fill?: string;
 };
 
 const RADIAN = Math.PI / 180;
@@ -92,18 +82,31 @@ const renderMobileLabel = ({
   );
 };
 
-const renderActiveShape = (props: ActiveShapeProps) => {
-  const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill = 'currentColor' } = props;
+const renderSector = (props: PieSectorShapeProps, activeIndex?: number) => {
+  const {
+    cx,
+    cy,
+    innerRadius,
+    outerRadius,
+    startAngle,
+    endAngle,
+    fill = 'currentColor',
+    isActive,
+    index,
+  } = props;
+  const sectorFill = props.payload?.fill ?? fill;
+  const fillOpacity = activeIndex === undefined || activeIndex === index ? 1 : 0.35;
 
   return (
     <Sector
       cx={cx}
       cy={cy}
       innerRadius={innerRadius}
-      outerRadius={outerRadius + 8}
+      outerRadius={outerRadius + (isActive ? 8 : 0)}
       startAngle={startAngle}
       endAngle={endAngle}
-      fill={fill}
+      fill={sectorFill}
+      fillOpacity={fillOpacity}
       style={{
         filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25))',
       }}
@@ -233,7 +236,7 @@ export const SectionBreakdownCard = ({ sectionResults }: SectionBreakdownCardPro
                   return renderCustomLabel(props);
                 }}
                 labelLine={false}
-                shape={renderActiveShape}
+                shape={(props) => renderSector(props, activeIndex)}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
                 isAnimationActive={false}
@@ -241,13 +244,6 @@ export const SectionBreakdownCard = ({ sectionResults }: SectionBreakdownCardPro
                   cursor: 'pointer',
                 }}
               >
-                {chartData.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={entry.fill}
-                    fillOpacity={activeIndex === undefined || activeIndex === index ? 1 : 0.35}
-                  />
-                ))}
                 <Label
                   content={({ viewBox }) => {
                     if (viewBox && 'cx' in viewBox && 'cy' in viewBox) {
