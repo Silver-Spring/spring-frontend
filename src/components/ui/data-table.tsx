@@ -2,8 +2,14 @@
 
 import { useState } from 'react';
 import {
+  createFilteredRowModel,
+  createPaginatedRowModel,
+  createSortedRowModel,
+  filterFns,
   flexRender,
+  sortFns,
   stockFeatures,
+  tableFeatures,
   useTable,
   type ColumnDef,
   type ColumnFiltersState,
@@ -14,6 +20,19 @@ import {
   type SortingState,
   type StockFeatures,
 } from '@tanstack/react-table';
+
+// v9 no longer bundles row models or built-in filter/sort fns automatically —
+// each is an explicit slot. Without these, table.getRowModel() returns the
+// unprocessed core model, so pagination / sorting / filtering silently do
+// nothing.
+const features = tableFeatures({
+  ...stockFeatures,
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
+  sortFns,
+});
 import {
   ChevronDown,
   ChevronLeft,
@@ -81,7 +100,7 @@ export function DataTable<TData extends RowData, TValue>({
   const setRowSelection = onRowSelectionChange ?? setInternalRowSelection;
 
   const table = useTable({
-    features: stockFeatures,
+    features,
     data,
     columns: columns as ColumnDef<StockFeatures, TData, unknown>[],
     onSortingChange: setSorting,
