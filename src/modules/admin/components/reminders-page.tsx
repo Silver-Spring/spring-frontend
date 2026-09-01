@@ -12,11 +12,9 @@ import { ReminderCandidatesTable } from './reminders/reminder-candidates-table';
 import { SendReminderDialog } from './dialogs/send-reminder-dialog';
 
 const SEGMENTS = [
-  { value: 'no_payment_attempt', label: 'No Payment Attempt — signed up, never started payment' },
-  { value: 'payment_abandoned', label: 'Payment Abandoned — payment order created, never completed' },
-  { value: 'payment_failed', label: 'Payment Failed — payment attempted and failed' },
-  { value: 'paid_no_test', label: 'Paid, No Test — paid, assessment not started' },
-  { value: 'test_incomplete', label: 'Test Incomplete — assessment started, not finished' },
+  { value: 'signup_idle', label: 'Signed Up, Idle — verified, no payment, no assessment, no workbook' },
+  { value: 'workbook_no_test', label: 'Workbook, No Test — bought the workbook, never started the assessment' },
+  { value: 'assessment_no_workbook', label: 'Assessment, No Workbook — finished the assessment, never bought the workbook' },
 ];
 
 export const RemindersPage = () => {
