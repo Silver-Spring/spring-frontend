@@ -35,15 +35,20 @@ export const RemindersPage = () => {
   const handleConfirmSend = async (customMessage: string) => {
     const userIds = selectedUserIds.map((index) => users[Number(index)]?.userId).filter(Boolean) as string[];
 
-    await sendReminderEmails({
-      userIds,
-      reminderType: segment,
-      customMessage: customMessage.trim() || undefined,
-    });
-
-    setShowSendDialog(false);
-    setRowSelection({});
-    refetch();
+    try {
+      await sendReminderEmails({
+        userIds,
+        reminderType: segment,
+        customMessage: customMessage.trim() || undefined,
+      });
+      // Only clear + close on success; on failure keep the dialog open so the
+      // admin can retry the same selection.
+      setShowSendDialog(false);
+      setRowSelection({});
+      refetch();
+    } catch {
+      // Error toast is already shown by useSendReminderEmails.
+    }
   };
 
   return (

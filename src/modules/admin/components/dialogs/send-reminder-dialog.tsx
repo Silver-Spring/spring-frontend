@@ -59,7 +59,15 @@ export const SendReminderDialog = ({
 
         <AlertDialogFooter>
           <AlertDialogCancel disabled={loading}>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={() => onConfirm(customMessage)} disabled={loading}>
+          <AlertDialogAction
+            onClick={(e) => {
+              // Keep the dialog open (and the "Sending..." state visible) until
+              // the caller closes it once the promise settles.
+              e.preventDefault();
+              onConfirm(customMessage);
+            }}
+            disabled={loading}
+          >
             {loading ? 'Sending...' : `Send to ${recipientCount} user${recipientCount === 1 ? '' : 's'}`}
           </AlertDialogAction>
         </AlertDialogFooter>
