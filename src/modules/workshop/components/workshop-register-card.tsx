@@ -10,6 +10,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { PhoneInput } from '@/components/ui/phone-input';
 import { Spinner } from '@/components/ui/spinner';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CheckCircle2, Lock, Users } from 'lucide-react';
@@ -170,14 +171,7 @@ export const WorkshopRegisterCard = ({ slug, status, registrationOpen }: Worksho
               <FormItem>
                 <FormLabel>Contact number</FormLabel>
                 <FormControl>
-                  <Input
-                    {...field}
-                    type="tel"
-                    inputMode="tel"
-                    autoComplete="tel"
-                    placeholder="98765 43210"
-                    className="h-13"
-                  />
+                  <PhoneInput {...field} placeholder="9876543210" groupClassName="h-13" />
                 </FormControl>
                 <FormMessage />
               </FormItem>

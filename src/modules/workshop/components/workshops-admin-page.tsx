@@ -2,6 +2,13 @@
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Spinner } from '@/components/ui/spinner';
 import {
   Table,
@@ -12,9 +19,21 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { AdminPageHeader } from '@/modules/admin/components/shared/admin-page-header';
-import { ExternalLink, Pencil, Plus } from 'lucide-react';
+import { ExternalLink, MoreHorizontal, Pencil, Plus, Trash2, Users } from 'lucide-react';
 import Link from 'next/link';
-import { useAdminWorkshopEvents } from '../hooks/use-admin-workshops';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { useAdminWorkshopEvents, useDeleteWorkshop } from '../hooks/use-admin-workshops';
 
 const STATUS_LABEL: Record<string, string> = {
   draft: 'Draft',
@@ -34,9 +53,24 @@ const formatWhen = (iso: string) =>
 
 export const WorkshopsAdminPage = () => {
   const { workshops, loading, refetch } = useAdminWorkshopEvents();
+  const [deleteWorkshop] = useDeleteWorkshop();
+  const [toDelete, setToDelete] = useState<{ id: string; title: string } | null>(null);
+
+  const handleDelete = async () => {
+    if (!toDelete) return;
+    try {
+      await deleteWorkshop({ variables: { id: toDelete.id } });
+      toast.success('Workshop deleted');
+      await refetch();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Could not delete the workshop');
+    } finally {
+      setToDelete(null);
+    }
+  };
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="min-w-0 space-y-6 p-6">
       <AdminPageHeader
         title="Workshops"
         description="Create workshops, set their status and share the page link."
@@ -69,7 +103,7 @@ export const WorkshopsAdminPage = () => {
                 <TableHead>Date</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Registered</TableHead>
-                <TableHead className="w-40" />
+                <TableHead className="w-12" />
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -87,17 +121,46 @@ export const WorkshopsAdminPage = () => {
                     {event.capacity ? ` / ${event.capacity}` : ''}
                   </TableCell>
                   <TableCell>
-                    <div className="flex justify-end gap-2">
-                      <Button asChild size="sm" variant="outline">
-                        <Link href={`/admin/workshops/${event.id}`}>
-                          <Pencil className="size-3.5" /> Edit
-                        </Link>
-                      </Button>
-                      <Button asChild size="icon-sm" variant="ghost" aria-label="Open public page">
-                        <Link href={`/workshops/${event.slug}`} target="_blank">
-                          <ExternalLink className="size-4" />
-                        </Link>
-                      </Button>
+                    <div className="flex justify-end">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="h-8 w-8 p-0" aria-label={`Actions for ${event.title}`}>
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem asChild>
+                            <Link href={`/admin/workshops/${event.id}/registrations`}>
+                              <Users className="mr-2 h-4 w-4" />
+                              Registrations
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link href={`/admin/workshops/${event.id}`}>
+                              <Pencil className="mr-2 h-4 w-4" />
+                              Edit workshop
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link href={`/workshops/${event.slug}`} target="_blank">
+                              <ExternalLink className="mr-2 h-4 w-4" />
+                              Open public page
+                            </Link>
+                          </DropdownMenuItem>
+                          {event.status === 'draft' && (
+                            <>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                variant="destructive"
+                                onClick={() => setToDelete({ id: event.id, title: event.title })}
+                              >
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                Delete
+                              </DropdownMenuItem>
+                            </>
+                          )}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -106,6 +169,22 @@ export const WorkshopsAdminPage = () => {
           </Table>
         </div>
       )}
+
+      <AlertDialog open={Boolean(toDelete)} onOpenChange={(open) => !open && setToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete {toDelete?.title}?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Only drafts can be deleted. This can&apos;t be undone. To stop a live workshop, set it
+              to Closed instead.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

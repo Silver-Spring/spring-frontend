@@ -26,28 +26,12 @@ export const workshopAdminSchema = z
     feedbackFormUrl: optionalUrl,
     resourcesNote: z.string().trim(),
   })
-  .refine((v) => !v.startsAt || !v.endsAt || new Date(`${v.endsAt}:00+05:30`) > new Date(`${v.startsAt}:00+05:30`), {
+  .refine((v) => !v.startsAt || !v.endsAt || new Date(v.endsAt) > new Date(v.startsAt), {
     message: 'End time must be after the start time',
     path: ['endsAt'],
   });
 
 export type WorkshopAdminValues = z.infer<typeof workshopAdminSchema>;
-
-/** ISO instant to the `YYYY-MM-DDTHH:mm` value a datetime-local input expects, in IST. */
-export const isoToIstInput = (iso: string) => {
-  const parts = new Intl.DateTimeFormat('sv-SE', {
-    timeZone: 'Asia/Kolkata',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    hourCycle: 'h23',
-  }).format(new Date(iso));
-  return parts.replace(' ', 'T');
-};
-
-export const istInputToIso = (value: string) => `${value}:00+05:30`;
 
 export const slugify = (title: string) =>
   title

@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Form, FormControl, FormField } from '@/components/ui/form';
+import { DateTimePicker } from '@/components/ui/date-time-picker';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -25,8 +26,6 @@ import {
   useUpdateWorkshop,
 } from '../hooks/use-admin-workshops';
 import {
-  isoToIstInput,
-  istInputToIso,
   slugify,
   workshopAdminSchema,
   type WorkshopAdminValues,
@@ -61,8 +60,8 @@ const toDefaults = (workshop?: AdminWorkshopEventFieldsFragment): WorkshopAdminV
     subtitle: event.subtitle ?? '',
     speakerName: speaker?.name ?? '',
     speakerRole: speaker?.role ?? '',
-    startsAt: isoToIstInput(event.startsAt),
-    endsAt: isoToIstInput(event.endsAt),
+    startsAt: event.startsAt,
+    endsAt: event.endsAt,
     status: event.status as WorkshopAdminValues['status'],
     capacity: event.capacity ? String(event.capacity) : '',
     slug: event.slug,
@@ -108,8 +107,8 @@ export const WorkshopForm = ({ workshop }: WorkshopFormProps) => {
         })),
       ],
       bannerImageUrl: existing?.bannerImageUrl ?? null,
-      startsAt: istInputToIso(values.startsAt),
-      endsAt: istInputToIso(values.endsAt),
+      startsAt: values.startsAt,
+      endsAt: values.endsAt,
       formatLabel: values.formatLabel || 'Online',
       capacity: values.capacity ? Number(values.capacity) : null,
       joiningUrl: values.joiningUrl || null,
@@ -219,11 +218,14 @@ export const WorkshopForm = ({ workshop }: WorkshopFormProps) => {
                   label="Date and start time"
                   where="On page"
                   required
-                  hint="Shows as the big date block, and the weekday is worked out for you. Times are in IST. The time itself goes in the emails and calendar invite, not on the page."
+                  hint="Shows as the big date block, and the weekday is worked out for you. Pick the time as it runs in India (IST). The time itself goes in the emails and calendar invite, not on the page."
                 >
-                  <FormControl>
-                    <Input {...field} type="datetime-local" className="sm:max-w-64" />
-                  </FormControl>
+                  <DateTimePicker
+                    id={field.name}
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder="Pick a date and time"
+                  />
                 </WorkshopField>
               )}
             />
@@ -312,9 +314,12 @@ export const WorkshopForm = ({ workshop }: WorkshopFormProps) => {
                   required
                   hint="Used in the calendar invite and emails. Must be after the start time."
                 >
-                  <FormControl>
-                    <Input {...field} type="datetime-local" className="sm:max-w-64" />
-                  </FormControl>
+                  <DateTimePicker
+                    id={field.name}
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder="Pick a date and time"
+                  />
                 </WorkshopField>
               )}
             />
