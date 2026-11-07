@@ -29,6 +29,7 @@ import {
   Home,
   LayoutDashboard,
   LogOut,
+  CalendarDays,
   Mail,
   Ticket,
   Users,
@@ -63,6 +64,7 @@ const navGroups = [
     items: [
       { title: 'Users', url: '/admin/users', icon: Users, exact: false },
       { title: 'Reminders', url: '/admin/reminders', icon: Mail, exact: false },
+      { title: 'Workshops', url: '/admin/workshops', icon: CalendarDays, exact: false },
     ],
   },
 ];

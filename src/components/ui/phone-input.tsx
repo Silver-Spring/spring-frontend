@@ -10,12 +10,13 @@ import { cn } from '@/lib/utils';
 export interface PhoneInputProps
   extends Omit<React.ComponentProps<typeof InputGroupInput>, 'type'> {
   countryCode?: string;
+  groupClassName?: string;
 }
 
 const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
-  ({ className, countryCode = '+91', ...props }, ref) => {
+  ({ className, groupClassName, countryCode = '+91', ...props }, ref) => {
     return (
-      <InputGroup>
+      <InputGroup className={groupClassName}>
         <InputGroupAddon>
           <InputGroupText>{countryCode}</InputGroupText>
         </InputGroupAddon>

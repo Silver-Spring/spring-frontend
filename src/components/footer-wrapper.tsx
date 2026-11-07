@@ -8,6 +8,7 @@ export function FooterWrapper() {
 
   const shouldHideFooter =
     pathname?.startsWith('/admin') ||
+    pathname?.startsWith('/workshops') ||
     (pathname?.startsWith('/assessment/') && pathname !== '/assessment');
 
   if (shouldHideFooter) {
