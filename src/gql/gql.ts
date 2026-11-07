@@ -105,6 +105,15 @@ type Documents = {
     "\n  mutation CreateWorkbookOrder($input: CreateWorkbookOrderInput!) {\n    createWorkbookOrder(input: $input) {\n      orderId\n      amount\n      originalAmount\n      discountAmount\n      currency\n      razorpayKeyId\n      couponApplied\n      couponMessage\n      isFree\n    }\n  }\n": typeof types.CreateWorkbookOrderDocument,
     "\n  mutation VerifyWorkbookPayment($input: VerifyWorkbookPaymentInput!) {\n    verifyWorkbookPayment(input: $input) {\n      success\n      purchaseId\n      message\n    }\n  }\n": typeof types.VerifyWorkbookPaymentDocument,
     "\n  query WorkbookStatus {\n    currentUserWorkbookStatus {\n      hasPurchased\n      purchasedAt\n      purchaseId\n    }\n  }\n": typeof types.WorkbookStatusDocument,
+    "\n  query AdminWorkshopEvents {\n    adminWorkshopEvents {\n      ...AdminWorkshopEventFields\n    }\n  }\n": typeof types.AdminWorkshopEventsDocument,
+    "\n  query AdminWorkshopEvent($id: UUID!) {\n    adminWorkshopEvent(id: $id) {\n      ...AdminWorkshopEventFields\n    }\n  }\n": typeof types.AdminWorkshopEventDocument,
+    "\n  fragment AdminWorkshopEventFields on AdminWorkshopEvent {\n    joiningUrl\n    feedbackFormUrl\n    resourcesNote\n    registrationCount\n    event {\n      id\n      slug\n      title\n      subtitle\n      description\n      programme\n      takeaways\n      speakers {\n        name\n        role\n        photoUrl\n      }\n      bannerImageUrl\n      startsAt\n      endsAt\n      formatLabel\n      capacity\n      status\n      registrationOpen\n      spotsLeft\n    }\n  }\n": typeof types.AdminWorkshopEventFieldsFragmentDoc,
+    "\n  mutation AdminCreateWorkshopEvent($input: WorkshopEventInput!) {\n    adminCreateWorkshopEvent(input: $input) {\n      ...AdminWorkshopEventFields\n    }\n  }\n": typeof types.AdminCreateWorkshopEventDocument,
+    "\n  mutation AdminUpdateWorkshopEvent($id: UUID!, $input: WorkshopEventInput!) {\n    adminUpdateWorkshopEvent(id: $id, input: $input) {\n      ...AdminWorkshopEventFields\n    }\n  }\n": typeof types.AdminUpdateWorkshopEventDocument,
+    "\n  mutation AdminSetWorkshopEventStatus($id: UUID!, $status: String!) {\n    adminSetWorkshopEventStatus(id: $id, status: $status) {\n      ...AdminWorkshopEventFields\n    }\n  }\n": typeof types.AdminSetWorkshopEventStatusDocument,
+    "\n  mutation AdminDeleteWorkshopEvent($id: UUID!) {\n    adminDeleteWorkshopEvent(id: $id)\n  }\n": typeof types.AdminDeleteWorkshopEventDocument,
+    "\n  mutation RegisterForWorkshop($input: RegisterForWorkshopInput!) {\n    registerForWorkshop(input: $input) {\n      success\n      eventTitle\n      startsAt\n    }\n  }\n": typeof types.RegisterForWorkshopDocument,
+    "\n  query WorkshopEventBySlug($slug: String!) {\n    workshopEventBySlug(slug: $slug) {\n      id\n      slug\n      title\n      subtitle\n      speakers {\n        name\n        role\n      }\n      startsAt\n      endsAt\n      status\n      registrationOpen\n      spotsLeft\n    }\n  }\n": typeof types.WorkshopEventBySlugDocument,
 };
 const documents: Documents = {
     "\n  mutation ActivateAssessmentType($code: String!) {\n    activateAssessmentType(code: $code) {\n      success\n      message\n      assessmentType {\n        code\n        isActive\n      }\n    }\n  }\n": types.ActivateAssessmentTypeDocument,
@@ -198,6 +207,15 @@ const documents: Documents = {
     "\n  mutation CreateWorkbookOrder($input: CreateWorkbookOrderInput!) {\n    createWorkbookOrder(input: $input) {\n      orderId\n      amount\n      originalAmount\n      discountAmount\n      currency\n      razorpayKeyId\n      couponApplied\n      couponMessage\n      isFree\n    }\n  }\n": types.CreateWorkbookOrderDocument,
     "\n  mutation VerifyWorkbookPayment($input: VerifyWorkbookPaymentInput!) {\n    verifyWorkbookPayment(input: $input) {\n      success\n      purchaseId\n      message\n    }\n  }\n": types.VerifyWorkbookPaymentDocument,
     "\n  query WorkbookStatus {\n    currentUserWorkbookStatus {\n      hasPurchased\n      purchasedAt\n      purchaseId\n    }\n  }\n": types.WorkbookStatusDocument,
+    "\n  query AdminWorkshopEvents {\n    adminWorkshopEvents {\n      ...AdminWorkshopEventFields\n    }\n  }\n": types.AdminWorkshopEventsDocument,
+    "\n  query AdminWorkshopEvent($id: UUID!) {\n    adminWorkshopEvent(id: $id) {\n      ...AdminWorkshopEventFields\n    }\n  }\n": types.AdminWorkshopEventDocument,
+    "\n  fragment AdminWorkshopEventFields on AdminWorkshopEvent {\n    joiningUrl\n    feedbackFormUrl\n    resourcesNote\n    registrationCount\n    event {\n      id\n      slug\n      title\n      subtitle\n      description\n      programme\n      takeaways\n      speakers {\n        name\n        role\n        photoUrl\n      }\n      bannerImageUrl\n      startsAt\n      endsAt\n      formatLabel\n      capacity\n      status\n      registrationOpen\n      spotsLeft\n    }\n  }\n": types.AdminWorkshopEventFieldsFragmentDoc,
+    "\n  mutation AdminCreateWorkshopEvent($input: WorkshopEventInput!) {\n    adminCreateWorkshopEvent(input: $input) {\n      ...AdminWorkshopEventFields\n    }\n  }\n": types.AdminCreateWorkshopEventDocument,
+    "\n  mutation AdminUpdateWorkshopEvent($id: UUID!, $input: WorkshopEventInput!) {\n    adminUpdateWorkshopEvent(id: $id, input: $input) {\n      ...AdminWorkshopEventFields\n    }\n  }\n": types.AdminUpdateWorkshopEventDocument,
+    "\n  mutation AdminSetWorkshopEventStatus($id: UUID!, $status: String!) {\n    adminSetWorkshopEventStatus(id: $id, status: $status) {\n      ...AdminWorkshopEventFields\n    }\n  }\n": types.AdminSetWorkshopEventStatusDocument,
+    "\n  mutation AdminDeleteWorkshopEvent($id: UUID!) {\n    adminDeleteWorkshopEvent(id: $id)\n  }\n": types.AdminDeleteWorkshopEventDocument,
+    "\n  mutation RegisterForWorkshop($input: RegisterForWorkshopInput!) {\n    registerForWorkshop(input: $input) {\n      success\n      eventTitle\n      startsAt\n    }\n  }\n": types.RegisterForWorkshopDocument,
+    "\n  query WorkshopEventBySlug($slug: String!) {\n    workshopEventBySlug(slug: $slug) {\n      id\n      slug\n      title\n      subtitle\n      speakers {\n        name\n        role\n      }\n      startsAt\n      endsAt\n      status\n      registrationOpen\n      spotsLeft\n    }\n  }\n": types.WorkshopEventBySlugDocument,
 };
 
 /**
@@ -578,6 +596,42 @@ export function graphql(source: "\n  mutation VerifyWorkbookPayment($input: Veri
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query WorkbookStatus {\n    currentUserWorkbookStatus {\n      hasPurchased\n      purchasedAt\n      purchaseId\n    }\n  }\n"): (typeof documents)["\n  query WorkbookStatus {\n    currentUserWorkbookStatus {\n      hasPurchased\n      purchasedAt\n      purchaseId\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query AdminWorkshopEvents {\n    adminWorkshopEvents {\n      ...AdminWorkshopEventFields\n    }\n  }\n"): (typeof documents)["\n  query AdminWorkshopEvents {\n    adminWorkshopEvents {\n      ...AdminWorkshopEventFields\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query AdminWorkshopEvent($id: UUID!) {\n    adminWorkshopEvent(id: $id) {\n      ...AdminWorkshopEventFields\n    }\n  }\n"): (typeof documents)["\n  query AdminWorkshopEvent($id: UUID!) {\n    adminWorkshopEvent(id: $id) {\n      ...AdminWorkshopEventFields\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  fragment AdminWorkshopEventFields on AdminWorkshopEvent {\n    joiningUrl\n    feedbackFormUrl\n    resourcesNote\n    registrationCount\n    event {\n      id\n      slug\n      title\n      subtitle\n      description\n      programme\n      takeaways\n      speakers {\n        name\n        role\n        photoUrl\n      }\n      bannerImageUrl\n      startsAt\n      endsAt\n      formatLabel\n      capacity\n      status\n      registrationOpen\n      spotsLeft\n    }\n  }\n"): (typeof documents)["\n  fragment AdminWorkshopEventFields on AdminWorkshopEvent {\n    joiningUrl\n    feedbackFormUrl\n    resourcesNote\n    registrationCount\n    event {\n      id\n      slug\n      title\n      subtitle\n      description\n      programme\n      takeaways\n      speakers {\n        name\n        role\n        photoUrl\n      }\n      bannerImageUrl\n      startsAt\n      endsAt\n      formatLabel\n      capacity\n      status\n      registrationOpen\n      spotsLeft\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation AdminCreateWorkshopEvent($input: WorkshopEventInput!) {\n    adminCreateWorkshopEvent(input: $input) {\n      ...AdminWorkshopEventFields\n    }\n  }\n"): (typeof documents)["\n  mutation AdminCreateWorkshopEvent($input: WorkshopEventInput!) {\n    adminCreateWorkshopEvent(input: $input) {\n      ...AdminWorkshopEventFields\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation AdminUpdateWorkshopEvent($id: UUID!, $input: WorkshopEventInput!) {\n    adminUpdateWorkshopEvent(id: $id, input: $input) {\n      ...AdminWorkshopEventFields\n    }\n  }\n"): (typeof documents)["\n  mutation AdminUpdateWorkshopEvent($id: UUID!, $input: WorkshopEventInput!) {\n    adminUpdateWorkshopEvent(id: $id, input: $input) {\n      ...AdminWorkshopEventFields\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation AdminSetWorkshopEventStatus($id: UUID!, $status: String!) {\n    adminSetWorkshopEventStatus(id: $id, status: $status) {\n      ...AdminWorkshopEventFields\n    }\n  }\n"): (typeof documents)["\n  mutation AdminSetWorkshopEventStatus($id: UUID!, $status: String!) {\n    adminSetWorkshopEventStatus(id: $id, status: $status) {\n      ...AdminWorkshopEventFields\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation AdminDeleteWorkshopEvent($id: UUID!) {\n    adminDeleteWorkshopEvent(id: $id)\n  }\n"): (typeof documents)["\n  mutation AdminDeleteWorkshopEvent($id: UUID!) {\n    adminDeleteWorkshopEvent(id: $id)\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation RegisterForWorkshop($input: RegisterForWorkshopInput!) {\n    registerForWorkshop(input: $input) {\n      success\n      eventTitle\n      startsAt\n    }\n  }\n"): (typeof documents)["\n  mutation RegisterForWorkshop($input: RegisterForWorkshopInput!) {\n    registerForWorkshop(input: $input) {\n      success\n      eventTitle\n      startsAt\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query WorkshopEventBySlug($slug: String!) {\n    workshopEventBySlug(slug: $slug) {\n      id\n      slug\n      title\n      subtitle\n      speakers {\n        name\n        role\n      }\n      startsAt\n      endsAt\n      status\n      registrationOpen\n      spotsLeft\n    }\n  }\n"): (typeof documents)["\n  query WorkshopEventBySlug($slug: String!) {\n    workshopEventBySlug(slug: $slug) {\n      id\n      slug\n      title\n      subtitle\n      speakers {\n        name\n        role\n      }\n      startsAt\n      endsAt\n      status\n      registrationOpen\n      spotsLeft\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

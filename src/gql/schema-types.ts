@@ -155,6 +155,15 @@ export type AdminWorkbookStatsPayload = {
   uniqueBuyers: Scalars['Int']['output'];
 };
 
+export type AdminWorkshopEvent = {
+  __typename?: 'AdminWorkshopEvent';
+  event: WorkshopEvent;
+  feedbackFormUrl?: Maybe<Scalars['String']['output']>;
+  joiningUrl?: Maybe<Scalars['String']['output']>;
+  registrationCount: Scalars['Int']['output'];
+  resourcesNote?: Maybe<Scalars['String']['output']>;
+};
+
 /** Age cohort comparison (same age range, any gender) */
 export type AgeCohort = {
   __typename?: 'AgeCohort';
@@ -5178,6 +5187,7 @@ export type Mutation = {
   activateAssessmentType?: Maybe<AssessmentTypePayload>;
   adminActivateCoupon?: Maybe<ActivateCouponPayload>;
   adminCreateCoupon?: Maybe<CreateCouponPayload>;
+  adminCreateWorkshopEvent: AdminWorkshopEvent;
   adminDeactivateCoupon?: Maybe<DeactivateCouponPayload>;
   adminDeleteCoupon?: Maybe<DeleteCouponPayload>;
   /**
@@ -5186,8 +5196,13 @@ export type Mutation = {
    * This action cannot be undone. Only administrators can delete users.
    */
   adminDeleteUser?: Maybe<AdminDeleteUserPayload>;
+  adminDeleteWorkshopEvent: Scalars['Boolean']['output'];
+  adminDeleteWorkshopRegistration: Scalars['Boolean']['output'];
   adminSendReminderEmails?: Maybe<SendReminderEmailsPayload>;
+  adminSendWorkshopEmail: SendWorkshopEmailPayload;
+  adminSetWorkshopEventStatus: AdminWorkshopEvent;
   adminUpdateCoupon?: Maybe<UpdateCouponPayload>;
+  adminUpdateWorkshopEvent: AdminWorkshopEvent;
   /**
    * Bulk create multiple questions for a section (admin only)
    * Useful for importing questions from CSV/JSON
@@ -5292,6 +5307,7 @@ export type Mutation = {
   recomputeAutoStageRanges?: Maybe<RecomputeStageRangesPayload>;
   /** Use this mutation to create an account on our system. This may only be used if you are logged out. */
   register?: Maybe<RegisterPayload>;
+  registerForWorkshop: RegisterForWorkshopPayload;
   /** Resend assessment report email (admin only) */
   resendAssessmentReport?: Maybe<ResendReportPayload>;
   /** After triggering forgotPassword, you'll be sent a reset token. Combine this with your user ID and a new password to reset your password. */
@@ -5400,6 +5416,12 @@ export type MutationAdminCreateCouponArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationAdminCreateWorkshopEventArgs = {
+  input: WorkshopEventInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationAdminDeactivateCouponArgs = {
   input: DeactivateCouponInput;
 };
@@ -5418,14 +5440,48 @@ export type MutationAdminDeleteUserArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationAdminDeleteWorkshopEventArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationAdminDeleteWorkshopRegistrationArgs = {
+  registrationId: Scalars['UUID']['input'];
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationAdminSendReminderEmailsArgs = {
   input: SendReminderEmailsInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationAdminSendWorkshopEmailArgs = {
+  customMessage?: InputMaybe<Scalars['String']['input']>;
+  emailType: Scalars['String']['input'];
+  eventId: Scalars['UUID']['input'];
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationAdminSetWorkshopEventStatusArgs = {
+  id: Scalars['UUID']['input'];
+  status: Scalars['String']['input'];
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationAdminUpdateCouponArgs = {
   input: UpdateCouponInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationAdminUpdateWorkshopEventArgs = {
+  id: Scalars['UUID']['input'];
+  input: WorkshopEventInput;
 };
 
 
@@ -5654,6 +5710,12 @@ export type MutationRecomputeAutoStageRangesArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationRegisterArgs = {
   input: RegisterInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationRegisterForWorkshopArgs = {
+  input: RegisterForWorkshopInput;
 };
 
 
@@ -6397,6 +6459,10 @@ export type Query = {
   adminWorkbookPurchases?: Maybe<AdminWorkbookPurchasesPayload>;
   /** Admin only: workbook purchase totals for the dashboard. */
   adminWorkbookStats?: Maybe<AdminWorkbookStatsPayload>;
+  adminWorkshopEmailPendingCount: Scalars['Int']['output'];
+  adminWorkshopEvent?: Maybe<AdminWorkshopEvent>;
+  adminWorkshopEvents: Array<AdminWorkshopEvent>;
+  adminWorkshopRegistrations: Array<WorkshopRegistration>;
   /**
    * Get list of all users in the system (admin only)
    * Includes user details and admin status for role management
@@ -6581,6 +6647,7 @@ export type Query = {
    * Returns count and percentage for each score range: 0-20, 21-40, 41-60, 61-80, 81-100
    */
   scoreDistribution?: Maybe<ScoreDistributionPayload>;
+  upcomingWorkshopEvents: Array<WorkshopEvent>;
   /** Get a single `User`. */
   user?: Maybe<User>;
   /** Reads and enables pagination through a set of `UserReminderStat`. */
@@ -6601,6 +6668,7 @@ export type Query = {
   workbookPurchase?: Maybe<WorkbookPurchase>;
   /** Reads and enables pagination through a set of `WorkbookPurchase`. */
   workbookPurchases?: Maybe<WorkbookPurchasesConnection>;
+  workshopEventBySlug?: Maybe<WorkshopEvent>;
 };
 
 
@@ -6661,6 +6729,25 @@ export type QueryAdminSettlementsListArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryAdminWorkbookPurchasesArgs = {
   input?: InputMaybe<AdminWorkbookPurchasesFilterInput>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAdminWorkshopEmailPendingCountArgs = {
+  emailType: Scalars['String']['input'];
+  eventId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAdminWorkshopEventArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAdminWorkshopRegistrationsArgs = {
+  eventId: Scalars['UUID']['input'];
 };
 
 
@@ -7247,6 +7334,12 @@ export type QueryWorkbookPurchasesArgs = {
   orderBy?: InputMaybe<Array<WorkbookPurchasesOrderBy>>;
 };
 
+
+/** The root query type which gives access points into the data universe. */
+export type QueryWorkshopEventBySlugArgs = {
+  slug: Scalars['String']['input'];
+};
+
 export type QuestionSummaryItem = {
   __typename?: 'QuestionSummaryItem';
   answerOptions?: Maybe<Scalars['JSON']['output']>;
@@ -7319,6 +7412,22 @@ export type RecomputeStageRangesPayload = {
   __typename?: 'RecomputeStageRangesPayload';
   message?: Maybe<Scalars['String']['output']>;
   stages: Array<AssessmentTypeStage>;
+  success: Scalars['Boolean']['output'];
+};
+
+export type RegisterForWorkshopInput = {
+  consent: Scalars['Boolean']['input'];
+  email: Scalars['String']['input'];
+  fullName: Scalars['String']['input'];
+  phone: Scalars['String']['input'];
+  slug: Scalars['String']['input'];
+  source?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type RegisterForWorkshopPayload = {
+  __typename?: 'RegisterForWorkshopPayload';
+  eventTitle: Scalars['String']['output'];
+  startsAt: Scalars['Datetime']['output'];
   success: Scalars['Boolean']['output'];
 };
 
@@ -7426,12 +7535,21 @@ export enum ReminderEmailsOrderBy {
   UserIdDesc = 'USER_ID_DESC'
 }
 
+/**
+ * Reminder segments. Active: signup_idle, workbook_no_test,
+ * assessment_no_workbook. Deprecated (retained for historical reminder_emails
+ * rows, no longer produced): no_payment_attempt, payment_abandoned,
+ * payment_failed, paid_no_test, test_incomplete.
+ */
 export enum ReminderType {
+  AssessmentNoWorkbook = 'ASSESSMENT_NO_WORKBOOK',
   NoPaymentAttempt = 'NO_PAYMENT_ATTEMPT',
   PaidNoTest = 'PAID_NO_TEST',
   PaymentAbandoned = 'PAYMENT_ABANDONED',
   PaymentFailed = 'PAYMENT_FAILED',
-  TestIncomplete = 'TEST_INCOMPLETE'
+  SignupIdle = 'SIGNUP_IDLE',
+  TestIncomplete = 'TEST_INCOMPLETE',
+  WorkbookNoTest = 'WORKBOOK_NO_TEST'
 }
 
 export type ResendReportInput = {
@@ -7535,6 +7653,15 @@ export type SendReminderEmailsPayload = {
   message?: Maybe<Scalars['String']['output']>;
   queuedCount: Scalars['Int']['output'];
   success: Scalars['Boolean']['output'];
+};
+
+export type SendWorkshopEmailPayload = {
+  __typename?: 'SendWorkshopEmailPayload';
+  failedCount: Scalars['Int']['output'];
+  failures: Array<Scalars['String']['output']>;
+  remainingCount: Scalars['Int']['output'];
+  sentCount: Scalars['Int']['output'];
+  skippedCount: Scalars['Int']['output'];
 };
 
 export type SessionQuestionDetail = {
@@ -9056,3 +9183,74 @@ export enum WorkbookPurchasesOrderBy {
   UserIdAsc = 'USER_ID_ASC',
   UserIdDesc = 'USER_ID_DESC'
 }
+
+export type WorkshopEmailStatus = {
+  __typename?: 'WorkshopEmailStatus';
+  emailType: Scalars['String']['output'];
+  error?: Maybe<Scalars['String']['output']>;
+  sentAt?: Maybe<Scalars['Datetime']['output']>;
+  status: Scalars['String']['output'];
+};
+
+export type WorkshopEvent = {
+  __typename?: 'WorkshopEvent';
+  bannerImageUrl?: Maybe<Scalars['String']['output']>;
+  capacity?: Maybe<Scalars['Int']['output']>;
+  description: Scalars['String']['output'];
+  endsAt: Scalars['Datetime']['output'];
+  formatLabel: Scalars['String']['output'];
+  id: Scalars['UUID']['output'];
+  programme: Array<Scalars['String']['output']>;
+  registrationOpen: Scalars['Boolean']['output'];
+  slug: Scalars['String']['output'];
+  speakers: Array<WorkshopSpeaker>;
+  spotsLeft?: Maybe<Scalars['Int']['output']>;
+  startsAt: Scalars['Datetime']['output'];
+  status: Scalars['String']['output'];
+  subtitle?: Maybe<Scalars['String']['output']>;
+  takeaways: Array<Scalars['String']['output']>;
+  title: Scalars['String']['output'];
+};
+
+export type WorkshopEventInput = {
+  bannerImageUrl?: InputMaybe<Scalars['String']['input']>;
+  capacity?: InputMaybe<Scalars['Int']['input']>;
+  description: Scalars['String']['input'];
+  endsAt: Scalars['Datetime']['input'];
+  feedbackFormUrl?: InputMaybe<Scalars['String']['input']>;
+  formatLabel?: InputMaybe<Scalars['String']['input']>;
+  joiningUrl?: InputMaybe<Scalars['String']['input']>;
+  programme: Array<Scalars['String']['input']>;
+  resourcesNote?: InputMaybe<Scalars['String']['input']>;
+  slug: Scalars['String']['input'];
+  speakers: Array<WorkshopSpeakerInput>;
+  startsAt: Scalars['Datetime']['input'];
+  subtitle?: InputMaybe<Scalars['String']['input']>;
+  takeaways: Array<Scalars['String']['input']>;
+  title: Scalars['String']['input'];
+};
+
+export type WorkshopRegistration = {
+  __typename?: 'WorkshopRegistration';
+  consentAt: Scalars['Datetime']['output'];
+  createdAt: Scalars['Datetime']['output'];
+  email: Scalars['String']['output'];
+  emails: Array<WorkshopEmailStatus>;
+  fullName: Scalars['String']['output'];
+  id: Scalars['UUID']['output'];
+  phone: Scalars['String']['output'];
+  source?: Maybe<Scalars['String']['output']>;
+};
+
+export type WorkshopSpeaker = {
+  __typename?: 'WorkshopSpeaker';
+  name: Scalars['String']['output'];
+  photoUrl?: Maybe<Scalars['String']['output']>;
+  role: Scalars['String']['output'];
+};
+
+export type WorkshopSpeakerInput = {
+  name: Scalars['String']['input'];
+  photoUrl?: InputMaybe<Scalars['String']['input']>;
+  role: Scalars['String']['input'];
+};
