@@ -15,11 +15,11 @@ export const WorkshopEditPage = ({ id }: { id: string }) => {
       </div>
     );
   }
-  if (!workshop) return <p className="p-6">Workshop not found.</p>;
+  if (!workshop) return <p className="p-6">Webinar not found.</p>;
 
   return (
     <div className="max-w-4xl space-y-6 p-6">
-      <AdminPageHeader title="Edit workshop" description={workshop.event.title} />
+      <AdminPageHeader title="Edit webinar" description={workshop.event.title} />
       <WorkshopForm workshop={workshop} />
     </div>
   );

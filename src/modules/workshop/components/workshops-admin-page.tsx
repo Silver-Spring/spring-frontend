@@ -60,10 +60,10 @@ export const WorkshopsAdminPage = () => {
     if (!toDelete) return;
     try {
       await deleteWorkshop({ variables: { id: toDelete.id } });
-      toast.success('Workshop deleted');
+      toast.success('Webinar deleted');
       await refetch();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Could not delete the workshop');
+      toast.error(error instanceof Error ? error.message : 'Could not delete the webinar');
     } finally {
       setToDelete(null);
     }
@@ -72,15 +72,15 @@ export const WorkshopsAdminPage = () => {
   return (
     <div className="min-w-0 space-y-6 p-6">
       <AdminPageHeader
-        title="Workshops"
-        description="Create workshops, set their status and share the page link."
+        title="Webinars"
+        description="Create webinars, set their status and share the page link."
         onRefresh={() => refetch()}
         refreshing={loading}
         actions={
           <Button asChild className="gap-2">
             <Link href="/admin/workshops/new">
               <Plus className="size-4" />
-              New workshop
+              New webinar
             </Link>
           </Button>
         }
@@ -138,7 +138,7 @@ export const WorkshopsAdminPage = () => {
                           <DropdownMenuItem asChild>
                             <Link href={`/admin/workshops/${event.id}`}>
                               <Pencil className="mr-2 h-4 w-4" />
-                              Edit workshop
+                              Edit webinar
                             </Link>
                           </DropdownMenuItem>
                           <DropdownMenuItem asChild>
@@ -175,7 +175,7 @@ export const WorkshopsAdminPage = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>Delete {toDelete?.title}?</AlertDialogTitle>
             <AlertDialogDescription>
-              Only drafts can be deleted. This can&apos;t be undone. To stop a live workshop, set it
+              Only drafts can be deleted. This can&apos;t be undone. To stop a live webinar, set it
               to Closed instead.
             </AlertDialogDescription>
           </AlertDialogHeader>

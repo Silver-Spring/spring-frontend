@@ -4,8 +4,8 @@ import { WorkshopForm } from '@/modules/workshop/components/workshop-form';
 const NewWorkshopPage = () => (
   <div className="max-w-4xl space-y-6 p-6">
     <AdminPageHeader
-      title="New workshop"
-      description="Each field says where it appears. New workshops start as a draft."
+      title="New webinar"
+      description="Each field says where it appears. New webinars start as a draft."
     />
     <WorkshopForm />
   </div>

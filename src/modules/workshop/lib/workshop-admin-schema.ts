@@ -11,8 +11,8 @@ export const workshopAdminSchema = z
   .object({
     title: z.string().trim().min(1, 'Title is required'),
     subtitle: z.string().trim(),
-    speakerName: z.string().trim().min(1, 'Add the speaker who leads the workshop'),
-    speakerRole: z.string().trim().min(1, 'Add the speaker role, e.g. Founder'),
+    speakerName: z.string().trim().min(1, 'Add the speaker who leads the webinar'),
+    speakerRole: z.string().trim().min(1, 'Add the speaker role, e.g. Retirement Transition Coach'),
     startsAt: z.string().min(1, 'Start date and time is required'),
     endsAt: z.string().min(1, 'End time is required'),
     status: z.enum(WORKSHOP_STATUSES),

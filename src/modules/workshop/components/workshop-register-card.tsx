@@ -118,7 +118,7 @@ export const WorkshopRegisterCard = ({ slug, status, registrationOpen }: Worksho
       <Notice
         icon={<Lock className="size-6" />}
         title="Registration is closed"
-        text="This workshop is no longer taking registrations. If you registered, look out for the joining link and, after the session, resources and a feedback form by email."
+        text="This webinar is no longer taking registrations. If you registered, look out for the joining link and, after the session, resources and a feedback form by email."
         prefix="Questions? Write to"
       />
     );
@@ -128,7 +128,7 @@ export const WorkshopRegisterCard = ({ slug, status, registrationOpen }: Worksho
     return (
       <Notice
         icon={<Lock className="size-6" />}
-        title="This workshop isn't open yet"
+        title="This webinar isn't open yet"
         text="This page is a draft preview, visible only to admins. Set the status to Published to open registration."
         prefix="Questions? Write to"
       />
@@ -139,16 +139,16 @@ export const WorkshopRegisterCard = ({ slug, status, registrationOpen }: Worksho
     return (
       <Notice
         icon={<Users className="size-6" />}
-        title="This workshop is full"
+        title="This webinar is full"
         text="All places have been taken. If you already registered, your place is safe and the joining link will reach you by email."
-        prefix="Want to hear about the next workshop? Write to"
+        prefix="Want to hear about the next webinar? Write to"
       />
     );
   }
 
   return (
     <Shell>
-      <h2 className="text-3xl font-bold tracking-tight">Register for the workshop</h2>
+      <h2 className="text-3xl font-bold tracking-tight">Register for the webinar</h2>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} noValidate className="flex flex-col gap-5">
           <FormField
@@ -198,7 +198,7 @@ export const WorkshopRegisterCard = ({ slug, status, registrationOpen }: Worksho
             )}
           />
           <p className="text-sm leading-relaxed text-muted-foreground">
-            By registering, you agree to receive emails about this workshop: your confirmation, the
+            By registering, you agree to receive emails about this webinar: your confirmation, the
             joining link and reminders.
           </p>
           <Button type="submit" size="lg" disabled={loading} className="h-13 rounded-full text-base">

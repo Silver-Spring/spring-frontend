@@ -48,9 +48,9 @@ export const WorkshopPage = ({ slug }: { slug: string }) => {
       <PageShell>
         <div className="relative z-10 flex flex-col gap-6">
           <Brand />
-          <h1 className="text-4xl font-bold tracking-tight">We couldn&apos;t find this workshop</h1>
+          <h1 className="text-4xl font-bold tracking-tight">We couldn&apos;t find this webinar</h1>
           <p className="max-w-md text-lg">
-            The link may be incorrect, or the workshop is not open yet. Write to
+            The link may be incorrect, or the webinar is not open yet. Write to
             support@silverspring.in and we&apos;ll help.
           </p>
         </div>
@@ -85,9 +85,10 @@ export const WorkshopPage = ({ slug }: { slug: string }) => {
           </h1>
           <p className="max-w-xl text-lg leading-8 text-[oklch(0.32_0.04_155)] sm:text-xl">
             {description.host}
-            {description.speaker && (
+            {description.speakerName && (
               <>
-                , led by <strong className="font-semibold">{description.speaker}</strong>
+                , led by <strong className="font-semibold">{description.speakerName}</strong>
+                {description.speakerRole && `, ${description.speakerRole}`}
               </>
             )}
             .

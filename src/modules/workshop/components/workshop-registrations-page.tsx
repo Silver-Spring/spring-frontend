@@ -64,7 +64,7 @@ export const WorkshopRegistrationsPage = ({ id }: { id: string }) => {
       </div>
     );
   }
-  if (!workshop) return <p className="p-6">Workshop not found.</p>;
+  if (!workshop) return <p className="p-6">Webinar not found.</p>;
 
   const { event } = workshop;
 
@@ -94,7 +94,7 @@ export const WorkshopRegistrationsPage = ({ id }: { id: string }) => {
       <div className="space-y-3">
         <Button asChild variant="ghost" size="sm" className="-ml-2 gap-1">
           <Link href="/admin/workshops">
-            <ArrowLeft className="size-4" /> All workshops
+            <ArrowLeft className="size-4" /> All webinars
           </Link>
         </Button>
         <AdminPageHeader
@@ -123,7 +123,7 @@ export const WorkshopRegistrationsPage = ({ id }: { id: string }) => {
             eventId={id}
             type="reminder_day_before"
             title="Day-before reminder"
-            description="Includes the joining link. Needs the joining link on the workshop."
+            description="Includes the joining link. Needs the joining link on the webinar."
             sendLabel="Send day-before reminder"
             onSent={() => refetch()}
           />
@@ -213,7 +213,7 @@ export const WorkshopRegistrationsPage = ({ id }: { id: string }) => {
           <AlertDialogHeader>
             <AlertDialogTitle>Remove {toDelete?.name}?</AlertDialogTitle>
             <AlertDialogDescription>
-              They will no longer receive emails for this workshop and their place is freed. This
+              They will no longer receive emails for this webinar and their place is freed. This
               can&apos;t be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
