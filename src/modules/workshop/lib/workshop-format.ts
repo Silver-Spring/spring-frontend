@@ -22,7 +22,7 @@ type Speaker = { name: string; role: string };
 export const buildWorkshopDescription = (subtitle: string | null | undefined, speaker?: Speaker) => {
   const topic = subtitle?.trim().replace(/\.$/, '');
   const host = topic
-    ? `A workshop hosted by Silver Spring on ${topic}`
-    : 'A workshop hosted by Silver Spring';
-  return { host, speaker: speaker ? `${speaker.role} ${speaker.name}` : '' };
+    ? `A webinar hosted by Silver Spring on ${topic}`
+    : 'A webinar hosted by Silver Spring';
+  return { host, speakerName: speaker?.name ?? '', speakerRole: speaker?.role ?? '' };
 };

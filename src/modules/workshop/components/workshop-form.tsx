@@ -121,16 +121,16 @@ export const WorkshopForm = ({ workshop }: WorkshopFormProps) => {
         ? (await updateWorkshop({ variables: { id: workshop.event.id, input } })).data
             ?.adminUpdateWorkshopEvent
         : (await createWorkshop({ variables: { input } })).data?.adminCreateWorkshopEvent;
-      if (!result) throw new Error('Could not save the workshop');
+      if (!result) throw new Error('Could not save the webinar');
       const saved = unmaskFragment(AdminWorkshopEventFragment, result);
 
       if (saved.event.status !== values.status) {
         await setStatus({ variables: { id: saved.event.id, status: values.status } });
       }
-      toast.success(isEdit ? 'Workshop saved' : 'Workshop created');
+      toast.success(isEdit ? 'Webinar saved' : 'Webinar created');
       router.push('/admin/workshops');
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Could not save the workshop');
+      toast.error(error instanceof Error ? error.message : 'Could not save the webinar');
     }
   };
 
@@ -171,7 +171,7 @@ export const WorkshopForm = ({ workshop }: WorkshopFormProps) => {
                 <WorkshopField
                   label="Topic line"
                   where="On page"
-                  hint="Fills the sentence “A workshop hosted by Silver Spring on …”. Write it in lower case with no full stop. Leave empty to skip the topic."
+                  hint="Fills the sentence “A webinar hosted by Silver Spring on …”. Write it in lower case with no full stop. Leave empty to skip the topic."
                 >
                   <FormControl>
                     <Textarea
@@ -187,7 +187,7 @@ export const WorkshopForm = ({ workshop }: WorkshopFormProps) => {
               label="Lead speaker"
               where="On page"
               required
-              hint="Named in “led by Founder …”. Role first, then name on the page. Other speakers saved earlier are kept but not shown in this design."
+              hint="Shown as “led by Name, Role”, for example “led by Mr. Rajat Mathur, Retirement Transition Coach”. Other speakers saved earlier are kept but not shown in this design."
             >
               <div className="grid gap-3 sm:grid-cols-2">
                 <FormField
@@ -195,7 +195,7 @@ export const WorkshopForm = ({ workshop }: WorkshopFormProps) => {
                   name="speakerRole"
                   render={({ field }) => (
                     <FormControl>
-                      <Input {...field} placeholder="Role, e.g. Founder" />
+                      <Input {...field} placeholder="Role, e.g. Retirement Transition Coach" />
                     </FormControl>
                   )}
                 />
@@ -260,7 +260,7 @@ export const WorkshopForm = ({ workshop }: WorkshopFormProps) => {
                 <WorkshopField
                   label="Capacity"
                   where="Controls the page"
-                  hint="Number of places. When all are taken, the form shows “This workshop is full”. Leave empty for no limit."
+                  hint="Number of places. When all are taken, the form shows “This webinar is full”. Leave empty for no limit."
                 >
                   <FormControl>
                     <Input {...field} inputMode="numeric" placeholder="100" className="sm:max-w-40" />
@@ -377,7 +377,7 @@ export const WorkshopForm = ({ workshop }: WorkshopFormProps) => {
           </Button>
           <Button type="submit" disabled={isSubmitting}>
             {isSubmitting && <Spinner className="size-4" />}
-            {isEdit ? 'Save changes' : 'Create workshop'}
+            {isEdit ? 'Save changes' : 'Create webinar'}
           </Button>
         </div>
       </form>
