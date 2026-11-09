@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Form, FormControl, FormField } from '@/components/ui/form';
-import { DateTimePicker } from '@/components/ui/date-time-picker';
+import { IstDateTimePicker } from './ist-date-time-picker';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -215,12 +215,12 @@ export const WorkshopForm = ({ workshop }: WorkshopFormProps) => {
               name="startsAt"
               render={({ field }) => (
                 <WorkshopField
-                  label="Date and start time"
+                  label="Date and start time (IST)"
                   where="On page"
                   required
                   hint="Shows as the big date block, and the weekday is worked out for you. Pick the time as it runs in India (IST). The time itself goes in the emails and calendar invite, not on the page."
                 >
-                  <DateTimePicker
+                  <IstDateTimePicker
                     id={field.name}
                     value={field.value}
                     onChange={field.onChange}
@@ -309,12 +309,12 @@ export const WorkshopForm = ({ workshop }: WorkshopFormProps) => {
               name="endsAt"
               render={({ field }) => (
                 <WorkshopField
-                  label="End time"
+                  label="End time (IST)"
                   where="Emails only"
                   required
                   hint="Used in the calendar invite and emails. Must be after the start time."
                 >
-                  <DateTimePicker
+                  <IstDateTimePicker
                     id={field.name}
                     value={field.value}
                     onChange={field.onChange}
