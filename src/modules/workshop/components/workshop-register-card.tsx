@@ -104,7 +104,7 @@ export const WorkshopRegisterCard = ({ slug, status, registrationOpen }: Worksho
             <p className="text-base leading-relaxed">
               We&apos;ve sent a confirmation to{' '}
               <strong className="break-all font-semibold">{registeredEmail}</strong>. The joining
-              link will reach you the day before and an hour before the session.
+              link will reach you 24 hours before the session.
             </p>
           </div>
           <SupportLine prefix="No email in a few minutes? Check your spam folder, or write to" />
