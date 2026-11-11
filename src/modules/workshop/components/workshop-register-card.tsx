@@ -171,7 +171,14 @@ export const WorkshopRegisterCard = ({ slug, status, registrationOpen }: Worksho
               <FormItem>
                 <FormLabel>Contact number</FormLabel>
                 <FormControl>
-                  <PhoneInput {...field} placeholder="9876543210" groupClassName="h-13" />
+                  <PhoneInput
+                    {...field}
+                    // Digits only, so spaces or a typed +91 can't use up the 10 characters.
+                    onChange={(event) => field.onChange(event.target.value.replace(/\D/g, ''))}
+                    inputMode="numeric"
+                    placeholder="9876543210"
+                    groupClassName="h-13"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
