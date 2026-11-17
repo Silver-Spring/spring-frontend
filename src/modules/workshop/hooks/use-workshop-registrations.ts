@@ -15,6 +15,7 @@ import {
 
 export const WORKSHOP_EMAIL_TYPES = [
   'confirmation',
+  'registration_thanks',
   'reminder_day_before',
   'reminder_hour_before',
   'thank_you',
