@@ -15,6 +15,7 @@ const SEGMENTS = [
   { value: 'signup_idle', label: 'Signed Up, Idle — verified, no payment, no assessment, no workbook' },
   { value: 'workbook_no_test', label: 'Workbook, No Test — bought the workbook, never started the assessment' },
   { value: 'assessment_no_workbook', label: 'Assessment, No Workbook — finished the assessment, never bought the workbook' },
+  { value: 'webinar_invite', label: 'Webinar Invite — verified, never started the assessment, not registered for Second Innings' },
 ];
 
 export const RemindersPage = () => {

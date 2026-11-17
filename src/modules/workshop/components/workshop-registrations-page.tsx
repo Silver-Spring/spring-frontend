@@ -36,6 +36,7 @@ import { WorkshopEmailCard } from './workshop-email-card';
 
 const EMAIL_LABEL: Record<string, string> = {
   confirmation: 'Confirmation',
+  registration_thanks: 'Registration thank-you',
   reminder_day_before: 'Day before',
   reminder_hour_before: 'Hour before',
   thank_you: 'Thank-you',
@@ -117,6 +118,14 @@ export const WorkshopRegistrationsPage = ({ id }: { id: string }) => {
             title="Confirmation"
             description="Sent automatically when someone registers. Resend it to anyone it didn't reach."
             sendLabel="Resend confirmations"
+            onSent={() => refetch()}
+          />
+          <WorkshopEmailCard
+            eventId={id}
+            type="registration_thanks"
+            title="Thank you for registering"
+            description="What the session covers and that joining details follow later this week. Sent once per registrant."
+            sendLabel="Send registration thank-you"
             onSent={() => refetch()}
           />
           <WorkshopEmailCard
