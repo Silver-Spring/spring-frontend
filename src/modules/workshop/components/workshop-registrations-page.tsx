@@ -14,6 +14,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Spinner } from '@/components/ui/spinner';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Table,
   TableBody,
@@ -23,17 +24,20 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { AdminPageHeader } from '@/modules/admin/components/shared/admin-page-header';
-import { ArrowLeft, Download, Trash2 } from 'lucide-react';
+import { useSaveCampaign } from '@/modules/emails/hooks/use-campaigns';
+import { ArrowLeft, Download, Mail, Trash2 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { useAdminWorkshopEvent } from '../hooks/use-admin-workshops';
 import {
   useDeleteWorkshopRegistration,
   useDownloadRegistrationsCsv,
+  useResendWorkshopConfirmations,
   useWorkshopRegistrations,
 } from '../hooks/use-workshop-registrations';
-import { WorkshopEmailCard } from './workshop-email-card';
+import { WorkshopEmailsTab } from './workshop-emails-tab';
 
 const EMAIL_LABEL: Record<string, string> = {
   confirmation: 'Confirmation',
@@ -59,6 +63,10 @@ export const WorkshopRegistrationsPage = ({ id }: { id: string }) => {
   const { registrations, loading, refetch } = useWorkshopRegistrations(id);
   const [deleteRegistration] = useDeleteWorkshopRegistration();
   const downloadCsv = useDownloadRegistrationsCsv();
+  const router = useRouter();
+  const [saveCampaign, { loading: emailing }] = useSaveCampaign();
+  const [resendConfirmations, { loading: resending }] = useResendWorkshopConfirmations();
+  const [resendOpen, setResendOpen] = useState(false);
   const [toDelete, setToDelete] = useState<{ id: string; name: string } | null>(null);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   // Ignore ids of people removed since they were ticked.
@@ -85,6 +93,63 @@ export const WorkshopRegistrationsPage = ({ id }: { id: string }) => {
   if (!workshop) return <p className="p-6">Webinar not found.</p>;
 
   const { event } = workshop;
+
+  const handleEmailSelected = async () => {
+    const emails = registrations.filter((r) => selected.has(r.id)).map((r) => r.email);
+    if (emails.length === 0) return;
+    try {
+      const { data } = await saveCampaign({
+        variables: {
+          input: {
+            name: `${event.title}: selected people`,
+            subject: event.title,
+            bodyMarkdown: '',
+            eventId: id,
+            audience: {
+              match: 'all',
+              groups: [
+                {
+                  match: 'all',
+                  rules: [
+                    { condition: 'registered_webinar', negate: false, params: { eventId: id } },
+                    { condition: 'selected_people', negate: false, params: { emails } },
+                  ],
+                },
+              ],
+            },
+          },
+        },
+      });
+      const draftId = data?.adminSaveCampaign?.id;
+      if (draftId) router.push(`/admin/emails/${draftId}`);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Could not start the email');
+    }
+  };
+
+  const handleResend = async () => {
+    setResendOpen(false);
+    try {
+      const { data } = await resendConfirmations({
+        variables: {
+          eventId: id,
+          registrationIds: selectedIds.length > 0 ? selectedIds : undefined,
+        },
+      });
+      const result = data?.adminResendWorkshopConfirmations;
+      if (!result) return;
+      const more =
+        result.remainingCount > 0 ? ` ${result.remainingCount} still waiting, resend again.` : '';
+      if (result.failedCount > 0) {
+        toast.error(`${result.sentCount} sent, ${result.failedCount} failed.${more}`);
+      } else {
+        toast.success(`${result.sentCount} sent.${more}`);
+      }
+      await refetch();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Could not resend the confirmations');
+    }
+  };
 
   const handleDownload = async () => {
     try {
@@ -126,158 +191,143 @@ export const WorkshopRegistrationsPage = ({ id }: { id: string }) => {
         />
       </div>
 
-      <section className="space-y-3">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="text-lg font-semibold">Send emails</h2>
-          <p className="text-sm text-muted-foreground">
-            {selectedIds.length > 0
-              ? `Sending to ${selectedIds.length} selected ${selectedIds.length === 1 ? 'person' : 'people'} only.`
-              : 'Nobody ticked: sends go to everyone who hasn\'t received that email.'}
-          </p>
-        </div>
-        <div className="grid gap-4 md:grid-cols-2">
-          <WorkshopEmailCard
-            eventId={id}
-            type="confirmation"
-            title="Confirmation"
-            description="Sent automatically when someone registers. Resend it to anyone it didn't reach."
-            sendLabel="Resend confirmations"
-            onSent={() => refetch()}
-            selectedIds={selectedIds}
-          />
-          <WorkshopEmailCard
-            eventId={id}
-            type="registration_thanks"
-            title="Thank you for registering"
-            description="What the session covers and that joining details follow later this week. Sent once per registrant."
-            sendLabel="Send registration thank-you"
-            onSent={() => refetch()}
-            selectedIds={selectedIds}
-          />
-          <WorkshopEmailCard
-            eventId={id}
-            type="reminder_day_before"
-            title="Day-before reminder"
-            description="Includes the joining link. Needs the joining link on the webinar."
-            sendLabel="Send day-before reminder"
-            onSent={() => refetch()}
-            selectedIds={selectedIds}
-          />
-          <WorkshopEmailCard
-            eventId={id}
-            type="reminder_today"
-            title="Today reminder"
-            description="Send on the morning of the webinar: it's on today, with the time and joining link. Needs the joining link."
-            sendLabel="Send today reminder"
-            onSent={() => refetch()}
-            selectedIds={selectedIds}
-          />
-          <WorkshopEmailCard
-            eventId={id}
-            type="joining_details"
-            title="Joining details"
-            description="Thanks for registering, see you this evening, with the joining link once again. Send it with today's reminder. Needs the joining link."
-            sendLabel="Send joining details"
-            onSent={() => refetch()}
-            selectedIds={selectedIds}
-          />
-          <WorkshopEmailCard
-            eventId={id}
-            type="reminder_hour_before"
-            title="Hour-before reminder"
-            description="A last nudge with the joining link, about an hour before the start."
-            sendLabel="Send hour-before reminder"
-            onSent={() => refetch()}
-            selectedIds={selectedIds}
-          />
-          <WorkshopEmailCard
-            eventId={id}
-            type="thank_you"
-            title="Thank-you and feedback"
-            description="After the session, with the feedback form (if set) and the SSRI assessment link. Tick only the people who attended."
-            sendLabel="Send thank-you email"
-            onSent={() => refetch()}
-            selectedIds={selectedIds}
-            requireSelection
-          />
-        </div>
-      </section>
+      <Tabs defaultValue="registrations" className="gap-6">
+        <TabsList>
+          <TabsTrigger value="registrations">Registrations</TabsTrigger>
+          <TabsTrigger value="emails">Emails</TabsTrigger>
+        </TabsList>
 
-      <section className="space-y-3">
-        <h2 className="text-lg font-semibold">Registrations</h2>
-        {loading && registrations.length === 0 ? (
-          <div className="flex min-h-40 items-center justify-center">
-            <Spinner className="size-6" />
+        <TabsContent value="registrations" className="space-y-3">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <p className="text-sm text-muted-foreground">
+              {selectedIds.length > 0
+                ? `${selectedIds.length} selected.`
+                : 'Tick people to email them, or to resend their confirmation.'}
+            </p>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                disabled={resending || registrations.length === 0}
+                onClick={() => setResendOpen(true)}
+              >
+                {resending && <Spinner className="size-4" />}
+                {selectedIds.length > 0
+                  ? `Resend confirmation (${selectedIds.length})`
+                  : 'Resend confirmations'}
+              </Button>
+              <Button
+                disabled={selectedIds.length === 0 || emailing}
+                onClick={handleEmailSelected}
+                className="gap-2"
+              >
+                {emailing ? <Spinner className="size-4" /> : <Mail className="size-4" />}
+                Email selected
+              </Button>
+            </div>
           </div>
-        ) : registrations.length === 0 ? (
-          <p className="rounded-xl border border-dashed p-10 text-center text-muted-foreground">
-            No one has registered yet.
-          </p>
-        ) : (
-          <div className="rounded-xl border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-10">
-                    <Checkbox
-                      aria-label="Select all"
-                      checked={allSelected}
-                      onCheckedChange={(checked) => toggleAll(checked === true)}
-                    />
-                  </TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Phone</TableHead>
-                  <TableHead>Registered</TableHead>
-                  <TableHead>Emails</TableHead>
-                  <TableHead className="w-12" />
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {registrations.map((registration) => (
-                  <TableRow key={registration.id} data-state={selected.has(registration.id) ? 'selected' : undefined}>
-                    <TableCell>
+          {loading && registrations.length === 0 ? (
+            <div className="flex min-h-40 items-center justify-center">
+              <Spinner className="size-6" />
+            </div>
+          ) : registrations.length === 0 ? (
+            <p className="rounded-xl border border-dashed p-10 text-center text-muted-foreground">
+              No one has registered yet.
+            </p>
+          ) : (
+            <div className="rounded-xl border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-10">
                       <Checkbox
-                        aria-label={`Select ${registration.fullName}`}
-                        checked={selected.has(registration.id)}
-                        onCheckedChange={(checked) => toggleOne(registration.id, checked === true)}
+                        aria-label="Select all"
+                        checked={allSelected}
+                        onCheckedChange={(checked) => toggleAll(checked === true)}
                       />
-                    </TableCell>
-                    <TableCell className="font-medium">{registration.fullName}</TableCell>
-                    <TableCell>{registration.email}</TableCell>
-                    <TableCell>{registration.phone}</TableCell>
-                    <TableCell>{formatWhen(registration.createdAt)}</TableCell>
-                    <TableCell>
-                      <div className="flex flex-wrap gap-1.5">
-                        {registration.emails.map((email) => (
-                          <Badge
-                            key={email.emailType}
-                            variant={email.status === 'failed' ? 'destructive' : 'secondary'}
-                            title={email.error ?? undefined}
-                          >
-                            {EMAIL_LABEL[email.emailType] ?? email.emailType}
-                            {email.status === 'sent' ? ' ✓' : ` · ${email.status}`}
-                          </Badge>
-                        ))}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Button
-                        size="icon-sm"
-                        variant="ghost"
-                        aria-label={`Remove ${registration.fullName}`}
-                        onClick={() => setToDelete({ id: registration.id, name: registration.fullName })}
-                      >
-                        <Trash2 className="size-4" />
-                      </Button>
-                    </TableCell>
+                    </TableHead>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Phone</TableHead>
+                    <TableHead>Registered</TableHead>
+                    <TableHead>Emails</TableHead>
+                    <TableHead className="w-12" />
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        )}
-      </section>
+                </TableHeader>
+                <TableBody>
+                  {registrations.map((registration) => (
+                    <TableRow
+                      key={registration.id}
+                      data-state={selected.has(registration.id) ? 'selected' : undefined}
+                    >
+                      <TableCell>
+                        <Checkbox
+                          aria-label={`Select ${registration.fullName}`}
+                          checked={selected.has(registration.id)}
+                          onCheckedChange={(checked) =>
+                            toggleOne(registration.id, checked === true)
+                          }
+                        />
+                      </TableCell>
+                      <TableCell className="font-medium">{registration.fullName}</TableCell>
+                      <TableCell>{registration.email}</TableCell>
+                      <TableCell>{registration.phone}</TableCell>
+                      <TableCell>{formatWhen(registration.createdAt)}</TableCell>
+                      <TableCell>
+                        <div className="flex flex-wrap gap-1.5">
+                          {registration.emails.map((email) => (
+                            <Badge
+                              key={email.emailType}
+                              variant={email.status === 'failed' ? 'destructive' : 'secondary'}
+                              title={email.error ?? undefined}
+                            >
+                              {EMAIL_LABEL[email.emailType] ?? email.emailType}
+                              {email.status === 'sent' ? ' ✓' : ` · ${email.status}`}
+                            </Badge>
+                          ))}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          size="icon-sm"
+                          variant="ghost"
+                          aria-label={`Remove ${registration.fullName}`}
+                          onClick={() =>
+                            setToDelete({ id: registration.id, name: registration.fullName })
+                          }
+                        >
+                          <Trash2 className="size-4" />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="emails">
+          <WorkshopEmailsTab eventId={id} />
+        </TabsContent>
+      </Tabs>
+
+      <AlertDialog open={resendOpen} onOpenChange={setResendOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Resend confirmation?</AlertDialogTitle>
+            <AlertDialogDescription>
+              {selectedIds.length > 0
+                ? `This resends the confirmation to your ${selectedIds.length} selected people who didn't receive it.`
+                : "This resends the confirmation to up to 100 people who didn't receive it."}{' '}
+              Anyone who already got it is skipped, so nobody gets it twice.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleResend}>Resend</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <AlertDialog open={Boolean(toDelete)} onOpenChange={(open) => !open && setToDelete(null)}>
         <AlertDialogContent>

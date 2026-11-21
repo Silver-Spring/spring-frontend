@@ -92,7 +92,7 @@ export const WorkshopsAdminPage = () => {
         </div>
       ) : workshops.length === 0 ? (
         <p className="rounded-xl border border-dashed p-10 text-center text-muted-foreground">
-          No workshops yet. Create the first one.
+          No webinars yet. Create the first one.
         </p>
       ) : (
         <div className="rounded-xl border">
