@@ -28,7 +28,7 @@ type ScheduleDialogProps = {
 const ScheduleDialogBody = ({ mode, count, initialSendAt, onConfirm, onClose }: ScheduleDialogProps) => {
   const [sendAt, setSendAt] = useState(initialSendAt ?? '');
   const people = count === null ? '…' : peopleLabel(count);
-  const canConfirm = mode === 'now' || Boolean(sendAt);
+  const canConfirm = count !== null && (mode === 'now' || Boolean(sendAt));
 
   return (
     <AlertDialogContent>

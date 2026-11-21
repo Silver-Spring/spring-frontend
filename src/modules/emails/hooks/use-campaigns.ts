@@ -49,13 +49,13 @@ export const useCampaign = (id: string | undefined) => {
 };
 
 export const useAudiencePreview = (audience: AudienceJson | null, eventId: string | null) => {
-  const { data, previousData, loading, error } = useQuery(AdminCampaignAudiencePreviewDoc, {
+  const { data, previousData, loading, error, refetch } = useQuery(AdminCampaignAudiencePreviewDoc, {
     variables: { audience: audience ?? {}, eventId },
     skip: !audience,
     fetchPolicy: 'network-only',
   });
   const preview = (data ?? previousData)?.adminCampaignAudiencePreview ?? null;
-  return { preview, loading, error };
+  return { preview, loading, error, refetch };
 };
 
 export const useCampaignRecipients = (id: string, status: string | null, offset: number, limit: number) => {

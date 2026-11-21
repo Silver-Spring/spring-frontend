@@ -119,6 +119,8 @@ const EmailEditorForm = ({ campaign, defaultEventId, onSaved, onChanged }: Edito
   const [buttonLabel, setButtonLabel] = useState(campaign?.buttonLabel ?? '');
   const [buttonUrl, setButtonUrl] = useState(campaign?.buttonUrl ?? '');
   const [sendMode, setSendMode] = useState<'now' | 'schedule' | null>(null);
+  // Count fetched fresh when the confirm opens; null until it arrives.
+  const [confirmCount, setConfirmCount] = useState<number | null>(null);
   const [starterOpen, setStarterOpen] = useState(false);
   const [starterEventId, setStarterEventId] = useState(NONE);
   const [busy, setBusy] = useState(false);
@@ -158,7 +160,7 @@ const EmailEditorForm = ({ campaign, defaultEventId, onSaved, onChanged }: Edito
     return () => clearTimeout(timer);
   }, [audienceKey]);
   const debounced = JSON.parse(debouncedKey) as { audience: typeof audienceJson | null; eventId: string | null };
-  const { preview, loading: counting, error: countError } = useAudiencePreview(
+  const { preview, loading: counting, error: countError, refetch: refetchCount } = useAudiencePreview(
     debounced.audience,
     debounced.eventId,
   );
@@ -247,7 +249,23 @@ const EmailEditorForm = ({ campaign, defaultEventId, onSaved, onChanged }: Edito
     afterSave(id);
   };
 
+  const countReady = settled && !counting && count !== null;
+
+  const handleOpenSend = async (mode: 'now' | 'schedule') => {
+    setConfirmCount(null);
+    setSendMode(mode);
+    try {
+      // refetch always goes to the network (the query is network-only).
+      const { data } = await refetchCount();
+      setConfirmCount(data?.adminCampaignAudiencePreview.count ?? null);
+    } catch (error) {
+      setSendMode(null);
+      toast.error(errorMessage(error, 'Could not count the recipients'));
+    }
+  };
+
   const handleConfirmSend = async (sendAt: string | null) => {
+    if (busy) return;
     setSendMode(null);
     setBusy(true);
     try {
@@ -507,16 +525,16 @@ const EmailEditorForm = ({ campaign, defaultEventId, onSaved, onChanged }: Edito
               type="button"
               variant="outline"
               className="gap-2"
-              onClick={() => setSendMode('schedule')}
-              disabled={disabled || Boolean(problem)}
+              onClick={() => handleOpenSend('schedule')}
+              disabled={disabled || Boolean(problem) || !countReady}
             >
               <CalendarClock className="size-4" /> Schedule…
             </Button>
             <Button
               type="button"
               className="gap-2"
-              onClick={() => setSendMode('now')}
-              disabled={disabled || Boolean(problem)}
+              onClick={() => handleOpenSend('now')}
+              disabled={disabled || Boolean(problem) || !countReady}
             >
               <Send className="size-4" /> Send now
             </Button>
@@ -526,7 +544,7 @@ const EmailEditorForm = ({ campaign, defaultEventId, onSaved, onChanged }: Edito
 
       <ScheduleDialog
         mode={sendMode}
-        count={count}
+        count={confirmCount}
         initialSendAt={campaign?.scheduledAt}
         onConfirm={handleConfirmSend}
         onClose={() => setSendMode(null)}
