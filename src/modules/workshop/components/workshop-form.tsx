@@ -296,7 +296,7 @@ export const WorkshopForm = ({ workshop }: WorkshopFormProps) => {
                 <WorkshopField
                   label="Joining link"
                   where="Emails only"
-                  hint="Private. Never shown on the page. Sent only in the day-before and hour-before reminder emails."
+                  hint="Private. Never shown on the page. Sent only in the reminder emails (day before, today and hour before)."
                 >
                   <FormControl>
                     <Input {...field} placeholder="https://meet.google.com/…" />
