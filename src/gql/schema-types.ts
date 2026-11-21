@@ -3798,6 +3798,13 @@ export enum AssessmentTypesOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
+export type AudiencePreview = {
+  __typename?: 'AudiencePreview';
+  count: Scalars['Int']['output'];
+  kind: Scalars['String']['output'];
+  sample: Array<CampaignContact>;
+};
+
 export type BulkCreateQuestionsInput = {
   questions: Array<BulkQuestionInput>;
   sectionId: Scalars['UUID']['input'];
@@ -3815,6 +3822,51 @@ export type BulkQuestionInput = {
   answerOptions?: InputMaybe<Scalars['JSON']['input']>;
   questionCategory?: InputMaybe<Scalars['String']['input']>;
   questionText: Scalars['String']['input'];
+};
+
+export type CampaignCondition = {
+  __typename?: 'CampaignCondition';
+  key: Scalars['String']['output'];
+  label: Scalars['String']['output'];
+  params: Array<CampaignConditionParam>;
+};
+
+export type CampaignConditionParam = {
+  __typename?: 'CampaignConditionParam';
+  name: Scalars['String']['output'];
+  type: Scalars['String']['output'];
+};
+
+export type CampaignContact = {
+  __typename?: 'CampaignContact';
+  email: Scalars['String']['output'];
+  hasAccount: Scalars['Boolean']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+export type CampaignCounts = {
+  __typename?: 'CampaignCounts';
+  failed: Scalars['Int']['output'];
+  queued: Scalars['Int']['output'];
+  sending: Scalars['Int']['output'];
+  sent: Scalars['Int']['output'];
+  suppressed: Scalars['Int']['output'];
+};
+
+export type CampaignPreview = {
+  __typename?: 'CampaignPreview';
+  html: Scalars['String']['output'];
+  recipientEmail?: Maybe<Scalars['String']['output']>;
+  subject: Scalars['String']['output'];
+};
+
+export type CampaignRecipient = {
+  __typename?: 'CampaignRecipient';
+  email: Scalars['String']['output'];
+  error?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  sentAt?: Maybe<Scalars['Datetime']['output']>;
+  status: Scalars['String']['output'];
 };
 
 /**
@@ -5059,6 +5111,28 @@ export type DomainResultItem = {
   strengthLabel: Scalars['String']['output'];
 };
 
+export type EmailCampaign = {
+  __typename?: 'EmailCampaign';
+  audience: Scalars['JSON']['output'];
+  bodyMarkdown: Scalars['String']['output'];
+  buttonLabel?: Maybe<Scalars['String']['output']>;
+  buttonUrl?: Maybe<Scalars['String']['output']>;
+  counts: CampaignCounts;
+  createdAt: Scalars['Datetime']['output'];
+  eventId?: Maybe<Scalars['UUID']['output']>;
+  finishedAt?: Maybe<Scalars['Datetime']['output']>;
+  id: Scalars['UUID']['output'];
+  isStarter: Scalars['Boolean']['output'];
+  kind: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  preheader?: Maybe<Scalars['String']['output']>;
+  scheduledAt?: Maybe<Scalars['Datetime']['output']>;
+  startedAt?: Maybe<Scalars['Datetime']['output']>;
+  starterKey?: Maybe<Scalars['String']['output']>;
+  status: Scalars['String']['output'];
+  subject: Scalars['String']['output'];
+};
+
 export type EnhancedResponseDetail = {
   __typename?: 'EnhancedResponseDetail';
   createdAt: Scalars['Datetime']['output'];
@@ -5221,6 +5295,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   activateAssessmentType?: Maybe<AssessmentTypePayload>;
   adminActivateCoupon?: Maybe<ActivateCouponPayload>;
+  adminCancelCampaign: EmailCampaign;
   adminCreateCoupon?: Maybe<CreateCouponPayload>;
   adminCreateWorkshopEvent: AdminWorkshopEvent;
   adminDeactivateCoupon?: Maybe<DeactivateCouponPayload>;
@@ -5233,6 +5308,10 @@ export type Mutation = {
   adminDeleteUser?: Maybe<AdminDeleteUserPayload>;
   adminDeleteWorkshopEvent: Scalars['Boolean']['output'];
   adminDeleteWorkshopRegistration: Scalars['Boolean']['output'];
+  adminDuplicateCampaign: EmailCampaign;
+  adminSaveCampaign: EmailCampaign;
+  adminScheduleCampaign: EmailCampaign;
+  adminSendCampaignTest: Scalars['Boolean']['output'];
   adminSendReminderEmails?: Maybe<SendReminderEmailsPayload>;
   adminSendWorkshopEmail: SendWorkshopEmailPayload;
   adminSetWorkshopEventStatus: AdminWorkshopEvent;
@@ -5447,6 +5526,12 @@ export type MutationAdminActivateCouponArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationAdminCancelCampaignArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationAdminCreateCouponArgs = {
   input: CreateCouponInput;
 };
@@ -5485,6 +5570,33 @@ export type MutationAdminDeleteWorkshopEventArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationAdminDeleteWorkshopRegistrationArgs = {
   registrationId: Scalars['UUID']['input'];
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationAdminDuplicateCampaignArgs = {
+  eventId?: InputMaybe<Scalars['UUID']['input']>;
+  id: Scalars['UUID']['input'];
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationAdminSaveCampaignArgs = {
+  input: SaveCampaignInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationAdminScheduleCampaignArgs = {
+  id: Scalars['UUID']['input'];
+  sendAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationAdminSendCampaignTestArgs = {
+  contactEmail?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['UUID']['input'];
 };
 
 
@@ -6464,6 +6576,11 @@ export type Query = {
   /** Get admin statistics about assessment content (admin only) */
   adminAssessmentStats?: Maybe<AdminStatsPayload>;
   adminAssessmentTypes: Array<AssessmentTypeInfo>;
+  adminCampaign?: Maybe<EmailCampaign>;
+  adminCampaignAudiencePreview: AudiencePreview;
+  adminCampaignConditions: Array<CampaignCondition>;
+  adminCampaignRecipients: Array<CampaignRecipient>;
+  adminCampaigns: Array<EmailCampaign>;
   adminCouponAnalytics?: Maybe<CouponAnalytics>;
   adminCouponById?: Maybe<Coupon>;
   adminCouponUsage?: Maybe<CouponUsageListPayload>;
@@ -6485,6 +6602,7 @@ export type Query = {
    * Requires admin privileges.
    */
   adminPaymentsList?: Maybe<AdminPaymentsListPayload>;
+  adminPreviewCampaign: CampaignPreview;
   /**
    * Admin only: Fetch all refunds from Razorpay.
    * Requires admin privileges.
@@ -6723,6 +6841,35 @@ export type QueryAdminAssessmentStatsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryAdminCampaignArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAdminCampaignAudiencePreviewArgs = {
+  audience: Scalars['JSON']['input'];
+  eventId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAdminCampaignRecipientsArgs = {
+  id: Scalars['UUID']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAdminCampaignsArgs = {
+  eventId?: InputMaybe<Scalars['UUID']['input']>;
+  starters?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryAdminCouponByIdArgs = {
   id: Scalars['UUID']['input'];
 };
@@ -6749,6 +6896,13 @@ export type QueryAdminPaymentDetailsArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryAdminPaymentsListArgs = {
   input?: InputMaybe<AdminPaymentsFilterInput>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAdminPreviewCampaignArgs = {
+  contactEmail?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['UUID']['input'];
 };
 
 
@@ -7667,6 +7821,18 @@ export type RevokeInternalAccessPayload = {
   message?: Maybe<Scalars['String']['output']>;
   success: Scalars['Boolean']['output'];
   user?: Maybe<User>;
+};
+
+export type SaveCampaignInput = {
+  audience: Scalars['JSON']['input'];
+  bodyMarkdown: Scalars['String']['input'];
+  buttonLabel?: InputMaybe<Scalars['String']['input']>;
+  buttonUrl?: InputMaybe<Scalars['String']['input']>;
+  eventId?: InputMaybe<Scalars['UUID']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  name: Scalars['String']['input'];
+  preheader?: InputMaybe<Scalars['String']['input']>;
+  subject: Scalars['String']['input'];
 };
 
 export type ScoreDistributionData = {

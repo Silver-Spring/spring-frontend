@@ -31,6 +31,7 @@ import {
   LogOut,
   CalendarDays,
   Mail,
+  Send,
   Ticket,
   Users,
 } from 'lucide-react';
@@ -65,6 +66,7 @@ const navGroups = [
       { title: 'Users', url: '/admin/users', icon: Users, exact: false },
       { title: 'Reminders', url: '/admin/reminders', icon: Mail, exact: false },
       { title: 'Webinars', url: '/admin/workshops', icon: CalendarDays, exact: false },
+      { title: 'Emails', url: '/admin/emails', icon: Send, exact: false },
     ],
   },
 ];
