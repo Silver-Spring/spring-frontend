@@ -18,9 +18,3 @@ export const AdminWorkshopRegistrationsDoc = graphql(`
     }
   }
 `);
-
-export const AdminWorkshopEmailPendingCountDoc = graphql(`
-  query AdminWorkshopEmailPendingCount($eventId: UUID!, $emailType: String!, $registrationIds: [UUID!]) {
-    adminWorkshopEmailPendingCount(eventId: $eventId, emailType: $emailType, registrationIds: $registrationIds)
-  }
-`);

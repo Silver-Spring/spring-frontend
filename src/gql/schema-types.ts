@@ -5309,11 +5309,11 @@ export type Mutation = {
   adminDeleteWorkshopEvent: Scalars['Boolean']['output'];
   adminDeleteWorkshopRegistration: Scalars['Boolean']['output'];
   adminDuplicateCampaign: EmailCampaign;
+  adminResendWorkshopConfirmations: SendWorkshopEmailPayload;
   adminSaveCampaign: EmailCampaign;
   adminScheduleCampaign: EmailCampaign;
   adminSendCampaignTest: Scalars['Boolean']['output'];
   adminSendReminderEmails?: Maybe<SendReminderEmailsPayload>;
-  adminSendWorkshopEmail: SendWorkshopEmailPayload;
   adminSetWorkshopEventStatus: AdminWorkshopEvent;
   adminUpdateCoupon?: Maybe<UpdateCouponPayload>;
   adminUpdateWorkshopEvent: AdminWorkshopEvent;
@@ -5581,6 +5581,13 @@ export type MutationAdminDuplicateCampaignArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationAdminResendWorkshopConfirmationsArgs = {
+  eventId: Scalars['UUID']['input'];
+  registrationIds?: InputMaybe<Array<Scalars['UUID']['input']>>;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationAdminSaveCampaignArgs = {
   input: SaveCampaignInput;
 };
@@ -5603,15 +5610,6 @@ export type MutationAdminSendCampaignTestArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationAdminSendReminderEmailsArgs = {
   input: SendReminderEmailsInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationAdminSendWorkshopEmailArgs = {
-  customMessage?: InputMaybe<Scalars['String']['input']>;
-  emailType: Scalars['String']['input'];
-  eventId: Scalars['UUID']['input'];
-  registrationIds?: InputMaybe<Array<Scalars['UUID']['input']>>;
 };
 
 
@@ -6621,7 +6619,6 @@ export type Query = {
   adminWorkbookPurchases?: Maybe<AdminWorkbookPurchasesPayload>;
   /** Admin only: workbook purchase totals for the dashboard. */
   adminWorkbookStats?: Maybe<AdminWorkbookStatsPayload>;
-  adminWorkshopEmailPendingCount: Scalars['Int']['output'];
   adminWorkshopEvent?: Maybe<AdminWorkshopEvent>;
   adminWorkshopEvents: Array<AdminWorkshopEvent>;
   adminWorkshopRegistrations: Array<WorkshopRegistration>;
@@ -6927,14 +6924,6 @@ export type QueryAdminSettlementsListArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryAdminWorkbookPurchasesArgs = {
   input?: InputMaybe<AdminWorkbookPurchasesFilterInput>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryAdminWorkshopEmailPendingCountArgs = {
-  emailType: Scalars['String']['input'];
-  eventId: Scalars['UUID']['input'];
-  registrationIds?: InputMaybe<Array<Scalars['UUID']['input']>>;
 };
 
 

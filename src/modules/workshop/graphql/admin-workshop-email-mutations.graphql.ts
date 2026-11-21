@@ -1,8 +1,8 @@
 import { graphql } from '@/gql';
 
-export const AdminSendWorkshopEmailDoc = graphql(`
-  mutation AdminSendWorkshopEmail($eventId: UUID!, $emailType: String!, $registrationIds: [UUID!]) {
-    adminSendWorkshopEmail(eventId: $eventId, emailType: $emailType, registrationIds: $registrationIds) {
+export const AdminResendWorkshopConfirmationsDoc = graphql(`
+  mutation AdminResendWorkshopConfirmations($eventId: UUID!, $registrationIds: [UUID!]) {
+    adminResendWorkshopConfirmations(eventId: $eventId, registrationIds: $registrationIds) {
       sentCount
       failedCount
       skippedCount
