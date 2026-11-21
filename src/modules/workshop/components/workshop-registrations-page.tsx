@@ -170,6 +170,7 @@ export const WorkshopRegistrationsPage = ({ id }: { id: string }) => {
             description="Send on the morning of the webinar: it's on today, with the time and joining link. Needs the joining link."
             sendLabel="Send today reminder"
             onSent={() => refetch()}
+            selectedIds={selectedIds}
           />
           <WorkshopEmailCard
             eventId={id}
@@ -178,6 +179,7 @@ export const WorkshopRegistrationsPage = ({ id }: { id: string }) => {
             description="Thanks for registering, see you this evening, with the joining link once again. Send it with today's reminder. Needs the joining link."
             sendLabel="Send joining details"
             onSent={() => refetch()}
+            selectedIds={selectedIds}
           />
           <WorkshopEmailCard
             eventId={id}
