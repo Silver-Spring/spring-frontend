@@ -39,6 +39,8 @@ const EMAIL_LABEL: Record<string, string> = {
   confirmation: 'Confirmation',
   registration_thanks: 'Registration thank-you',
   reminder_day_before: 'Day before',
+  reminder_today: 'Today',
+  joining_details: 'Joining details',
   reminder_hour_before: 'Hour before',
   thank_you: 'Thank-you',
 };
@@ -160,6 +162,22 @@ export const WorkshopRegistrationsPage = ({ id }: { id: string }) => {
             sendLabel="Send day-before reminder"
             onSent={() => refetch()}
             selectedIds={selectedIds}
+          />
+          <WorkshopEmailCard
+            eventId={id}
+            type="reminder_today"
+            title="Today reminder"
+            description="Send on the morning of the webinar: it's on today, with the time and joining link. Needs the joining link."
+            sendLabel="Send today reminder"
+            onSent={() => refetch()}
+          />
+          <WorkshopEmailCard
+            eventId={id}
+            type="joining_details"
+            title="Joining details"
+            description="Thanks for registering, see you this evening, with the joining link once again. Send it with today's reminder. Needs the joining link."
+            sendLabel="Send joining details"
+            onSent={() => refetch()}
           />
           <WorkshopEmailCard
             eventId={id}
