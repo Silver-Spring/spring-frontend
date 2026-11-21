@@ -4693,6 +4693,41 @@ export type CreateRecommendedActionPayload = {
   success: Scalars['Boolean']['output'];
 };
 
+/** All input for the create `ReminderEmail` mutation. */
+export type CreateReminderEmailInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `ReminderEmail` to be created by this mutation. */
+  reminderEmail: ReminderEmailInput;
+};
+
+/** The output of our create `ReminderEmail` mutation. */
+export type CreateReminderEmailPayload = {
+  __typename?: 'CreateReminderEmailPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `ReminderEmail` that was created by this mutation. */
+  reminderEmail?: Maybe<ReminderEmail>;
+  /** An edge for our `ReminderEmail`. May be used by Relay 1. */
+  reminderEmailEdge?: Maybe<ReminderEmailsEdge>;
+  /** Reads a single `User` that is related to this `ReminderEmail`. */
+  user?: Maybe<User>;
+};
+
+
+/** The output of our create `ReminderEmail` mutation. */
+export type CreateReminderEmailPayloadReminderEmailEdgeArgs = {
+  orderBy?: Array<ReminderEmailsOrderBy>;
+};
+
 /** All input for the create `User` mutation. */
 export type CreateUserInput = {
   /**
@@ -5238,6 +5273,8 @@ export type Mutation = {
   createPaymentOrder?: Maybe<CreatePaymentOrderPayload>;
   /** Create a new recommended action (admin only) */
   createRecommendedAction?: Maybe<CreateRecommendedActionPayload>;
+  /** Creates a single `ReminderEmail`. */
+  createReminderEmail?: Maybe<CreateReminderEmailPayload>;
   /** Creates a single `User`. */
   createUser?: Maybe<CreateUserPayload>;
   createWorkbookOrder?: Maybe<CreateWorkbookOrderPayload>;
@@ -5462,6 +5499,7 @@ export type MutationAdminSendWorkshopEmailArgs = {
   customMessage?: InputMaybe<Scalars['String']['input']>;
   emailType: Scalars['String']['input'];
   eventId: Scalars['UUID']['input'];
+  registrationIds?: InputMaybe<Array<Scalars['UUID']['input']>>;
 };
 
 
@@ -5566,6 +5604,12 @@ export type MutationCreatePaymentOrderArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateRecommendedActionArgs = {
   input: CreateRecommendedActionInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateReminderEmailArgs = {
+  input: CreateReminderEmailInput;
 };
 
 
@@ -6736,6 +6780,7 @@ export type QueryAdminWorkbookPurchasesArgs = {
 export type QueryAdminWorkshopEmailPendingCountArgs = {
   emailType: Scalars['String']['input'];
   eventId: Scalars['UUID']['input'];
+  registrationIds?: InputMaybe<Array<Scalars['UUID']['input']>>;
 };
 
 
@@ -7496,6 +7541,20 @@ export type ReminderEmailCondition = {
   userId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
+/** An input for mutations affecting `ReminderEmail` */
+export type ReminderEmailInput = {
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  emailSentAt?: InputMaybe<Scalars['Datetime']['input']>;
+  emailSubject: Scalars['String']['input'];
+  emailTemplate: Scalars['String']['input'];
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  /** Additional data like email open status, click tracking, etc. */
+  metadata?: InputMaybe<Scalars['JSON']['input']>;
+  /** Type of reminder: no_payment_attempt, payment_abandoned, payment_failed, paid_no_test, test_incomplete */
+  reminderType: ReminderType;
+  userId: Scalars['UUID']['input'];
+};
+
 /** A connection to a list of `ReminderEmail` values. */
 export type ReminderEmailsConnection = {
   __typename?: 'ReminderEmailsConnection';
@@ -7549,6 +7608,7 @@ export enum ReminderType {
   PaymentFailed = 'PAYMENT_FAILED',
   SignupIdle = 'SIGNUP_IDLE',
   TestIncomplete = 'TEST_INCOMPLETE',
+  WebinarInvite = 'WEBINAR_INVITE',
   WorkbookNoTest = 'WORKBOOK_NO_TEST'
 }
 

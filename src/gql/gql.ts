@@ -105,7 +105,7 @@ type Documents = {
     "\n  mutation CreateWorkbookOrder($input: CreateWorkbookOrderInput!) {\n    createWorkbookOrder(input: $input) {\n      orderId\n      amount\n      originalAmount\n      discountAmount\n      currency\n      razorpayKeyId\n      couponApplied\n      couponMessage\n      isFree\n    }\n  }\n": typeof types.CreateWorkbookOrderDocument,
     "\n  mutation VerifyWorkbookPayment($input: VerifyWorkbookPaymentInput!) {\n    verifyWorkbookPayment(input: $input) {\n      success\n      purchaseId\n      message\n    }\n  }\n": typeof types.VerifyWorkbookPaymentDocument,
     "\n  query WorkbookStatus {\n    currentUserWorkbookStatus {\n      hasPurchased\n      purchasedAt\n      purchaseId\n    }\n  }\n": typeof types.WorkbookStatusDocument,
-    "\n  mutation AdminSendWorkshopEmail($eventId: UUID!, $emailType: String!) {\n    adminSendWorkshopEmail(eventId: $eventId, emailType: $emailType) {\n      sentCount\n      failedCount\n      skippedCount\n      remainingCount\n      failures\n    }\n  }\n": typeof types.AdminSendWorkshopEmailDocument,
+    "\n  mutation AdminSendWorkshopEmail($eventId: UUID!, $emailType: String!, $registrationIds: [UUID!]) {\n    adminSendWorkshopEmail(eventId: $eventId, emailType: $emailType, registrationIds: $registrationIds) {\n      sentCount\n      failedCount\n      skippedCount\n      remainingCount\n      failures\n    }\n  }\n": typeof types.AdminSendWorkshopEmailDocument,
     "\n  mutation AdminDeleteWorkshopRegistration($registrationId: UUID!) {\n    adminDeleteWorkshopRegistration(registrationId: $registrationId)\n  }\n": typeof types.AdminDeleteWorkshopRegistrationDocument,
     "\n  query AdminWorkshopEvents {\n    adminWorkshopEvents {\n      ...AdminWorkshopEventFields\n    }\n  }\n": typeof types.AdminWorkshopEventsDocument,
     "\n  query AdminWorkshopEvent($id: UUID!) {\n    adminWorkshopEvent(id: $id) {\n      ...AdminWorkshopEventFields\n    }\n  }\n": typeof types.AdminWorkshopEventDocument,
@@ -115,7 +115,7 @@ type Documents = {
     "\n  mutation AdminSetWorkshopEventStatus($id: UUID!, $status: String!) {\n    adminSetWorkshopEventStatus(id: $id, status: $status) {\n      ...AdminWorkshopEventFields\n    }\n  }\n": typeof types.AdminSetWorkshopEventStatusDocument,
     "\n  mutation AdminDeleteWorkshopEvent($id: UUID!) {\n    adminDeleteWorkshopEvent(id: $id)\n  }\n": typeof types.AdminDeleteWorkshopEventDocument,
     "\n  query AdminWorkshopRegistrations($eventId: UUID!) {\n    adminWorkshopRegistrations(eventId: $eventId) {\n      id\n      fullName\n      email\n      phone\n      source\n      createdAt\n      emails {\n        emailType\n        status\n        sentAt\n        error\n      }\n    }\n  }\n": typeof types.AdminWorkshopRegistrationsDocument,
-    "\n  query AdminWorkshopEmailPendingCount($eventId: UUID!, $emailType: String!) {\n    adminWorkshopEmailPendingCount(eventId: $eventId, emailType: $emailType)\n  }\n": typeof types.AdminWorkshopEmailPendingCountDocument,
+    "\n  query AdminWorkshopEmailPendingCount($eventId: UUID!, $emailType: String!, $registrationIds: [UUID!]) {\n    adminWorkshopEmailPendingCount(eventId: $eventId, emailType: $emailType, registrationIds: $registrationIds)\n  }\n": typeof types.AdminWorkshopEmailPendingCountDocument,
     "\n  mutation RegisterForWorkshop($input: RegisterForWorkshopInput!) {\n    registerForWorkshop(input: $input) {\n      success\n      eventTitle\n      startsAt\n    }\n  }\n": typeof types.RegisterForWorkshopDocument,
     "\n  query WorkshopEventBySlug($slug: String!) {\n    workshopEventBySlug(slug: $slug) {\n      id\n      slug\n      title\n      subtitle\n      speakers {\n        name\n        role\n      }\n      startsAt\n      endsAt\n      status\n      registrationOpen\n      spotsLeft\n    }\n  }\n": typeof types.WorkshopEventBySlugDocument,
 };
@@ -211,7 +211,7 @@ const documents: Documents = {
     "\n  mutation CreateWorkbookOrder($input: CreateWorkbookOrderInput!) {\n    createWorkbookOrder(input: $input) {\n      orderId\n      amount\n      originalAmount\n      discountAmount\n      currency\n      razorpayKeyId\n      couponApplied\n      couponMessage\n      isFree\n    }\n  }\n": types.CreateWorkbookOrderDocument,
     "\n  mutation VerifyWorkbookPayment($input: VerifyWorkbookPaymentInput!) {\n    verifyWorkbookPayment(input: $input) {\n      success\n      purchaseId\n      message\n    }\n  }\n": types.VerifyWorkbookPaymentDocument,
     "\n  query WorkbookStatus {\n    currentUserWorkbookStatus {\n      hasPurchased\n      purchasedAt\n      purchaseId\n    }\n  }\n": types.WorkbookStatusDocument,
-    "\n  mutation AdminSendWorkshopEmail($eventId: UUID!, $emailType: String!) {\n    adminSendWorkshopEmail(eventId: $eventId, emailType: $emailType) {\n      sentCount\n      failedCount\n      skippedCount\n      remainingCount\n      failures\n    }\n  }\n": types.AdminSendWorkshopEmailDocument,
+    "\n  mutation AdminSendWorkshopEmail($eventId: UUID!, $emailType: String!, $registrationIds: [UUID!]) {\n    adminSendWorkshopEmail(eventId: $eventId, emailType: $emailType, registrationIds: $registrationIds) {\n      sentCount\n      failedCount\n      skippedCount\n      remainingCount\n      failures\n    }\n  }\n": types.AdminSendWorkshopEmailDocument,
     "\n  mutation AdminDeleteWorkshopRegistration($registrationId: UUID!) {\n    adminDeleteWorkshopRegistration(registrationId: $registrationId)\n  }\n": types.AdminDeleteWorkshopRegistrationDocument,
     "\n  query AdminWorkshopEvents {\n    adminWorkshopEvents {\n      ...AdminWorkshopEventFields\n    }\n  }\n": types.AdminWorkshopEventsDocument,
     "\n  query AdminWorkshopEvent($id: UUID!) {\n    adminWorkshopEvent(id: $id) {\n      ...AdminWorkshopEventFields\n    }\n  }\n": types.AdminWorkshopEventDocument,
@@ -221,7 +221,7 @@ const documents: Documents = {
     "\n  mutation AdminSetWorkshopEventStatus($id: UUID!, $status: String!) {\n    adminSetWorkshopEventStatus(id: $id, status: $status) {\n      ...AdminWorkshopEventFields\n    }\n  }\n": types.AdminSetWorkshopEventStatusDocument,
     "\n  mutation AdminDeleteWorkshopEvent($id: UUID!) {\n    adminDeleteWorkshopEvent(id: $id)\n  }\n": types.AdminDeleteWorkshopEventDocument,
     "\n  query AdminWorkshopRegistrations($eventId: UUID!) {\n    adminWorkshopRegistrations(eventId: $eventId) {\n      id\n      fullName\n      email\n      phone\n      source\n      createdAt\n      emails {\n        emailType\n        status\n        sentAt\n        error\n      }\n    }\n  }\n": types.AdminWorkshopRegistrationsDocument,
-    "\n  query AdminWorkshopEmailPendingCount($eventId: UUID!, $emailType: String!) {\n    adminWorkshopEmailPendingCount(eventId: $eventId, emailType: $emailType)\n  }\n": types.AdminWorkshopEmailPendingCountDocument,
+    "\n  query AdminWorkshopEmailPendingCount($eventId: UUID!, $emailType: String!, $registrationIds: [UUID!]) {\n    adminWorkshopEmailPendingCount(eventId: $eventId, emailType: $emailType, registrationIds: $registrationIds)\n  }\n": types.AdminWorkshopEmailPendingCountDocument,
     "\n  mutation RegisterForWorkshop($input: RegisterForWorkshopInput!) {\n    registerForWorkshop(input: $input) {\n      success\n      eventTitle\n      startsAt\n    }\n  }\n": types.RegisterForWorkshopDocument,
     "\n  query WorkshopEventBySlug($slug: String!) {\n    workshopEventBySlug(slug: $slug) {\n      id\n      slug\n      title\n      subtitle\n      speakers {\n        name\n        role\n      }\n      startsAt\n      endsAt\n      status\n      registrationOpen\n      spotsLeft\n    }\n  }\n": types.WorkshopEventBySlugDocument,
 };
@@ -607,7 +607,7 @@ export function graphql(source: "\n  query WorkbookStatus {\n    currentUserWork
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation AdminSendWorkshopEmail($eventId: UUID!, $emailType: String!) {\n    adminSendWorkshopEmail(eventId: $eventId, emailType: $emailType) {\n      sentCount\n      failedCount\n      skippedCount\n      remainingCount\n      failures\n    }\n  }\n"): (typeof documents)["\n  mutation AdminSendWorkshopEmail($eventId: UUID!, $emailType: String!) {\n    adminSendWorkshopEmail(eventId: $eventId, emailType: $emailType) {\n      sentCount\n      failedCount\n      skippedCount\n      remainingCount\n      failures\n    }\n  }\n"];
+export function graphql(source: "\n  mutation AdminSendWorkshopEmail($eventId: UUID!, $emailType: String!, $registrationIds: [UUID!]) {\n    adminSendWorkshopEmail(eventId: $eventId, emailType: $emailType, registrationIds: $registrationIds) {\n      sentCount\n      failedCount\n      skippedCount\n      remainingCount\n      failures\n    }\n  }\n"): (typeof documents)["\n  mutation AdminSendWorkshopEmail($eventId: UUID!, $emailType: String!, $registrationIds: [UUID!]) {\n    adminSendWorkshopEmail(eventId: $eventId, emailType: $emailType, registrationIds: $registrationIds) {\n      sentCount\n      failedCount\n      skippedCount\n      remainingCount\n      failures\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -647,7 +647,7 @@ export function graphql(source: "\n  query AdminWorkshopRegistrations($eventId: 
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query AdminWorkshopEmailPendingCount($eventId: UUID!, $emailType: String!) {\n    adminWorkshopEmailPendingCount(eventId: $eventId, emailType: $emailType)\n  }\n"): (typeof documents)["\n  query AdminWorkshopEmailPendingCount($eventId: UUID!, $emailType: String!) {\n    adminWorkshopEmailPendingCount(eventId: $eventId, emailType: $emailType)\n  }\n"];
+export function graphql(source: "\n  query AdminWorkshopEmailPendingCount($eventId: UUID!, $emailType: String!, $registrationIds: [UUID!]) {\n    adminWorkshopEmailPendingCount(eventId: $eventId, emailType: $emailType, registrationIds: $registrationIds)\n  }\n"): (typeof documents)["\n  query AdminWorkshopEmailPendingCount($eventId: UUID!, $emailType: String!, $registrationIds: [UUID!]) {\n    adminWorkshopEmailPendingCount(eventId: $eventId, emailType: $emailType, registrationIds: $registrationIds)\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

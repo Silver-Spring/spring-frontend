@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Spinner } from '@/components/ui/spinner';
 import {
   Table,
@@ -57,6 +58,20 @@ export const WorkshopRegistrationsPage = ({ id }: { id: string }) => {
   const [deleteRegistration] = useDeleteWorkshopRegistration();
   const downloadCsv = useDownloadRegistrationsCsv();
   const [toDelete, setToDelete] = useState<{ id: string; name: string } | null>(null);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  // Ignore ids of people removed since they were ticked.
+  const selectedIds = registrations.filter((r) => selected.has(r.id)).map((r) => r.id);
+  const allSelected = registrations.length > 0 && selectedIds.length === registrations.length;
+
+  const toggleOne = (registrationId: string, checked: boolean) =>
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (checked) next.add(registrationId);
+      else next.delete(registrationId);
+      return next;
+    });
+  const toggleAll = (checked: boolean) =>
+    setSelected(checked ? new Set(registrations.map((r) => r.id)) : new Set());
 
   if (workshopLoading) {
     return (
@@ -110,7 +125,14 @@ export const WorkshopRegistrationsPage = ({ id }: { id: string }) => {
       </div>
 
       <section className="space-y-3">
-        <h2 className="text-lg font-semibold">Send emails</h2>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h2 className="text-lg font-semibold">Send emails</h2>
+          <p className="text-sm text-muted-foreground">
+            {selectedIds.length > 0
+              ? `Sending to ${selectedIds.length} selected ${selectedIds.length === 1 ? 'person' : 'people'} only.`
+              : 'Nobody ticked: sends go to everyone who hasn\'t received that email.'}
+          </p>
+        </div>
         <div className="grid gap-4 md:grid-cols-2">
           <WorkshopEmailCard
             eventId={id}
@@ -119,6 +141,7 @@ export const WorkshopRegistrationsPage = ({ id }: { id: string }) => {
             description="Sent automatically when someone registers. Resend it to anyone it didn't reach."
             sendLabel="Resend confirmations"
             onSent={() => refetch()}
+            selectedIds={selectedIds}
           />
           <WorkshopEmailCard
             eventId={id}
@@ -127,6 +150,7 @@ export const WorkshopRegistrationsPage = ({ id }: { id: string }) => {
             description="What the session covers and that joining details follow later this week. Sent once per registrant."
             sendLabel="Send registration thank-you"
             onSent={() => refetch()}
+            selectedIds={selectedIds}
           />
           <WorkshopEmailCard
             eventId={id}
@@ -135,6 +159,7 @@ export const WorkshopRegistrationsPage = ({ id }: { id: string }) => {
             description="Includes the joining link. Needs the joining link on the webinar."
             sendLabel="Send day-before reminder"
             onSent={() => refetch()}
+            selectedIds={selectedIds}
           />
           <WorkshopEmailCard
             eventId={id}
@@ -143,14 +168,17 @@ export const WorkshopRegistrationsPage = ({ id }: { id: string }) => {
             description="A last nudge with the joining link, about an hour before the start."
             sendLabel="Send hour-before reminder"
             onSent={() => refetch()}
+            selectedIds={selectedIds}
           />
           <WorkshopEmailCard
             eventId={id}
             type="thank_you"
             title="Thank-you and feedback"
-            description="After the session, with resources and the feedback form. Needs the feedback link."
+            description="After the session, with the feedback form (if set) and the SSRI assessment link. Tick only the people who attended."
             sendLabel="Send thank-you email"
             onSent={() => refetch()}
+            selectedIds={selectedIds}
+            requireSelection
           />
         </div>
       </section>
@@ -170,6 +198,13 @@ export const WorkshopRegistrationsPage = ({ id }: { id: string }) => {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead className="w-10">
+                    <Checkbox
+                      aria-label="Select all"
+                      checked={allSelected}
+                      onCheckedChange={(checked) => toggleAll(checked === true)}
+                    />
+                  </TableHead>
                   <TableHead>Name</TableHead>
                   <TableHead>Email</TableHead>
                   <TableHead>Phone</TableHead>
@@ -180,7 +215,14 @@ export const WorkshopRegistrationsPage = ({ id }: { id: string }) => {
               </TableHeader>
               <TableBody>
                 {registrations.map((registration) => (
-                  <TableRow key={registration.id}>
+                  <TableRow key={registration.id} data-state={selected.has(registration.id) ? 'selected' : undefined}>
+                    <TableCell>
+                      <Checkbox
+                        aria-label={`Select ${registration.fullName}`}
+                        checked={selected.has(registration.id)}
+                        onCheckedChange={(checked) => toggleOne(registration.id, checked === true)}
+                      />
+                    </TableCell>
                     <TableCell className="font-medium">{registration.fullName}</TableCell>
                     <TableCell>{registration.email}</TableCell>
                     <TableCell>{registration.phone}</TableCell>

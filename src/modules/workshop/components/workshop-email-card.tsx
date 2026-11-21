@@ -28,6 +28,10 @@ type WorkshopEmailCardProps = {
   description: string;
   sendLabel: string;
   onSent: () => void;
+  /** Registrations ticked in the table. Empty means "everyone who hasn't got it". */
+  selectedIds: string[];
+  /** When true the button stays off until at least one person is ticked. */
+  requireSelection?: boolean;
 };
 
 export const WorkshopEmailCard = ({
@@ -37,8 +41,15 @@ export const WorkshopEmailCard = ({
   description,
   sendLabel,
   onSent,
+  selectedIds,
+  requireSelection = false,
 }: WorkshopEmailCardProps) => {
-  const { pending, refetch } = useWorkshopPendingCount(eventId, type);
+  const hasSelection = selectedIds.length > 0;
+  const { pending, refetch } = useWorkshopPendingCount(
+    eventId,
+    type,
+    hasSelection ? selectedIds : undefined
+  );
   const [sendEmail, { loading }] = useSendWorkshopEmail();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [failures, setFailures] = useState<string[]>([]);
@@ -46,7 +57,9 @@ export const WorkshopEmailCard = ({
   const handleSend = async () => {
     setConfirmOpen(false);
     try {
-      const { data } = await sendEmail({ variables: { eventId, emailType: type } });
+      const { data } = await sendEmail({
+        variables: { eventId, emailType: type, registrationIds: hasSelection ? selectedIds : undefined },
+      });
       const result = data?.adminSendWorkshopEmail;
       if (!result) return;
       setFailures(result.failures);
@@ -73,17 +86,22 @@ export const WorkshopEmailCard = ({
           </div>
           <span className="shrink-0 text-right text-sm">
             <strong className="block text-2xl font-bold leading-none">{pending}</strong>
-            waiting
+            {hasSelection ? 'of selected waiting' : 'waiting'}
           </span>
         </div>
         <Button
           variant="outline"
-          disabled={loading || pending === 0}
+          disabled={loading || pending === 0 || (requireSelection && !hasSelection)}
           onClick={() => setConfirmOpen(true)}
         >
           {loading && <Spinner className="size-4" />}
-          {sendLabel}
+          {hasSelection ? `${sendLabel} (${selectedIds.length} selected)` : sendLabel}
         </Button>
+        {requireSelection && !hasSelection && (
+          <p className="text-sm text-muted-foreground">
+            Tick the people who attended in the table below.
+          </p>
+        )}
         {failures.length > 0 && (
           <ul className="list-disc space-y-1 pl-5 text-sm text-destructive">
             {failures.map((failure) => (
@@ -98,9 +116,11 @@ export const WorkshopEmailCard = ({
           <AlertDialogHeader>
             <AlertDialogTitle>{sendLabel}?</AlertDialogTitle>
             <AlertDialogDescription>
-              This emails up to {Math.min(pending, 100)} of the {pending} people who haven&apos;t
-              received it yet. Anyone who already got it is skipped, so nobody gets it twice. Emails
-              can&apos;t be unsent.
+              {hasSelection
+                ? `This emails the ${pending} of your ${selectedIds.length} selected people who haven't received it yet.`
+                : `This emails up to ${Math.min(pending, 100)} of the ${pending} people who haven't received it yet.`}{' '}
+              Anyone who already got it is skipped, so nobody gets it twice. Emails can&apos;t be
+              unsent.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

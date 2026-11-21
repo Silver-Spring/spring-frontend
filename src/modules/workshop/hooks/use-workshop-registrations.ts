@@ -30,9 +30,14 @@ export const useWorkshopRegistrations = (eventId: string) => {
   return { registrations: data?.adminWorkshopRegistrations ?? [], loading, refetch };
 };
 
-export const useWorkshopPendingCount = (eventId: string, emailType: WorkshopEmailType) => {
+/** Pass `registrationIds` to count only within a selection; omit for everyone. */
+export const useWorkshopPendingCount = (
+  eventId: string,
+  emailType: WorkshopEmailType,
+  registrationIds?: string[]
+) => {
   const { data, loading, refetch } = useQuery(AdminWorkshopEmailPendingCountDoc, {
-    variables: { eventId, emailType },
+    variables: { eventId, emailType, registrationIds },
     fetchPolicy: 'network-only',
   });
   return { pending: data?.adminWorkshopEmailPendingCount ?? 0, loading, refetch };
