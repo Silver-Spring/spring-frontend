@@ -104,6 +104,7 @@ type Documents = {
     "\n  query AdminCampaign($id: UUID!) {\n    adminCampaign(id: $id) {\n      id\n      name\n      subject\n      preheader\n      bodyMarkdown\n      buttonLabel\n      buttonUrl\n      eventId\n      audience\n      kind\n      includeUnsubscribe\n      status\n      isStarter\n      starterKey\n      scheduledAt\n      startedAt\n      finishedAt\n      createdAt\n      counts {\n        queued\n        sending\n        sent\n        failed\n        suppressed\n      }\n    }\n  }\n": typeof types.AdminCampaignDocument,
     "\n  query AdminCampaigns($eventId: UUID, $starters: Boolean) {\n    adminCampaigns(eventId: $eventId, starters: $starters) {\n      id\n      name\n      subject\n      eventId\n      kind\n      status\n      isStarter\n      starterKey\n      scheduledAt\n      startedAt\n      finishedAt\n      createdAt\n      counts {\n        queued\n        sending\n        sent\n        failed\n        suppressed\n      }\n    }\n  }\n": typeof types.AdminCampaignsDocument,
     "\n  mutation AdminCancelCampaign($id: UUID!) {\n    adminCancelCampaign(id: $id) {\n      id\n      status\n    }\n  }\n": typeof types.AdminCancelCampaignDocument,
+    "\n  mutation AdminDeleteCampaign($id: UUID!) {\n    adminDeleteCampaign(id: $id)\n  }\n": typeof types.AdminDeleteCampaignDocument,
     "\n  mutation AdminDuplicateCampaign($id: UUID!, $eventId: UUID) {\n    adminDuplicateCampaign(id: $id, eventId: $eventId) {\n      id\n    }\n  }\n": typeof types.AdminDuplicateCampaignDocument,
     "\n  query AdminPreviewCampaign($id: UUID!, $contactEmail: String) {\n    adminPreviewCampaign(id: $id, contactEmail: $contactEmail) {\n      subject\n      html\n      recipientEmail\n    }\n  }\n": typeof types.AdminPreviewCampaignDocument,
     "\n  mutation AdminSaveCampaign($input: SaveCampaignInput!) {\n    adminSaveCampaign(input: $input) {\n      id\n      kind\n      status\n    }\n  }\n": typeof types.AdminSaveCampaignDocument,
@@ -220,6 +221,7 @@ const documents: Documents = {
     "\n  query AdminCampaign($id: UUID!) {\n    adminCampaign(id: $id) {\n      id\n      name\n      subject\n      preheader\n      bodyMarkdown\n      buttonLabel\n      buttonUrl\n      eventId\n      audience\n      kind\n      includeUnsubscribe\n      status\n      isStarter\n      starterKey\n      scheduledAt\n      startedAt\n      finishedAt\n      createdAt\n      counts {\n        queued\n        sending\n        sent\n        failed\n        suppressed\n      }\n    }\n  }\n": types.AdminCampaignDocument,
     "\n  query AdminCampaigns($eventId: UUID, $starters: Boolean) {\n    adminCampaigns(eventId: $eventId, starters: $starters) {\n      id\n      name\n      subject\n      eventId\n      kind\n      status\n      isStarter\n      starterKey\n      scheduledAt\n      startedAt\n      finishedAt\n      createdAt\n      counts {\n        queued\n        sending\n        sent\n        failed\n        suppressed\n      }\n    }\n  }\n": types.AdminCampaignsDocument,
     "\n  mutation AdminCancelCampaign($id: UUID!) {\n    adminCancelCampaign(id: $id) {\n      id\n      status\n    }\n  }\n": types.AdminCancelCampaignDocument,
+    "\n  mutation AdminDeleteCampaign($id: UUID!) {\n    adminDeleteCampaign(id: $id)\n  }\n": types.AdminDeleteCampaignDocument,
     "\n  mutation AdminDuplicateCampaign($id: UUID!, $eventId: UUID) {\n    adminDuplicateCampaign(id: $id, eventId: $eventId) {\n      id\n    }\n  }\n": types.AdminDuplicateCampaignDocument,
     "\n  query AdminPreviewCampaign($id: UUID!, $contactEmail: String) {\n    adminPreviewCampaign(id: $id, contactEmail: $contactEmail) {\n      subject\n      html\n      recipientEmail\n    }\n  }\n": types.AdminPreviewCampaignDocument,
     "\n  mutation AdminSaveCampaign($input: SaveCampaignInput!) {\n    adminSaveCampaign(input: $input) {\n      id\n      kind\n      status\n    }\n  }\n": types.AdminSaveCampaignDocument,
@@ -620,6 +622,10 @@ export function graphql(source: "\n  query AdminCampaigns($eventId: UUID, $start
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation AdminCancelCampaign($id: UUID!) {\n    adminCancelCampaign(id: $id) {\n      id\n      status\n    }\n  }\n"): (typeof documents)["\n  mutation AdminCancelCampaign($id: UUID!) {\n    adminCancelCampaign(id: $id) {\n      id\n      status\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation AdminDeleteCampaign($id: UUID!) {\n    adminDeleteCampaign(id: $id)\n  }\n"): (typeof documents)["\n  mutation AdminDeleteCampaign($id: UUID!) {\n    adminDeleteCampaign(id: $id)\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
