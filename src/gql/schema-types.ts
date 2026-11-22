@@ -5300,6 +5300,7 @@ export type Mutation = {
   adminCreateCoupon?: Maybe<CreateCouponPayload>;
   adminCreateWorkshopEvent: AdminWorkshopEvent;
   adminDeactivateCoupon?: Maybe<DeactivateCouponPayload>;
+  adminDeleteCampaign: Scalars['Boolean']['output'];
   adminDeleteCoupon?: Maybe<DeleteCouponPayload>;
   /**
    * Delete a user from the system (admin only)
@@ -5547,6 +5548,12 @@ export type MutationAdminCreateWorkshopEventArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationAdminDeactivateCouponArgs = {
   input: DeactivateCouponInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationAdminDeleteCampaignArgs = {
+  id: Scalars['UUID']['input'];
 };
 
 

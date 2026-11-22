@@ -8,6 +8,7 @@ import { AdminCampaignRecipientsDoc } from '../graphql/admin-campaign-recipients
 import { AdminCampaignDoc } from '../graphql/admin-campaign.graphql';
 import { AdminCampaignsDoc } from '../graphql/admin-campaigns.graphql';
 import { AdminCancelCampaignDoc } from '../graphql/admin-cancel-campaign.graphql';
+import { AdminDeleteCampaignDoc } from '../graphql/admin-delete-campaign.graphql';
 import { AdminDuplicateCampaignDoc } from '../graphql/admin-duplicate-campaign.graphql';
 import { AdminPreviewCampaignDoc } from '../graphql/admin-preview-campaign.graphql';
 import { AdminSaveCampaignDoc } from '../graphql/admin-save-campaign.graphql';
@@ -73,4 +74,5 @@ export const useSaveCampaign = () => useMutation(AdminSaveCampaignDoc);
 export const useSendCampaignTest = () => useMutation(AdminSendCampaignTestDoc);
 export const useScheduleCampaign = () => useMutation(AdminScheduleCampaignDoc);
 export const useCancelCampaign = () => useMutation(AdminCancelCampaignDoc);
+export const useDeleteCampaign = () => useMutation(AdminDeleteCampaignDoc);
 export const useDuplicateCampaign = () => useMutation(AdminDuplicateCampaignDoc);

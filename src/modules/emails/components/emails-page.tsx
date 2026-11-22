@@ -15,11 +15,15 @@ import { AdminPageHeader } from '@/modules/admin/components/shared/admin-page-he
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import { useCampaigns } from '../hooks/use-campaigns';
-import { CAMPAIGN_STATUS_LABEL, formatCount, formatIst, statusBadgeVariant } from '../lib/format';
-
-type Counts = { queued: number; sending: number; sent: number; failed: number; suppressed: number };
-
-const totalRecipients = (c: Counts): number => c.queued + c.sending + c.sent + c.failed + c.suppressed;
+import {
+  CAMPAIGN_STATUS_LABEL,
+  canDeleteCampaign,
+  formatCount,
+  formatIst,
+  statusBadgeVariant,
+  totalRecipients,
+} from '../lib/format';
+import { DeleteEmailButton } from './delete-email-button';
 
 const whenOf = (c: { status: string; scheduledAt?: string | null; startedAt?: string | null; finishedAt?: string | null }) => {
   if (c.status === 'scheduled') return c.scheduledAt ?? null;
@@ -64,6 +68,9 @@ export const EmailsPage = () => {
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Recipients</TableHead>
                 <TableHead>Sent</TableHead>
+                <TableHead className="w-12">
+                  <span className="sr-only">Actions</span>
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -84,6 +91,11 @@ export const EmailsPage = () => {
                     </TableCell>
                     <TableCell className="text-right">{total ? formatCount(total) : '—'}</TableCell>
                     <TableCell>{when ? formatIst(when) : '—'}</TableCell>
+                    <TableCell className="py-1">
+                      {canDeleteCampaign(c) && (
+                        <DeleteEmailButton id={c.id} name={c.name} compact onDeleted={() => refetch()} />
+                      )}
+                    </TableCell>
                   </TableRow>
                 );
               })}

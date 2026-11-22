@@ -17,6 +17,15 @@ export const RECIPIENT_STATUS_LABEL: Record<string, string> = {
   suppressed: 'Suppressed',
 };
 
+type RecipientCounts = Record<(typeof RECIPIENT_STATUSES)[number], number>;
+
+export const totalRecipients = (counts: RecipientCounts): number =>
+  RECIPIENT_STATUSES.reduce((sum, status) => sum + counts[status], 0);
+
+/** Same rule as the server: never went out, and is not a starter. */
+export const canDeleteCampaign = (c: { status: string; isStarter: boolean; counts: RecipientCounts }): boolean =>
+  !c.isStarter && ['draft', 'cancelled', 'failed'].includes(c.status) && totalRecipients(c.counts) === 0;
+
 export const statusBadgeVariant = (
   status: string,
 ): 'default' | 'secondary' | 'destructive' | 'outline' => {
