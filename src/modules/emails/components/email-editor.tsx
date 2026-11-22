@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
+import { Switch } from '@/components/ui/switch';
 import type { AdminCampaignQuery } from '@/gql/graphql';
 import { useAdminAssessmentTypes } from '@/modules/admin/hooks/use-admin-assessment-types';
 import { useAdminWorkshopEvents } from '@/modules/workshop/hooks/use-admin-workshops';
@@ -72,6 +73,8 @@ const KIND_BANNER = {
   webinar_update: "Webinar update — sent to this webinar's registrants, no unsubscribe link",
   promotional: 'Promotional — includes an unsubscribe link',
 } as const;
+const UNSUBSCRIBE_BANNER =
+  "Webinar update — sent to this webinar's registrants, includes an unsubscribe link. Anyone who already unsubscribed is skipped.";
 
 type FieldKey = 'subject' | 'preheader' | 'body' | 'buttonLabel' | 'buttonUrl';
 type TextElement = HTMLInputElement | HTMLTextAreaElement;
@@ -118,6 +121,7 @@ const EmailEditorForm = ({ campaign, defaultEventId, onSaved, onChanged }: Edito
   const [body, setBody] = useState(campaign?.bodyMarkdown ?? '');
   const [buttonLabel, setButtonLabel] = useState(campaign?.buttonLabel ?? '');
   const [buttonUrl, setButtonUrl] = useState(campaign?.buttonUrl ?? '');
+  const [includeUnsubscribe, setIncludeUnsubscribe] = useState(campaign?.includeUnsubscribe ?? false);
   const [sendMode, setSendMode] = useState<'now' | 'schedule' | null>(null);
   // Count fetched fresh when the confirm opens; null until it arrives.
   const [confirmCount, setConfirmCount] = useState<number | null>(null);
@@ -169,10 +173,12 @@ const EmailEditorForm = ({ campaign, defaultEventId, onSaved, onChanged }: Edito
   const count = !problem && preview && !countError ? preview.count : null;
 
   const kind = classifyAudience(audienceJson, eventId);
+  const updateWithUnsubscribe = kind === 'webinar_update' && includeUnsubscribe;
   // Starters are templates for webinar emails, so they get every webinar variable.
   const variables = availableVariables({
     hasWebinar: isStarter || Boolean(eventId),
-    webinarUpdate: isStarter || kind === 'webinar_update',
+    // The joining link is refused alongside an unsubscribe link.
+    webinarUpdate: isStarter || (kind === 'webinar_update' && !includeUnsubscribe),
   });
 
   const handleInsertVariable = (token: string) => {
@@ -218,6 +224,7 @@ const EmailEditorForm = ({ campaign, defaultEventId, onSaved, onChanged }: Edito
             buttonLabel: buttonLabel || null,
             buttonUrl: buttonUrl || null,
             eventId,
+            includeUnsubscribe: isStarter ? false : includeUnsubscribe,
             audience: audienceJson,
           },
         },
@@ -396,8 +403,24 @@ const EmailEditorForm = ({ campaign, defaultEventId, onSaved, onChanged }: Edito
           {!isStarter && (
             <Alert>
               <Megaphone />
-              <AlertDescription>{KIND_BANNER[kind]}</AlertDescription>
+              <AlertDescription>{updateWithUnsubscribe ? UNSUBSCRIBE_BANNER : KIND_BANNER[kind]}</AlertDescription>
             </Alert>
+          )}
+          {!isStarter && kind === 'webinar_update' && (
+            <div className="flex items-start gap-3">
+              <Switch
+                id="campaign-unsubscribe"
+                checked={includeUnsubscribe}
+                onCheckedChange={setIncludeUnsubscribe}
+                disabled={disabled}
+              />
+              <div className="space-y-1">
+                <Label htmlFor="campaign-unsubscribe">Include an unsubscribe link</Label>
+                <p className="text-xs text-muted-foreground">
+                  For follow-ups. Leave it off for joining details and reminders, so every registrant gets them.
+                </p>
+              </div>
+            </div>
           )}
           <AudienceBuilder
             value={audience}

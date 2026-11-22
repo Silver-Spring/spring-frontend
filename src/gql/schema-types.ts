@@ -5122,6 +5122,7 @@ export type EmailCampaign = {
   eventId?: Maybe<Scalars['UUID']['output']>;
   finishedAt?: Maybe<Scalars['Datetime']['output']>;
   id: Scalars['UUID']['output'];
+  includeUnsubscribe: Scalars['Boolean']['output'];
   isStarter: Scalars['Boolean']['output'];
   kind: Scalars['String']['output'];
   name: Scalars['String']['output'];
@@ -7819,6 +7820,7 @@ export type SaveCampaignInput = {
   buttonUrl?: InputMaybe<Scalars['String']['input']>;
   eventId?: InputMaybe<Scalars['UUID']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
+  includeUnsubscribe?: InputMaybe<Scalars['Boolean']['input']>;
   name: Scalars['String']['input'];
   preheader?: InputMaybe<Scalars['String']['input']>;
   subject: Scalars['String']['input'];

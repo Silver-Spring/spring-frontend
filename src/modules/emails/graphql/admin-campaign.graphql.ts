@@ -13,6 +13,7 @@ export const AdminCampaignDoc = graphql(`
       eventId
       audience
       kind
+      includeUnsubscribe
       status
       isStarter
       starterKey

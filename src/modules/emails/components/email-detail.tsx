@@ -88,6 +88,9 @@ export const EmailDetail = ({ campaign, onRefresh }: { campaign: Campaign; onRef
           {CAMPAIGN_STATUS_LABEL[campaign.status] ?? campaign.status}
         </Badge>
         <Badge variant="outline">{KIND_LABEL[campaign.kind] ?? campaign.kind}</Badge>
+        {campaign.kind === 'webinar_update' && campaign.includeUnsubscribe && (
+          <Badge variant="outline">Unsubscribe link</Badge>
+        )}
         <span className="text-sm text-muted-foreground">{times.join(' · ')}</span>
         <div className="ml-auto flex gap-2">
           <Button variant="outline" size="sm" className="gap-2" onClick={handleRefresh}>
